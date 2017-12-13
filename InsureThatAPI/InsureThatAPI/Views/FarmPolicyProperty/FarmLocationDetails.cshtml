@@ -1,0 +1,268 @@
+﻿@model InsureThatAPI.Models.FarmLocationDetails
+@{
+    ViewBag.Title = "Farm Location Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrackPFP"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / FIXED FARM PROPERTY</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="javascript:void(0)" class="active">Farm Location Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("FarmDetails", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text> }>Farm Building</a>
+            </li>
+            <li>
+                <a href="@Url.Action("FarmStructures", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text> }>Farm Structures</a>
+            </li>
+            <li>
+                <a href="@Url.Action("HarvestedCrops", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text> }>Harvested Crops</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text> }>Interested Parties</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("FarmLocationDetails", "FarmPolicyProperty", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "farmLocationDetails", @name = "farmLocationDetails" }))
+            {
+                @Html.AntiForgeryToken()
+                <div id="ptab1">
+                    @Html.HiddenFor(p => p.completionTrackPFP, new { @id = "completiontrack" })
+                    @Html.HiddenFor(p => p.CustomerId)
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>FARM LOCATION DETAILS</h2></div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">What is the physical address of your farm</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="address" class="form-control form-border-bottom">
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Town/Suburb</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select name="suburb" class="form-control form-border-bottom">
+                                <option value="">Town</option>
+                                <option value="1">Ashbury</option>
+                                <option value="2">Campsie</option>
+                                <option value="3">Dundas</option>
+                                <option value="4">Earlwood</option>
+                                <option value="5">Fairfield</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">State</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select name="state" class="form-control  form-border-bottom">
+                                <option value="">State</option>
+                                <option value="1">New South Wales</option>
+                                <option value="2">Queensland</option>
+                                <option value="3">Victoria</option>
+                                <option value="4">Tasmania</option>
+                                <option value="5">Western Australia</option>
+                                <option value="6">South Australia</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Postcode</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="postcode" class="form-control form-border-bottom">
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12 mt-5">What type of farm is it?</p>
+                        <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            <select name="typeoffarm" id="typeoffarm" class="form-control form-border-bottom">
+                                <option value="">Select</option>
+                                <option value="1">Apiarist</option>
+                                <option value="2">Aquaculture - this occupation cannot be insured</option>
+                                <option value="3">Cane</option>
+                                <option value="4">Chicken</option>
+                                <option value="5">Cotton</option>
+                                <option value="6">Crop</option>
+                                <option value="7">Dairy</option>
+                                <option value="8">Hobby</option>
+                                <option value="9">Livestock</option>
+                                <option value="10">Mixed</option>
+                                <option value="11">Orchard</option>
+                                <option value="12">Stud Farm – not horses</option>
+                                <option value="13">Stud Horses – Message saying farm liability cannot be insured</option>
+                                <option value="14">Winery – occupation must be approved by the underwriter before accepting the quote</option>
+                            </select>
+                        </p>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">What is the farm size.</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" name="farmsize" class="field-length-sm form-border-bottom"> <a href="#hectarModal" role="button" data-target="#hectarModal" data-toggle="modal">hectares.</a>
+                        </div>
+                    </div>
+                    <div id="hectarModal" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h3 class="text-center">ACRES TO HECTOR CALCULATOR</h3>
+                                    <div class="row mt-70 mb-100">
+                                        <div class="col-md-5 text-center">
+                                            <label>ACRES</label>
+                                            <input id="acres" name="acres" class="form-control form-border-1" onkeyup="convert('ACR')">
+                                        </div>
+                                        <div class="col-md-2 mt-30">
+                                            <img src="~/images/right-arrow2.png" />
+                                        </div>
+                                        <div class="col-md-5 text-center">
+                                            <label>HECTARS</label>
+                                            <input type="text" name="hectar" class="form-control form-border-1" id="hectar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='farmLocationDetails']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "address": {
+                    required: true,
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "suburb": "required",
+                "state": "required",
+                "postcode": {
+                    required: true,
+                    regex: /^[0-9]*$/,
+                },
+                "typeoffarm": "required",
+                "farmsize": {
+                    required: true,
+                    regex: /^[0-9]*$/,
+                },
+                "acres": {
+                    required: true,
+                    regex: /^[0-9]*$/,
+                },
+                "hectar": {
+                    required: true,
+                    regex: /^[0-9]*$/,
+                },
+            },
+            messages: {
+                "address": {
+                    required: "Please select address",
+                    regex: "Special character & numeric not allowed in address"
+                },
+                "suburb": "Please select suburb",
+                "state": "Please select state",
+                "postcode": {
+                    required: "Please select postcode",
+                    regex: "Only numeric allowed in post code"
+                },
+                "typeoffarm": "Please select type of farm",
+                "farmsize": {
+                    required: "Please select farm size",
+                    regex: "Only numeric allowed in farm size"
+                },
+                "acres": {
+                    regex: "Only numeric allowed in acres"
+                },
+                "hectar": {
+                    regex: "Only numeric allowed in hectar"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

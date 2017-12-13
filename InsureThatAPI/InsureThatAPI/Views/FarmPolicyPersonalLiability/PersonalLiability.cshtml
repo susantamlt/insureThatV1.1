@@ -1,0 +1,140 @@
+﻿@model InsureThatAPI.Models.PersonalLiability
+@{
+    ViewBag.Title = "Personal Liability";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / PERSONAL LIABILITY</h4>
+</div>
+<div>
+    @using (Ajax.BeginForm("PersonalLiability", "FarmPolicyPersonalLiability", new { cid =@ViewBag.cid }, new AjaxOptions()
+    {
+        HttpMethod = "POST"
+    }, new { @id = "personalliabilityFP", @name = "personalliabilityFP" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(p => p.CustomerId)
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+                <h2>PERSONAL LIABILITY</h2>
+            </div>
+            <div class="clearfix"></div>
+            <div id="errorContainer"></div>
+            <div class="form">
+                <div class="mt-10 mb-10 col-md-12">
+                    <p>This cover is automatically given with Home Buildings and/or Home Contents.</p>
+                </div>
+                <div class="mt-10 mb-10 clearfix">
+                    <p class="col-md-5 col-sm-5 col-xs-12">Personal liability</p>
+                    <div class="col-md-7 col-sm-7 col-xs-12">                  
+                        @Html.TextBoxFor(p => p.LimitindemnityObj.Limitindemnity, new { @class = "form-control form-border-bottom", @id = "pllimitofindemnity", @Value = "20000000" })
+                        @Html.HiddenFor(p => p.LimitindemnityObj.EiId)
+                        <p class="mini-text">(This policy automatically provides personal liability for $20,000,000.)</p>
+                    </div>
+                </div>
+
+                <div class="clearfix mb-md-30 mt-10 mb-10 ">
+                    <div class="col-md-5"><p>Excess</p></div>
+                    <div class="col-md-7">
+                        @Html.DropDownListFor(Model => Model.ExcessplObj.Excess, @Model.ExcessplObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "plexcess" })
+                        @Html.HiddenFor(p => p.ExcessplObj.EiId)
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 pull-right text-right mt-30">
+                <a href="#" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                <img src="~/images/button-devider.png">
+                <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+            </div>
+        </div>
+    }
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+              $(document).ready(function() {
+                $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                });
+              });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+              $(document).ready(function() {
+                $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                });
+              });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.dropdown').hover(function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500); }, function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500); });
+</script>
+
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='personalliabilityFP']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "LimitindemnityObj.Limitindemnity": {
+                    regex: /^[0-9,$]*$/,
+                },
+            },
+            messages: {
+
+                "LimitindemnityObj.Limitindemnity": {
+                    regex: "Only Numeric Allowed in Personal Liability"
+                },
+
+
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

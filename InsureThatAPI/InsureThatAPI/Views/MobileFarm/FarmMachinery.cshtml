@@ -1,0 +1,665 @@
+﻿@model InsureThatAPI.Models.MobileFarmMachinery
+@{
+    ViewBag.Title = "FarmMachinery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["CompletionTrackFPC"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+    var policyinclusions = new string[] { };
+    var policyinclusion = Model.PolicyInclusions;
+    if (policyinclusion != null)
+    {
+        if (policyinclusion.Length > 1)
+        {
+            policyinclusions = policyinclusion.Split('-');
+        }
+        else
+        {
+            policyinclusions = policyinclusion.Split(' ');
+        }
+    }
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / MOBILE FARM PROPERTY</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("FarmContents", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>   }>Farm Contents</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Farm Machinery</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Livestock", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>   }>Livestock</a>
+            </li>
+            <li>
+                <a href="@Url.Action("WorkingDogsBeehives", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>   }>Working Dogs and Beehives</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("FarmMachinery", "MobileFarm", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+
+            }, new { @id = "farmMachinery", @name = "farmMachinery" }))
+            {
+                <div id="ptab2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>FARM MACHINERY</h2></div>
+                    <p class="mini-text col-md-12"><a href="#fmachiModalLabel" role="button" data-target="#fmachiModalLabel" data-toggle="modal"><span class="cover-options">Click here for farm machinery definition</span></a></p>
+                    <div id="fmachiModalLabel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="fmachiModalLabel" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">farm machinery</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="mini-text col-md-12">Note: farm machinery does not include any machine or implement that is required to be registered under any motor vehicle registration Act or legislation, whether or not such registration is in place. These can be covered under the motor section. </p>
+                    <div class="col-md-12">
+                        <a href="#costumModal2" role="button" data-target="#costumModal2" data-toggle="modal"><span class="cover-options">Click here to see the cover available for farm machinery</span></a>
+                        <div id="costumModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="pull-left">Accidental loss or damage cover</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <img src="images/close-icon.png" />
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>It is covered against accidental loss or damage that takes place anywhere in Australia during the period of cover and is caused by: </p>
+                                        <ol class="ml-30 col-md-12">
+                                            <li>Fire</li>
+                                            <li>Earthquake</li>
+                                            <li>Explosion</li>
+                                            <li>Impact by anything that flies or falls from the sky</li>
+                                            <li>Lightning</li>
+                                            <li>Malicious acts</li>
+                                            <li>Storm</li>
+                                            <li>Volcanoes </li>
+                                        </ol>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p class="col-md-12">You can insure unspecified items of farm machinery up to $5,000 for any one item</p>
+
+                <div class="clearfix mb-md-30 mt-10 mb-10">
+                    <p class="col-md-6 col-sm-6 col-xs-12">How much cover do you need for unspecified farm machinery?</p>
+                    <div class="col-md-6 col-sm-6 col-xs-12">
+                        @Html.TextBoxFor(p => p.FPUnspecifiedMachineryFMObj.UnspecifiedMachinery, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                        @Html.HiddenFor(p => p.FPUnspecifiedMachineryFMObj.EiId)
+
+                    </div>
+                </div>
+                <div class="clearfix mb-md-30 mt-10 mb-10">
+                    <p class="col-md-6 col-sm-6 col-xs-12">Excess for unspecified machinery</p>
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(Model => Model.FPExcessforUMFMObj.Excess, @Model.FPExcessforUMFMObj.ExcessUMList, new { @class = "form-control form-border-bottom description", @id = "typeofunits" })
+                        @Html.HiddenFor(p => p.FPExcessforUMFMObj.EiId)
+                    </div>
+                    <div class="col-md-3">
+                        <div class="policy-loc-row"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                    </div>
+                </div>
+                <div class="clearfix mb-md-30 mt-10 mb-10">
+                    <p class="col-md-12">Please list your specified items of machinery (valued over $5,000 per item) below.  </p>
+                </div>
+                <div class="clearfix mb-md-30 mt-10 mb-10">
+                    <div class="col-md-12 table-8">
+                        <table class="table" style=" width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th class="space_left">Description</th>
+                                    <th class="space_left">Year</th>
+                                    <th class="space_left">Serial Number</th>
+                                    <th class="space_left">Excess</th>
+                                    <th class="space_right">Sum Insured</th>
+                                    <th class="space_right">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="tname-tr-1">
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.FPDescriptionsFMObj.DescriptionFM, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                                        @Html.HiddenFor(p => p.FPDescriptionsFMObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.FPYearFMObj.YearFM, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                                        @Html.HiddenFor(p => p.FPYearFMObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.FPSerialNumberFMObj.SerialNumberFM, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                                        @Html.HiddenFor(p => p.FPSerialNumberFMObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.DropDownListFor(Model => Model.FPExcessFMObj.Excess, @Model.FPExcessFMObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "typeofunits" })
+                                        @Html.HiddenFor(p => p.FPExcessFMObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.FPSumOfInsuredFMObj.SuminsuredFM, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                                        @Html.HiddenFor(p => p.FPSumOfInsuredFMObj.EiId)
+                                    </td>
+                                    <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-4"><p>Total for specified items</p></div>
+                    <div class="col-md-8"><input type="text" name="totalspaceific" id="totalspaceific" class="form-control form-border-bottom"></div>
+                </div>
+                <div class="col-md-6 pull-right text-right">
+                    <a href="@Url.Action("FarmContents", "MobileFarm")" class="button-3d nomargin tab-linker quot-prev-btn">Prev</a>
+                    <img src="~/images/button-devider.png">
+                    <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                </div>
+
+
+            }
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        @if (policyinclusions != null && policyinclusion != null && policyinclusion.Length > 0)
+        {
+            //for (int i = 0; i < policyinclusion.Length; i++)
+            //{
+            if (policyinclusions[0] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location1" />
+                    <label for="radio1"><span><span></span></span>Mobile Farm Property</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location1').click(function () {
+                                $("#policy-ed-del-wrap1").fadeIn('slow');
+                                $("#policy-ed-del-wrap1").delay(2000).fadeOut(1000);
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[1] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location2" />
+                    <label for="radio1"><span><span></span></span>Fixed Farm Property</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location2').click(function () {
+                                $("#policy-ed-del-wrap2").fadeIn('slow');
+                                $("#policy-ed-del-wrap2").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[2] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location3" />
+                    <label for="radio1"><span><span></span></span>Farm Interruption</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location3').click(function () {
+                                $("#policy-ed-del-wrap3").fadeIn('slow');
+                                $("#policy-ed-del-wrap3").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap3" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[3] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location4" />
+                    <label for="radio1"><span><span></span></span>Farm Liability</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location4').click(function () {
+                                $("#policy-ed-del-wrap4").fadeIn('slow');
+                                $("#policy-ed-del-wrap4").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap4" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[4] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location5" />
+                    <label for="radio1"><span><span></span></span>Burglary</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location5').click(function () {
+                                $("#policy-ed-del-wrap5").fadeIn('slow');
+                                $("#policy-ed-del-wrap5").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap5" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[5] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location6" />
+                    <label for="radio1"><span><span></span></span>Electronics</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location6').click(function () {
+                                $("#policy-ed-del-wrap6").fadeIn('slow');
+                                $("#policy-ed-del-wrap6").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap6" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Electronics", "FarmPolicyElectronics",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[6] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location7" />
+                    <label for="radio1"><span><span></span></span>Money</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location7').click(function () {
+                                $("#policy-ed-del-wrap7").fadeIn('slow');
+                                $("#policy-ed-del-wrap7").delay(2000).fadeOut();
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap7" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[7] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location8" />
+                    <label for="radio1"><span><span></span></span>Transit</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location8').click(function () {
+                                $("#policy-ed-del-wrap8").fadeIn('slow');
+                                $("#policy-ed-del-wrap8").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap8" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[8] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location9" />
+                    <label for="radio1"><span><span></span></span>Valuables</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location9').click(function () {
+                                $("#policy-ed-del-wrap9").fadeIn('slow');
+                                $("#policy-ed-del-wrap9").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap9" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[9] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location10" />
+                    <label for="radio1"><span><span></span></span>Live stock</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location10').click(function () {
+                                $("#policy-ed-del-wrap10").fadeIn('slow');
+                                $("#policy-ed-del-wrap10").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap10" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[10] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location11" />
+                    <label for="radio1"><span><span></span></span>Personal Liability</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location11').click(function () {
+                                $("#policy-ed-del-wrap11").fadeIn('slow');
+                                $("#policy-ed-del-wrap11").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap11" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+
+            if (policyinclusions[11] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location13" />
+                    <label for="radio1"><span><span></span></span>Home Building</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location13').click(function () {
+                                $("#policy-ed-del-wrap13").fadeIn('slow');
+                                $("#policy-ed-del-wrap13").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap13" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[12] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location14" />
+                    <label for="radio1"><span><span></span></span>Home Content</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location14').click(function () {
+                                $("#policy-ed-del-wrap14").fadeIn('slow');
+                                $("#policy-ed-del-wrap14").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap14" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[13] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location15" />
+                    <label for="radio1"><span><span></span></span>Machinery</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location15').click(function () {
+                                $("#policy-ed-del-wrap15").fadeIn('slow');
+                                $("#policy-ed-del-wrap15").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap15" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[14] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location16" />
+                    <label for="radio1"><span><span></span></span>Motor</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location16').click(function () {
+                                $("#policy-ed-del-wrap16").fadeIn('slow');
+                                $("#policy-ed-del-wrap16").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap16" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+
+
+        }
+
+        <div class="clearfix"></div>
+  
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
+                <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
+                <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
+
+                <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
+             
+                <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
+                <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
+                <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
+                <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
+                <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
+              
+                <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+           
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Transit</a></li>
+
+               
+            </ul>
+        </div>
+        @*<input type="submit" name="newcover" value="New Cover">*@
+    </div>
+    
+
+</div>
+<script src="~/js/datepicker.min.js"></script>
+<script type="text/javascript">
+                $(function () {
+                    $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+                });
+</script>
+<script type="text/javascript">
+    function tnameAdd(id) {
+        var countId = id + 1;
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.FPDescriptionsFMObj.DescriptionFM, new { @class = "form-control form-border-bottom", @id = "description" })@Html.HiddenFor(p => p.FPDescriptionsFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.FPYearFMObj.YearFM, new { @class = "form-control form-border-bottom year", @id = "year", @readonly = "readonly" })@Html.HiddenFor(p => p.FPYearFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.FPSerialNumberFMObj.SerialNumberFM, new { @class = "form-control form-border-bottom", @id = "serialnumber" })@Html.HiddenFor(p => p.FPSerialNumberFMObj.EiId)</td><td class="no-border"><div class="col-md-9 pt-10 pb-10">@Html.DropDownListFor(Model => Model.FPExcessFMObj.Excess, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom", @id = "excess" })@Html.HiddenFor(p => p.FPExcessFMObj.EiId)</div><td class="no-border">@Html.TextBoxFor(p => p.FPSumOfInsuredFMObj.SuminsuredFM, new { @class = "form-control form-border-bottom", @id = "suminsured" })@Html.HiddenFor(p => p.FPSumOfInsuredFMObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+
+        $.ajax({
+            url: '/farm/farmajaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "farmMachinery" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tname-" + id).html(replaceA);
+                    $("#tname-tr-" + id).after(html);
+                    $("#tname-tr-" + countId + ' #excess').html(html1);
+                    $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+
+                    $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);
+                    $("#tname-tr-" + countId + ' #year').attr('id', "year" + countId);
+                    $("#tname-tr-" + countId + ' #serialnumber').attr('id', "serialnumber" + countId);
+                    $("#tname-tr-" + countId + ' #excess').attr('id', "excess" + countId);
+
+                    $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                }
+            }
+        });
+    }
+    function tnameRemove(id) {
+        $("#tname-tr-" + id).remove();
+    }
+</script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='farmMachinery']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "FPUnspecifiedMachineryFMObj.UnspecifiedMachinery": {
+                    regex: /^[0-9]*$/,
+                },
+                "FPExcessforUMFMObj.Excess": {
+                    required: function (element) {
+                        if ($("#farmcontents").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+
+                "FPDescriptionsFMObj.DescriptionFM": {
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "FPYearFMObj.YearFM": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+                "FPSerialNumberFMObj.SerialNumberFM": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    regex: /^[0-9]*$/,
+                },
+                "FPExcessFMObj.Excess": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+
+                "FPSumOfInsuredFMObj.SuminsuredFM": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    regex: /^[0-9]*$/,
+                },
+            },
+            messages: {
+                "FPUnspecifiedMachineryFMObj.UnspecifiedMachinery": {
+                    regex: "Only numeric allowed"
+                },
+                "FPExcessforUMFMObj.Excess": {
+                    required: "Please select excessum"
+                },
+
+                "FPDescriptionsFMObj.DescriptionFM": {
+                    regex: "Special character not allowed"
+                },
+                "FPYearFMObj.YearFM": {
+                    required: "Please enter year"
+                },
+                "FPSerialNumberFMObj.SerialNumberFM": {
+                    required: "Please enter serial number",
+                    regex: "Only numeric allowed"
+                },
+                "FPExcessFMObj.Excess": {
+                    required: "Please select Excess"
+                },
+
+                "FPSumOfInsuredFMObj.SuminsuredFM": {
+                    required: "Please enter sum of insured",
+                    regex: "Only numeric allowed"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>
+<script>
+    $('.dropdown').hover(function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500); }, function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500); });
+    $(function () {
+        $("#processTabs").tabs({ show: { effect: "fade", duration: 400 } });
+        $(".tab-linker").click(function () {
+            $("#processTabs").tabs("option", "active", $(this).attr('rel') - 1);
+            return false;
+        });
+    });
+</script>

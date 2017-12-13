@@ -1,0 +1,301 @@
+﻿@model InsureThatAPI.Models.FPBurglary
+
+@{
+    ViewBag.Title = "Burglary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / BURGLARY</h4>
+</div>
+
+<div>
+
+    @using (Ajax.BeginForm("Burglary", "FarmPolicyBurglary", new { cid = @ViewBag.cid }, new AjaxOptions()
+    {
+        HttpMethod = "POST"
+    }, new { @id = "burglary", @name = "burglary" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 policy-full-head">
+                <h2>Burglary</h2>
+            </div>
+            @Html.HiddenFor(p => p.CustomerId)
+            <div class="clearfix"></div>
+            <div id="errorContainer"></div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-4"><p>Location</p></div>
+                <div class="col-md-8"><div class="col-md-10 col-sm-10 col-xs-10"><input type="text" name="location" class="form-control form-border-bottom"></div><div class="col-md-2 col-sm-2 col-xs-2"></div></div>
+            </div>
+            <h5 class="col-md-12 mt-10">Cover Option</h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover your property against loss or accidental damage caused by burglary?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                        <label for="radio1"><span><span></span></span>Yes</label>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                        <label for="radio1"><span><span></span></span>No</label>
+                    </div>
+                </div>
+            </div>
+            <p class="col-md-12 mb-md-30 mt-10 mb-10">If you select burglary cover, the amounts you have selected under fixed farm property and mobile farm property are incorporated into the burglary section.   </p>
+            <h5 class=" mt-10 col-md-12">Details of Cover</h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Buildings (excluding coolrooms)</p></div>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(p => p.FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms, new { @class = "form-control form-border-bottom", @id = "CoverFB" })
+                    @Html.HiddenFor(p => p.FarmBuildingExCoolRoomsFPObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Coolrooms</p></div>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(p => p.CoolRoomsFPObj.CoolRooms, new { @class = "form-control form-border-bottom", @id = "FPCoolRooms" })
+                    @Html.HiddenFor(p => p.CoolRoomsFPObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Fencing</p></div>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(p => p.FarmFencingFPObj.FarmFencing, new { @class = "form-control form-border-bottom", @id = "FPFarmFencing" })
+                    @Html.HiddenFor(p => p.FarmFencingFPObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Other Farm Structures</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+
+                    @Html.TextBoxFor(p => p.OtherFarmStructuresFPObj.OtherFarmStructures, new { @class = "form-control form-border-bottom", @id = "FPOtherFarm" })
+                    @Html.HiddenFor(p => p.OtherFarmStructuresFPObj.EiId)
+                    <p class="mini-text">includes covered ways, exterior light fittings, irrigation systems, pens, sheep dips, stockyards, pipes, cables, power and telephone poles, silos, solar power units, tanks and windmills</p>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Contents	</p></div>
+                <div class="col-md-6">
+                    @Html.TextBoxFor(p => p.FarmContentsFPObj.FarmContents, new { @class = "form-control form-border-bottom", @id = "FPFarmContents" })
+                    @Html.HiddenFor(p => p.FarmContentsFPObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Hail netting stored in a Farm Structure</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.TextBoxFor(p => p.HailNettingStoredFPObj.HailNettingStored, new { @class = "form-control form-border-bottom", @id = "FPHailNetting" })
+                    @Html.HiddenFor(p => p.HailNettingStoredFPObj.EiId)
+                    <p class="mini-text">with roof and walls (fire only)</p>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Unspecified machinery	</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.TextBoxFor(p => p.UnspecifiedMachineryFPObj.UnspecifiedMachinery, new { @class = "form-control form-border-bottom", @id = "FPUnspecMach" })
+                    @Html.HiddenFor(p => p.UnspecifiedMachineryFPObj.EiId)
+                    <p class="mini-text">limit $5,000 per item</p>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Specified Items over $5,000 per item</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.TextBoxFor(p => p.SpecifiedItemsOver5KFPObj.SpecifiedItemOver5K, new { @class = "form-control form-border-bottom", @id = "FPSpecItems" })
+                    @Html.HiddenFor(p => p.SpecifiedItemsOver5KFPObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6"><p>Excess for burglary</p></div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(Model => Model.ExcessFPBurglaryObj.Excess, @Model.ExcessFPBurglaryObj.ExcessList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
+                    @Html.HiddenFor(p => p.ExcessFPBurglaryObj.EiId)
+                </div>
+
+                <div class="col-md-3">
+                    <div class="policy-loc-row"><input type="checkbox" name="ImposedBuglaryObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                </div>
+            </div>
+            <h5 class="col-md-12 mt-10">Optional Extras</h5>
+            <p class="col-md-12">You can extend this cover to include cover by theft (without forcible or violent entry) at each listed location and in transit between all the locations you have listed on your policy.</p>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover theft of your farm structures and farm contents?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                        <label for="radio1"><span><span></span></span>Yes</label>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                        <label for="radio1"><span><span></span></span>No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover theft of your farm machinery</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                        <label for="radio1"><span><span></span></span>Yes</label>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                        <label for="radio1"><span><span></span></span>No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover your farm contents for theft Australia wide?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                        <label for="radio1"><span><span></span></span>Yes</label>
+                    </div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                        <label for="radio1"><span><span></span></span>No</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-40">
+                <div class="col-md-8"></div>
+                <div class="col-md-4 pull-right text-right">
+                    <a href="#" class="button-3d nomargin tab-linker quot-prev-btn">Prev</a>
+                    <img src="~/images/button-devider.png">
+                    <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+                $(document).ready(function () {
+                    $.validator.addMethod("regex", function (value, element, regexp) {
+                        if (regexp.constructor != RegExp)
+                            regexp = new RegExp(regexp);
+                        else if (regexp.global)
+                            regexp.lastIndex = 0;
+                        return this.optional(element) || regexp.test(value);
+                    }, "Please check your input.");
+                    $("form[name='burglary']").validate({
+                        errorContainer: "#errorContainer",
+                        errorLabelContainer: "#errorContainer",
+                        errorElement: "li",
+                        rules: {
+                            "FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms": {
+                                regex: /^[0-9]*$/,
+                            },
+
+                            "CoolRoomsFPObj.CoolRooms": {
+                                regex: /^[0-9]*$/,
+                            },
+                            "FarmFencingFPObj.FarmFencing": {
+                                regex: /^[0-9]*$/,
+                            },
+
+                            "OtherFarmStructuresFPObj.OtherFarmStructures": {
+                                regex: /^[0-9]*$/,
+                            },
+                            "FarmContentsFPObj.FarmContents": {
+                                regex: /^[0-9]*$/,
+                            },
+
+                            "HailNettingStoredFPObj.HailNettingStored": {
+                                regex: /^[0-9]*$/,
+                            },
+                            "UnspecifiedMachineryFPObj.UnspecifiedMachinery": {
+                                regex: /^[0-9]*$/,
+                            },
+
+                            "SpecifiedItemsOver5KFPObj.SpecifiedItemOver5K": {
+                                regex: /^[0-9]*$/,
+                            },
+                        },
+                        messages: {
+                            "FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms": {
+                                regex: "Only numeric allowed in Cover details of Farm Buildings"
+                            },
+
+                            "CoolRoomsFPObj.CoolRooms": {
+                                regex: "Only numeric allowed in Cover Details of Coolrooms"
+                            },
+                            "FarmFencingFPObj.FarmFencing": {
+                                regex: "Only numeric allowed in Cover Details of Farm Fencing"
+                            },
+                            "OtherFarmStructuresFPObj.OtherFarmStructures": {
+                                regex: "Only numeric allowed in Cover Details of Other Farm Structures"
+                            },
+                            "FarmContentsFPObj.FarmContents": {
+                                regex: "Only numeric allowed in Cover Details of Farm Contents"
+                            },
+                            "HailNettingStoredFPObj.HailNettingStored": {
+                                regex: "Only numeric allowed in Cover Details of Hail Netting"
+                            },
+                            "UnspecifiedMachineryFPObj.UnspecifiedMachinery": {
+                                regex: "Only numeric allowed in Cover Details of Unspecified Machinery"
+                            },
+                            "SpecifiedItemsOver5KFPObj.SpecifiedItemOver5K": {
+                                regex: "Only numeric allowed in Cover Details of Specified Items"
+                            },
+
+                        },
+                        onfocusout: function (element) {
+                            this.element(element);
+                        },
+                        submitHandler: function (form) {
+                            form.submit();
+                        }
+                    });
+                });
+</script>

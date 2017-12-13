@@ -1,0 +1,106 @@
+﻿@model InsureThatAPI.Models.GetNewPolicyDetailsRef
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="content mt-60 mb-60">
+
+    <div class="col_half policy-full-head"><h2>Policy List<span>@Model.PolicyData.Select(o=>o.InsuredName).FirstOrDefault()</span></h2></div>
+
+    <div class="col_half col_last pull-right">
+        <div class="fright">
+            <a class="btn color-bk-btn" href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId })">Add Policy</a>
+            <!-- <a class="btn color-bk-btn" href="#">View Insured</a>
+            <a class="btn color-bk-btn" href="#">View Policy History</a> -->
+        </div>
+    </div>
+    @*@using (Ajax.BeginForm("HomeDescription", "RuralLifeStyle", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+        {
+            HttpMethod = "Get"
+
+        }))
+        {
+            @Html.AntiForgeryToken()*@
+    @using (Html.BeginForm("HomeDescription", "RuralLifeStyle", FormMethod.Get, new { cid = 1, enctype = "multipart/form-data", id = "advancedSearch" }))
+    {
+        @Html.AntiForgeryToken()
+
+
+        <div class="clearfix"></div>
+        if (Model.PolicyData != null && Model.PolicyData.Count() > 0)
+        {
+            for (int i = 0; i < Model.PolicyData.Count(); i++)
+            {
+                <div class="pc-list">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-2 col-xs-12">
+                                @if (Model.PolicyData[i].PrId == 1029 || Model.PolicyData[i].PrId == 1009)
+                                {
+                                    <img src="~/images/rural-icon.png" class="policy-list-img">
+                                }
+                                else
+                                {
+                                    <img src="~/images/farm-icon.png" class="policy-list-img">
+                                }
+                            </div>
+                            <div class="col-md-8 col-sm-7 col-xs-12 col-sm-offset-0 col-xs-offset-1">
+                                <div class="col_full">
+                                    <div class="row">
+                                        <div class="col-sm-4 col-xs-6 p-5">
+                                            Policy Type: @if (Model.PolicyData[i].PrId == 1029 || Model.PolicyData[i].PrId == 1009)
+                                            {
+                                                <span>Rural Lifestyle</span>
+                                            }
+                                            else
+                                            {  <span>Farm</span>
+                                            }
+                                        </div>
+                                        <div class="col-sm-4 col-xs-6 p-5">Policy No: @Model.PolicyData[i].PolicyNumber</div>
+                                        <div class="col-sm-4 col-xs-6 p-5">Insured: @Model.PolicyData.Select(o => o.InsuredName).FirstOrDefault()</div>
+                                        <div class="clearfix"></div>
+                                        <div class="col-sm-4 col-xs-6 p-5">Start Date: @Model.PolicyData[i].InceptionDate.ToString("dd/MM/yy")</div>
+                                        <div class="col-sm-4 col-xs-6 p-5">End Date: @Model.PolicyData[i].ExpiryDate.ToString("dd/MM/yy")</div>
+                                        <div class="col-sm-4 col-xs-6 p-5">Duration: @Model.PolicyData[i].CoverPeriod&nbsp; @Model.PolicyData[i].CoverPeriodUnit </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1 col-md-2 col-sm-3 col-xs-12">
+                                <a href="@Url.Action("ViewUpdatePolicyDetails", "Customer",new {cid=@ViewBag.CustomerId, PcId= @Model.PolicyData[i].PcId})" class="btn-primary btn col-sm-12 col-xs-5">View Details</a>
+                                <a href="#" class="btn-primary btn col-sm-12 col-xs-5">Cancel Policy</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div><label>No Policies under this customer</label></div>
+        }
+    }
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

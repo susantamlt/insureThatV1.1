@@ -1,0 +1,301 @@
+﻿@model InsureThatAPI.Models.HB2HomeDescription
+
+@{
+    ViewBag.Title = "Home Building Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "Main House",
+        Value = "1"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Managers House",
+        Value = "2",
+        Selected = true
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Gate House",
+        Value = "3"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Guest House",
+        Value = "4"
+    });
+
+    listItems.Add(new SelectListItem
+    {
+        Text = "Pool House",
+        Value = "5"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Summer House",
+        Value = "6"
+    });
+    List<SelectListItem> listsStates = new List<SelectListItem>();
+    listsStates.Add(new SelectListItem
+    {
+        Text = "NSW",
+        Value = "NSW"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "QLD",
+        Value = "QLD",
+        Selected = true
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "SA",
+        Value = "SA"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "TAS",
+        Value = "TAS"
+    });
+
+    listsStates.Add(new SelectListItem
+    {
+        Text = "VIC",
+        Value = "VIC"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "WA",
+        Value = "WA"
+    });
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrack"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+    //var ApiKey = Session["apiKey"].ToString();
+
+
+
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / HOME Description</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="javascript:void(0)" class="active">Home Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ConstructionDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>     }>Construction Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>     }>Occupancy Details</a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("InterestedParties", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>     }>Interested Parties</a>
+            </li>
+            <li>
+                <a href="@Url.Action("HomeBuilding", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>     }>Home Building</a>
+            </li>
+        </ul>
+        <div id="homeBuildContain">
+            <div id="ptab1">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>
+                <div id="errorContainer"></div>
+                @using (Ajax.BeginForm("HomeDescription", "RuralLifeStyle", new { cid = @ViewBag.cid }, new AjaxOptions()
+                {
+                    HttpMethod = "POST"
+
+                }, new { @id = "homeDescription", @name = "homeDescription" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="fill-form-wrap col-md-12">
+                        @Html.HiddenFor(p => p.CustomerId)
+                        @Html.HiddenFor(p => p.CompletionTrack, new { @id = "completiontrack" })
+                        @Html.HiddenFor(p => p.ApiKey, new { @id = "apisecret" })
+                        <p>
+                            I own a
+                            <select name="property" id="property" class="form-control form-inline select2hd">
+                                <option value="1">Building</option>
+                                <option value="2">Farm</option>
+                            </select>
+                            located at
+                            @Html.DropDownListFor(model => model.SubUrb, Model.SubUrb, "-- Suburb --", new { @class = "form-control form-inline select2hd select2hdc", @id = "suburb", @name = "suburb" }),
+                            @Html.DropDownListFor(model => model.LocationObj.Location, listsStates, "-- State --", new { @class = "form-control form-inline select2hd", @id = "", @name = "" }),
+
+                            @*<select name="state" id="state" class="form-control form-inline select2hd">
+                                <option value="">State</option>
+                                <option value="1">Melborne</option>
+                                <option value="2">Sydney</option>
+                            </select>*@,
+                            Postcode @*@Html.DropDownListFor(model => model.SubUrb, Model.SubUrb, "Pincode", new { @class = "form-control form-inline select2hd select2hdc", @id = "pincode", @name = "pincode" })*@
+                            <input type="text" placeholder="Number" name="postcode" id="postCode" class="form-control form-inline field-length-xs" />.
+                            The building sits on a property size of
+                            @Html.TextBoxFor(p => p.AreapropertyObj.Areaproperty, new { @class = "form-control form-inline field-length-xs", @id = "areaproperty" })
+                            @Html.HiddenFor(p => p.AreapropertyObj.EiId)  
+                                <a href="#hectarModal" role="button" data-target="#hectarModal" data-toggle="modal">hectares.</a>
+                        
+                            <div id="hectarModal" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                <img src="~/images/close-icon.png" />
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h3 class="text-center">ACRES TO HECTOR CALCULATOR</h3>
+                                            <div class="row mt-70 mb-100">
+                                                <div class="col-md-5 text-center">
+                                                    <label>ACRES</label>
+                                                    <input id="acres" name="acres" class="form-control form-border-1" onkeyup="convert('ACR')">
+                                                </div>
+                                                <div class="col-md-2 mt-30">
+                                                    <img src="~/images/right-arrow2.png" />
+                                                </div>
+                                                <div class="col-md-5 text-center">
+                                                    <label>HECTARS</label>
+                                                    <input type="text" name="hectar" class="form-control form-border-1" id="hectar">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+
+                        <p>
+                            Is your Home Building more than 100 metres from Uncleared Natural Bushland, a State or National Forest or a commercial plantation of pine trees?
+                            <span class="isbuilding-located">
+                                <span class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '0')
+                                    <label for="radio1"><span><span></span></span>No</label>
+                                </span>
+                                <span class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '1')
+                                    <label for="radio1"><span><span></span></span>Yes</label>
+                                </span>
+                            </span>
+                            @Html.HiddenFor(p => p.IsbuildinglocatedObj.EiId)
+                        </p>
+                        <div class="mt-10 mb-10 col-md-12 buildingAddress">
+                            <p class="col-md-6 col-sm-6 col-xs-12 mt-5">Describe the building address</p>
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                                @Html.DropDownListFor(model => model.DescribeaddressObj.Describeaddress, listItems, "-- Select --", new { @class = "form-control form-border-bottom", @id = "describeaddress", @name = "describeaddress" })
+                                @Html.HiddenFor(p => p.DescribeaddressObj.EiId)
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script src="~/Scripts/select2.min.js"></script>
+<script type="text/javascript">
+                function convert(degree) {
+                    var x;
+                    if (degree == "ACR") {
+                        x = document.getElementById("acres").value * 0.40468564224;
+                        document.getElementById("hectar").value = x.toPrecision(6);
+                    }
+                }
+             
+                var apival = $("#apisecret").val();
+
+                $('#suburb').on('change', (function () {
+                    var suburb = $(this).val();
+                    var pincode = $("#pincode").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/RuralLifeStyle/SubUrbStatePincode",
+                        data: { "suburb": suburb, "pincode": pincode },
+                        success: function (responce) {
+                        }
+                    });
+                }));
+                $(document).ready(function () {
+                    $.validator.addMethod("regex", function (value, element, regexp) {
+                        if (regexp.constructor != RegExp)
+                            regexp = new RegExp(regexp);
+                        else if (regexp.global)
+                            regexp.lastIndex = 0;
+                        return this.optional(element) || regexp.test(value);
+                    }, "Please check your input.");
+                    $("form[name='homeDescription']").validate({
+                        errorContainer: "#errorContainer",
+                        errorLabelContainer: "#errorContainer",
+                        errorElement: "li",
+                        rules: {
+                            property: "required",
+                            suburb: "required",
+                            state: "required",
+                            postcode: "required",
+                            "AreapropertyObj.Areaproperty": "required",
+                            "DescribeaddressObj.Describeaddress": "required",
+                            "IsbuildinglocatedObj.Isbuildinglocated": "required",
+                        },
+                        messages: {
+                            property: "Please select property",
+                            suburb: "Please select suburb",
+                            state: "Please select state",
+                            postcode: "Please enter post code",
+                            "AreapropertyObj.Areaproperty": "Please enter size of property",
+                            "DescribeaddressObj.Describeaddress": "Please describe the address",
+                            "IsbuildinglocatedObj.Isbuildinglocated": "Please select Home Building more than 100 metres from Uncleared Natural Bushland",
+                        },
+                        onfocusout: function (element) {
+                            this.element(element);
+                        }/*,*/
+                        //submitHandler: function (form) {
+                        //    form.submit();
+                        //}
+                    });
+                });
+</script>

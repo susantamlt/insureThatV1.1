@@ -1,0 +1,342 @@
+﻿@model InsureThatAPI.Models.FPLivestock
+@{
+    ViewBag.Title = "Livestock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / LIVESTOCK</h4>
+</div>
+
+<div>
+@using (Ajax.BeginForm("Livestock", "FarmPolicyLivestock", new { cid = @ViewBag.cid }, new AjaxOptions()
+{
+    HttpMethod = "POST"
+}, new { @id = "livestockID", @name = "livestockName" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.CustomerId)
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+        <div class="col-lg-12 clearfix col-sm-12 col-xs-12 policy-full-head">
+            <h2>LIVESTOCK</h2>
+            <h4>Part A – Death - <a href="#costumModal2" role="button" data-target="#costumModal2" data-toggle="modal">For more information click here</a></h4>
+            <div id="costumModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="pull-left">Part A - Death Cover </h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <img src="~/images/close-icon.png" />
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h5>Please provide the details for each animal to be covered:</h5>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Class of animal</p></div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(Model => Model.ClassOfAnimalFPObj.ClassofAnimal, @Model.ClassOfAnimalFPObj.ClassOfAnimalList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "classofanimal" })
+                @Html.HiddenFor(p => p.ClassOfAnimalFPObj.EiId)
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Type</p></div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(Model => Model.TypeOfAnimalFPObj.TypeofAnimal, @Model.TypeOfAnimalFPObj.TypeOfAnimalList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "typeofanimal" })
+                @Html.HiddenFor(p => p.TypeOfAnimalFPObj.EiId)
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What breed is your animal?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.BreedOfAnimalFPObj.BreedofAnimal, new { @class = "form-control form-border-bottom", @id = "breedofanimal" })
+            @Html.HiddenFor(p => p.BreedOfAnimalFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What is the age of the animal</p></div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(Model => Model.AgeOfAnimalFPObj.AgeofAnimal, @Model.AgeOfAnimalFPObj.AgeOfAnimalList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "ageofanimal" })
+                @Html.HiddenFor(p => p.AgeOfAnimalFPObj.EiId)
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What colour are they?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.ColourOfAnimalFPObj.ColourofAnimal, new { @class = "form-control form-border-bottom", @id = "colourofanimal" })
+            @Html.HiddenFor(p => p.ColourOfAnimalFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What is your animal used for?</p></div>
+            <div class="col-md-6">
+                @Html.DropDownListFor(Model => Model.UseOfAnimalFPObj.UseofAnimal, @Model.UseOfAnimalFPObj.UseOfAnimalList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "useofanimal" })
+                @Html.HiddenFor(p => p.UseOfAnimalFPObj.EiId)
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Describe their brand if applicable</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.DescBrandOfAnimalFPObj.BrandofAnimal, new { @class = "form-control form-border-bottom", @id = "brandofanimal" })
+            @Html.HiddenFor(p => p.DescBrandOfAnimalFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Describe their markings</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.DescMarksOfAnimalFPObj.MarkingsofAnimal, new { @class = "form-control form-border-bottom", @id = "markingsofanimal" })
+            @Html.HiddenFor(p => p.DescMarksOfAnimalFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Is the animal in sound health?</p></div>
+            <div class="col-md-6">
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptSoundHealthofAnimalFPObj.HealthofAnimal, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                    <label for="radio1"><span><span></span></span>Yes</label>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptSoundHealthofAnimalFPObj.HealthofAnimal, '0', new { @class = "buildingtype", @id = "buildingtype1" })
+                    <label for="radio1"><span><span></span></span>No</label>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>If no, please provide details</p></div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(p => p.DescSoundHealthofAnimalFPObj.Description, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                @Html.HiddenFor(p => p.DescSoundHealthofAnimalFPObj.EiId)
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Is there any contagious or infectious diseases in any of your stock?</p></div>
+            <div class="col-md-6">
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptDiseaseOfAnimalFPObj.DiseaseofAnimal, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>Yes</label>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptDiseaseOfAnimalFPObj.DiseaseofAnimal, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                    <label for="radio1"><span><span></span></span>No</label>
+                </div>
+                </div>
+            </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>If no, please provide details</p></div>
+            <div class="col-md-6">
+                @Html.TextBoxFor(p => p.DescDiseaseOfAnimalFPObj.Description, new { @class = "form-control form-border-bottom", @id = "diseasesofanimal" })
+                @Html.HiddenFor(p => p.DescDiseaseOfAnimalFPObj.EiId)
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Is the animal syndicated</p></div>
+            <div class="col-md-6">
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptAnimalSyndicatedFPObj.AnimalSyndicated, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>Yes</label>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptAnimalSyndicatedFPObj.AnimalSyndicated, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                    <label for="radio1"><span><span></span></span>No</label>
+                </div>
+                </div>
+            </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>For how much do you wish to insure your animal?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.SumInsuredLivestockFPObj.SumInsured, new { @class = "form-control form-border-bottom", @id = "suminsured" })
+            @Html.HiddenFor(p => p.SumInsuredLivestockFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10 ">
+            <div class="col-md-6"><p>You can choose the following option extras.  Click on each option to obtain further details</p></div>
+            <div class="col-md-6">
+                <div class="policy-loc-row col-md-6 col-sm-6 col-xs-6"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox1"><span><span></span></span><a href="#costumModal3" role="button" data-target="#costumModal3" data-toggle="modal">Infertility</a></label></div>
+                <div id="costumModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Infertility</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Insure that helps livestock farmers worldwide protect their assets from risks such as mortality, infertility, theft and disease. 
+                                </p>
+                                <p> We use the know-how of industry experts, such as livestock agents and vets, to assess risks and design fairly priced products</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="policy-loc-row col-md-6 col-sm-6 col-xs-6"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox2"><span><span></span></span><a href="#costumModal4" role="button" data-target="#costumModal4" data-toggle="modal">Loss of Use</a></label></div>
+                <div id="costumModal4" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Loss of Use</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Introducing full mortality and loss of use coverage, the best protection we can offer for your significant investment.
+                                </p>
+                                <p> Covers total and permanent infertility resulting from an accidental breeding injury. Requires a veterinarian statement of soundness, unless bound date of auction purchase.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="policy-loc-row col-md-6 col-sm-6 col-xs-6"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox3"><span><span></span></span><a href="#costumModal5" role="button" data-target="#costumModal5" data-toggle="modal">Theft</a></label></div>
+                <div id="costumModal5" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Theft</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Raising livestock and poultry to sell can be unpredictable and risky. That's why a solid and affordable livestock or poultry insurance policy is a necessit.
+                                </p>
+                                <p> This insurance protects your investment from those unexpected events and accidents that can decimate your animals and your livelihood.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="policy-loc-row col-md-6 col-sm-6 col-xs-6"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox4"><span><span></span></span><a href="#costumModal6" role="button" data-target="#costumModal6" data-toggle="modal">Unborn Foal</a></label></div>
+                <div id="costumModal6" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Unborn Foal</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Prospective Foal Insurance indemnifies you in the event that your unborn foal is not born alive or does not survive to a certain age.
+                                </p>
+                                <p> Most commonly, cover is arranged from the date that the mare tests pregnant 45 days after last service, through until the foal is born and reaches 30 days of age.
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10 ">
+            <div class="col-md-6"><p>Excess</p></div>
+            <div class="col-md-3">
+                @Html.DropDownListFor(Model => Model.ExcessLivestockFPObj.Excess, @Model.ExcessLivestockFPObj.ExcessList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "typeofunits" })
+                @Html.HiddenFor(p => p.ExcessLivestockFPObj.EiId)
+            </div>
+            <div class="col-md-3">
+                <div class="policy-loc-row"><input type="checkbox" name="ImposedLivestock.impose" id="impose"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+            </div>
+        </div>
+        <div class="col-lg-12 clearfix col-sm-12 col-xs-12 policy-full-head">
+            <h4>Part B</h4>
+            <h5>Semen and Embryos</h5>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>How many containers do you need to insure?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.NoOfContainersFPObj.NumberOfContainers, new { @class = "form-control form-border-bottom", @id = "noofcontainers" })
+            @Html.HiddenFor(p => p.NoOfContainersFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What is the maximum number of straws and ampoules in a container?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.MaxStrawsandAmpoulesFPObj.StrawAndAmpoules, new { @class = "form-control form-border-bottom", @id = "strawandampoules" })
+            @Html.HiddenFor(p => p.MaxStrawsandAmpoulesFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What is the maximum value of any one container and its contents?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.MaxValOneContainerFPObj.MaxValoneContainer, new { @class = "form-control form-border-bottom", @id = "maxvalonecontainer" })
+            @Html.HiddenFor(p => p.MaxValOneContainerFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>What is your annual turnover of straws and ampoules?</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.AnnualStrawsandAmpoulesFPObj.AnnualStrawandAmpoules, new { @class = "form-control form-border-bottom", @id = "annualStrawandAmpoules" })
+            @Html.HiddenFor(p => p.AnnualStrawsandAmpoulesFPObj.EiId)</div>
+        </div>
+
+        <div class="col-md-4 pull-right text-right">
+            <a href="#" class="button-3d nomargin tab-linker quot-prev-btn">Prev</a>
+            <img src="~/images/button-devider.png">
+            <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+        </div>
+    </div>
+
+
+}
+
+
+
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location1').click(function () {
+						        $("#policy-ed-del-wrap1").fadeIn('slow');
+						        $("#policy-ed-del-wrap2").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location2').click(function () {
+						        $("#policy-ed-del-wrap2").fadeIn('slow');
+						        $("#policy-ed-del-wrap1").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+

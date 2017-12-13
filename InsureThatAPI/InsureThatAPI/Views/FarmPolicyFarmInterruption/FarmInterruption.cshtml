@@ -1,0 +1,348 @@
+﻿@model InsureThatAPI.Models.FPFarmInterruption
+@{
+    ViewBag.Title = "FarmInterruption";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / FARM INTERRUPTION</h4>
+</div>
+<div>
+    @using (Ajax.BeginForm("FarmInterruption", "FarmPolicyFarmInterruption", new { cid =@ViewBag.cid }, new AjaxOptions()
+    {
+        HttpMethod = "POST"
+    }, new { @id = "farmInterruption", @name = "farmInterruption" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 policy-full-head">
+                <h2>Farm Interruption</h2>
+            </div>
+            <div class="clearfix"></div>
+            <div id="errorContainer"></div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-4"><p>Location</p></div>
+                @Html.HiddenFor(p => p.CustomerId)
+                <div class="col-md-8"><div class="col-md-10 col-sm-10 col-xs-10"><input type="text" name="location" class="form-control form-border-bottom"></div><div class="col-md-2 col-sm-2 col-xs-2"></div></div>
+            </div>
+            <h5 class="col-md-12 mt-10">Part A - Loss of Farm Income</h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>What is your expected farm income (excluding <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal">Agistment Income</a>) for the next year </p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear, new { @class = "form-control form-border-bottom", @id = "expFarmIncome" })
+                @Html.HiddenFor(p => p.ExpFarmIncomeNextYearFPObj.EiId)</div>
+                <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Agistment Income</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                </p>
+                                <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <p>How many months cover do you require? (This is called the <a href="#costumModal1" role="button" data-target="#costumModal2" data-toggle="modal">Indemnity Period</a>) </p>
+                    <div id="costumModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Indemnity Period</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>6</label></div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>9</label></div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                    <label for="radio1"><span><span></span></span>12</label></div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>18</label></div>
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>24</label></div>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.SumInsuredFarmIncomeFPObj.SumInsured, new { @class = "form-control form-border-bottom", @id = "suminsuredFarmIncome", @value = "$ 2,000,000" })
+                @Html.HiddenFor(p => p.SumInsuredFarmIncomeFPObj.EiId)</div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6"><p>Excess for loss of farm income</p></div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(Model => Model.ExcessFarmIncomeFPObj.Excess, @Model.ExcessFarmIncomeFPObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "excessFarmIncome" })
+                    @Html.HiddenFor(p => p.ExcessFarmIncomeFPObj.EiId)
+                </div>
+                <div class="col-md-3">
+                    <div class="policy-loc-row"><input type="checkbox" name="ImposedFarmIncomeObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                </div>
+            </div>
+            <h5 class="col-md-12 mt-10">Part B - Loss of Agistment Income (allowing other people’s animals to graze on your land for a fee)</h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>What is your expected Agistment Income for the next year</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear, new { @class = "form-control form-border-bottom", @id = "agistIncome" })
+                @Html.HiddenFor(p => p.ExpAgistIncomeNextYearFPObj.EiId)</div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>How many months cover do you require? (This is called the Indemnity Period) </p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>6</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                <label for="radio1"><span><span></span></span>9</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>12</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                <label for="radio1"><span><span></span></span>18</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                <label for="radio1"><span><span></span></span>24</label>
+                </div>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.SumInsuredAgistIncomeFPObj.SumInsured, new { @class = "form-control form-border-bottom", @id = "Agistsuminsured" })
+                @Html.HiddenFor(p => p.SumInsuredAgistIncomeFPObj.EiId)</div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6"><p>Excess for agistment income</p></div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(Model => Model.ExcessAgistIncomeFPObj.Excess, @Model.ExcessAgistIncomeFPObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "agistexcess" })
+                    @Html.HiddenFor(p => p.ExcessAgistIncomeFPObj.EiId)
+                </div>
+                <div class="col-md-3">
+                    <div class="policy-loc-row"><input type="checkbox" name="ImposedAgistObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                </div>
+            </div>
+            <h5 class="col-md-12 mt-10">Part C - Extra Costs – the extra costs incurred to keep your farm running normally</h5>
+
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>How many months cover do you require? (This is called the Indemnity Period) </p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>6</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                <label for="radio1"><span><span></span></span>9</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>12</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                <label for="radio1"><span><span></span></span>18</label>
+                </div>
+                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                <label for="radio1"><span><span></span></span>24</label>
+                </div>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.SumInsuredExtraCostFPObj.SumInsured, new { @class = "form-control form-border-bottom", @id = "suminsuredExtracost" })
+                @Html.HiddenFor(p => p.SumInsuredExtraCostFPObj.EiId)</div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6"><p>Excess for extra costs</p></div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(Model => Model.ExcessExtraCostFPObj.Excess, @Model.ExcessExtraCostFPObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "excessextracost" })
+                    @Html.HiddenFor(p => p.ExcessExtraCostFPObj.EiId)
+                </div>
+                <div class="col-md-3">
+                    <div class="policy-loc-row"><input type="checkbox" name="ImposedExtraCostObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                </div>
+            </div>
+            <h5 class="col-md-12 mt-10">Part D - Shearing Delays</h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
+                <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.SumInsuredShearingDelayFPObj.SumInsured, new { @class = "form-control form-border-bottom", @id = "suminsuredShearing" })
+                @Html.HiddenFor(p => p.SumInsuredShearingDelayFPObj.EiId)</div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-6"><p>Excess for Shearing Delays</p></div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(Model => Model.ExcessShearingDelayFPObj.Excess, @Model.ExcessShearingDelayFPObj.ExcessList,  new { @class = "form-control form-border-bottom description", @id = "excessShearing" })
+                    @Html.HiddenFor(p => p.ExcessShearingDelayFPObj.EiId)
+                </div>
+                <div class="col-md-3">
+                    <div class="policy-loc-row">
+                        <input type="checkbox" name="ImposedShearingObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-40">
+                <div class="col-md-8"></div>
+                <div class="col-md-6 pull-right text-right mt-30">
+                    <a href="#" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                    <img src="~/images/button-devider.png">
+                    <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location1').click(function () {
+						        $("#policy-ed-del-wrap1").fadeIn('slow');
+						        $("#policy-ed-del-wrap2").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location2').click(function () {
+						        $("#policy-ed-del-wrap2").fadeIn('slow');
+						        $("#policy-ed-del-wrap1").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+                    $(document).ready(function () {
+                        $.validator.addMethod("regex", function (value, element, regexp) {
+                            if (regexp.constructor != RegExp)
+                                regexp = new RegExp(regexp);
+                            else if (regexp.global)
+                                regexp.lastIndex = 0;
+                            return this.optional(element) || regexp.test(value);
+                        }, "Please check your input.");
+                        $("form[name='farmInterruption']").validate({
+                            errorContainer: "#errorContainer",
+                            errorLabelContainer: "#errorContainer",
+                            errorElement: "li",
+                            rules: {
+                                "ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear": {
+                                    regex: /^[0-9]*$/,
+                                },
+
+                                "SumInsuredFarmIncomeFPObj.SumInsured": {
+                                    regex: /^[0-9]*$/,
+                                },
+                                "ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear": {
+                                    regex: /^[0-9]*$/,
+                                },
+
+                                "SumInsuredAgistIncomeFPObj.SumInsured": {
+                                    regex: /^[0-9]*$/,
+                                },
+                                "SumInsuredExtraCostFPObj.SumInsured": {
+                                    regex: /^[0-9]*$/,
+                                },
+
+                                "SumInsuredShearingDelayFPObj.SumInsured": {
+                                    regex: /^[0-9]*$/,
+                                },
+                                
+                            },
+                            messages: {
+                                "ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear": {
+                                    regex: "Only numeric allowed in Expected Farm Income"
+                                },
+
+                                "SumInsuredFarmIncomeFPObj.SumInsured": {
+                                    regex: "Only numeric allowed in Sum Insured for Farm Income"
+                                },
+                                "ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear": {
+                                    regex: "Only numeric allowed in Expected Agistment Income"
+                                },
+
+                                "SumInsuredAgistIncomeFPObj.SumInsured": {
+                                    regex: "Only numeric allowed in Agistment Sum Insured"
+                                },
+                                "SumInsuredExtraCostFPObj.SumInsured": {
+                                    regex: "Only numeric allowed in Sum Insured for Extra cost"
+                                },
+
+                                "SumInsuredShearingDelayFPObj.SumInsured": {
+                                    regex: "Only numeric allowed in Sum Insured for Shearing Delays"
+                                },                               
+
+                            },
+                            onfocusout: function (element) {
+                                this.element(element);
+                            },
+                            submitHandler: function (form) {
+                                form.submit();
+                            }
+                        });
+                    });
+</script>
+

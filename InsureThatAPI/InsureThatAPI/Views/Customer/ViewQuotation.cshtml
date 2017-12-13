@@ -1,0 +1,109 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "ViewQuotation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="col-xs-12 endorsment-overview">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 policy-full-head">
+        <h2>QUOTATION</h2>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-right">
+        @*<a name="edit-again" class="agree-btn btn color-bk-btn">Edit Again</a>*@
+        @*<a name="accept-pay" class="agree-btn btn color-bk-btn">Accept &amp; Pay</a>*@
+        <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle",new { PcId=Model.PolicyData.PolicyNumber})">View Policy History</a>
+        <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer",new {PolicyNumber=Model.PolicyData.PolicyNumber })">View Insured</a>
+        <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer",new {CustomerId=1 })">Add Policy</a>
+    </div>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsment-overview">    
+    <div class="clearfix"></div>
+    <div class="col-md-12 quotation-wrapper">
+        <table class="table_color text-center">
+            <tr>
+                <th colspan="6" class="heading_space">Premium and Government Charges</th>
+            </tr>
+            <tr>
+                <td class="no_data"></td>
+                <td class="row_space">Our<br>Premium</td>
+                <td class="row_space">Fire Service<br>Levy</td>
+                <td class="row_space">GST</td>
+                <td class="row_space">Stamp<br>Duty</td>
+                <td class="row_space">Gross<br>Premium</td>
+            </tr>
+            @for (int i = 0; i < Model.PremiumData.Count(); i++)
+            {
+                <tr>
+                  
+                    <td class="value">@Model.PremiumData[i].SectionName</td>
+                    <td>$@Model.PremiumData[i].Base</td>
+                    <td>$@Model.PremiumData[i].Fsl</td>
+                    <td>$@Model.PremiumData[i].Gst</td>
+                    <td>$@Model.PremiumData[i].StampDuty</td>
+                    <td>$@Model.PremiumData[i].Gross</td>
+                 
+                </tr>
+                @*<tr class="row_span"><td colspan="6">&nbsp;</td></tr>
+                <tr>
+                    <td class="value">Total</td>
+                    <td>$451.44</td>
+                    <td>$0.00</td>
+                    <td>$45.14</td>
+                    <td>$44.69</td>
+                    <td>$541.27</td>
+                </tr>*@
+            }
+          
+            <tr>
+                <td class="value" colspan="3" rowspan="3" id="row_span">&nbsp;</td>
+                <td colspan="2" class="text-right fee">Underwriter Fee</td>
+                <td>$75.00</td>
+            </tr>          
+            <tr>
+                <td colspan="2" class="text-right fee">GST on Fee</td>
+                <td>$7.50</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="text-right" id="invoice">Invoice Amount</td>
+                <td>$623.77</td>
+            </tr>
+        </table>
+    </div>
+
+
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+

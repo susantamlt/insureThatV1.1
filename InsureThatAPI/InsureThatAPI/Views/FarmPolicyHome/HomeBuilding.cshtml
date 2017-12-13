@@ -1,0 +1,189 @@
+﻿@model InsureThatAPI.Models.HomeBuilding
+@{
+    ViewBag.Title = "Home Building";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["CompletionTrackFPHB"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / HOME BUILDING</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("MainDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>  }>Home Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ConstructionDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>  }>Construction Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OccupancyDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>  }>Occupancy Details</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Home Building</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParty", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>   }>Interested Party</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("HomeBuilding", "FarmPolicyHome", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "homeBuilding", @name = "homeBuilding" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.CustomerId)
+                <div id="ptab6">
+                    @Html.HiddenFor(p => p.CompletionTrackFPHB, new { @id = "completiontrack" })
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>HOME BUILDING</h2></div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <div class="col-md-6"><p>Do you require cover for <span class="cover-options">accidental damage</span> or just <span class="cover-options">defined events</span></p></div>
+                        <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" checked="" name="health" id="yes"><label for="radio1"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="health" id="no"><label for="radio1"><span><span></span></span>No</label></div>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <div class="col-md-6"><p>How much would it cost to replace your Home Building?</p></div>
+                        <div class="col-md-6"><input type="text" name="retailvalue" id="retailvalue" class="form-control form-border-bottom"></div>
+                    </div>
+                    <div class="mt-10 mb-10 clearfix ">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">How many years is it since you last made an insurance claim on your Home Buildings?<a href="#"><img src="~/images/help-icon.png" /></a></p>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="years" id="years"><label for="radio1"><span><span></span></span>0 year</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="years" id="years"><label for="radio1"><span><span></span></span>1 year</label></div>
+                            <div class="col-md-5 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="years" id="years"><label for="radio1"><span><span></span></span>2 or more years</label></div>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Excess</p>
+                        <div class="col-md-3">
+                            <select class="gray-bg-underline form-control form-border-bottom field-length-sm">
+                                <option value="0">Select</option>
+                                <option value="1">$300</option>
+                                <option value="2">$450</option>
+                                <option value="3">$650</option>
+                                <option value="4">$850</option>
+                                <option value="5">$1000</option>
+                                <option value="6">$2000</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="policy-loc-row"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">If your home building is tenanted, do you want the definition of Home Buildings extended to cover fitted carpets, freestanding home appliances and window covering</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="tenanted" id="tenanted" /><label for="tenanted"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="tenanted" id="tenanted1" /><label for="tenanted1"><span><span></span></span>No</label></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right">
+                        <a href="@Url.Action("OccupancyDetails", "FarmPolicyHome")" class="button-3d nomargin tab-linker quot-prev-btn" rel="3">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='mainDetails']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "PhysicaladdresObj.Physicaladdres": {
+                    required: true,
+                    regex: /^[a-zA-Z0-9, ]*$/,
+                },
+                "UNBushlandObj.UNBushland": {
+                    required: true,
+                },
+            },
+            messages: {
+                "PhysicaladdresObj.Physicaladdres": {
+                    required: "Please enter physical addres",
+                    regex: "Special character & numeric not allowed in physical addres"
+                },
+                "UNBushlandObj.UNBushland": {
+                    required: "Please enter uncleared natural bushland"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

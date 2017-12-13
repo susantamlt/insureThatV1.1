@@ -1,0 +1,210 @@
+﻿@model InsureThatAPI.Models.OccupancyDetails
+@{
+    ViewBag.Title = "Occupancy Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["CompletionTrackFPHB"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / HOME BUILDING</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("MainDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text> }>Home Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ConstructionDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text> }>Construction Details</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Occupancy Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("HomeBuilding", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text> }>Home Building</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParty", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>    }>Interested Party</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("OccupancyDetails", "FarmPolicyHome", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "occupancyDetails", @name = "occupancyDetails" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.CustomerId)
+                <div id="ptab3">
+                    @Html.HiddenFor(p => p.CompletionTrackFPHB, new { @id = "completiontrack" })
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>OCCUPANCY DETAILS</h2></div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Who normally lives in home?</p>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WholivesObj.Wholives, '0', new { @id = "normalstay" })<label for="radio1"><span><span></span></span>You</label></div>
+                            <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WholivesObj.Wholives, '1', new { @id = "normalstay1" })<label for="radio1"><span><span></span></span>Tenants</label></div>
+                            <div class="col-md-5 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WholivesObj.Wholives, '2', new { @id = "normalstay2" })<label for="radio1"><span><span></span></span>You and boarders</label></div>
+                        </div>
+                        @Html.HiddenFor(p => p.WholivesObj.EiId)
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Is the Building?</p>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '0', new { @id = "buildingtype" })<label for="radio1"><span><span></span></span>Occupied</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '1', new { @id = "buildingtype1" })<label for="radio1"><span><span></span></span>Tenanted</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '2', new { @id = "buildingtype2" })<label for="radio1"><span><span></span></span>Holiday Home</label></div>
+                        </div>
+                        @Html.HiddenFor(p => p.IsbuildingObj.EiId)
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">In the next 12 months, will the home be unoccupied for 90 consecutive days or more?</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ConsecutiveObj.Consecutive, '1', new { @id = "unoccupied" })<label for="unoccupied"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ConsecutiveObj.Consecutive, '0', new { @id = "unoccupied1" })<label for="unoccupied1"><span><span></span></span>No</label></div>
+                        </div>
+                        @Html.HiddenFor(p => p.ConsecutiveObj.EiId)
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">Is the building used for business?</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.UsedbusinessObj.Usedbusiness, '1', new { @id = "usedbusiness" })<label for="business-use"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.UsedbusinessObj.Usedbusiness, '0', new { @id = "usedbusiness1" })<label for="business-use1"><span><span></span></span>No</label></div>
+                        </div>
+                        @Html.HiddenFor(p => p.UsedbusinessObj.EiId)
+                    </div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $(".describe-business-wrap").hide();
+                            $("#usedbusiness").click(function () {
+                                if ($(this).is(":checked")) {
+                                    $(".describe-business-wrap").show(300);
+                                }
+                            });
+                            $("#usedbusiness1").click(function () {
+                                if ($(this).is(":checked")) {
+                                    $(".describe-business-wrap").hide(300);
+                                }
+                            });
+                        });
+                    </script>
+                    <div class="clearfix mb-md-30 mt-10 mb-10 describe-business-wrap">
+                        <div class="col-md-6"><p>Describe Business</p></div>
+                        <div class="col-md-6">
+                            @Html.TextAreaFor(m => m.DesbusinessObj.Desbusiness, new { @class = "form-control form-border-bottom", @id= "describe-business" })  
+                            @Html.HiddenFor(p => p.DesbusinessObj.EiId)
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right">
+                        <a href="@Url.Action("ConstructionDetails", "FarmPolicyHome")" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='occupancyDetails']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "WholivesObj.Wholives": "required",
+                "IsbuildingObj.Isbuilding": "required",
+                "ConsecutiveObj.Consecutive": "required",
+                "UsedbusinessObj.Usedbusiness": "required",
+                "DesbusinessObj.Desbusiness": {
+                    required: function (el) {
+                        if ($('#usedbusiness').is(":checked")) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    regex: /^[a-zA-Z]*$/,
+                },
+            },
+            messages: {
+                "WholivesObj.Wholives": "Please select who normally lives in home",
+                "IsbuildingObj.Isbuilding": "Please select Is the Building",
+                "ConsecutiveObj.Consecutive": "Please select unoccupied for 90 consecutive days",
+                "UsedbusinessObj.Usedbusiness": "Please select businused for businessess",
+                "UsedbusinessObj.Usedbusiness": {
+                    required: "Please enter used for business",
+                    regex: "Special character & numeric not allowed in used for business"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

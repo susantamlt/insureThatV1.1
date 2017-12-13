@@ -1,0 +1,237 @@
+﻿@model InsureThatAPI.Models.FPHomeContents
+@{
+    ViewBag.Title = "HomeContents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / HOME CONTENTS</h4>
+</div>
+
+<div>
+
+@using (Ajax.BeginForm("HomeContents", "FarmPolicyHomecontents", new { cid = @ViewBag.cid }, new AjaxOptions()
+{
+    HttpMethod = "POST"
+}, new { @id = "homecontentFP", @name = "homecontentFP" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.CustomerId)
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+        <div class="col-lg-12 clearfix col-sm-12 col-xs-12 policy-full-head">
+            <h2>HOME CONTENTS</h2>
+        </div>
+        <div class="clearfix"></div>
+        <div id="errorContainer"></div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>Do you require cover for <span class="cover-options">accidental damage</span> or just <span class="cover-options">defined events</span></p></div>
+            <div class="col-md-6">
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptCoverAccidentalDamageFPObj.AccidentalDamage, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>Yes</label></div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptCoverAccidentalDamageFPObj.AccidentalDamage, '0', new { @class = "buildingtype", @id = "buildingtype1" })
+                <label for="radio1"><span><span></span></span>No</label></div>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-6"><p>How much Cover do you need for your unspecified contents</p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.CoverForUnspecifiedContentsFPObj.CoverUnspecifiedContent, new { @class = "form-control form-border-bottom", @id = "unspecifiedcontent" })
+            @Html.HiddenFor(p => p.CoverForUnspecifiedContentsFPObj.EiId)</div>
+        </div>
+        <div class="col-md-12 mb-md-30 mt-10 mb-10">
+            <h4>Specified contents</h4>
+            <p>If the following items, pairs, collections or sets are valued at more than $10,000 or 25% of the sum insured they need to be listed separately</p>
+            <p>a watch, a curio, a work of art, a fur, a coin or collection of coins, a medal or collection of medals, a stamp or collection of stamps, a document or set of documents, an item or set of jewellery or a gold, silver or platinum object</p>
+        </div>
+
+        <div class="clearfix mb-md-30 mt-10 mb-10" id="processTabs">
+            <div class="col-md-12 table-8">
+                <h5>Please list them here</h5>
+                <table class="table" style=" width: 100%; ">
+                    <thead>
+                        <tr>
+                            <th class="space_left">Description</th>
+                            <th class="space_left">Sum Insured</th>
+                            <th class="space_right">&nbsp;</th>
+                        </tr>
+                        </thead>
+                    <tbody>
+                        <tr id="tname-tr-1">
+                            <td class="no-border">
+                                @Html.DropDownListFor(Model => Model.DescriptionFPObj.Description, @Model.DescriptionFPObj.DescriptionList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "description" })
+                                @Html.HiddenFor(p => p.DescriptionFPObj.EiId)
+                            </td>
+                            <td class="no-border">
+                                @Html.TextBoxFor(p => p.SumInsuredFPObj.SumInsured, new { @class = "form-control form-border-bottom", @id = "suminsured" })
+                            @Html.HiddenFor(p => p.SumInsuredFPObj.EiId)
+                        </td>
+                            <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                    </tr>
+                    <tr>
+                        <td class="no-border"><input type="text" name="sum" id="sum" class="form-control form-border-bottom" placeholder="Total value"></td>
+                        <td class="no-border"><input type="text" name="sum" id="sum" class="form-control form-border-bottom" placeholder="Auto calculate"></td>
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-md-4"><p>Do you require cover for <span class="cover-options">accidental damage</span> or just <span class="cover-options">defined events</span></p></div>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptHCcoverOptionsFPObj.CoverOptions, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                    <label for="radio1"><span><span></span></span>Yes</label>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptHCcoverOptionsFPObj.CoverOptions, '0', new { @class = "buildingtype", @id = "buildingtype1" })
+                    <label for="radio1"><span><span></span></span>No</label>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10 ">
+            <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">How many years is it since you last made an insurance claim on your home contents?</p>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptHCLastPaidInsuranceFPObj.LastpaidInsurance, '0', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>0 year</label></div>
+                <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptHCLastPaidInsuranceFPObj.LastpaidInsurance, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>1 year</label></div>
+                <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.OptHCLastPaidInsuranceFPObj.LastpaidInsurance, '2', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>2 or more years</label></div>
+
+            </div>
+        </div>
+
+        <div class="col-md-6 pull-right text-right mt-30">
+            <a href="#" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+            <img src="~/images/button-devider.png">
+            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+        </div>
+    </div>
+
+}
+
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location1').click(function () {
+						        $("#policy-ed-del-wrap1").fadeIn('slow');
+						        $("#policy-ed-del-wrap2").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location2').click(function () {
+						        $("#policy-ed-del-wrap2").fadeIn('slow');
+						        $("#policy-ed-del-wrap1").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+                    $('.dropdown').hover(function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500); }, function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500); });
+</script>
+
+<script type="text/javascript">
+    function tnameAdd(id) {
+        var countId = id + 1;
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.DropDownListFor(Model => Model.DescriptionFPObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom description", @id = "description" })@Html.HiddenFor(p => p.DescriptionFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SumInsuredFPObj.SumInsured, new { @class = "form-control form-border-bottom sumoftotalcover", @id = "suminsured" })@Html.HiddenFor(p => p.SumInsuredFPObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+
+        $.ajax({
+            url: '/farm/farmajaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "homeContents" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    var html2 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $.each(response.con, function (i, v) {
+                        html2 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tname-" + id).html(replaceA);
+                    $("#tname-tr-" + id).after(html);
+                    $("#tname-tr-" + countId + ' #description').html(html1);             
+
+                    $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);                   
+                    $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                }
+            }
+        });
+    }
+    function tnameRemove(id) {
+        $("#tname-tr-" + id).remove();
+    }
+</script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+                    $(document).ready(function () {
+                        $.validator.addMethod("regex", function (value, element, regexp) {
+                            if (regexp.constructor != RegExp)
+                                regexp = new RegExp(regexp);
+                            else if (regexp.global)
+                                regexp.lastIndex = 0;
+                            return this.optional(element) || regexp.test(value);
+                        }, "Please check your input.");
+                        $("form[name='homecontentFP']").validate({
+                            errorContainer: "#errorContainer",
+                            errorLabelContainer: "#errorContainer",
+                            errorElement: "li",
+                            rules: {
+                                "CoverForUnspecifiedContentsFPObj.CoverUnspecifiedContent": {
+                                    regex: /^[0-9]*$/,
+                                },                           
+
+                            },
+                            messages: {
+
+                                "CoverForUnspecifiedContentsFPObj.CoverUnspecifiedContent": {
+                                    regex: "Only Numeric Allowed in Cover for Unspecified Contents"
+                                },                                
+
+                            },
+                            onfocusout: function (element) {
+                                this.element(element);
+                            },
+                            submitHandler: function (form) {
+                                form.submit();
+                            }
+                        });
+                    });
+</script>
