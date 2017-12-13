@@ -32,6 +32,14 @@ namespace InsureThatAPI.Controllers
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> HomeDescription(int? cid, int? PcId)
         {
+            var db = new MasterDataEntities();
+            string policyid = null;
+            HB2HomeDescription homebuilding = new HB2HomeDescription();
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (Session["Policyinclustions"] != null)
             {
                 List<string> PolicyInclustions = new List<string>();
@@ -81,9 +89,63 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 1 });
+                if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+                {
+                    if (policyinclusion.PolicyInclusions.Length > 1)
+                    {
+                        var policyinclusions = policyinclusion.PolicyInclusions.Split('-');
+                        if (policyinclusions != null && policyinclusions.Length > 0)
+                        {
+
+                            if (policyinclusions[0] == "1")
+                            {
+
+                            }
+                            else
+                            {
+                                if (policyinclusions[1] == "1")
+                                {
+                                    return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid });
+                                }
+                                if (policyinclusions[2] == "1")
+                                {
+                                    return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid });
+                                }
+                                if (policyinclusions[3] == "1")
+                                {
+                                    return RedirectToAction("FarmContents", "Farm", new { cid = cid });
+                                }
+                                if (policyinclusions[4] == "1")
+                                {
+                                    return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
+                                }
+                                if (policyinclusions[5] == "1")
+                                {
+                                    return RedirectToAction("TravelCover", "Travel", new { cid = cid });
+                                }
+                                if (policyinclusions[6] == "1")
+                                {
+                                    return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
+                                }
+
+                                if (policyinclusions[7] == "1")
+                                {
+                                    return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
+                                }
+                                else if (policyinclusions[8] == "1")
+                                {
+                                    return RedirectToAction("PetsCover", "Pets", new { cid = cid });
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.FarmPolicy) });
+                }
             }
-            HB2HomeDescription homebuilding = new HB2HomeDescription();
+
             homebuilding.LocationObj = new Locations();
             homebuilding.LocationObj.EiId = 60133;
             homebuilding.LocationObj.Location = "";
@@ -114,9 +176,6 @@ namespace InsureThatAPI.Controllers
 
             homebuilding.DescribeaddressObj = new DescribeAddresses();
             homebuilding.DescribeaddressObj.EiId = 60007;
-
-            var db = new MasterDataEntities();
-            string policyid = null;
             if (PcId != null && PcId > 0)
             {
                 policyid = PcId.ToString();
@@ -147,49 +206,7 @@ namespace InsureThatAPI.Controllers
                 }
 
             }
-            else
-            {
-                HttpClient hclient = new HttpClient();
-                hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                string PlainTextEncrpted = string.Empty;
-                string ApiKey = string.Empty;
-                ApiKey = Session["apiKey"].ToString();
-                HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=2&ProfileUnId=1");/*insureddetails.InsuredID */
-                var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-                SectionD sdata = new SectionD();
-                homebuilding.SectionDatas = JsonConvert.DeserializeObject<SectionD>(EmpResponse);
-                if (homebuilding.SectionDatas.ErrorMessage != null && homebuilding.SectionDatas.ErrorMessage.Count > 0 && homebuilding.SectionDatas.ErrorMessage.Contains("API Session Expired"))
-                {
-                    return RedirectToAction("AgentLogin", "Login");
-                }
-                if(homebuilding.SectionDatas!=null && homebuilding.SectionDatas.SectionData.ValueData!=null)
-                {
-                    for(int value=0; value<=homebuilding.SectionDatas.SectionData.ValueData.Count; value++ )
-                    {
-                        db.IT_InsertCustomerQnsData(cid, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.SectionDatas.SectionData.ValueData[value].Element.ElId, homebuilding.SectionDatas.SectionData.ValueData[value].Value, Convert.ToInt32(PolicyType.RLS), policyid);//need to change
-                        if (homebuilding.SectionDatas.SectionData.ValueData[value].Element.ElId == homebuilding.LocationObj.EiId)
-                        {
-                        
-                            homebuilding.LocationObj.Location = homebuilding.SectionDatas.SectionData.ValueData[value].Value;
-                        }
-                        if (homebuilding.SectionDatas.SectionData.ValueData[value].Element.ElId == homebuilding.AreapropertyObj.EiId && homebuilding.SectionDatas.SectionData.ValueData[value].Value!=null )
-                        {
-                        
-                            homebuilding.AreapropertyObj.Areaproperty = Convert.ToInt32(homebuilding.SectionDatas.SectionData.ValueData[value].Value);
-                        }
-                        if (homebuilding.SectionDatas.SectionData.ValueData[value].Element.ElId == homebuilding.IsbuildinglocatedObj.EiId && homebuilding.SectionDatas.SectionData.ValueData[value].Value!=null)
-                        {
-                         
-                            homebuilding.IsbuildinglocatedObj.Isbuildinglocated  = Convert.ToInt32(homebuilding.SectionDatas.SectionData.ValueData[value].Value);
-                        }
-                        if (homebuilding.SectionDatas.SectionData.ValueData[value].Element.ElId == homebuilding.DescribeaddressObj.EiId)
-                        {
-                         
-                            homebuilding.DescribeaddressObj.Describeaddress = Convert.ToInt32(homebuilding.SectionDatas.SectionData.ValueData[value].Value);
-                        }
-                    }
-                }
-            }
+        
             var suburblist = db.IT_Master_GetSuburbList().ToList();
 
             homebuilding.SubUrb = suburblist.Where(s => !string.IsNullOrEmpty(s)).Select(s => new SelectListItem() { Text = s, Value = s }).ToList();
@@ -347,7 +364,7 @@ namespace InsureThatAPI.Controllers
             constructionDetails.DomesticdwellingObj.EiId = 60057;
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(RLSSection.HomeBuilding),Convert.ToInt32(PolicyType.RLS),policyid).ToList();
+            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
 
@@ -525,7 +542,7 @@ namespace InsureThatAPI.Controllers
 
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding),Convert.ToInt32(PolicyType.RLS),policyid).ToList();
+            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
                 if (details.Exists(q => q.QuestionId == occupancydetails.WholivesObj.EiId))
@@ -652,7 +669,7 @@ namespace InsureThatAPI.Controllers
             MasterDataEntities db = new MasterDataEntities();
             // interestedparties.CustomerId = cid.Value;
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(RLSSection.HomeBuilding),Convert.ToInt32(PolicyType.RLS),policyid).ToList();
+            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
                 if (details.Exists(q => q.QuestionId == interestedparties.CoverhomebuildingObj.EiId))
@@ -754,7 +771,7 @@ namespace InsureThatAPI.Controllers
             homebuilding.ExcessObj.EiId = 60197;
             MasterDataEntities db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding),Convert.ToInt32(PolicyType.RLS),policyid).ToList();
+            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
                 if (details.Exists(q => q.QuestionId == homebuilding.CostforRebuildingObj.EiId))
@@ -812,7 +829,7 @@ namespace InsureThatAPI.Controllers
                 PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
                 loginKey = logindetails.APIkeyEncrypt(PlainTextEncrpted, EncrptForLogin);
 
-                var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding),Convert.ToInt32(PolicyType.RLS),policyid).ToList();
+                var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
                 var Qlist = new List<KeyValuePair<string, int>>();
                 foreach (var row in details)
                 {
