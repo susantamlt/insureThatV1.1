@@ -25,6 +25,7 @@ namespace InsureThatAPI.Models
         public IEnumerable<SelectListItem> QList { get; set; }
         public SectionD SectionDatas { get; set; }
         public string PolicyInclusions { get; set; }
+        public string PolicyId { get; set; }
 
     }
     public class SectionD

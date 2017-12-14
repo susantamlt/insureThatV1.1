@@ -142,13 +142,10 @@ namespace InsureThatAPI.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.FarmPolicy) });
+                    return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.RLS) });
                 }
             }
 
-            homebuilding.LocationObj = new Locations();
-            homebuilding.LocationObj.EiId = 60133;
-            homebuilding.LocationObj.Location = "";
             if (Session["apiKey"] != null)
             {
                 homebuilding.ApiKey = Session["apiKey"].ToString();
@@ -168,6 +165,10 @@ namespace InsureThatAPI.Controllers
             {
                 homebuilding.CustomerId = cid.Value;
             }
+
+            homebuilding.LocationObj = new Locations();
+            homebuilding.LocationObj.EiId = 60133;
+            homebuilding.LocationObj.Location = "";
             homebuilding.AreapropertyObj = new Areapropertys();
             homebuilding.AreapropertyObj.EiId = 60009;
             //homebuilding.AreapropertyObj.Areaproper
@@ -179,6 +180,7 @@ namespace InsureThatAPI.Controllers
             if (PcId != null && PcId > 0)
             {
                 policyid = PcId.ToString();
+                homebuilding.PolicyId = policyid;
             }
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
@@ -213,7 +215,7 @@ namespace InsureThatAPI.Controllers
             return View(homebuilding);
         }
         [HttpPost]
-        public ActionResult HomeDescription(int? cid, HB2HomeDescription homebuilding)
+        public ActionResult HomeDescription(int? cid,int? PcId, HB2HomeDescription homebuilding)
         {
             var db = new MasterDataEntities();
             if (cid != null)
@@ -232,10 +234,10 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.AreapropertyObj.EiId, homebuilding.AreapropertyObj.Areaproperty.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
                 }
-                //if (homebuilding.LocationObj.Location != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(homebuilding.CustomerId, 1, homebuilding.LocationObj.EiId, homebuilding.LocationObj.Location);
-                //}
+                if (homebuilding.LocationObj.Location != null)
+                {
+                    db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.LocationObj.EiId, homebuilding.LocationObj.Location, Convert.ToInt32(PolicyType.RLS), policyid);
+                }
                 if (homebuilding.IsbuildinglocatedObj.Isbuildinglocated != null)
                 {
                     db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.IsbuildinglocatedObj.EiId, homebuilding.IsbuildinglocatedObj.Isbuildinglocated.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
