@@ -95,7 +95,9 @@ namespace InsureThatAPI.Models
     public class HB2ConstructionDetails
     {
         public int CustomerId { get; set; }
+        public int? PolicyId { get; set; }
         public string ApiKey { get; set; }
+        public string PolicyInclusions { get; set; }
         public string CompletionTrack { get; set; }
         //public TypeBuildings TypebuildingObj { get; set; }
         //public DescribeBuildings DescribebuildingObj { get; set; }
@@ -111,6 +113,9 @@ namespace InsureThatAPI.Models
     }
     public class HB2OccupancyDetails
     {
+        public int? PolicyId { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyInclusions { get; set; }
         public int CustomerId { get; set; }
         public string CompletionTrack { get; set; }
         public WhoLives WholivesObj { get; set; }
@@ -138,6 +143,9 @@ namespace InsureThatAPI.Models
     }
     public class HB2InterestedParties
     {
+        public int? PolicyId { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyInclusions { get; set; }
         public string CompletionTrack { get; set; }
         public int CustomerId { get; set; }
         public Locations LocationObj { get; set; }
@@ -169,6 +177,9 @@ namespace InsureThatAPI.Models
     public class HB2HomeBuilding
     {
         public int CustomerId { get; set; }
+        public int? PolicyId { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyInclusions { get; set; }
         public string completiontrack { get; set; }
         public Locations LocationObj { get; set; }
         public CostForRebuilding CostforRebuildingObj { get; set; }

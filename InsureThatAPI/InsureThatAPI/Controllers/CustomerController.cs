@@ -446,35 +446,67 @@ namespace InsureThatAPI.Controllers
                                 }
                                 if (model.UnitData[pi].Name == "Farm Property")
                                 {
-                                    policystringarray[4] = "1";
+                                    policystringarray[4] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[4] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Valuables")
                                 {
-                                    policystringarray[3] = "1";
+                                    policystringarray[3] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[3] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Home Contents")
                                 {
-                                    policystringarray[1] = "1";
+                                    policystringarray[1] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[1] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Travels")
                                 {
-                                    policystringarray[2] = "1";
+                                    policystringarray[2] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[2] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Liability")
                                 {
-                                    policystringarray[5] = "1";
+                                    policystringarray[5] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[5] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Boat")
                                 {
-                                    policystringarray[6] = "1";
+                                    policystringarray[6] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[6] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Motors")
                                 {
-                                    policystringarray[7] = "1";
+                                    policystringarray[7] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[7] = "-0";
                                 }
                                 if (model.UnitData[pi].Name == "Pets")
                                 {
-                                    policystringarray[8] = "1";
+                                    policystringarray[8] = "-1";
+                                }
+                                else
+                                {
+                                    policystringarray[8] = "-0";
                                 }
                             }
                             else
@@ -482,8 +514,10 @@ namespace InsureThatAPI.Controllers
                                 break;
                             }
                         }
-                        model.PolicyInclusions = policystringarray.ToString();
-                        var insertpolicy = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, PcId.ToString(), Convert.ToInt32(PolicyType.RLS)).SingleOrDefault();
+                        model.PolicyInclusions =  string.Join("", policystringarray);
+
+                     
+                       // var insertpolicy = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, PcId.ToString(), Convert.ToInt32(PolicyType.RLS)).SingleOrDefault();
                         if (policystringarray[0] == "1")
                         {
                             return RedirectToAction("HomeDescription", "RuralLifeStyle", new {cid=cid, PcId = PcId, });
