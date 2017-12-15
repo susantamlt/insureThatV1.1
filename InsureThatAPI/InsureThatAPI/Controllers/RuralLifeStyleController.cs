@@ -34,8 +34,12 @@ namespace InsureThatAPI.Controllers
         {
             var db = new MasterDataEntities();
             string policyid = null;
+            if(PcId!=null && PcId.HasValue)
+            {
+                policyid = PcId.ToString();
+            }
             HB2HomeDescription homebuilding = new HB2HomeDescription();
-            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.RLS)).FirstOrDefault();
             if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
             {
                 homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
@@ -142,7 +146,7 @@ namespace InsureThatAPI.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.RLS) });
+                    return RedirectToAction("PolicyInclustions", "Customer", new { cid = cid, type = Convert.ToInt32(PolicyType.RLS) });
                 }
             }
 
@@ -228,6 +232,17 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = homebuilding.CustomerId;
             }
             string policyid = null;
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                homebuilding.PolicyId = PcId.ToString();
+            }
+
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (cid.HasValue && cid > 0)
             {
                 if (homebuilding.AreapropertyObj.Areaproperty != null)
@@ -276,7 +291,7 @@ namespace InsureThatAPI.Controllers
                     homebuilding.CompletionTrack = Session["completionTrack"].ToString();
                 }
                 // homebuilding.CompletionTrack = "1-0-0-0-0";
-                return RedirectToAction("ConstructionDetails", new { cid = cid });
+                return RedirectToAction("ConstructionDetails", new { cid = cid ,PcId=PcId});
             }
             return View(homebuilding);
         }
@@ -304,15 +319,27 @@ namespace InsureThatAPI.Controllers
         }
         #endregion
         [HttpGet]
-        public ActionResult ConstructionDetails(int? cid)
+        public ActionResult ConstructionDetails(int? cid,int? PcId)
         {
             NewPolicyDetailsClass ConstructionDetailsmodel = new NewPolicyDetailsClass();
             List<SelectListItem> ExternalWallsMadeList = new List<SelectListItem>();
             ExternalWallsMadeList = ConstructionDetailsmodel.ExternalWallsMadeList();
             List<SelectListItem> IsRoofMadeOfList = new List<SelectListItem>();
             IsRoofMadeOfList = ConstructionDetailsmodel.RoofMadesList();
-
+            var db = new MasterDataEntities();
+            string policyid = null;
             HB2ConstructionDetails constructionDetails = new HB2ConstructionDetails();
+            if (PcId!=null && PcId>0)
+            {
+                policyid = PcId.ToString();
+                constructionDetails.PolicyId = PcId;
+            }
+        
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                constructionDetails.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -364,8 +391,7 @@ namespace InsureThatAPI.Controllers
 
             constructionDetails.DomesticdwellingObj = new DomesticDwellings();
             constructionDetails.DomesticdwellingObj.EiId = 60057;
-            var db = new MasterDataEntities();
-            string policyid = null;
+           
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
@@ -412,7 +438,7 @@ namespace InsureThatAPI.Controllers
             return View(constructionDetails);
         }
         [HttpPost]
-        public ActionResult ConstructionDetails(HB2ConstructionDetails ConstructionDetails, int? cid)
+        public ActionResult ConstructionDetails(HB2ConstructionDetails ConstructionDetails, int? cid,int? PcId)
         {
             var db = new MasterDataEntities();
             if (cid != null)
@@ -432,6 +458,17 @@ namespace InsureThatAPI.Controllers
             ConstructionDetails.ExtwallsmadeObj.ExtwallsmadeList = ExternalWallsMadeList;
             ConstructionDetails.RoofmadeObj.RoofmadeList = IsRoofMadeOfList;
             string policyid = null;
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                ConstructionDetails.PolicyId = PcId;
+            }
+
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                ConstructionDetails.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (ConstructionDetails.CustomerId != null && ConstructionDetails.CustomerId != 0)
             {
                 if (ConstructionDetails.DescribeexternalwallsObj.Describeexternalwall != null)
@@ -499,10 +536,10 @@ namespace InsureThatAPI.Controllers
                     ConstructionDetails.CompletionTrack = Session["completionTrack"].ToString();
                 }
             }
-            return RedirectToAction("OccupancyDetails", new { cid = ConstructionDetails.CustomerId });
+            return RedirectToAction("OccupancyDetails", new { cid = ConstructionDetails.CustomerId,PcId=PcId });
         }
         [HttpGet]
-        public ActionResult OccupancyDetails(int? cid)
+        public ActionResult OccupancyDetails(int? cid,int? PcId)
         {
             HB2OccupancyDetails occupancydetails = new HB2OccupancyDetails();
             occupancydetails.WholivesObj = new WhoLives();
@@ -544,6 +581,16 @@ namespace InsureThatAPI.Controllers
 
             var db = new MasterDataEntities();
             string policyid = null;
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                occupancydetails.PolicyId = PcId;
+            }
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                occupancydetails.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
@@ -573,7 +620,7 @@ namespace InsureThatAPI.Controllers
             return View(occupancydetails);
         }
         [HttpPost]
-        public ActionResult OccupancyDetails(int? cid, HB2OccupancyDetails OccupancyDetails)
+        public ActionResult OccupancyDetails(int? cid, HB2OccupancyDetails OccupancyDetails,int? PcId)
         {
             var db = new MasterDataEntities();
             if (cid != null)
@@ -586,6 +633,17 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = OccupancyDetails.CustomerId;
             }
             string policyid = null;
+          
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                OccupancyDetails.PolicyId = PcId;
+            }
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                OccupancyDetails.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (OccupancyDetails.CustomerId != null && OccupancyDetails.CustomerId != 0)
             {
                 if (OccupancyDetails.ConsecutivedayObj.Consecutiveday != null)
@@ -639,10 +697,10 @@ namespace InsureThatAPI.Controllers
 
 
             }
-            return RedirectToAction("InterestedParties", new { cid = OccupancyDetails.CustomerId });
+            return RedirectToAction("InterestedParties", new { cid = OccupancyDetails.CustomerId ,PcId=PcId});
         }
         [HttpGet]
-        public ActionResult InterestedParties(int? cid)
+        public ActionResult InterestedParties(int? cid, int? PcId)
         {
             HB2InterestedParties interestedparties = new HB2InterestedParties();
             interestedparties.LocationObj = new Locations();
@@ -666,11 +724,23 @@ namespace InsureThatAPI.Controllers
                 Session["completionTrack"] = "0-0-0-0-0"; ;
                 interestedparties.CompletionTrack = Session["completionTrack"].ToString();
             }
+            MasterDataEntities db = new MasterDataEntities();
+            string policyid = null;
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                interestedparties.PolicyId = PcId;
+            }
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                interestedparties.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             interestedparties.CoverhomebuildingObj = new CoverHomeBuildings();
             interestedparties.CoverhomebuildingObj.EiId = 60133;
-            MasterDataEntities db = new MasterDataEntities();
+          
             // interestedparties.CustomerId = cid.Value;
-            string policyid = null;
+         
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
@@ -686,7 +756,7 @@ namespace InsureThatAPI.Controllers
             return View(interestedparties);
         }
         [HttpPost]
-        public ActionResult InterestedParties(int? cid, HB2InterestedParties InterestedParties)
+        public ActionResult InterestedParties(int? cid,int? PcId, HB2InterestedParties InterestedParties)
         {
             MasterDataEntities db = new MasterDataEntities();
             if (cid != null)
@@ -699,6 +769,16 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = InterestedParties.CustomerId;
             }
             string policyid = null;
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                InterestedParties.PolicyId = PcId;
+            }
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                InterestedParties.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (InterestedParties.CustomerId != null && InterestedParties.CustomerId != 0)
             {
                 if (InterestedParties.LocationObj.Location != null)
@@ -737,13 +817,13 @@ namespace InsureThatAPI.Controllers
                     Session["completionTrack"] = "0-0-0-1-0"; ;
                     InterestedParties.CompletionTrack = Session["completionTrack"].ToString();
                 }
-                return RedirectToAction("HomeBuilding", new { cid = InterestedParties.CustomerId });
+                return RedirectToAction("HomeBuilding", new { cid = InterestedParties.CustomerId,PcId=PcId });
             }
-            return RedirectToAction("HomeBuilding", new { cid = InterestedParties.CustomerId });
+            return RedirectToAction("HomeBuilding", new { cid = InterestedParties.CustomerId,PcId=PcId });
 
         }
         [HttpGet]
-        public ActionResult HomeBuilding(int? cid)
+        public ActionResult HomeBuilding(int? cid,int? PcId)
         {
             HB2HomeBuilding homebuilding = new HB2HomeBuilding();
             if (cid != null)
@@ -773,6 +853,16 @@ namespace InsureThatAPI.Controllers
             homebuilding.ExcessObj.EiId = 60197;
             MasterDataEntities db = new MasterDataEntities();
             string policyid = null;
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                homebuilding.PolicyId = PcId;
+            }
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
             if (details != null && details.Any())
             {
@@ -792,7 +882,7 @@ namespace InsureThatAPI.Controllers
             return View(homebuilding);
         }
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult> HomeBuilding(int? cid, HB2HomeBuilding homebuilding)
+        public async System.Threading.Tasks.Task<ActionResult> HomeBuilding(int? cid,int? PcId, HB2HomeBuilding homebuilding)
         {
             MasterDataEntities db = new MasterDataEntities();
             HttpClient hclient = new HttpClient();
@@ -806,6 +896,17 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = homebuilding.CustomerId;
             }
             string policyid = null;
+      
+            if (PcId != null && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                homebuilding.PolicyId = PcId;
+            }
+            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            {
+                homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
+            }
             if (homebuilding.CustomerId != null && homebuilding.CustomerId > 0)
             {
                 if (homebuilding.CostforRebuildingObj.CostforRebuilding != null)
@@ -889,7 +990,7 @@ namespace InsureThatAPI.Controllers
                 }
 
             }
-            return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = homebuilding.CustomerId });
+            return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = homebuilding.CustomerId,PcId=PcId });
 
         }
         #region Policy History

@@ -14,6 +14,7 @@ namespace InsureThatAPI.Models
     {
 
         public int CustomerId { get; set; }
+        public int? PolicyId { get; set; }
         public string CompletionTrackFPC { get; set; }
         public string PolicyInclusions { get; set; }
         public FarmContentsSumInsuredFP FarmContentsSumInsuredFPObj { get; set; }        

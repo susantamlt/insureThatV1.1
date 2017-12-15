@@ -9,7 +9,19 @@
         urlIdSuccess = urlId_Success.Split('-');
     }
     //var ApiKey = Session["apiKey"].ToString();
-
+    var policyinclusions = new string[] { };
+    var policyinclusion = Model.PolicyInclusions;
+    if (policyinclusion != null)
+    {
+        if (policyinclusion.Length > 1)
+        {
+            policyinclusions = policyinclusion.Split('-');
+        }
+        else
+        {
+            policyinclusions = policyinclusion.Split(' ');
+        }
+    }
 }
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
@@ -20,27 +32,27 @@
     <div id="processTabs">
         <ul class="process-steps clearfix col-sm-12">
             <li>
-                <a href="@Url.Action("HomeDescription", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>   } }>Home Description</a>
+                <a href="@Url.Action("HomeDescription", "RuralLifeStyle",new {cid=@Model.CustomerId , PcId=@Model.PolicyId})" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>   } }>Home Description</a>
             </li>
             <li>
                 <a href="javascript:void(0)" class="active">Construction Details</a>
             </li>
             <li>
-                <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>   }>Occupancy Details</a>
+                <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle",new {cid=@Model.CustomerId , PcId=@Model.PolicyId})" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>   }>Occupancy Details</a>
             </li>
 
             <li>
-                <a href="@Url.Action("InterestedParties", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>   }>Interested Parties</a>
+                <a href="@Url.Action("InterestedParties", "RuralLifeStyle",new {cid=@Model.CustomerId , PcId=@Model.PolicyId})" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>   }>Interested Parties</a>
             </li>
             <li>
-                <a href="@Url.Action("HomeBuilding", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>   }>Home Building</a>
+                <a href="@Url.Action("HomeBuilding", "RuralLifeStyle",new {cid=@Model.CustomerId , PcId=@Model.PolicyId})" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>   }>Home Building</a>
             </li>
         </ul>
         <div id="homeBuildContain">
             <div id="ptab2">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>CONSTRUCTION DETAILS</h2></div>
                 <div id="errorContainer"></div>
-                @using (Ajax.BeginForm("ConstructionDetails", "RuralLifeStyle", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+                @using (Ajax.BeginForm("ConstructionDetails", "RuralLifeStyle", new { cid = @ViewBag.CustomerId, PcId = @Model.PolicyId }, new AjaxOptions()
                 {
                     HttpMethod = "POST"
                 }, new { @id = "constructionDetails", @name = "constructionDetails" }))
@@ -324,34 +336,174 @@
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#location1').click(function () {
-                        $("#policy-ed-del-wrap1").fadeIn('slow');
-                        $("#policy-ed-del-wrap2").fadeOut('slow');
-                    });
-                });
-            </script>
-            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#location2').click(function () {
-                        $("#policy-ed-del-wrap2").fadeIn('slow');
-                        $("#policy-ed-del-wrap1").fadeOut('slow');
-                    });
-                });
-            </script>
-            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
+        @if (policyinclusions != null && policyinclusion != null && policyinclusion.Length > 0)
+        {
+            //for (int i = 0; i < policyinclusion.Length; i++)
+            //{
+            if (policyinclusions[0] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location1" />
+                    <label for="radio1"><span><span></span></span>Home Building</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location1').click(function () {
+                                $("#policy-ed-del-wrap1").fadeIn('slow');
+                                $("#policy-ed-del-wrap1").delay(2000).fadeOut(1000);
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("HomeDescription", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[1] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location2" />
+                    <label for="radio1"><span><span></span></span>Home Contents</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location2').click(function () {
+                                $("#policy-ed-del-wrap2").fadeIn('slow');
+                                $("#policy-ed-del-wrap2").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("HomeContent", "HomeContentValuable", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[2] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location3" />
+                    <label for="radio1"><span><span></span></span>Travels</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location3').click(function () {
+                                $("#policy-ed-del-wrap3").fadeIn('slow');
+                                $("#policy-ed-del-wrap3").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap3" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("TravelCover", "Travel", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[3] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location4" />
+                    <label for="radio1"><span><span></span></span>Valuables</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location4').click(function () {
+                                $("#policy-ed-del-wrap4").fadeIn('slow');
+                                $("#policy-ed-del-wrap4").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap4" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("Valuables", "HomeContentValuable", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[4] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location5" />
+                    <label for="radio1"><span><span></span></span>Farm Property</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location5').click(function () {
+                                $("#policy-ed-del-wrap5").fadeIn('slow');
+                                $("#policy-ed-del-wrap5").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap5" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("FarmContents", "Farm", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[5] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location6" />
+                    <label for="radio1"><span><span></span></span>Liability</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location6').click(function () {
+                                $("#policy-ed-del-wrap6").fadeIn('slow');
+                                $("#policy-ed-del-wrap6").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap6" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("LiabilityCover", "Liabilities", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[6] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location7" />
+                    <label for="radio1"><span><span></span></span>Boat</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location7').click(function () {
+                                $("#policy-ed-del-wrap7").fadeIn('slow');
+                                $("#policy-ed-del-wrap7").delay(2000).fadeOut();
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap7" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("BoatDetails", "Boat", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[7] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location8" />
+                    <label for="radio1"><span><span></span></span>Motor</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location8').click(function () {
+                                $("#policy-ed-del-wrap8").fadeIn('slow');
+                                $("#policy-ed-del-wrap8").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap8" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("VehicleDescription", "MotorCover", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+            if (policyinclusions[8] == "1")
+            {
+                <div class="policy-loc-row">
+                    <input type="radio" name="radio1" id="location9" />
+                    <label for="radio1"><span><span></span></span>Pet</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('#location9').click(function () {
+                                $("#policy-ed-del-wrap9").fadeIn('slow');
+                                $("#policy-ed-del-wrap9").delay(2000).fadeOut('slow');
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap9" class="policy-ed-del-wrapper" style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" href="@Url.Action("PetsCover", "Pets", new { cid = @ViewBag.cid, PcId = @Model.PolicyId })">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                    </div>
+                </div>
+            }
+        }
+
         <div class="clearfix"></div>
         <input type="submit" name="newcover" value="New Cover">
     </div>

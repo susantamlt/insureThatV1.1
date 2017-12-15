@@ -18,7 +18,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult FarmContents(int? cid)
+        public ActionResult FarmContents(int? cid,int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
 
@@ -28,6 +28,11 @@ namespace InsureThatAPI.Controllers
             MobileFarmContents MobileFarmContents = new MobileFarmContents();
             var db = new MasterDataEntities();
             string policyid = null;
+            if(PcId!=null && PcId.HasValue)
+            {
+                policyid = PcId.ToString();
+                MobileFarmContents.PolicyId = Convert.ToInt32(policyid);
+            }
             var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
             if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
             {
