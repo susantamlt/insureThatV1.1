@@ -45,20 +45,38 @@
                     @Html.HiddenFor(p => p.CompletionTrackFPHB, new { @id = "completiontrack" })
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>HOME DESCRIPTION</h2></div>
                     <div class="clearfix mb-md-30 mt-10 mb-10">
-                        <div class="col-md-6 col-sm-4 col-xs-12"><p>What is the physical address of your home building?</p></div>
+                        <div class="col-md-6 col-sm-4 col-xs-12"><p>What is the physical address of your Home Building?</p></div>
                         <div class="col-md-6 col-sm-8 col-xs-12">
-                            <div class="col-md-10 col-sm-10 col-xs-10">
-                                @Html.TextBoxFor(p => p.PhysicaladdresObj.Physicaladdres, new { @class = "form-control form-border-bottom", @id = "physicaladdres" })
-                                @Html.HiddenFor(p => p.PhysicaladdresObj.EiId)
-                            </div>
-                            <div class="col-md-2 col-sm-2 col-xs-2">
-                                <a href="javascript:0)"><img src="~/images/mark-icon.png" /></a>
-                            </div>
+                            @Html.TextBoxFor(p => p.PhysicaladdresObj.Physicaladdres, new { @class = "form-control form-border-bottom", @id = "physicaladdres" })
+                            @Html.HiddenFor(p => p.PhysicaladdresObj.EiId)
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <div class="col-md-6 col-sm-4 col-xs-12"><p>Town/Suburb</p></div>
+                        <div class="col-md-6 col-sm-8 col-xs-12">
+                            <select class="form-control form-border-bottom description">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <div class="col-md-6 col-sm-4 col-xs-12"><p>State</p></div>
+                        <div class="col-md-6 col-sm-8 col-xs-12">
+                            <select class="form-control form-border-bottom description">
+                                <option value="">Select</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <div class="col-md-6 col-sm-4 col-xs-12"><p>Postcode</p></div>
+                        <div class="col-md-6 col-sm-8 col-xs-12">
+                            @Html.TextBoxFor(p => p.PhysicaladdresObj.Physicaladdres, new { @class = "form-control form-border-bottom", @id = "physicaladdres" })
+                            @Html.HiddenFor(p => p.PhysicaladdresObj.EiId)
                         </div>
                     </div>
                     <div class="clearfix mb-md-30 mt-10 mb-10">
                         <p class="col-md-12">
-                            Is your Home Building more than 100 metres from Uncleared Natural Bushland, a State or National Forest or a Commercial Plantation of pine trees?
+                            Is your Home Building within 100 metres from Uncleared Natural Bushland, a State or National Forest or a Commercial Plantation of pine trees?
                             <span class="isbuilding-located">
                                 <span class="policy-loc-row">
                                     @Html.RadioButtonFor(m => m.UNBushlandObj.UNBushland, '1',new { @id= "checkboxbushfield1", @class= "checkbox-bushfield" })
@@ -125,15 +143,26 @@
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="#">New Cover</a>
             <ul class="dropdown-menu col-md-12">
-                <li><a href="#">+  Home Building</a></li>
-                <li><a href="#">+  Home Content</a></li>
-                <li><a href="#">+  Travel</a></li>
+                <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
+                <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
+                <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
+
+                <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
+
+                <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
+                <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
+                <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
+                <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
+                <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
+
+                <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
                 <li><a href="#">+  Valuables</a></li>
-                <li><a href="#">+  Farm Property</a></li>
-                <li><a href="#">+  Liability</a></li>
-                <li><a href="#">+  Boat</a></li>
-                <li><a href="#">+  Motor</a></li>
-                <li><a href="#">+  Pets</a></li>
+                <li><a href="#">+  Transit</a></li>
             </ul>
         </div>
     </div>

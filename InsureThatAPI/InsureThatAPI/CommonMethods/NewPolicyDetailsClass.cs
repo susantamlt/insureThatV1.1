@@ -852,5 +852,56 @@ namespace InsureThatAPI.CommonMethods
             return ENList;
         }
         #endregion
+        #region Type of Machinery
+        public List<SelectListItem> TypeOfMachinery()
+        {
+            List<SelectListItem> TypeOfMachineryList = new List<SelectListItem>();
+            TypeOfMachineryList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            TypeOfMachineryList.Add(new SelectListItem { Value = "1", Text = "Compressors, electric motors, generators (not workshops)" });
+            TypeOfMachineryList.Add(new SelectListItem { Value = "2", Text = "Pumps – above ground" });
+            TypeOfMachineryList.Add(new SelectListItem { Value = "3", Text = "Pumps – submersible" });
+            TypeOfMachineryList.Add(new SelectListItem { Value = "4", Text = "Refrigeration Units other than in milking sheds" });
+            TypeOfMachineryList.Add(new SelectListItem { Value = "5", Text = "Machinery in farm workshops" });
+            return TypeOfMachineryList;
+        }
+        #endregion
+        #region Machinery Power
+        public List<SelectListItem> Power()
+        {
+            List<SelectListItem> PowerList = new List<SelectListItem>();
+            PowerList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            PowerList.Add(new SelectListItem { Value = "1", Text = "Up to 5" });
+            PowerList.Add(new SelectListItem { Value = "2", Text = "5 to 10" });
+            PowerList.Add(new SelectListItem { Value = "3", Text = "10 to 20" });
+
+            return PowerList;
+        }
+        #endregion
+        #region Machinery Volume Of Vat
+        public List<SelectListItem> VolumeOfVat()
+        {
+            List<SelectListItem> VolumeOfVatList = new List<SelectListItem>();
+            VolumeOfVatList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            VolumeOfVatList.Add(new SelectListItem { Value = "1", Text = "Up to 2000" });
+            VolumeOfVatList.Add(new SelectListItem { Value = "2", Text = "2000 to 5000" });
+            VolumeOfVatList.Add(new SelectListItem { Value = "3", Text = "5000 to 10000" });
+
+            return VolumeOfVatList;
+        }
+        #endregion
+        #region Type Of Unit Machinery
+        public List<SelectListItem> MachineryTypeOfUnit()
+        {
+            List<SelectListItem> MachineryTypeOfUnitList = new List<SelectListItem>();
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "1", Text = "Hot water" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "2", Text = "Boiler" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "3", Text = "Pipe Systems" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "2", Text = "Steam Boiler" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "3", Text = "Steam Generator" });
+
+            return MachineryTypeOfUnitList;
+        }
+        #endregion
     }
 }
