@@ -31,16 +31,16 @@
     <div id="processTabs">
         <ul class="process-steps clearfix col-sm-12">
             <li>
-                <a href="@Url.Action("FarmContents", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>   }>Farm Contents</a>
+                <a href="@Url.Action("FarmContents", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>    }>Farm Contents</a>
             </li>
             <li>
                 <a href="javascript:void(0)" class="active">Farm Machinery</a>
             </li>
             <li>
-                <a href="@Url.Action("Livestock", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>   }>Livestock</a>
+                <a href="@Url.Action("Livestock", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>    }>Livestock</a>
             </li>
             <li>
-                <a href="@Url.Action("WorkingDogsBeehives", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>   }>Working Dogs and Beehives</a>
+                <a href="@Url.Action("WorkingDogsBeehives", "MobileFarm",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>    }>Working Dogs and Beehives</a>
             </li>
         </ul>
         <div>
@@ -51,6 +51,9 @@
 
             }, new { @id = "farmMachinery", @name = "farmMachinery" }))
             {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.CompletionTrackFPC, new { @id = "completiontrack" })
+                @Html.HiddenFor(p => p.CustomerId)
                 <div id="ptab2">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>FARM MACHINERY</h2></div>
                     <p class="mini-text col-md-12"><a href="#fmachiModalLabel" role="button" data-target="#fmachiModalLabel" data-toggle="modal"><span class="cover-options">Click here for farm machinery definition</span></a></p>
@@ -60,7 +63,7 @@
                                 <div class="modal-header">
                                     <h3 class="pull-left">farm machinery</h3>
                                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                        <img src="images/close-icon.png" />
+                                        <img src="~/images/close-icon.png" />
                                     </button>
                                 </div>
                                 <div class="modal-body">
@@ -109,7 +112,6 @@
                     </div>
                 </div>
                 <p class="col-md-12">You can insure unspecified items of farm machinery up to $5,000 for any one item</p>
-
                 <div class="clearfix mb-md-30 mt-10 mb-10">
                     <p class="col-md-6 col-sm-6 col-xs-12">How much cover do you need for unspecified farm machinery?</p>
                     <div class="col-md-6 col-sm-6 col-xs-12">
@@ -151,7 +153,7 @@
                                         @Html.HiddenFor(p => p.FPDescriptionsFMObj.EiId)
                                     </td>
                                     <td class="no-border">
-                                        @Html.TextBoxFor(p => p.FPYearFMObj.YearFM, new { @class = "form-control form-border-bottom year", @id = "farmstructures" })
+                                        @Html.TextBoxFor(p => p.FPYearFMObj.YearFM, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
                                         @Html.HiddenFor(p => p.FPYearFMObj.EiId)
                                     </td>
                                     <td class="no-border">
@@ -193,8 +195,6 @@
     <div class="well">
         @if (policyinclusions != null && policyinclusion != null && policyinclusion.Length > 0)
         {
-            //for (int i = 0; i < policyinclusion.Length; i++)
-            //{
             if (policyinclusions[0] == "1")
             {
                 <div class="policy-loc-row">
@@ -471,7 +471,6 @@
         }
 
         <div class="clearfix"></div>
-  
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="#">New Cover</a>
             <ul class="dropdown-menu col-md-12">
@@ -480,34 +479,31 @@
                 <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
 
                 <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
-             
+
                 <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
-                <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>             
+                <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
 
                 <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
                 <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
                 <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
                 <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
-              
+
                 <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
                 <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
-           
+
                 <li><a href="#">+  Valuables</a></li>
                 <li><a href="#">+  Transit</a></li>
-
-               
             </ul>
         </div>
         @*<input type="submit" name="newcover" value="New Cover">*@
     </div>
-    
-
 </div>
 <script src="~/js/datepicker.min.js"></script>
 <script type="text/javascript">
-                $(function () {
-                    $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
-                });
+                        $(function () {
+                            $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+                        });
 </script>
 <script type="text/javascript">
     function tnameAdd(id) {
