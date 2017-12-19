@@ -1,0 +1,175 @@
+﻿@model InsureThatAPI.Models.FPMoney
+@{
+    ViewBag.Title = "Money";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / MONEY</h4>
+</div>
+
+
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 policy-full-head">
+        <h2>Money</h2>
+    </div>
+    <div class="clearfix"></div>
+    <div id="errorContainer"></div>
+    @using (Ajax.BeginForm("Money", "FarmPolicyMoney", new { cid = @ViewBag.cid }, new AjaxOptions()
+    {
+        HttpMethod = "POST"
+    }, new { @id = "moneyFP", @name = "moneyFP" }))
+    {
+      
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(p => p.CustomerId)
+        <div class="clearfix"></div>
+                <div class="clearfix mb-md-30 mt-10 mb-10">
+                    <div class="col-md-4"><p>Location is</p></div>
+                    <div class="col-md-8"><div class="col-md-10 col-sm-10 col-xs-10"><input type="text" name="location" class="form-control form-border-bottom"></div><div class="col-md-2 col-sm-2 col-xs-2"></div></div>
+                </div>
+
+                        <p class="col-md-12 mb-md-30 mt-10 mb-10">How much do you need to cover your money against accidental loss that takes place</p>
+
+                        <div class="clearfix mb-md-30 mt-10 mb-10">
+                            <div class="col-md-6 col-sm-6 col-xs-12"><p>At the Location</p></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.AtTheLocationObj.atLocation, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                            @Html.HiddenFor(p => p.AtTheLocationObj.EiId)</div>
+                        </div>
+                        <div class="clearfix mb-md-30 mt-10 mb-10">
+                            <div class="col-md-6 col-sm-6 col-xs-12"><p>In a locked safe or strongroom at the location</p></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.LockedSafeAtLocationObj.lockedsafeatlocation, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                            @Html.HiddenFor(p => p.LockedSafeAtLocationObj.EiId)</div>
+                        </div>
+                        <div class="clearfix mb-md-30 mt-10 mb-10">
+                            <div class="col-md-6 col-sm-6 col-xs-12"><p>In direct transit between the location, a bank or other financial institution, market or saleyard</p></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12">@Html.TextBoxFor(p => p.BankorOtherFinanInstObj.bankorotherFinanInst, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                            @Html.HiddenFor(p => p.BankorOtherFinanInstObj.EiId)</div>
+                        </div>
+                        <div class="clearfix mb-md-30 mt-10 mb-10">
+                            <div class="col-md-6"><p>Excess for money</p></div>
+                            <div class="col-md-3">
+                               @Html.DropDownListFor(Model => Model.ExcessFPMoneyObj.Excess, @Model.ExcessFPMoneyObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "typeofunits" })
+                            @Html.HiddenFor(p => p.ExcessFPMoneyObj.EiId)
+                            </div>
+                            <div class="col-md-3">
+                                <div class="policy-loc-row"><input type="checkbox" name="ImposedmoneyObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 pull-right text-right mt-30">
+                            <a href="#" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                            <img src="~/images/button-devider.png">
+                            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                        </div>
+
+    }
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location1').click(function () {
+						        $("#policy-ed-del-wrap1").fadeIn('slow');
+						        $("#policy-ed-del-wrap2").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location2').click(function () {
+						        $("#policy-ed-del-wrap2").fadeIn('slow');
+						        $("#policy-ed-del-wrap1").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+                    $('.dropdown').hover(function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500); }, function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500); });
+</script>
+
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+                    $(document).ready(function () {
+                        $.validator.addMethod("regex", function (value, element, regexp) {
+                            if (regexp.constructor != RegExp)
+                                regexp = new RegExp(regexp);
+                            else if (regexp.global)
+                                regexp.lastIndex = 0;
+                            return this.optional(element) || regexp.test(value);
+                        }, "Please check your input.");
+                        $("form[name='moneyFP']").validate({
+                            errorContainer: "#errorContainer",
+                            errorLabelContainer: "#errorContainer",
+                            errorElement: "li",
+                            rules: {
+                                
+                                "AtTheLocationObj.atLocation": {
+                                    regex: /^[a-zA-Z ]*$/,
+                                },
+                                "LockedSafeAtLocationObj.lockedsafeatlocation": {
+                                    
+                                    regex: /^[a-zA-Z ]*$/,
+                                },
+                                "BankorOtherFinanInstObj.bankorotherFinanInst": {
+                                   
+                                    regex: /^[a-zA-Z ]*$/,
+                                },
+                                
+                            },
+                            messages: {
+
+                                "AtTheLocationObj.atLocation": {
+                                   
+                                    regex: "Special character and Number not allowed in At Location Field"
+                                },
+                                "LockedSafeAtLocationObj.lockedsafeatlocation": {
+                                    
+                                    regex: "Special character and Number not allowed in Locked Safe Field"
+                                },
+                                "BankorOtherFinanInstObj.bankorotherFinanInst": {
+                                    
+                                    regex: "Special character and Number not allowed in Direct Transit Field"
+                                },
+                                
+                            },
+                            onfocusout: function (element) {
+                                this.element(element);
+                            },
+                            submitHandler: function (form) {
+                                form.submit();
+                            }
+                        });
+                    });
+</script>

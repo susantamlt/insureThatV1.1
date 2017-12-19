@@ -298,45 +298,7 @@ namespace InsureThatAPI.Controllers
         //    return View();
         //}
         #region Display Policy List Based on Insured Id
-        [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> PolicyList(int? InsuredId, int? CustomerId)
-        {
-            if (Session["apiKey"] != null)
-            {
-            }
-            else
-            {
-                return RedirectToAction("AgentLogin", "Login");
-            }
-            GetNewPolicyDetailsRef policydetails = new GetNewPolicyDetailsRef();
-            //  return View(policydetails);
-            PolicyList policylist = new PolicyList();
-            policydetails.PolicyData = new List<PolicyDetails>();
-            InsuredId = 108454;
-            if (InsuredId.HasValue && InsuredId > 0)
-            {
-                //  insureddetails.InsuredID = Convert.ToInt32(Session["InsuredId"]);
-                HttpClient hclient = new HttpClient();
-                hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await hclient.GetAsync(" https://api.insurethat.com.au/Api/PolicyDetails?iyId=9262&paId=" + InsuredId + "");/*insureddetails.InsuredID */
-                var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-                //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-                policydetails = JsonConvert.DeserializeObject<GetNewPolicyDetailsRef>(EmpResponse);
-                ViewBag.CustomerId = CustomerId;
-                if (policydetails.PolicyData != null && policydetails.PolicyData.Count() > 0)
-                {
-                    return View(policydetails);
-                }
-                else
-                {
-                    return RedirectToAction("NewPolicy", "Customer", new { CustomerId = 1 });
-                }
-            }
-            else
-            {
-                return RedirectToAction("AdvancedCustomerSearch", "Customer");
-            }
-        }
+    
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> InsuredPolicys(int? InsuredId, int? cid)
         {
@@ -370,10 +332,7 @@ namespace InsureThatAPI.Controllers
                     return RedirectToAction("NewPolicy", "Customer", new { cid = cid });
                 }
             }
-            //else if(CustomerId.HasValue && CustomerId>0)
-            //{
-            //    return View(policydetails);
-            //}
+          
             else
             {
                 return RedirectToAction("AdvancedCustomerSearch", "Customer");
@@ -395,11 +354,13 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AgentLogin", "Login");
             }
             PcId = 54611;
+          
             int policytype = 1;
             string policyid = PcId.ToString();
             if (PcId != null && PcId > 0)
             {
                 ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+                
                 var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, policytype).FirstOrDefault();
                 if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
                 {
@@ -428,6 +389,25 @@ namespace InsureThatAPI.Controllers
                 if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                 {
                     return RedirectToAction("AgentLogin", "Login");
+                }
+                if(model!=null)
+                {
+                    Session["apiKey"] = model.ApiKey;
+                    var insertpolicydetails = db.IT_dt_Insert_PolicyDetails(model.PolicyData.PolicyNumber, model.PolicyData.TransactionNumber, model.PolicyData.PcId, model.PolicyData.TrId, model.PolicyData.TermNumber, model.PolicyData.AccountManagerID,
+                        model.PolicyData.PolicyStatus, model.PolicyData.CoverPeriod, model.PolicyData.CoverPeriodUnit, model.PolicyData.InceptionDate, model.PolicyData.ExpiryDate, model.PolicyData.EffectiveDate, model.PolicyData.PrId, model.PolicyData.IyId,
+                        model.PolicyData.InsuredName, model.PolicyData.RemoveStampDuty, model.PolicyData.CreatedbyUserId, model.PolicyData.Timecreated, model.PolicyData.IsFloodCoverRequired, model.PolicyData.HasMadeAClaim, model.PolicyData.Reason, model.Status).SingleOrDefault();
+                 
+                    if (insertpolicydetails>1)
+                    {
+                        if(model.UnitData!=null && model.UnitData.Count>0)
+                        {
+                            for(int i=0; i<model.UnitData.Count; i++)
+                            {
+                                var insertunits = db.IT_dt_Insert_Unit(insertpolicydetails, model.UnitData[i].Component, model.UnitData[i].Name, model.UnitData[i].UnId, model.UnitData[i].UnitNumber,
+                                    model.UnitData[i].UnitStatus, model.UnitData[i].ProfileUnId, model.ReferralList, model.Status).SingleOrDefault();
+                            }
+                        }
+                    }
                 }
                 if(model.UnitData!=null && model.UnitData.Count>0)
                 {
@@ -514,14 +494,10 @@ namespace InsureThatAPI.Controllers
                                 break;
                             }
                         }
-                        model.PolicyInclusions =  string.Join("", policystringarray);
-
-                     
-                       // var insertpolicy = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, PcId.ToString(), Convert.ToInt32(PolicyType.RLS)).SingleOrDefault();
-                        if (policystringarray[0] == "1")
-                        {
-                            return RedirectToAction("HomeDescription", "RuralLifeStyle", new {cid=cid, PcId = PcId, });
-                        }
+                        model.PolicyInclusions =  string.Join("", policystringarray);                     
+                        var insertpolicy = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, PcId.ToString(), Convert.ToInt32(PolicyType.RLS)).SingleOrDefault();
+                        return RedirectToAction("HomeBilding", "PolicyDetails", new {cid=cid, PcId = PcId});
+                        
                     }
 
                 }
@@ -1156,7 +1132,7 @@ namespace InsureThatAPI.Controllers
                 }
                 Session["Policyinclustions"] = PolicyinslustionsList;
                 var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy));
-                return RedirectToAction("FarmLocationDetails", "FarmPolicyProperty", new { cid = cid });
+                return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
             }
 
             return RedirectToAction("NewPolicy", "RuralLifeStyle", new { cid = cid });

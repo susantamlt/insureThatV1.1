@@ -1,0 +1,260 @@
+﻿@model InsureThatAPI.Models.MCVehicleDescription
+@{
+    ViewBag.Title = "Vehicle Description";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrackMC"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / MOTOR</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
+            <li>
+                <a href="javascript:void(0)" class="active">Vehicle Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("AdditionalDetails", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>      }>Additional Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Drivers", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>      }>Drivers</a>
+            </li>
+            <li>
+                <a href="@Url.Action("CoverDetails", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>      }>Cover Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OptionalExtrasExcesses", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>      }>Optional Extras and Excesses</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[5] == "1") { <text> class="success" </text>      }>Interested Parties</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("VehicleDescription", "MotorCover", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "vehicleDescription", @name = "vehicleDescription" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.completionTrackMC, new { @id = "completiontrack" })
+                @Html.HiddenFor(p => p.CustomerId, new { @id = "customerId" })
+                <div id="ptab1">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>VEHICLE DESCRIPTION</h2></div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <h5>Glass's Listed Vehicles</h5>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-3 col-sm-12 col-xs-12 policy-loc-row">Category</p>
+                        <div class="col-md-9 col-sm-12 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.LscategoryObj.Category, '0', new { @id = "buildingtype", @data_eiid = @Model.LscategoryObj.EiId })<label for="radio1"><span><span></span></span>Passenger</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.LscategoryObj.Category, '1', new { @id = "holidayhome", @data_eiid = @Model.LscategoryObj.EiId })<label for="radio1"><span><span></span></span>Light Commercial</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.LscategoryObj.Category, '2', new { @id = "other", @data_eiid = @Model.LscategoryObj.EiId })<label for="radio1"><span><span></span></span>Heavy</label></div>
+                            @Html.HiddenFor(p => p.LscategoryObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>What is the make of your vehicle</p></div>
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(p => p.McmakeObj.Make, @Model.McmakeObj.MakeList, new { @class = "form-control form-border-bottom vehicle", @id = "vehiclemake", @data_eiid = @Model.McmakeObj.EiId })
+                            @Html.HiddenFor(p => p.McmakeObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>What year was it manufactured</p></div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(p => p.McyearObj.Year, new { @class = "form-control form-border-bottom year vehicle", @id = "year1", @data_eiid = @Model.McyearObj.EiId })
+                            @Html.HiddenFor(p => p.McyearObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>What is the family</p></div>
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(p => p.MCfamilyObj.Family, @Model.MCfamilyObj.FamilyList, new { @class = "form-control form-border-bottom vehicle", @id = "family1", @data_eiid = @Model.MCfamilyObj.EiId })
+                            @Html.HiddenFor(p => p.MCfamilyObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>Select Correct Details</p></div>
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(p => p.MCscdObj.Scd, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control form-border-bottom vehicle", @id = "details1", @data_eiid = @Model.MCscdObj.EiId })
+                            @Html.HiddenFor(p => p.MCscdObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>Estimated retail value * *</p></div>
+                        <div class="col-md-6">
+                            <input type="text" name="retailvalue" id="retailvalue" class="form-control form-border-bottom">
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <h5>Farm Machinery</h5>
+                    </div>
+
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>What is the make of your vehicle</p></div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(p => p.FmmcmakeObj.FmMake, new { @class = "form-control form-border-bottom vehicle", @id = "vehiclemake2", @data_eiid = @Model.FmmcmakeObj.EiId })
+                            @Html.HiddenFor(p => p.FmmcmakeObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>What year was it manufactured</p></div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(p => p.FmmcyearObj.FmYear, new { @class = "form-control form-border-bottom year vehicle", @id = "year2", @data_eiid = @Model.FmmcyearObj.EiId })
+                            @Html.HiddenFor(p => p.FmmcyearObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>What is the family</p></div>
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(p => p.FmmctypeObj.FmFamily, @Model.FmmctypeObj.FmFamilyList, new { @class = "form-control form-border-bottom vehicle", @id = "family2", @data_eiid = @Model.FmmctypeObj.EiId })
+                            @Html.HiddenFor(p => p.FmmctypeObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>Select Correct Details</p></div>
+                        <div class="col-md-6">
+                            @Html.DropDownListFor(p => p.FmmcscdObj.FmScd, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control form-border-bottom vehicle", @id = "details2", @data_eiid = @Model.FmmcscdObj.EiId })
+                            @Html.HiddenFor(p => p.FmmcscdObj.EiId)
+                        </div>
+                    </div>
+                    <div class="col-md-12"><p class="mini-text">Is the Farm Machinery to be insured operated and maintained in accordance with the manufacturer’s instructions as stated in the owner’s manual?</p></div>
+                    <div class="col-md-6 pull-right text-right mt-20">
+                        <button class="button-3d nomargin tab-linker quot-next-btn" rel="2">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script>
+                var apival = $(".apisecret").val();
+                $(document).ready(function () {
+                    $("#family2").change(function () {
+                        var value = this.value;
+                        var EiId = $(this).data('eiid');
+                        alert(EiId);
+                        var dataFocusElement = null;
+                        var dataElement = new Array();
+                        var valueElement = new Array();
+                        if (value != '' && EiId != '') {
+                            $.ajax({
+                                url: 'https://api.insurethat.com.au/Api/ElementDetails',
+                                type: "POST",
+                                crossOrigin: true,
+                                data: { "apiKey": "h5tuZ7qqZzl2act0b5J958Ld6wSJn4cM8A/pTqcqCHc=", "ProfileUnId": "0", "SectionUnId": "7", "ElId": EiId, "ItId": "0", "Value": 39 },
+                                success: function (data) {
+                                    if (data != '' && data != null) {
+                                        if (data.ElementData != '' && data.ElementData != null) {
+                                            if (data.ElementData.ValueData != '' && data.ElementData.ValueData != null) {
+                                                $.each(data.ElementData.ValueData, function (index, value) {
+                                                    valueElement.push(value.Element.ElId + '~' + value.Value + '-sb-');
+                                                });
+                                            }
+                                            if (data.ElementData.FocusElement != '' && data.ElementData.FocusElement != null) {
+                                                dataFocusElement = data.ElementData.FocusElement.ElId + '~' + data.ElementData.FocusElement.ItId;
+                                            }
+                                            if (data.ElementData.StateData != '' && data.ElementData.StateData != null) {
+                                                $.each(data.ElementData.StateData, function (index, value) {
+                                                    dataElement.push(value.Element.ElId + '~' + value.State);
+                                                });
+                                            }
+                                            if (dataFocusElement != '' && dataFocusElement != null && dataElement != '' && dataElement != null) {
+                                                commonElement(valueElement, dataElement, dataFocusElement);
+                                            }
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                });
+                function commonElement(valueElement, dataElement, dataFocusElement) {
+                    var focusId = null;
+                    var splitteddataFocusElement = null;
+                    var splitdatavalueElement = null;
+                    if (valueElement != '' && valueElement != null) {
+                        if (valueElement != '' && valueElement != null) {
+                            $.each(valueElement, function (index, value) {
+                                var splitdatavalueElement = value.split('~');
+                                var splitdatavalueElement1 = splitdatavalueElement[1].split('-sb-');
+                                focusId = $('.vehicle[data-eiid="' + splitdatavalueElement[0] + '"]').attr('id');
+                                $('#' + focusId).val(splitdatavalueElement1[0]);
+
+                            });
+
+
+                            sessionStorage.setItem("valueelement", valueElement);
+                            sessionStorage.setItem("dataelement", dataElement);
+                            sessionStorage.setItem("datafocuselement", dataFocusElement);
+                            //alert(focusId);
+                            var sessionitem = sessionStorage.getItem("valueelement")
+                            $.each(valueElement, function (index, value) {
+                                var sessionelment = value.split('~');
+                                alert(sessionelment[0]);
+                            });
+
+
+                        }
+                    }
+                    if (dataFocusElement != '' && dataFocusElement != null) {
+                        var splitteddataFocusElement = dataFocusElement.split('~');
+                        focusId = $('.vehicle[data-eiid="' + splitteddataFocusElement[0] + '"]').attr('id');
+                        $("#" + focusId).focus();
+                        if (dataElement != '' && dataElement != null) {
+                            $.each(dataElement, function (index, value) {
+                                var splitteddataElement = value.split('~');
+                                if (splitteddataFocusElement[0] == splitteddataElement[0]) {
+                                    //alert(splitteddataElement[1]);
+                                }
+                            });
+                        }
+                    }
+                }
+
+</script>

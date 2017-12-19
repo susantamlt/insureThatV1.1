@@ -1,0 +1,281 @@
+﻿@model InsureThatAPI.Models.FarmStructures
+@{
+    ViewBag.Title = "FarmStructures";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrackPFP"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / FIXED FARM PROPERTY</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>  }>Farm Location Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("FarmDetails", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>  }>Farm Building</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Farm Structures</a>
+            </li>
+            <li>
+                <a href="@Url.Action("HarvestedCrops", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>  }>Harvested Crops</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "FarmPolicyProperty",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text> }>Interested Parties</a>
+            </li>
+        </ul>    
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("FarmStructures", "FarmPolicyProperty", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "farmStructures", @name = "farmStructures" }))
+            {
+                @Html.AntiForgeryToken()
+                <div id="ptab3">
+                    @Html.HiddenFor(p => p.completionTrackPFP, new { @id = "completiontrack" })
+                    @Html.HiddenFor(p => p.CustomerId )
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>FARM STRUCTURES</h2></div>
+                    <div class="mt-10 mb-10 col-md-12"><P>We can cover your <a href="#FsBuhectarModal" role="button" data-target="#FsBuhectarModal" data-toggle="modal">farm fencing</a></P></div>
+                    <div id="FsBuhectarModal" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Farm Fencing</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Please advise the cost per kilometre to replace your fencing</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">$
+                            @Html.TextBoxFor(p => p.SublimitObj.Sublimit, new { @class = "form-control form-border-bottom", @id = "sublimit", @style= "display: inline-block;width: 92%;" })
+                            @Html.HiddenFor(p => p.SublimitObj.EiId)/-
+                            <p class="mini-text">(The amount you choose is the maximum we will pay per kilometre.)</p>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">What is the <a href="#trchectarModal" role="button" data-target="#trchectarModal" data-toggle="modal">total replacement cost</a> of fencing cover you would like?</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">$
+                            @Html.TextBoxFor(p => p.TotalcoverObj.Totalcover, new { @class = "form-control form-border-bottom", @id = "totalcover", @style = "display: inline-block;width: 92%;" })
+                            @Html.HiddenFor(p => p.TotalcoverObj.EiId)/-
+                        </div>
+                    </div>
+                    <div id="trchectarModal" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Total replacement cost</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Please advise how much you would like the rest of your <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal">farm structures</a> to be insured </p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.TextBoxFor(p => p.OtherstructurefcObj.Otherstructure, new { @class = "form-control form-border-bottom", @id = "otherstructure" })
+                            @Html.HiddenFor(p => p.OtherstructurefcObj.EiId)
+                        </div>
+                    </div>
+                    <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Farm Structures</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="col-md-12">We can insure hail netting (for fire only) when it is stored in a farm structure that has a  roof and walls.  Hail netting in the open is not covered. </p>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">How much cover do you require?</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.TextBoxFor(p => p.RoofwallsObj.Roofwalls, new { @class = "form-control form-border-bottom", @id = "roofandwall" })
+                            @Html.HiddenFor(p => p.RoofwallsObj.EiId)
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Excess for Farm Buildings and Farm Structures</p>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(p => p.ExcesshcObj.Excess, @Model.ExcesshcObj.ExcessHCList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
+                            @Html.HiddenFor(p => p.ExcesshcObj.EiId)
+                        </div>
+                        <div class="col-md-3">
+                            <div class="policy-loc-row"><input type="checkbox" name="imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <a href="@Url.Action("FarmDetails", "FarmPolicyProperty")" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>  
+                        <img src="~/images/button-devider.png"> 
+                        <button class="button-3d nomargin tab-linker quot-next-btn" type="submit">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
+                <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
+                <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
+
+                <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
+
+                <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
+                <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
+                <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
+                <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
+                <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
+
+                <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
+                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Transit</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='farmStructures']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "SublimitObj.Sublimit": {
+                    regex: /^[0-9]*$/,
+                },
+                "TotalcoverObj.Totalcover": {
+                    regex: /^[0-9]*$/,
+                },
+                "OtherstructurefcObj.Otherstructure": {
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "RoofwallsObj.Roofwalls": {
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "imposed": {
+                    required: function (element) {
+                        if ($("#excess").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+            },
+            messages: {
+                "SublimitObj.Sublimit": {
+                    regex: "Only numeric allowed in total replacement cost of fencing cover"
+                },
+                "TotalcoverObj.Totalcover": {
+                    regex: "Only numeric allowed in cost per kilometre"
+                },
+                "OtherstructurefcObj.Otherstructure": {
+                    regex: "Special character & numeric not allowed in farm structures"
+                },
+                "RoofwallsObj.Roofwalls": {
+                    regex: "Special character & numeric not allowed in  roof and walls."
+                },
+                "imposed": "Please select imposed",
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

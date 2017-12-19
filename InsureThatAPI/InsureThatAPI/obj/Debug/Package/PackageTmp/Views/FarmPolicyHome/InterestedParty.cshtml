@@ -1,0 +1,162 @@
+﻿@model InsureThatAPI.Models.InterestedPartyFPIP
+@{
+    ViewBag.Title = "Home Building";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["CompletionTrackFPHB"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / HOME BUILDING</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("MainDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>   }>Home Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ConstructionDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>   }>Construction Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OccupancyDetails", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>   }>Occupancy Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("HomeBuilding", "FarmPolicyHome",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>    }>Home Building</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Interested Party</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("InterestedParty", "FarmPolicyHome", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "interestedParty", @name = "interestedParty" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.CustomerId)
+                <div id="ptab4">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>Interested Parties</h2></div>
+                    @Html.HiddenFor(p => p.CompletionTrackFPHB, new { @id = "completiontrack" })
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Interested Party Name</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.TextBoxFor(p => p.PartynameObj.Name, new { @class = "form-control form-border-bottom", @id = "name" })
+                            @Html.HiddenFor(p => p.PartynameObj.EiId)
+                        </div>
+                    </div>
+                    <div class="clearfix mb-md-30 mt-10 mb-10">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Interested Party Location</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.TextBoxFor(p => p.PartylocationObj.Location, new { @class = "form-control form-border-bottom", @id = "location" })
+                            @Html.HiddenFor(p => p.PartylocationObj.EiId)
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <a href="@Url.Action("HomeBuilding", "FarmPolicyHome")" class="button-3d nomargin tab-linker quot-prev-btn" rel="3">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button class="button-3d nomargin tab-linker quot-next-btn" type="submit">Submit</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='interestedParty']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "PartynameObj.Name": {
+                    required: true,
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "PartylocationObj.Location": {
+                    required: true,
+                    regex: /^[a-zA-Z ]*$/,
+                },
+            },
+            messages: {
+                "PartynameObj.Name": {
+                    required: "Please enter name",
+                    regex: "Special character & numeric not allowed in name"
+                },
+                "PartylocationObj.Location": {
+                    required: "Please enter location",
+                    regex: "Special character & numeric not allowed in location"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

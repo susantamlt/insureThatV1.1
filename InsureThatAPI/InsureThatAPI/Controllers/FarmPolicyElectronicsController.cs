@@ -38,7 +38,7 @@ namespace InsureThatAPI.Controllers
                     
                         if (Policyincllist.Contains("Electronics"))
                         {
-                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
+
                         }
                         else{
                         if (Policyincllist.Contains("Money"))

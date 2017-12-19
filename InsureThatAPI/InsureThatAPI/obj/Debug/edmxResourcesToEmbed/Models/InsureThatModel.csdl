@@ -43,6 +43,7 @@
     </FunctionImport>
     <FunctionImport Name="IT_CC_Insert_InsuredDetails" ReturnType="Collection(Int32)">
       <Parameter Name="InsuredID" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyIds" Mode="In" Type="String" />
       <Parameter Name="ClientType" Mode="In" Type="Int32" />
       <Parameter Name="Title" Mode="In" Type="String" />
       <Parameter Name="FirstName" Mode="In" Type="String" />
@@ -95,7 +96,7 @@
       <Parameter Name="ValuablesDescription" Mode="In" Type="String" />
       <Parameter Name="ValuablesSumInsured" Mode="In" Type="Decimal" />
     </FunctionImport>
-    <FunctionImport Name="IT_CC_InsertAddressDetails">
+    <FunctionImport Name="IT_CC_InsertAddressDetails" ReturnType="Collection(Int32)">
       <Parameter Name="AddressID" Mode="In" Type="Int32" />
       <Parameter Name="AddressLine1" Mode="In" Type="String" />
       <Parameter Name="AddressLine2" Mode="In" Type="String" />
@@ -393,6 +394,68 @@
       <Parameter Name="PolicyId" Mode="In" Type="String" />
       <Parameter Name="PolicyType" Mode="In" Type="Int32" />
     </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_PolicyDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="PolicyNumber" Mode="In" Type="String" />
+      <Parameter Name="TransactionNumber" Mode="In" Type="String" />
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="TermNumber" Mode="In" Type="Int32" />
+      <Parameter Name="AccountManagerID" Mode="In" Type="String" />
+      <Parameter Name="PolicyStatus" Mode="In" Type="String" />
+      <Parameter Name="CoverPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="CoverPeriodUnit" Mode="In" Type="String" />
+      <Parameter Name="InceptionDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ExpiryDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EffectiveDate" Mode="In" Type="DateTime" />
+      <Parameter Name="PrId" Mode="In" Type="Int32" />
+      <Parameter Name="IyId" Mode="In" Type="Int32" />
+      <Parameter Name="InsuredName" Mode="In" Type="String" />
+      <Parameter Name="RemoveStampDuty" Mode="In" Type="Boolean" />
+      <Parameter Name="CreatedByUserID" Mode="In" Type="Int32" />
+      <Parameter Name="TimeCreated" Mode="In" Type="String" />
+      <Parameter Name="IsFloodCoverRequired" Mode="In" Type="Boolean" />
+      <Parameter Name="HasMadeAClaim" Mode="In" Type="Boolean" />
+      <Parameter Name="Reason" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_Unit" ReturnType="Collection(Int32)">
+      <Parameter Name="PolicyId" Mode="In" Type="Int32" />
+      <Parameter Name="Component" Mode="In" Type="String" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+      <Parameter Name="UnitNumber" Mode="In" Type="Int32" />
+      <Parameter Name="UnitStatus" Mode="In" Type="String" />
+      <Parameter Name="ProfileUnId" Mode="In" Type="Int32" />
+      <Parameter Name="ReferralList" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_UnitDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="UnitId" Mode="In" Type="Int32" />
+      <Parameter Name="Component_Type" Mode="In" Type="String" />
+      <Parameter Name="Unit_Type" Mode="In" Type="String" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+      <Parameter Name="ElementId" Mode="In" Type="Int32" />
+      <Parameter Name="RowSourceData" Mode="In" Type="String" />
+      <Parameter Name="ValueData" Mode="In" Type="String" />
+      <Parameter Name="StateData" Mode="In" Type="String" />
+      <Parameter Name="ReferralList" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+      <Parameter Name="AddressId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="usp_dt_GetPolicyDetails" ReturnType="Collection(MasterDataModel.usp_dt_GetPolicyDetails_Result)">
+      <Parameter Name="PolicyId" Mode="In" Type="Int32" />
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="usp_GetUnit" ReturnType="Collection(MasterDataModel.usp_GetUnit_Result)">
+      <Parameter Name="UnitId" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyId" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="usp_GetUnitDetails" ReturnType="Collection(MasterDataModel.usp_GetUnitDetails_Result)">
+      <Parameter Name="UnitId" Mode="In" Type="Int32" />
+      <Parameter Name="UnitDetailsId" Mode="In" Type="Int32" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <ComplexType Name="GetCustomerDetails_Result">
     <Property Type="String" Name="MobileNo" Nullable="false" MaxLength="9" />
@@ -613,4 +676,55 @@
     <Property Type="Int32" Name="PolicyType" Nullable="false" />
   </ComplexType>
   <ComplexType Name="ComplexType1" />
+  <ComplexType Name="usp_dt_GetPolicyDetails_Result">
+    <Property Type="Int32" Name="PolicyId" Nullable="false" />
+    <Property Type="String" Name="PolicyNumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="TransactionNumber" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="true" />
+    <Property Type="Int32" Name="TermNumber" Nullable="true" />
+    <Property Type="String" Name="AccountManagerID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="PolicyStatus" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="CoverPeriod" Nullable="true" />
+    <Property Type="String" Name="CoverPeriodUnit" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="InceptionDate" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="ExpiryDate" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="EffectiveDate" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="PrId" Nullable="false" />
+    <Property Type="Int32" Name="IyId" Nullable="false" />
+    <Property Type="String" Name="InsuredName" Nullable="true" MaxLength="150" />
+    <Property Type="Boolean" Name="RemoveStampDuty" Nullable="true" />
+    <Property Type="Int32" Name="CreatedByUserID" Nullable="true" />
+    <Property Type="String" Name="TimeCreated" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="IsFloodCoverRequired" Nullable="true" />
+    <Property Type="Boolean" Name="HasMadeAClaim" Nullable="true" />
+    <Property Type="String" Name="Reason" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="usp_GetUnit_Result">
+    <Property Type="Int32" Name="UnitId" Nullable="false" />
+    <Property Type="Int32" Name="PolicyId" Nullable="false" />
+    <Property Type="String" Name="Component" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="UnId" Nullable="false" />
+    <Property Type="Int32" Name="UnitNumber" Nullable="false" />
+    <Property Type="String" Name="UnitStatus" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="ProfileUnId" Nullable="true" />
+    <Property Type="String" Name="ReferralList" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="usp_GetUnitDetails_Result">
+    <Property Type="Int32" Name="UnitDetailsId" Nullable="false" />
+    <Property Type="Int32" Name="UnitId" Nullable="false" />
+    <Property Type="String" Name="Component_Type" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Unit_Type" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="UnId" Nullable="true" />
+    <Property Type="Int32" Name="ElementId" Nullable="true" />
+    <Property Type="String" Name="RowSourceData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="ValueData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="StateData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="ReferralList" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="AddressId" Nullable="true" />
+  </ComplexType>
 </Schema>

@@ -34,11 +34,8 @@ namespace InsureThatAPI.Controllers
                     }
                     else
                     {
-                        if (Policyincllist.Contains("MobileFarmProperty"))
-                        {
-                            return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("FarmInteruption"))
+                      
+                         if (Policyincllist.Contains("FarmInteruption"))
                         {
                             return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
                         }

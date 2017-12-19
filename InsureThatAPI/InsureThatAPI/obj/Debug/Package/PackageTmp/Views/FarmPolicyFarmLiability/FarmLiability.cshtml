@@ -1,0 +1,252 @@
+﻿@model InsureThatAPI.Models.FPFarmliability
+@{
+    ViewBag.Title = "FarmLiability";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / FARM LIABILITY</h4>
+</div>
+
+<div>
+    @using (Ajax.BeginForm("Farmliability", "FarmPolicyFarmliability", new { cid = @ViewBag.cid }, new AjaxOptions()
+    {
+        HttpMethod = "POST"
+    }, new { @id = "farmliabilityFP", @name = "farmliabilityFP" }))
+    {
+        @Html.HiddenFor(p => p.CustomerId)
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+            <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 policy-full-head">
+                <h2>Farm Liability</h2>
+            </div>
+            <div class="clearfix"></div>
+            <div id="errorContainer"></div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <div class="col-md-4"><p>Location</p></div>
+                <div class="col-md-8"><div class="col-md-10 col-sm-10 col-xs-10"><input type="text" name="location" class="form-control form-border-bottom"></div></div>
+            </div>
+            <p class="col-md-12 mini-text">Note: You may not insure farm liability on its own – you need to select at least fixed farm property, mobile farm property or home building and/or  home contents. </p>
+            <h5 class="col-md-12 mt-10">Part A - General Liability</h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Limit of Indemnity</p>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.DropDownListFor(Model => Model.GenLiabilityLimitOfIndemnityFPObj.LimitOfIndemnity, @Model.GenLiabilityLimitOfIndemnityFPObj.GLLimitOfIndemnityFPList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "limitofindemnity" })
+                    @Html.HiddenFor(p => p.GenLiabilityLimitOfIndemnityFPObj.EiId)
+                </div>
+            </div>
+            <h5 class="mt-10 col-md-12">Part B - Products Liability – automatically provided as soon as you have selected general liability. </h5>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Limit of Indemnity</p>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    @Html.TextBoxFor(p => p.ProdLiabilityLimitOfIndemnityFPObj.LimitOfIndemnity, new { @class = "form-control form-border-bottom", @id = "limitofindemnity" })
+                    @Html.HiddenFor(p => p.ProdLiabilityLimitOfIndemnityFPObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">List of products sold</p>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-5 col-sm-5 col-xs-12 policy-loc-row"><input type="checkbox" name="farm-produce" id="buildingtype" /><label for="checkbox1"><span><span></span></span>Farm produce</label></div>
+                    <div class="col-md-7 col-sm-7 col-xs-12 policy-loc-row"><input type="checkbox" name="food-beverages" id="Food and beverages" /><label for="checkbox3"><span><span></span></span>Food and beverages</label></div>
+                    <div class="col-md-5 col-sm-5 col-xs-12 policy-loc-row"><input type="checkbox" name="Livestock" id="Livestock" /><label for="checkbox2"><span><span></span></span>Livestock</label></div>
+                    <div class="col-md-7 col-sm-7 col-xs-12 policy-loc-row"><input type="checkbox" name="gifts-souvenirs" id="gifts-souvenirs" /><label for="checkbox4"><span><span></span></span>Gifts and souvenirs</label></div>
+                </div>
+            </div>
+            <h5 class="col-md-12 mt-10">Optional Extras</h5>
+
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-6 col-sm-6 col-xs-12">Do you have any paying guests visit your farm to stay?</p>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                        @Html.RadioButtonFor(m => m.OptPayingGuestFP.PayingGuestOption, '1', new { @class = "buildingtype", @id = "buildingtype" })
+                    <label for="radio1"><span><span></span></span>Yes</label>
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                    @Html.RadioButtonFor(m => m.OptPayingGuestFP.PayingGuestOption, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+                <label for="radio1"><span><span></span></span>No</label>
+            </div>
+            <p class="mini-text">(Accommodation cover only - does not cover activities)</p>
+        </div>
+    </div>
+    <div class="clearfix mb-md-30 mt-10 mb-10">
+        <p class="col-md-6 col-sm-6 col-xs-12">What type of accommodation are the guests staying in?</p>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.DropDownListFor(Model => Model.TypeOfAccomGuestsStayingInFPObj.TypeOfAccommodation, @Model.TypeOfAccomGuestsStayingInFPObj.TypeOfAccommodationGuestsStayingInList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "typeofaccommodation" })
+            @Html.HiddenFor(p => p.TypeOfAccomGuestsStayingInFPObj.EiId)
+            <p class="mini-text">Note: caravans and camping facilities will be declined by our system. </p>
+        </div>
+    </div>
+    <div class="clearfix mb-md-30 mt-10 mb-10">
+        <p class="col-md-6 col-sm-6 col-xs-12">If other, please describe the type of accommodation</p>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            @Html.TextBoxFor(p => p.DescriptionOfAccommodationFPObj.DescOfAccommodation, new { @class = "form-control form-border-bottom", @id = "describeaccommodation" })
+            @Html.HiddenFor(p => p.DescriptionOfAccommodationFPObj.EiId)
+        </div>
+    </div>
+    <div class="clearfix mb-md-30 mt-10 mb-10">
+        <p class="col-md-6 col-sm-6 col-xs-12">Does the accommodation facility comply with local council regulations? </p>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                @Html.RadioButtonFor(m => m.OptAccomComplyRegulationFPObj.AccomComplyRegulations, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+            <label for="radio1"><span><span></span></span>Yes</label>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+            @Html.RadioButtonFor(m => m.OptAccomComplyRegulationFPObj.AccomComplyRegulations, '0', new { @class = "buildingtype", @id = "buildingtype1" })
+        <label for="radio1"><span><span></span></span>No</label>
+    </div>
+</div>
+</div>
+<div class="clearfix mb-md-30 mt-10 mb-10">
+    <p class="col-md-6 col-sm-6 col-xs-12">Holiday Farms-(Recreational and farm activities including accommodation) </p>
+    <div class="col-md-6 col-sm-6 col-xs-12">
+        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+            @Html.RadioButtonFor(m => m.OptHolidayFarmsFPObj.HolidayFarms, '1', new { @class = "buildingtype", @id = "buildingtype" })
+        <label for="radio1"><span><span></span></span>Yes</label>
+    </div>
+    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+        @Html.RadioButtonFor(m => m.OptHolidayFarmsFPObj.HolidayFarms, '0', new { @class = "buildingtype", @id = "buildingtype1", @checked = "checked" })
+    <label for="radio1"><span><span></span></span>No</label>
+</div>
+</div>
+</div>
+
+<div class="clearfix mb-md-30 mt-10 mb-10">
+    <div class="col-md-6"><p>Excess for farm liability</p></div>
+    <div class="col-md-3">
+        @Html.DropDownListFor(Model => Model.ExcessFPFarmLiabilityObj.Excess, @Model.ExcessFPFarmLiabilityObj.ExcessList, new { @class = "form-control form-border-bottom description", @id = "excessfarmliability" })
+        @Html.HiddenFor(p => p.ExcessFPFarmLiabilityObj.EiId)
+    </div>
+    <div class="col-md-3">
+        <div class="policy-loc-row"><input type="checkbox" name="ImposedfarmliabilityObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+    </div>
+</div>
+<div class="mt-40">
+    <div class="col-md-8"></div>
+    <div class="col-md-6 pull-right text-right mt-30">
+        <a href="#" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+        <img src="~/images/button-devider.png">
+        <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+    </div>
+
+</div>
+</div>
+
+    }
+
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="#">+  Home Building</a></li>
+                <li><a href="#">+  Home Content</a></li>
+                <li><a href="#">+  Travel</a></li>
+                <li><a href="#">+  Valuables</a></li>
+                <li><a href="#">+  Farm Property</a></li>
+                <li><a href="#">+  Liability</a></li>
+                <li><a href="#">+  Boat</a></li>
+                <li><a href="#">+  Motor</a></li>
+                <li><a href="#">+  Pets</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+                $(document).ready(function () {
+                    $.validator.addMethod("regex", function (value, element, regexp) {
+                        if (regexp.constructor != RegExp)
+                            regexp = new RegExp(regexp);
+                        else if (regexp.global)
+                            regexp.lastIndex = 0;
+                        return this.optional(element) || regexp.test(value);
+                    }, "Please check your input.");
+                    $("form[name='farmliabilityFP']").validate({
+                        errorContainer: "#errorContainer",
+                        errorLabelContainer: "#errorContainer",
+                        errorElement: "li",
+                        rules: {
+
+                            "GenLiabilityLimitOfIndemnityFPObj.LimitOfIndemnity": {
+                                required: function (el) {
+                                    if ($(el).parent('tr').find('.description').val() != '') {
+                                        return true;
+                                    }
+                                },
+                            },
+                            "ProdLiabilityLimitOfIndemnityFPObj.LimitOfIndemnity": {
+                                regex: /^[0-9]*$/,
+                            },
+
+                            "TypeOfAccomGuestsStayingInFPObj.TypeOfAccommodation": {
+                                required: function (el) {
+                                    if ($(el).parent('tr').find('.description').val() != '') {
+                                        return true;
+                                    }
+                                },
+                            },
+                            "DescriptionOfAccommodationFPObj.DescOfAccommodation": {
+                                regex: /^[a-zA-Z ]*$/,
+                            },
+                        },
+                        messages: {
+
+                            "GenLiabilityLimitOfIndemnityFPObj.LimitOfIndemnity": "Please select Limit of Indemnity",
+
+                            "ProdLiabilityLimitOfIndemnityFPObj.LimitOfIndemnity": {
+
+                                regex: "Only Numeric Allowed in Limit of Indemnity"
+                            },
+
+                            "TypeOfAccomGuestsStayingInFPObj.TypeOfAccommodation": {
+                                required: "Please enter Type of Accommodation",
+                                regex: "Special character and Number not allowed"
+                            },
+                            "DescriptionOfAccommodationFPObj.DescOfAccommodation": {
+
+                                regex: "Special character and Number not allowed",
+                            },
+
+                        },
+                        onfocusout: function (element) {
+                            this.element(element);
+                        },
+                        submitHandler: function (form) {
+                            form.submit();
+                        }
+                    });
+                });
+</script>

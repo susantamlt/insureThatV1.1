@@ -1,0 +1,280 @@
+﻿@model InsureThatAPI.Models.FPElectronics
+@{
+    ViewBag.Title = "Electronics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / ELECTRONICS</h4>
+</div>
+
+<div>
+    <div class="col-lg-12 clearfix col-sm-12 col-xs-12 policy-full-head">
+        <h2>ELECTRONICS</h2>
+    </div>
+    <div class="clearfix"></div>
+    <div id="errorContainer"></div>
+@using (Ajax.BeginForm("Electronics", "FarmPolicyElectronics", new { cid = @ViewBag.cid }, new AjaxOptions()
+{
+    HttpMethod = "POST"
+}, new { @id = "electronicsFP", @name = "electronicsFP" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.CustomerId)
+
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+        
+        <div class="col-lg-12 clearfix col-sm-12 col-xs-12 policy-full-head">
+            <h5>Part A</h5>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-20">
+            <div class="col-md-6 col-sm-4 col-xs-12"><p>Locations covered</p></div>
+            <div class="col-md-6 col-sm-8 col-xs-12"><div class="col-md-10 col-sm-10 col-xs-10"><input type="text" name="location" class="form-control form-border-bottom"></div><div class="col-md-2 col-sm-2 col-xs-2"></div></div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10" id="processTabs">
+            <div class="col-md-12 table-8">
+                <table class="table" style=" width: 100%; ">
+                    <tbody>
+                        <tr>
+                            <th class="space_left">Type of unit</th>
+                            <th class="space_left">Make and model</th>
+                            <th class="space_left">Serial number</th>
+                            <th class="space_left">Number of units</th>
+                            <th class="space_left">Portable Items Option (def)</th>
+                            <th class="space_left">Sum Insured per unit</th>
+                            <th class="space_right">Total Sum Insured</th>
+                            <th class="space_right">&nbsp;</th>
+                        </tr>
+                        <tr>
+                            <td class="no-border">
+                                @Html.DropDownListFor(Model => Model.TypeOfUnitFPObj.TypeofUnit, @Model.TypeOfUnitFPObj.ElectronicsTypeofUnitList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "typeofunits" })
+                                @Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)
+                            </td>
+                            <td class="no-border">@Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "form-control form-border-bottom", @id = "makeandmodel" })
+                            @Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)</td>
+                            <td class="no-border">@Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "form-control form-border-bottom", @id = "serialnumber" })
+                            @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)</td>
+                            <td class="no-border">@Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom", @id = "NoofUnits" })
+                            @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)</td>
+                            <td class="no-border"><div class="policy-loc-row">
+                            <input type="checkbox" name="PortableitemsObj.portableitems" id="portableitems"><label for="checkbox1"><span><span></span></span></label></div>
+                            </td>
+                            <td class="no-border">@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @class = "form-control form-border-bottom", @id = "suminsured" })
+                            @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)</td>
+                            <td class="no-border">@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @class = "form-control form-border-bottom", @id = "totalsuminsured" })
+                            @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)</td>
+                            <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10 ">
+            <div class="col-md-6"><p>Excess</p></div>
+            <div class="col-md-3">
+                @Html.DropDownListFor(Model => Model.ExcessElectronicsFPObj.Excess, @Model.ExcessElectronicsFPObj.ExcessList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
+                @Html.HiddenFor(p => p.ExcessElectronicsFPObj.EiId)
+            </div>
+            <div class="col-md-3">
+                <div class="policy-loc-row"><input type="checkbox" name="ImposedelectronicsObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+            </div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-lg-12 clearfix col-sm-12 col-xs-12 policy-full-head">
+                <h5>Part B - Loss of data</h5>
+            </div>
+            <div class="col-md-6"><p>How much do you wish to cover for loss of data? </p></div>
+            <div class="col-md-6">@Html.TextBoxFor(p => p.CoverLossOfDataFPObj.CoverLossofData, new { @class = "form-control form-border-bottom", @id = "coverlossdata" })
+            @Html.HiddenFor(p => p.CoverLossOfDataFPObj.EiId)</div>
+        </div>
+        <div class="clearfix mb-md-30 mt-10 mb-10 ">
+            <div class="col-md-6"><p>Excess for electronics</p></div>
+            <div class="col-md-3">
+                @Html.DropDownListFor(Model => Model.ExcessCoverLossOfDataFPObj.Excess, @Model.ExcessCoverLossOfDataFPObj.ExcessList,  new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excesslossdata" })
+                @Html.HiddenFor(p => p.ExcessCoverLossOfDataFPObj.EiId)
+            </div>
+            <div class="col-md-3">
+                <div class="policy-loc-row"><input type="checkbox" name="ImposedlossofdataObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+            </div>
+        </div>
+        <div class="mt-40">
+            <div class="col-md-8"></div>
+            <div class="col-md-4 pull-right text-right">
+                <a href="#" class="button-3d nomargin tab-linker quot-prev-btn">Prev</a>
+                <img src="~/images/button-devider.png">
+                <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+            </div>
+        </div>
+
+    </div>
+}
+</div>
+
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location1').click(function () {
+						        $("#policy-ed-del-wrap1").fadeIn('slow');
+						        $("#policy-ed-del-wrap2").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+					$(document).ready(function() {
+						$('#location2').click(function () {
+						        $("#policy-ed-del-wrap2").fadeIn('slow');
+						        $("#policy-ed-del-wrap1").fadeOut('slow');
+						});
+					});
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script type="text/javascript">
+                    $('.dropdown').hover(function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500); }, function () { $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500); });
+</script>
+<script type="text/javascript">
+    function tnameAdd(id) {
+        var countId = id + 1;
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.DropDownListFor(Model => Model.TypeOfUnitFPObj.TypeofUnit, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom description", @id = "description" })@Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "form-control form-border-bottom MakeAndModel", @id = "MakeAndModel" })@Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "form-control form-border-bottom", @id = "serialnumber" }) @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom", @id = "NoofUnits" }) @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)</td><td class="no-border"><div class="policy-loc-row"><input type="checkbox" name="PortableitemsObj.portableitems" id="portableitems"><label for="checkbox1"><span><span></span></span></label></div></td><td class="no-border">@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @class = "form-control form-border-bottom", @id = "suminsured" }) @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @class = "form-control form-border-bottom", @id = "totalsuminsured" }) @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+
+        $.ajax({
+            url: '/farm/farmajaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "farmContents" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    var html2 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $.each(response.con, function (i, v) {
+                        html2 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tname-" + id).html(replaceA);
+                    $("#tname-tr-" + id).after(html);
+                    $("#tname-tr-" + countId + ' #description').html(html1);
+                    $("#tname-tr-" + countId + ' #makeandmodel').html(html2);
+                    $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);
+                    $("#tname-tr-" + countId + ' #year').attr('id', "year" + countId);
+                    $("#tname-tr-" + countId + ' #materials').attr('id', "materials" + countId);
+                    $("#tname-tr-" + countId + ' #coolroom').attr('id', "coolroom" + countId);
+                    $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                }
+            }
+        });
+    }
+    function tnameRemove(id) {
+        $("#tname-tr-" + id).remove();
+    }
+</script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $.validator.addMethod("notempty", function (value, element, param) {
+            var matchesFound = 0;
+            $(".description").each(function () {
+                if ($(this).val() != '') {
+                    matchesFound++;
+                }
+            });
+            if (this.optional(element) || matchesFound < 1) {
+                return true;
+            } else {
+            }
+        }, "Please enter a diferent value.");
+
+
+        $("form[name='electronicsFP']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "MakeAndModelFPObj.MakeandModel": {
+                    required: function (el) {
+                        if ($(el).parent('tr').find('.description').val() != '') {
+                            return true;
+                        }
+                    },
+                },
+                
+                "SerialNumberFPObj.SerialNumber": {
+                    required: function (el) {
+                        if ($(el).parent('tr').find('.description').val() != '') {
+                            return true;
+                        }
+                    },
+                },
+                "NoOfUnitsFPObj.NoOfUnits": {
+                    required: function (el) {
+                        if ($(el).parent('tr').find('.description').val() != '') {
+                            return true;
+                        }
+                    },
+                    regex: /^[0-9]*$/,
+                },
+                "PortableitemsObj.portableitems": "required",
+                "SumInsuredPerUnitFPObj.SumInsuredPerUnit": {
+                    regex: /^[0-9]*$/,
+                },
+                "TotalSumInsuredFPObj.TotalSumInsured": {
+                    regex: /^[0-9]*$/,
+                },                
+                
+                "CoverLossOfDataFPObj.CoverLossofData": {
+                    regex: /^[0-9]*$/,
+                },
+                
+            },
+            messages: {
+                "MakeAndModelFPObj.MakeandModel": "Please enter Make And Model",
+                "SerialNumberFPObj.SerialNumber": "Please enter Serial number",
+                "CoolroomFcObj.Coolroom": "Please select coolroom",
+                "NoOfUnitsFPObj.NoOfUnits": {
+                    required: "Please enter Number Of Units",
+                    regex: "Only numeric allowed"
+                },
+                "PortableitemsObj.portableitems": "Please select Portable Items Option",
+                "SumInsuredPerUnitFPObj.SumInsuredPerUnit": {
+                    required: "Please enter Sum Insured Per Unit",
+                    regex: "Only numeric allowed"
+                },
+                "CoverLossOfDataFPObj.CoverLossofData": {
+                    regex: "Only numeric allowed in Cover for Loss of data field"
+                },
+                
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

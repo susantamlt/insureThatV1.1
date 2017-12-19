@@ -149,12 +149,12 @@ namespace InsureThatAPI.CommonMethods
                 MasterDataEntities db = new MasterDataEntities();
                 if (ID.HasValue && ID>0)
                 {//UPDATE the Insured Details
-                    result = db.IT_CC_Insert_InsuredDetails(ID, insureddetailsmodel.ClientType, insureddetailsmodel.Title, insureddetailsmodel.FirstName, insureddetailsmodel.LastName, insureddetailsmodel.MiddleName, insureddetailsmodel.CompanyBusinessName, insureddetailsmodel.TradingName, insureddetailsmodel.ABN, insureddetailsmodel.AddressID, insureddetailsmodel.PostalAddressID, insureddetailsmodel.PhoneNo, insureddetailsmodel.MobileNo, insureddetailsmodel.DOB, insureddetailsmodel.EmailID).SingleOrDefault();
+                  //  result = db.IT_CC_Insert_InsuredDetails(ID, insureddetailsmodel.ClientType, insureddetailsmodel.Title, insureddetailsmodel.FirstName, insureddetailsmodel.LastName, insureddetailsmodel.MiddleName, insureddetailsmodel.CompanyBusinessName, insureddetailsmodel.TradingName, insureddetailsmodel.ABN, insureddetailsmodel.AddressID, insureddetailsmodel.PostalAddressID, insureddetailsmodel.PhoneNo, insureddetailsmodel.MobileNo, insureddetailsmodel.DOB, insureddetailsmodel.EmailID).SingleOrDefault();
                 }
                 else
                 {
                     //INSERT the Insured details
-                    result = db.IT_CC_Insert_InsuredDetails(null, insureddetailsmodel.ClientType, insureddetailsmodel.Title, insureddetailsmodel.FirstName, insureddetailsmodel.LastName, insureddetailsmodel.MiddleName, insureddetailsmodel.CompanyBusinessName, insureddetailsmodel.TradingName, insureddetailsmodel.ABN, insureddetailsmodel.AddressID, insureddetailsmodel.PostalAddressID, insureddetailsmodel.PhoneNo, insureddetailsmodel.MobileNo, insureddetailsmodel.DOB, insureddetailsmodel.EmailID).SingleOrDefault();
+                   // result = db.IT_CC_Insert_InsuredDetails(null, insureddetailsmodel.ClientType, insureddetailsmodel.Title, insureddetailsmodel.FirstName, insureddetailsmodel.LastName, insureddetailsmodel.MiddleName, insureddetailsmodel.CompanyBusinessName, insureddetailsmodel.TradingName, insureddetailsmodel.ABN, insureddetailsmodel.AddressID, insureddetailsmodel.PostalAddressID, insureddetailsmodel.PhoneNo, insureddetailsmodel.MobileNo, insureddetailsmodel.DOB, insureddetailsmodel.EmailID).SingleOrDefault();
                 }
 
             }

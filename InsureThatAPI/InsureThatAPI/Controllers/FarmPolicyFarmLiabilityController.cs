@@ -28,25 +28,12 @@ namespace InsureThatAPI.Controllers
                 var Policyincllist = Session["Policyinclustions"] as List<string>;
                 if (Policyincllist != null)
                 {
-                    if (Policyincllist.Contains("FixedFarmProperty"))
-                    {
-
-                    }
-                    else
-                    {
-                        if (Policyincllist.Contains("MobileFarmProperty"))
+                  
+                        if (Policyincllist.Contains("FarmLiability"))
                         {
-                            return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
+                           
                         }
-                        else if (Policyincllist.Contains("FarmInteruption"))
-                        {
-                            return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("FarmLiability"))
-                        {
-                            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Burglary"))
+                        else{ if (Policyincllist.Contains("Burglary"))
                         {
                             return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
                         }

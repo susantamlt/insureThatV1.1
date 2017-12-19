@@ -1,0 +1,403 @@
+﻿
+@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; ;
+}
+
+
+<div class="row content">
+    <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+        <h2>
+            POLICY DETAILS<span>
+
+                @Model.PolicyData.InsuredName/ @Model.PolicyData.PolicyNumber @if (Model.PolicyData.PolicyStatus == "AP")
+                { <span>/ Endorsed Policy</span> }
+                else if (Model.PolicyData.PolicyStatus == "AQ")
+                { <span>/ Endorsement Quotation</span> }
+                else if (Model.PolicyData.PolicyStatus == "CP")
+                { <span>/ Cancelled Policy</span> }
+                else if (Model.PolicyData.PolicyStatus == "CQ")
+                { <span>/ Cancellation Quotation</span> }
+                else if (Model.PolicyData.PolicyStatus == "DQ")
+                { <span>/ Discarded Quotation</span> }
+                else if (Model.PolicyData.PolicyStatus == "NP")
+                { <span>/ New Policy</span> }
+                else if (Model.PolicyData.PolicyStatus == "NQ")
+                { <span>/ Quotation</span> }
+                else if (Model.PolicyData.PolicyStatus == "RP")
+                { <span>/ Renewed Policy</span> }
+                else if (Model.PolicyData.PolicyStatus == "RQ")
+                { <span>/ Renewal Invitation</span> }
+                else if (Model.PolicyData.PolicyStatus == "XP")
+                { <span>/ Cancelled Policy</span> }
+                else if (Model.PolicyData.PolicyStatus == "XQ")
+                { <span>/ Cancellation Quotation</span> }
+            </span>
+
+        </h2>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+        <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle",new { PcId=Model.PolicyData.PolicyNumber})">View Policy History</a>
+        <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer",new {PolicyNumber=Model.PolicyData.PolicyNumber})">View Insured</a>
+        <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer",new {CustomerId=1 })">Add Policy</a>
+    </div>
+
+    <div class="mt-50 mb-50"></div>
+    <div class="p-10 col-md-12 border-bottom-1 mb-15">
+        <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+            <img src="~/images/farm-icon.png" class="policy-list-img">
+        </div>
+        <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                            Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                            {
+                                <lable>Rural Lifestyle</lable>
+                            }
+                            else
+                            { <label>Farm</label>
+                            }
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                            Policy No: @Model.PolicyData.PolicyNumber
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="screens">
+    @using (Ajax.BeginForm("ViewUpdatePolicyDetails", "Customer", new { CustomerId = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber, step = 2 }, new AjaxOptions()
+    {
+        HttpMethod = "POST"
+
+    }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="row content policy-full-view">
+            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div class="well">
+                    @Html.HiddenFor(p=>p.CustomerId)
+                    @for (int i = 0; i < Model.RiskData.Where(l => l.Name == "Home").Select(k => k.Elements).Count(); i++)
+                    {
+
+                        <h3>Your home at Location 1</h3>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Location of <strong>Home Building</strong> or Building which contains <strong>Home Content</strong></p>
+                            <p class="col-md-2 col-sm-2 col-xs-2"></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                            <p class="col-md-4 col-sm-4 col-xs-12 text-right">@*@Model.InsuredDetails.Select(p=>p.a*@</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">
+                                Description of this building at this address
+                            </p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+
+
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60007) && Model.RiskData[0].Elements.Where(h => h.ElId == 60007).FirstOrDefault().Value == "1")
+                                {
+                                    <span>Main Home</span>
+                                }
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60007) && Model.RiskData[0].Elements.Where(h => h.ElId == 60007).FirstOrDefault().Value == "2")
+                                {
+                                    <span>Managers Home</span>
+                                }
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60007) && Model.RiskData[0].Elements.Where(h => h.ElId == 60007).FirstOrDefault().Value == "3")
+                                {
+                                    <span>Gate Home</span>
+                                }
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60007) && Model.RiskData[0].Elements.Where(h => h.ElId == 60007).FirstOrDefault().Value == "4")
+                                {
+                                    <span>Guest Home</span>
+                                }
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60007) && Model.RiskData[0].Elements.Where(h => h.ElId == 60007).FirstOrDefault().Value == "5")
+                                {
+                                    <span>Pool Home</span>
+                                }
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60007) && Model.RiskData[0].Elements.Where(h => h.ElId == 60007).FirstOrDefault().Value == "6")
+                                {
+                                    <span>Summer Home</span>
+                                }
+
+
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Area of the property  </p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60009) && Model.RiskData[0].Elements.Where(h => h.ElId == 60009).FirstOrDefault().Value != null)
+                                {
+                                    @Model.RiskData[0].Elements.Where(h => h.ElId == 60009).FirstOrDefault().Value <label>Hectares</label>
+                                }
+                            </p>
+                        </div>
+
+
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is <B>Your Home Building more than 100 metres</B> from<b> Uncleared Natural Bushland</b>, a State or National Forest or a commercial plantation of pine trees? </p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60013) && Model.RiskData[0].Elements.Where(h => h.ElId == 60013).FirstOrDefault().Value != null)
+                            {
+                                if (Model.RiskData[0].Elements.Where(h => h.ElId == 60013).FirstOrDefault().Value == "0")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        No
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Yes
+                                    </p>
+                                }
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is your Home Building located on farm? </p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60013) && Model.RiskData[0].Elements.Where(h => h.ElId == 60013).FirstOrDefault().Value != null)
+                            {
+                                if (Model.RiskData[0].Elements.Where(h => h.ElId == 60013).FirstOrDefault().Value == "0")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">No</p>
+                                }
+                                else
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">Yes</p>
+                                }
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10"><strong>Construction Details</strong></p>
+                            <p class="col-md-2 col-sm-2 col-xs-2"></p>
+                        </div>
+
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">   What is External Walls made of </p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60029) && Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value != null)
+                            {
+
+
+                                if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "1")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Asbestos cement sheet or plank
+                                    </p>
+                                }
+                                else if ((Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "2"))
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Brick Veneer
+                                    </p>
+                                }
+                                else if ((Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "3"))
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Cladding
+                                    </p>if ((Model.RiskData[0].Elements.Where(h => h.ElId == 60031).FirstOrDefault().Value != null))
+                                    {
+                                        @Model.RiskData[0].Elements.Where(h => h.ElId == 60031).FirstOrDefault().Value
+                                    }
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "4")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Concrete
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "5")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Concrete Block
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "6")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Double Brick
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "7")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Metel
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "8")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Mud Brick
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "9")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Other
+                                    </p>
+                                    if ((Model.RiskData[0].Elements.Where(h => h.ElId == 60035).FirstOrDefault().Value != null))
+                                    {
+                                        @Model.RiskData[0].Elements.Where(h => h.ElId == 60035).FirstOrDefault().Value
+                                    }
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "10")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Rock/Stone
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "11")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Rockcote
+                                    </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60029).FirstOrDefault().Value == "12")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Timber
+                                    </p>
+                                }
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">  What is Roof made of </p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60035) && Model.RiskData[0].Elements.Where(h => h.ElId == 60035).FirstOrDefault().Value != null)
+                            {
+
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @Model.RiskData[0].Elements.Where(h => h.ElId == 60035).FirstOrDefault().Value
+                                </p>
+
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">  In what year was the home built? </p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60037) && Model.RiskData[0].Elements.Where(h => h.ElId == 60037).FirstOrDefault().Value != null)
+                            {
+
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @Model.RiskData[0].Elements.Where(h => h.ElId == 60037).FirstOrDefault().Value
+                                </p>
+
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10"> Is the Home Building watertight, well maintained, structurally sound and secure? </p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60043) && Model.RiskData[0].Elements.Where(h => h.ElId == 60043).FirstOrDefault().Value != null)
+                            {
+
+                                if (Model.RiskData[0].Elements.Where(h => h.ElId == 60043).FirstOrDefault().Value == "0")
+                                {   <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                No
+                            </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60043).FirstOrDefault().Value == "1")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Yes
+                                    </p>
+                                }
+
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is the Home Building protected under heritage legislation other than a local council listing?</p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60045) && Model.RiskData[0].Elements.Where(h => h.ElId == 60045).FirstOrDefault().Value != null)
+                            {
+                                if (Model.RiskData[0].Elements.Where(h => h.ElId == 60045).FirstOrDefault().Value == "0")
+                                {   <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                No
+                            </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60045).FirstOrDefault().Value == "1")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Yes
+                                    </p>
+                                }
+                            }
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Does your Home Building comply with the local council regulations regarding its fitness for occupancy as a domestic dwelling and as a Bread and Breakfast business?</p>
+                            @if (Model.RiskData[0].Elements.Exists(o => o.ElId == 60057) && Model.RiskData[0].Elements.Where(h => h.ElId == 60057).FirstOrDefault().Value != null)
+                            {
+                                if (Model.RiskData[0].Elements.Where(h => h.ElId == 60057).FirstOrDefault().Value == "0")
+                                {   <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                No
+                            </p>
+                                }
+                                else if (Model.RiskData[0].Elements.Where(h => h.ElId == 60057).FirstOrDefault().Value == "1")
+                                {
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        Yes
+                                    </p>
+                                }
+
+                            }
+                        </div>
+
+                    }
+                    <div class="row">
+                        <button type="submit" class="btn-primary btn pull-right" style="margin-bottom:5% !important;">NEXT</button>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+                <div class="well">
+                    <h3>Policy Sections</h3>
+                    <p>* Click to view or edit</p>
+                    <hr />
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#location1').click(function () {
+                                    $("#policy-ed-del-wrap1").fadeIn('slow');
+                                    $("#policy-ed-del-wrap2").fadeOut('slow');
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#location2').click(function () {
+                                    $("#policy-ed-del-wrap2").fadeIn('slow');
+                                    $("#policy-ed-del-wrap1").fadeOut('slow');
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <input type="submit" name="newcover" value="New Cover">
+                </div>
+            </div>
+        </div>
+    }
+</div>

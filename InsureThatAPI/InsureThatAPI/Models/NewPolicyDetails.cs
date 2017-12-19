@@ -75,14 +75,17 @@ namespace InsureThatAPI.Models
     }
     public class PolicyDetails
     {
+        public string Timecreated { get; set; }
+        public int CreatedbyUserId { get; set; }
+        public bool RemoveStampDuty { get; set; }
         public int CustomerId { get; set; }
-        public string PcId { get; set; }
+        public int PcId { get; set; }
         public string PolicyNumber { get; set; }
         public string TransactionNumber { get; set; }
-        public string TermNumber { get; set; }
+        public int TermNumber { get; set; }
         public string AccountManagerID { get; set; }
         public string PolicyStatus { get; set; }
-        public string CoverPeriod { get; set; }
+        public int CoverPeriod { get; set; }
         public string CoverPeriodUnit { get; set; }
         public DateTime InceptionDate { get; set; }
         public DateTime ExpiryDate { get; set; }
@@ -91,8 +94,8 @@ namespace InsureThatAPI.Models
         public int TrId { get; set; }
         public int? IyId { get; set; }
         public string InsuredName { get; set; }
-        public string IsFloodCoverRequired { get; set; }
-        public string HasMadeAClaim { get; set; }
+        public bool IsFloodCoverRequired { get; set; }
+        public bool HasMadeAClaim { get; set; }
         public string PolicyInclusions { get; set; }
         //public PolicyDetails PolicyData { get; set; }
         public List<InsuredDetails> InsuredDetails { get; set; }
@@ -124,28 +127,44 @@ namespace InsureThatAPI.Models
     }
     public class ViewEditPolicyDetails
     {
+        public int? AddressID { get; set; }
         public int CustomerId { get; set; }
         public string PcId { get; set; }
+        public string ApiKey { get; set; }
         public string PolicyInclusions { get; set; }
         public PolicyDetails PolicyData { get; set; }
         public List<InsuredDetails> InsuredDetails { get; set; }
         public List<RiskDetails> RiskData { get; set; }
         public List<PremiumDetails> PremiumData { get; set; }
         public List<UnitDatas> UnitData { get; set; }
+        public List<AddressData> AddressData { get; set; }
+        public SectionDatas SectionData { get; set; }
+        public ProfileDatas ProfileData { get; set; }
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
         public string ReferralList { get; set; }
+
         public List<string> ReferralFullList { get; set; }
         public string Reason { get; set; }
     }
+    public class AddressData
+    {
+        public int AddressID { get; set; }
+        public string AddressLine1 { get; set; }
+        public string Suburb { get; set; }
+        public string State { get; set; }
+        public int Postcode { get; set; }
+        
+        
+}
     public class UnitDatas
     {
         public string Component { get; set; }
         public string Name{ get; set; }
         public int UnId { get; set; }
-        public string UnitNumber { get; set; }
+        public int? UnitNumber { get; set; }
         public string UnitStatus { get; set; }
-        public string ProfileUnId { get; set; }
+        public int? ProfileUnId { get; set; }
      }
     public class ViewEditPolicyDetailss
     {

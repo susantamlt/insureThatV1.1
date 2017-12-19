@@ -1,0 +1,272 @@
+﻿@model InsureThatAPI.Models.HB2HomeBuilding
+@{
+    ViewBag.Title = "Home Building";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrack"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / HOME BUILDING</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("HomeDescription", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1"){ <text>class = "success"</text>}>Home Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("ConstructionDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1"){ <text>class = "success"</text>}>Construction Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1"){ <text>class = "success"</text>}>Occupancy Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1"){ <text>class = "success"</text>}>Interested Parties</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Home Building</a>
+            </li>
+        </ul>
+        <div id="homeBuildContain">
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("HomeBuilding", "RuralLifeStyle", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "homeBuilding", @name = "homeBuilding" }))
+            {
+                <div id="ptab6">
+                    @Html.HiddenFor(p => p.CustomerId)
+                    @Html.HiddenFor(p => p.completiontrack, new { @id = "completiontrck" })
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        @Html.AntiForgeryToken()
+                        <p class="col-md-3 col-sm-3 col-xs-12">Location <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                        <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <img src="~/images/close-icon.png" />
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        </p>
+                                        <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-9 col-sm-9 col-xs-12">
+                            @Html.TextBoxFor(p => p.LocationObj.Location, new { @class = "form-control form-border-bottom", @id = "location" })
+                            @Html.HiddenFor(p => p.LocationObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-6 col-sm-6 col-xs-12">How much would it cost to replace your Home Building?</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            @Html.TextBoxFor(p => p.CostforRebuildingObj.CostforRebuilding, new { @class = "form-control form-border-bottom CostforRebuilding", @id = "costforRebuilding" })
+                            @Html.HiddenFor(p => p.CostforRebuildingObj.EiId)
+                            <p class="mini-text">The minimum is $500,000</p>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-4 col-sm-4 col-xs-12">Cover for Home Building</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            @Html.TextBoxFor(p => p.CoverhomebuildingObj.Coverhomebuilding, new { @class = "gray-bg-underline", @id = "coverhomebuilding" })
+                            @Html.HiddenFor(p => p.CoverhomebuildingObj.EiId)
+                        </div>
+                        <p class="col-md-5 col-sm-5 col-xs-12 mini-text">(This should be the cost of building the home today plus the cost of all fees, demolition, removal of debris and propping up that may  be required.)</p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Claim free period? <a href="#costumModal3" role="button" data-target="#costumModal3" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                        <div id="costumModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <img src="~/images/close-icon.png" />
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        </p>
+                                        <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '0')<label for="radio1"><span><span></span></span>0 years</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '1')<label for="radio1"><span><span></span></span>1 years</label></div>
+                            <div class="col-md-5 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '3')<label for="radio1"><span><span></span></span>2 or more years</label></div>
+                        </div>
+                        @Html.HiddenFor(p => p.ClaimfreeperiodObj.EiId)
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <div class="col-md-6"><p>Please select the excess you wish to pay</p></div>
+                        <div class="col-md-3">
+                            <select class="gray-bg-underline form-control form-border-bottom field-length-sm" name="ExcessObj.Excess" id="excess">
+                                <option value="">Select</option>
+                                <option value="1">$500</option>
+                                <option value="2">$600</option>
+                                <option value="3">$700</option>
+                                <option value="4">$850</option>
+                                <option value="5">$1200</option>
+                                <option value="6">$2200</option>
+                                <option value="7">$5500</option>
+                            </select>
+                            @Html.HiddenFor(p => p.ExcessObj.EiId)
+                        </div>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('#excess').change(function () {
+                                    if ($(this).val() != '') {
+                                        $('#imposed').removeAttr('disabled');                                        
+                                    } else {
+                                        $('#imposed').attr('disabled', 'disabled');
+                                        $('#imposed').removeAttr('checked');
+                                        $('#imposed').val('false');
+                                    }
+                                });
+                            });
+                        </script>
+                        <div class="col-md-3">
+                            <div class="policy-loc-row">
+                                <input type="checkbox" name="ImposedObj.Imposed" id="imposed" value="false" disabled="disabled" />
+                                <label for="checkbox1"><span><span></span></span>Imposed</label>
+                            </div>
+                            @Html.HiddenFor(p => p.ImposedObj.EiId)
+                            <script type="text/javascript">
+                                $(document).on('click', '#imposed', function () {
+                                    if ($(this).is(':checked') == true) {
+                                        $(this).attr('checked', 'checked');
+                                        $(this).val('true');
+                                    } else {
+                                        $(this).removeAttr('checked');
+                                        $(this).val('false');
+                                    }
+                                });
+                            </script>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <a href="@Url.Action("InterestedParties", "RuralLifeStyle")" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='homeBuilding']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "LocationObj.Location": {
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "CostforRebuildingObj.CostforRebuilding": {
+                    regex: /^[0-9]*$/,
+                    min:500000
+                },
+                "CoverhomebuildingObj.Coverhomebuilding": {
+                    regex: /^[0-9]*$/,
+                },
+                "ClaimfreeperiodObj.Claimfreeperiod": "required",
+                "ExcessObj.Excess": {
+                    required: function (el) {
+                        if ($("#coverhomebuilding").val() != '') {
+                            return true;
+                        }
+                    },
+                },
+                "ImposedObj.Imposed": {
+                    required: function (el) {
+                        if ($("#excess").val() != '') {
+                            return true;
+                        }
+                    },
+                },                
+            },
+            messages: {
+                "LocationObj.Location": "Special character and Number not allowed in location ",
+                "CostforRebuildingObj.CostforRebuilding": {
+                    regex: "Special character not allowed home building",
+                    min: "Please enter a value greater than or equal to $500,000."
+                },
+                "CoverhomebuildingObj.Coverhomebuilding": "Special character not allowed cover building",
+                "ClaimfreeperiodObj.Claimfreeperiod": "Please select claim free Period",
+                "ExcessObj.Excess": "Please select excess",
+                "ImposedObj.Imposed":"Please checked imposed",
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            //submitHandler: function (form) {
+            //    form.submit();
+            //}
+        });
+    });
+</script>

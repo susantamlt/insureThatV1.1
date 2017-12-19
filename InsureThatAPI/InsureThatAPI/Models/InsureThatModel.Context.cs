@@ -170,11 +170,15 @@ namespace InsureThatAPI.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("IT_CC_Insert_HomeContentsItems", pcIdParameter, trIdParameter, homeIDParameter, homeContentsItemDescriptionParameter, homeContentsItemSumInsuredParameter);
         }
     
-        public virtual ObjectResult<Nullable<int>> IT_CC_Insert_InsuredDetails(Nullable<int> insuredID, Nullable<int> clientType, string title, string firstName, string lastName, string middleName, string companyBusinessName, string tradingName, string aBN, Nullable<int> addressID, Nullable<int> postalAddressID, string phoneNo, string mobileNo, Nullable<System.DateTime> dOB, string emailID)
+        public virtual ObjectResult<Nullable<int>> IT_CC_Insert_InsuredDetails(Nullable<int> insuredID, string policyIds, Nullable<int> clientType, string title, string firstName, string lastName, string middleName, string companyBusinessName, string tradingName, string aBN, Nullable<int> addressID, Nullable<int> postalAddressID, string phoneNo, string mobileNo, Nullable<System.DateTime> dOB, string emailID)
         {
             var insuredIDParameter = insuredID.HasValue ?
                 new ObjectParameter("InsuredID", insuredID) :
                 new ObjectParameter("InsuredID", typeof(int));
+    
+            var policyIdsParameter = policyIds != null ?
+                new ObjectParameter("PolicyIds", policyIds) :
+                new ObjectParameter("PolicyIds", typeof(string));
     
             var clientTypeParameter = clientType.HasValue ?
                 new ObjectParameter("ClientType", clientType) :
@@ -232,7 +236,7 @@ namespace InsureThatAPI.Models
                 new ObjectParameter("EmailID", emailID) :
                 new ObjectParameter("EmailID", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_CC_Insert_InsuredDetails", insuredIDParameter, clientTypeParameter, titleParameter, firstNameParameter, lastNameParameter, middleNameParameter, companyBusinessNameParameter, tradingNameParameter, aBNParameter, addressIDParameter, postalAddressIDParameter, phoneNoParameter, mobileNoParameter, dOBParameter, emailIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_CC_Insert_InsuredDetails", insuredIDParameter, policyIdsParameter, clientTypeParameter, titleParameter, firstNameParameter, lastNameParameter, middleNameParameter, companyBusinessNameParameter, tradingNameParameter, aBNParameter, addressIDParameter, postalAddressIDParameter, phoneNoParameter, mobileNoParameter, dOBParameter, emailIDParameter);
         }
     
         public virtual int IT_CC_Insert_InsuredDisclosureDetails(Nullable<int> pcId, Nullable<int> trId, Nullable<int> previousInsurer, string rDBValue1, string rDBValue2, string rDBValue3, string rDBValue4, string rDBValue5, string rDBValue6, string rDBValue7, Nullable<System.DateTime> dischargeDate, string description)
@@ -371,7 +375,7 @@ namespace InsureThatAPI.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("IT_CC_Insert_ValuablesItems", pcIdParameter, trIdParameter, homeIDParameter, valuablesItemIDParameter, valuablesDescriptionParameter, valuablesSumInsuredParameter);
         }
     
-        public virtual int IT_CC_InsertAddressDetails(Nullable<int> addressID, string addressLine1, string addressLine2, string suburb, string state, string postcode)
+        public virtual ObjectResult<Nullable<int>> IT_CC_InsertAddressDetails(Nullable<int> addressID, string addressLine1, string addressLine2, string suburb, string state, string postcode)
         {
             var addressIDParameter = addressID.HasValue ?
                 new ObjectParameter("AddressID", addressID) :
@@ -397,7 +401,7 @@ namespace InsureThatAPI.Models
                 new ObjectParameter("Postcode", postcode) :
                 new ObjectParameter("Postcode", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("IT_CC_InsertAddressDetails", addressIDParameter, addressLine1Parameter, addressLine2Parameter, suburbParameter, stateParameter, postcodeParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_CC_InsertAddressDetails", addressIDParameter, addressLine1Parameter, addressLine2Parameter, suburbParameter, stateParameter, postcodeParameter);
         }
     
         public virtual int IT_CC_InsertConstructionDetails(Nullable<int> pcId, Nullable<int> trId, Nullable<int> homeID, Nullable<int> externalWallDetails, string wallDescription, Nullable<int> roofDetails, string roofDescription, Nullable<System.DateTime> buildYear, string rDBValue1, string rDBValue2, string rDBValue3, string rDBValue4)
@@ -1424,6 +1428,236 @@ namespace InsureThatAPI.Models
                 new ObjectParameter("PolicyType", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_InsertPolicyInclusions", customerIdParameter, policyInclusionsParameter, policyIdParameter, policyTypeParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> IT_dt_Insert_PolicyDetails(string policyNumber, string transactionNumber, Nullable<int> pcId, Nullable<int> trId, Nullable<int> termNumber, string accountManagerID, string policyStatus, Nullable<int> coverPeriod, string coverPeriodUnit, Nullable<System.DateTime> inceptionDate, Nullable<System.DateTime> expiryDate, Nullable<System.DateTime> effectiveDate, Nullable<int> prId, Nullable<int> iyId, string insuredName, Nullable<bool> removeStampDuty, Nullable<int> createdByUserID, string timeCreated, Nullable<bool> isFloodCoverRequired, Nullable<bool> hasMadeAClaim, string reason, string status)
+        {
+            var policyNumberParameter = policyNumber != null ?
+                new ObjectParameter("PolicyNumber", policyNumber) :
+                new ObjectParameter("PolicyNumber", typeof(string));
+    
+            var transactionNumberParameter = transactionNumber != null ?
+                new ObjectParameter("TransactionNumber", transactionNumber) :
+                new ObjectParameter("TransactionNumber", typeof(string));
+    
+            var pcIdParameter = pcId.HasValue ?
+                new ObjectParameter("PcId", pcId) :
+                new ObjectParameter("PcId", typeof(int));
+    
+            var trIdParameter = trId.HasValue ?
+                new ObjectParameter("TrId", trId) :
+                new ObjectParameter("TrId", typeof(int));
+    
+            var termNumberParameter = termNumber.HasValue ?
+                new ObjectParameter("TermNumber", termNumber) :
+                new ObjectParameter("TermNumber", typeof(int));
+    
+            var accountManagerIDParameter = accountManagerID != null ?
+                new ObjectParameter("AccountManagerID", accountManagerID) :
+                new ObjectParameter("AccountManagerID", typeof(string));
+    
+            var policyStatusParameter = policyStatus != null ?
+                new ObjectParameter("PolicyStatus", policyStatus) :
+                new ObjectParameter("PolicyStatus", typeof(string));
+    
+            var coverPeriodParameter = coverPeriod.HasValue ?
+                new ObjectParameter("CoverPeriod", coverPeriod) :
+                new ObjectParameter("CoverPeriod", typeof(int));
+    
+            var coverPeriodUnitParameter = coverPeriodUnit != null ?
+                new ObjectParameter("CoverPeriodUnit", coverPeriodUnit) :
+                new ObjectParameter("CoverPeriodUnit", typeof(string));
+    
+            var inceptionDateParameter = inceptionDate.HasValue ?
+                new ObjectParameter("InceptionDate", inceptionDate) :
+                new ObjectParameter("InceptionDate", typeof(System.DateTime));
+    
+            var expiryDateParameter = expiryDate.HasValue ?
+                new ObjectParameter("ExpiryDate", expiryDate) :
+                new ObjectParameter("ExpiryDate", typeof(System.DateTime));
+    
+            var effectiveDateParameter = effectiveDate.HasValue ?
+                new ObjectParameter("EffectiveDate", effectiveDate) :
+                new ObjectParameter("EffectiveDate", typeof(System.DateTime));
+    
+            var prIdParameter = prId.HasValue ?
+                new ObjectParameter("PrId", prId) :
+                new ObjectParameter("PrId", typeof(int));
+    
+            var iyIdParameter = iyId.HasValue ?
+                new ObjectParameter("IyId", iyId) :
+                new ObjectParameter("IyId", typeof(int));
+    
+            var insuredNameParameter = insuredName != null ?
+                new ObjectParameter("InsuredName", insuredName) :
+                new ObjectParameter("InsuredName", typeof(string));
+    
+            var removeStampDutyParameter = removeStampDuty.HasValue ?
+                new ObjectParameter("RemoveStampDuty", removeStampDuty) :
+                new ObjectParameter("RemoveStampDuty", typeof(bool));
+    
+            var createdByUserIDParameter = createdByUserID.HasValue ?
+                new ObjectParameter("CreatedByUserID", createdByUserID) :
+                new ObjectParameter("CreatedByUserID", typeof(int));
+    
+            var timeCreatedParameter = timeCreated != null ?
+                new ObjectParameter("TimeCreated", timeCreated) :
+                new ObjectParameter("TimeCreated", typeof(string));
+    
+            var isFloodCoverRequiredParameter = isFloodCoverRequired.HasValue ?
+                new ObjectParameter("IsFloodCoverRequired", isFloodCoverRequired) :
+                new ObjectParameter("IsFloodCoverRequired", typeof(bool));
+    
+            var hasMadeAClaimParameter = hasMadeAClaim.HasValue ?
+                new ObjectParameter("HasMadeAClaim", hasMadeAClaim) :
+                new ObjectParameter("HasMadeAClaim", typeof(bool));
+    
+            var reasonParameter = reason != null ?
+                new ObjectParameter("Reason", reason) :
+                new ObjectParameter("Reason", typeof(string));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_dt_Insert_PolicyDetails", policyNumberParameter, transactionNumberParameter, pcIdParameter, trIdParameter, termNumberParameter, accountManagerIDParameter, policyStatusParameter, coverPeriodParameter, coverPeriodUnitParameter, inceptionDateParameter, expiryDateParameter, effectiveDateParameter, prIdParameter, iyIdParameter, insuredNameParameter, removeStampDutyParameter, createdByUserIDParameter, timeCreatedParameter, isFloodCoverRequiredParameter, hasMadeAClaimParameter, reasonParameter, statusParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> IT_dt_Insert_Unit(Nullable<int> policyId, string component, string name, Nullable<int> unId, Nullable<int> unitNumber, string unitStatus, Nullable<int> profileUnId, string referralList, string status)
+        {
+            var policyIdParameter = policyId.HasValue ?
+                new ObjectParameter("PolicyId", policyId) :
+                new ObjectParameter("PolicyId", typeof(int));
+    
+            var componentParameter = component != null ?
+                new ObjectParameter("Component", component) :
+                new ObjectParameter("Component", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var unIdParameter = unId.HasValue ?
+                new ObjectParameter("UnId", unId) :
+                new ObjectParameter("UnId", typeof(int));
+    
+            var unitNumberParameter = unitNumber.HasValue ?
+                new ObjectParameter("UnitNumber", unitNumber) :
+                new ObjectParameter("UnitNumber", typeof(int));
+    
+            var unitStatusParameter = unitStatus != null ?
+                new ObjectParameter("UnitStatus", unitStatus) :
+                new ObjectParameter("UnitStatus", typeof(string));
+    
+            var profileUnIdParameter = profileUnId.HasValue ?
+                new ObjectParameter("ProfileUnId", profileUnId) :
+                new ObjectParameter("ProfileUnId", typeof(int));
+    
+            var referralListParameter = referralList != null ?
+                new ObjectParameter("ReferralList", referralList) :
+                new ObjectParameter("ReferralList", typeof(string));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_dt_Insert_Unit", policyIdParameter, componentParameter, nameParameter, unIdParameter, unitNumberParameter, unitStatusParameter, profileUnIdParameter, referralListParameter, statusParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> IT_dt_Insert_UnitDetails(Nullable<int> unitId, string component_Type, string unit_Type, Nullable<int> unId, Nullable<int> elementId, string rowSourceData, string valueData, string stateData, string referralList, string status, Nullable<int> addressId)
+        {
+            var unitIdParameter = unitId.HasValue ?
+                new ObjectParameter("UnitId", unitId) :
+                new ObjectParameter("UnitId", typeof(int));
+    
+            var component_TypeParameter = component_Type != null ?
+                new ObjectParameter("Component_Type", component_Type) :
+                new ObjectParameter("Component_Type", typeof(string));
+    
+            var unit_TypeParameter = unit_Type != null ?
+                new ObjectParameter("Unit_Type", unit_Type) :
+                new ObjectParameter("Unit_Type", typeof(string));
+    
+            var unIdParameter = unId.HasValue ?
+                new ObjectParameter("UnId", unId) :
+                new ObjectParameter("UnId", typeof(int));
+    
+            var elementIdParameter = elementId.HasValue ?
+                new ObjectParameter("ElementId", elementId) :
+                new ObjectParameter("ElementId", typeof(int));
+    
+            var rowSourceDataParameter = rowSourceData != null ?
+                new ObjectParameter("RowSourceData", rowSourceData) :
+                new ObjectParameter("RowSourceData", typeof(string));
+    
+            var valueDataParameter = valueData != null ?
+                new ObjectParameter("ValueData", valueData) :
+                new ObjectParameter("ValueData", typeof(string));
+    
+            var stateDataParameter = stateData != null ?
+                new ObjectParameter("StateData", stateData) :
+                new ObjectParameter("StateData", typeof(string));
+    
+            var referralListParameter = referralList != null ?
+                new ObjectParameter("ReferralList", referralList) :
+                new ObjectParameter("ReferralList", typeof(string));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            var addressIdParameter = addressId.HasValue ?
+                new ObjectParameter("AddressId", addressId) :
+                new ObjectParameter("AddressId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_dt_Insert_UnitDetails", unitIdParameter, component_TypeParameter, unit_TypeParameter, unIdParameter, elementIdParameter, rowSourceDataParameter, valueDataParameter, stateDataParameter, referralListParameter, statusParameter, addressIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_dt_GetPolicyDetails_Result> usp_dt_GetPolicyDetails(Nullable<int> policyId, Nullable<int> pcId)
+        {
+            var policyIdParameter = policyId.HasValue ?
+                new ObjectParameter("PolicyId", policyId) :
+                new ObjectParameter("PolicyId", typeof(int));
+    
+            var pcIdParameter = pcId.HasValue ?
+                new ObjectParameter("PcId", pcId) :
+                new ObjectParameter("PcId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_dt_GetPolicyDetails_Result>("usp_dt_GetPolicyDetails", policyIdParameter, pcIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_GetUnit_Result> usp_GetUnit(Nullable<int> unitId, Nullable<int> policyId, string name)
+        {
+            var unitIdParameter = unitId.HasValue ?
+                new ObjectParameter("UnitId", unitId) :
+                new ObjectParameter("UnitId", typeof(int));
+    
+            var policyIdParameter = policyId.HasValue ?
+                new ObjectParameter("PolicyId", policyId) :
+                new ObjectParameter("PolicyId", typeof(int));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUnit_Result>("usp_GetUnit", unitIdParameter, policyIdParameter, nameParameter);
+        }
+    
+        public virtual ObjectResult<usp_GetUnitDetails_Result> usp_GetUnitDetails(Nullable<int> unitId, Nullable<int> unitDetailsId, Nullable<int> unId)
+        {
+            var unitIdParameter = unitId.HasValue ?
+                new ObjectParameter("UnitId", unitId) :
+                new ObjectParameter("UnitId", typeof(int));
+    
+            var unitDetailsIdParameter = unitDetailsId.HasValue ?
+                new ObjectParameter("UnitDetailsId", unitDetailsId) :
+                new ObjectParameter("UnitDetailsId", typeof(int));
+    
+            var unIdParameter = unId.HasValue ?
+                new ObjectParameter("UnId", unId) :
+                new ObjectParameter("UnId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUnitDetails_Result>("usp_GetUnitDetails", unitIdParameter, unitDetailsIdParameter, unIdParameter);
         }
     }
 }
