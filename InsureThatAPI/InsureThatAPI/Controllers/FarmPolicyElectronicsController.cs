@@ -328,7 +328,7 @@ namespace InsureThatAPI.Controllers
                 }
 
             }
-            return View(FPElectronics);
+            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
         }
     }
 }
