@@ -358,7 +358,7 @@ namespace InsureThatAPI.Controllers
             if (PcId != null && PcId > 0)
             {
                 ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-
+                int policytype = 1;
                 var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, policytype).FirstOrDefault();
                 if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
                 {

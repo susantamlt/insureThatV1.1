@@ -17,20 +17,12 @@ namespace InsureThatAPI.Controllers
         public async System.Threading.Tasks.Task<ActionResult> HomeBilding(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
-                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                if(policydetails!=null)
-                {
-                    model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
-                    model.PolicyData.InsuredName = policydetails.InsuredName;
-                    model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
-                    model.PolicyData.PrId = policydetails.PrId;
-                    model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
-                    model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
-                }
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();              
                 var units = db.usp_GetUnit(null, policydetails.PolicyId, "Home Buildings").FirstOrDefault();
                 if (units != null)
                 {
@@ -42,6 +34,16 @@ namespace InsureThatAPI.Controllers
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -151,7 +153,7 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                return RedirectToAction("", "");
+                return RedirectToAction("Agenlogin", "Login");
             }
 
             return View(model);
