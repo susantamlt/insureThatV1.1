@@ -298,7 +298,7 @@ namespace InsureThatAPI.Controllers
         //    return View();
         //}
         #region Display Policy List Based on Insured Id
-    
+
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> InsuredPolicys(int? InsuredId, int? cid)
         {
@@ -332,7 +332,7 @@ namespace InsureThatAPI.Controllers
                     return RedirectToAction("NewPolicy", "Customer", new { cid = cid });
                 }
             }
-          
+
             else
             {
                 return RedirectToAction("AdvancedCustomerSearch", "Customer");
@@ -354,13 +354,11 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AgentLogin", "Login");
             }
             PcId = 54611;
-          
-            int policytype = 1;
             string policyid = PcId.ToString();
             if (PcId != null && PcId > 0)
             {
                 ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-                
+
                 var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, policytype).FirstOrDefault();
                 if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
                 {
@@ -390,18 +388,18 @@ namespace InsureThatAPI.Controllers
                 {
                     return RedirectToAction("AgentLogin", "Login");
                 }
-                if(model!=null)
+                if (model != null)
                 {
                     Session["apiKey"] = model.ApiKey;
                     var insertpolicydetails = db.IT_dt_Insert_PolicyDetails(model.PolicyData.PolicyNumber, model.PolicyData.TransactionNumber, model.PolicyData.PcId, model.PolicyData.TrId, model.PolicyData.TermNumber, model.PolicyData.AccountManagerID,
                         model.PolicyData.PolicyStatus, model.PolicyData.CoverPeriod, model.PolicyData.CoverPeriodUnit, model.PolicyData.InceptionDate, model.PolicyData.ExpiryDate, model.PolicyData.EffectiveDate, model.PolicyData.PrId, model.PolicyData.IyId,
                         model.PolicyData.InsuredName, model.PolicyData.RemoveStampDuty, model.PolicyData.CreatedbyUserId, model.PolicyData.Timecreated, model.PolicyData.IsFloodCoverRequired, model.PolicyData.HasMadeAClaim, model.PolicyData.Reason, model.Status).SingleOrDefault();
-                 
-                    if (insertpolicydetails>1)
+
+                    if (insertpolicydetails > 1)
                     {
-                        if(model.UnitData!=null && model.UnitData.Count>0)
+                        if (model.UnitData != null && model.UnitData.Count > 0)
                         {
-                            for(int i=0; i<model.UnitData.Count; i++)
+                            for (int i = 0; i < model.UnitData.Count; i++)
                             {
                                 var insertunits = db.IT_dt_Insert_Unit(insertpolicydetails, model.UnitData[i].Component, model.UnitData[i].Name, model.UnitData[i].UnId, model.UnitData[i].UnitNumber,
                                     model.UnitData[i].UnitStatus, model.UnitData[i].ProfileUnId, model.ReferralList, model.Status).SingleOrDefault();
@@ -409,145 +407,82 @@ namespace InsureThatAPI.Controllers
                         }
                     }
                 }
-                if(model.UnitData!=null && model.UnitData.Count>0)
+                if (model.UnitData != null && model.UnitData.Count > 0)
                 {
                     model.PolicyInclusions = null;
-                    if (policytype == 1)
+
+                    for (int pi = 0; pi < model.UnitData.Count; pi++)
                     {
-                        string policyincl = "0-0-0-0-0-0-0-0-0";
-                        string[] policystringarray = policyincl.Split('-');
-                        for (int pi = 0;   model.UnitData.Count<= policystringarray.Length; pi++)
+                        if (pi < model.UnitData.Count)
                         {
-                            if (pi < model.UnitData.Count)
+                            if (model.PolicyData.PrId == 1029)
                             {
                                 if (model.UnitData[pi].Name == "Home")
                                 {
-                                    policystringarray[0] = "1";
+                                    model.PolicyInclusions = "HB";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Farm Property")
                                 {
-                                    policystringarray[4] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[4] = "-0";
+                                    model.PolicyInclusions = "HC";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Valuables")
                                 {
-                                    policystringarray[3] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[3] = "-0";
+                                    model.PolicyInclusions = "HV";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Home Contents")
                                 {
-                                    policystringarray[1] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[1] = "-0";
+                                    model.PolicyInclusions = "HFP";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Travels")
                                 {
-                                    policystringarray[2] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[2] = "-0";
+                                    model.PolicyInclusions = "HL";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Liability")
                                 {
-                                    policystringarray[5] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[5] = "-0";
+                                    model.PolicyInclusions = "HT";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Boat")
                                 {
-                                    policystringarray[6] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[6] = "-0";
+                                    model.PolicyInclusions = "HB";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Motors")
                                 {
-                                    policystringarray[7] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[7] = "-0";
+                                    model.PolicyInclusions = "HM";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Pets")
                                 {
-                                    policystringarray[8] = "-1";
-                                }
-                                else
-                                {
-                                    policystringarray[8] = "-0";
+                                    model.PolicyInclusions = "HP";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                             }
-                            else
+
+                            if (model.PolicyData.PrId == 1009)
                             {
-                                break;
+
                             }
                         }
-                        model.PolicyInclusions =  string.Join("", policystringarray);                     
-                        var insertpolicy = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, PcId.ToString(), Convert.ToInt32(PolicyType.RLS)).SingleOrDefault();
-                        return RedirectToAction("HomeBilding", "PolicyDetails", new {cid=cid, PcId = PcId});
-                        
+                        else
+                        {
+                            break;
+                        }
+
+                        return RedirectToAction("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
                     }
-
                 }
-             
-
-                //if (model.RiskData != null && model.RiskData.Count > 0)
-                //{
-                //    if (model.RiskData.Select(o => o.Name).FirstOrDefault() == "Home" && step == 1)
-                //    {
-                //        return View(model);
-                //    }
-                //    if (model.RiskData.Select(o => o.Name).FirstOrDefault() == "Home" && step == 2)
-                //    {
-                //        return PartialView("ViewOccupancyIPHBuilding", model);
-
-                //    }
-                //    if (model.RiskData.Exists(o => o.Name == "Home Contents") && step == 3)
-                //    {
-                //        //model.RiskData = model.RiskData.Where(p => p.Name == "Home Contents").Select(o => o.Elements).ToList();
-                //        return PartialView("ViewHomeContent", model);
-
-                //    }
-                //    if (model.RiskData.Exists(o => o.Name == "Valuables") && step == 4)
-                //    {
-                //        return PartialView("ViewValuables", model);
-
-                //    }
-                //    if (model.RiskData.Exists(o => o.Name == "Farm Property") && step == 5)
-                //    {
-                //        return PartialView("ViewFarmProperty", model);
-
-                //    }
-                //    if (model.RiskData.Exists(o => o.Name == "Farm Property") && step == 6)
-                //    {
-                //        return PartialView("ViewFarmMachinery", model);
-
-                //    }
-                //    if (model.PremiumData != null && model.PremiumData.Count > 0 && step == 8)
-                //    {
-                //        return PartialView("ViewQuotation", model);
-
-                //    }
-                //    if (model.RiskData.Select(p => p.Name).First() == "Home Building")
-                //    {
-                //        // return Json(new { content = RenderRazorViewToString("_UpdateEditRolePermissionList", manageusers), rolesddl = manageusers.RoleList, rolenames = manageusers.RoleName, ViewBag.messages, status = true, msg = "Role assigned successfully." });
-                //    }
-                //    return View(model);
-                //}
             }
-            return RedirectToAction("InsuredPolicys", "Customer", new { InsuredId = 108454, CustomerId = cid });
+            return RedirectToAction("InsuredPolicys", "Customer", new
+            {
+                InsuredId = 108454,
+                CustomerId = cid
+            });
         }
 
         [HttpPost]
@@ -673,7 +608,7 @@ namespace InsureThatAPI.Controllers
         //        }
         //        if (model.UnitData != null && model.UnitData.Count > 0)
         //        {
-                    
+
 
         //        }
         //        return View();
@@ -743,145 +678,64 @@ namespace InsureThatAPI.Controllers
                 {
                     if (model.HomeBuilding == true)
                     {
-                        model.PolicyInclusions = "1";
+                        model.PolicyInclusions = "HB";
                         PolicyinslustionsList.Add("Home");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = "0";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                     }
                     if (model.HomeContents == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions+"-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-1";
-                        }
+                        model.PolicyInclusions = "HC";
                         PolicyinslustionsList.Add("HomeContents");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                     }
                     if (model.Valuables == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-1";
-                        }
+                        model.PolicyInclusions = "HV";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("Valuables");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.FarmProperty == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-1";
-                        }
+
+                        model.PolicyInclusions = "HFP";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("FarmProperty");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Liability == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-1";
-                        }
+
+                        model.PolicyInclusions = "HL";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("Liability");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Travels == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "HT";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("Travel");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Boat == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "HB";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("Boat");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Motor == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "HM";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("Motor");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Pet == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "HP";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), null, null, null).SingleOrDefault();
                         PolicyinslustionsList.Add("Pet");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                 }
                 Session["Policyinclustions"] = PolicyinslustionsList;
-                var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS));
-                return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid , PcId=policyid });
+                //  var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS));
+                return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = policyid });
             }
             else if (model.PolicyType == 2)
             {
@@ -897,241 +751,100 @@ namespace InsureThatAPI.Controllers
                 {
                     if (model.MobileFarmProperty == true)
                     {
-                        model.PolicyInclusions = "1";
+                        model.PolicyInclusions = "MFP";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("MobileFarmProperty");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = "0";
                     }
                     if (model.FixedFarmProperty == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-1";
-                        }
+
+                        model.PolicyInclusions = "FFP";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("FixedFarmProperty");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.FarmInteruption == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-1";
-                        }
+                        model.PolicyInclusions = "FI";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("FarmInteruption");
                     }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
-                    }
+
                     if (model.FarmLiability == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FL";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("FarmLiability");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Burglary == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "BG";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("Burglary");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Electronics == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FE";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("Electronics");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Money == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FM";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("Money");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Transit == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FT";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("Transit");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.ValuablesFarm == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FV";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("ValuablesFarm");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.LiveStockFarm == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FLS";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("LiveStockFarm");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.PersonalLiabilitiesFarm == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FPL";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("PersonalLiabilitiesFarm");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.HomeBuildingFarm == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FHB";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy),null,null, null);
                         PolicyinslustionsList.Add("HomeBuildingFarm");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.HomeContent == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-0-0-0-1";
-                        }
-                        
+                        model.PolicyInclusions = "FHC";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy),null,null, null);
+
                         PolicyinslustionsList.Add("HomeContent");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.Machinery == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FM";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy),null,null, null);
                         PolicyinslustionsList.Add("Machinery");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                     if (model.MotorFarm == true)
                     {
-                        if (model.PolicyInclusions != null || string.IsNullOrWhiteSpace(model.PolicyInclusions))
-                        {
-                            model.PolicyInclusions = model.PolicyInclusions + "-1";
-                        }
-                        else
-                        {
-                            model.PolicyInclusions = "0-0-0-0-0-0-0-0-0-0-0-0-1";
-                        }
+                        model.PolicyInclusions = "FMR";
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
                         PolicyinslustionsList.Add("MotorFarm");
-                    }
-                    else
-                    {
-                        model.PolicyInclusions = model.PolicyInclusions + "-0";
                     }
                 }
                 Session["Policyinclustions"] = PolicyinslustionsList;
-                var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy));
+
                 return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
             }
 

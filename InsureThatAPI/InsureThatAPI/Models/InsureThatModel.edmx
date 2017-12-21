@@ -286,6 +286,19 @@
           <Parameter Name="ValuablesItemID" Type="int" Mode="In" />
           <Parameter Name="ValuablesDescription" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="IT_dt_Insert_Local_Element_UnitDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="Component_Type" Type="varchar" Mode="In" />
+          <Parameter Name="Unit_Type" Type="varchar" Mode="In" />
+          <Parameter Name="UnId" Type="int" Mode="In" />
+          <Parameter Name="SectionName" Type="varchar" Mode="In" />
+          <Parameter Name="ElementId" Type="int" Mode="In" />
+          <Parameter Name="RowSourceData" Type="varchar" Mode="In" />
+          <Parameter Name="ValueData" Type="varchar" Mode="In" />
+          <Parameter Name="StateData" Type="varchar" Mode="In" />
+          <Parameter Name="ReferralList" Type="varchar" Mode="In" />
+          <Parameter Name="Status" Type="varchar" Mode="In" />
+          <Parameter Name="AddressId" Type="int" Mode="In" />
+        </Function>
         <Function Name="IT_dt_Insert_PolicyDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PolicyNumber" Type="varchar" Mode="In" />
           <Parameter Name="TransactionNumber" Type="varchar" Mode="In" />
@@ -418,6 +431,9 @@
           <Parameter Name="PolicyInclusions" Type="varchar" Mode="In" />
           <Parameter Name="PolicyId" Type="varchar" Mode="In" />
           <Parameter Name="PolicyType" Type="int" Mode="In" />
+          <Parameter Name="UnId" Type="int" Mode="In" />
+          <Parameter Name="UnitNumber" Type="int" Mode="In" />
+          <Parameter Name="UnitStatus" Type="varchar" Mode="In" />
         </Function>
         <Function Name="IT_Master_GetSuburbDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="Suburb" Type="nvarchar" Mode="In" />
@@ -427,6 +443,11 @@
         <Function Name="usp_dt_GetPolicyDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="PolicyId" Type="int" Mode="In" />
           <Parameter Name="PcId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetLocalElement_UnitDetails" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="UnitDetailsId" Type="int" Mode="In" />
+          <Parameter Name="SectionName" Type="varchar" Mode="In" />
+          <Parameter Name="UnId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_GetUnit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="UnitId" Type="int" Mode="In" />
@@ -836,6 +857,9 @@
             <Parameter Name="PolicyInclusions" Mode="In" Type="String" />
             <Parameter Name="PolicyId" Mode="In" Type="String" />
             <Parameter Name="PolicyType" Mode="In" Type="Int32" />
+            <Parameter Name="UnId" Mode="In" Type="Int32" />
+            <Parameter Name="UnitNumber" Mode="In" Type="Int32" />
+            <Parameter Name="UnitStatus" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="IT_dt_Insert_PolicyDetails" ReturnType="Collection(Int32)">
             <Parameter Name="PolicyNumber" Mode="In" Type="String" />
@@ -897,6 +921,24 @@
           <FunctionImport Name="usp_GetUnitDetails" ReturnType="Collection(MasterDataModel.usp_GetUnitDetails_Result)">
             <Parameter Name="UnitId" Mode="In" Type="Int32" />
             <Parameter Name="UnitDetailsId" Mode="In" Type="Int32" />
+            <Parameter Name="UnId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="IT_dt_Insert_Local_Element_UnitDetails" ReturnType="Collection(Int32)">
+            <Parameter Name="Component_Type" Mode="In" Type="String" />
+            <Parameter Name="Unit_Type" Mode="In" Type="String" />
+            <Parameter Name="UnId" Mode="In" Type="Int32" />
+            <Parameter Name="SectionName" Mode="In" Type="String" />
+            <Parameter Name="ElementId" Mode="In" Type="Int32" />
+            <Parameter Name="RowSourceData" Mode="In" Type="String" />
+            <Parameter Name="ValueData" Mode="In" Type="String" />
+            <Parameter Name="StateData" Mode="In" Type="String" />
+            <Parameter Name="ReferralList" Mode="In" Type="String" />
+            <Parameter Name="Status" Mode="In" Type="String" />
+            <Parameter Name="AddressId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetLocalElement_UnitDetails" ReturnType="Collection(MasterDataModel.usp_GetLocalElement_UnitDetails_Result)">
+            <Parameter Name="UnitDetailsId" Mode="In" Type="Int32" />
+            <Parameter Name="SectionName" Mode="In" Type="String" />
             <Parameter Name="UnId" Mode="In" Type="Int32" />
           </FunctionImport>
         </EntityContainer>
@@ -1117,6 +1159,9 @@
           <Property Type="String" Name="PolicyId" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="PolicyInclusions" Nullable="false" MaxLength="50" />
           <Property Type="Int32" Name="PolicyType" Nullable="false" />
+          <Property Type="Int32" Name="UnId" Nullable="false" />
+          <Property Type="Int32" Name="unitNumber" Nullable="true" />
+          <Property Type="String" Name="UnitStatus" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="ComplexType1" />
         <ComplexType Name="usp_dt_GetPolicyDetails_Result">
@@ -1170,6 +1215,21 @@
           <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
           <Property Type="Int32" Name="AddressId" Nullable="true" />
         </ComplexType>
+        <ComplexType Name="usp_GetLocalElement_UnitDetails_Result">
+          <Property Type="Int32" Name="UnitDetailsId" Nullable="false" />
+          <Property Type="String" Name="Component_Type" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Unit_Type" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="UnId" Nullable="true" />
+          <Property Type="String" Name="SectionName" Nullable="true" MaxLength="80" />
+          <Property Type="Int32" Name="ElementId" Nullable="true" />
+          <Property Type="String" Name="RowSourceData" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ValueData" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="StateData" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="ReferralList" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="AddressId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="ComplexType2" />
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1459,6 +1519,9 @@
                 <ScalarProperty Name="PolicyId" ColumnName="PolicyId" />
                 <ScalarProperty Name="PolicyInclusions" ColumnName="PolicyInclusions" />
                 <ScalarProperty Name="PolicyType" ColumnName="PolicyType" />
+                <ScalarProperty Name="UnId" ColumnName="UnId" />
+                <ScalarProperty Name="unitNumber" ColumnName="unitNumber" />
+                <ScalarProperty Name="UnitStatus" ColumnName="UnitStatus" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -1519,6 +1582,25 @@
                 <ScalarProperty Name="Component_Type" ColumnName="Component_Type" />
                 <ScalarProperty Name="Unit_Type" ColumnName="Unit_Type" />
                 <ScalarProperty Name="UnId" ColumnName="UnId" />
+                <ScalarProperty Name="ElementId" ColumnName="ElementId" />
+                <ScalarProperty Name="RowSourceData" ColumnName="RowSourceData" />
+                <ScalarProperty Name="ValueData" ColumnName="ValueData" />
+                <ScalarProperty Name="StateData" ColumnName="StateData" />
+                <ScalarProperty Name="ReferralList" ColumnName="ReferralList" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="AddressId" ColumnName="AddressId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="IT_dt_Insert_Local_Element_UnitDetails" FunctionName="MasterDataModel.Store.IT_dt_Insert_Local_Element_UnitDetails" />
+          <FunctionImportMapping FunctionImportName="usp_GetLocalElement_UnitDetails" FunctionName="MasterDataModel.Store.usp_GetLocalElement_UnitDetails">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="MasterDataModel.usp_GetLocalElement_UnitDetails_Result">
+                <ScalarProperty Name="UnitDetailsId" ColumnName="UnitDetailsId" />
+                <ScalarProperty Name="Component_Type" ColumnName="Component_Type" />
+                <ScalarProperty Name="Unit_Type" ColumnName="Unit_Type" />
+                <ScalarProperty Name="UnId" ColumnName="UnId" />
+                <ScalarProperty Name="SectionName" ColumnName="SectionName" />
                 <ScalarProperty Name="ElementId" ColumnName="ElementId" />
                 <ScalarProperty Name="RowSourceData" ColumnName="RowSourceData" />
                 <ScalarProperty Name="ValueData" ColumnName="ValueData" />

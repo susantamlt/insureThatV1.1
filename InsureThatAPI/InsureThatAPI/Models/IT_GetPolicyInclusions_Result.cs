@@ -18,5 +18,8 @@ namespace InsureThatAPI.Models
         public string PolicyId { get; set; }
         public string PolicyInclusions { get; set; }
         public int PolicyType { get; set; }
+        public int UnId { get; set; }
+        public Nullable<int> unitNumber { get; set; }
+        public string UnitStatus { get; set; }
     }
 }
