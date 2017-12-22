@@ -19,8 +19,8 @@ namespace InsureThatAPI.CommonMethods
         };
         public enum PolicyType
         {
-           FarmPolicy=2,
-           RLS=1
+           FarmPolicy=1009,
+           RLS=1029
         };
         public enum RLSSection
         {

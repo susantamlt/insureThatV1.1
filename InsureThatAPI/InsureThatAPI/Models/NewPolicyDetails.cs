@@ -8,6 +8,8 @@ namespace InsureThatAPI.Models
 
     public class PolicyTypes
     {
+        public int? InsureId { get; set; }
+        public int? cid { get; set; }
         public int PolicyType { get; set; }
     }
     public class PolicyInclustions
