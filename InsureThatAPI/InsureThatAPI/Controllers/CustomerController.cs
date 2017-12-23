@@ -341,7 +341,7 @@ namespace InsureThatAPI.Controllers
         #endregion
 
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> ViewUpdatePolicyDetails(int? cid, int? PcId,int? policytype, int? step)
+        public async System.Threading.Tasks.Task<ActionResult> ViewUpdatePolicyDetails(int? cid, int? PcId, int? policytype, int? step)
         {
             var db = new MasterDataEntities();
             // PolicyNo = "ITRD00075330";
@@ -354,17 +354,17 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AgentLogin", "Login");
             }
             PcId = 54611;
-            PcId = 54693;
+            // PcId = 54693;
             string policyid = PcId.ToString();
             if (PcId != null && PcId > 0)
             {
                 ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-           
-                var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, policytype).FirstOrDefault();
-                if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
-                {
-                    model.PolicyInclusions = policyinclusion.PolicyInclusions;
-                }
+
+                //var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, policytype).FirstOrDefault();
+                //if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+                //{
+                //    model.PolicyInclusions = policyinclusion.PolicyInclusions;
+                //}
                 model.PcId = PcId.ToString();
                 HttpClient hclient = new HttpClient();
                 hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -463,55 +463,80 @@ namespace InsureThatAPI.Controllers
                                     model.PolicyInclusions = "HP";
                                     var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
+                                return RedirectToAction("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
                             }
 
-                            if (model.PolicyData.PrId == 1009)
+                            if (model.PolicyData.PrId == 1021)
                             {
                                 if (model.UnitData[pi].Name == "Home")
                                 {
-                                    model.PolicyInclusions = "HB";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FH";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
-                                if (model.UnitData[pi].Name == "Farm Property")
+                                if (model.UnitData[pi].Name == "Farm")
                                 {
-                                    model.PolicyInclusions = "HC";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FF";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Valuables")
                                 {
-                                    model.PolicyInclusions = "HV";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FV";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
-                                if (model.UnitData[pi].Name == "Home Contents")
+                                if (model.UnitData[pi].Name == "Fixed Farm Property")
                                 {
-                                    model.PolicyInclusions = "HFP";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FFP";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
-                                if (model.UnitData[pi].Name == "Travels")
+                                if (model.UnitData[pi].Name == "Home Buildings")
                                 {
-                                    model.PolicyInclusions = "HL";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FHB";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
-                                if (model.UnitData[pi].Name == "Liability")
+                                if (model.UnitData[pi].Name == "Motor Personal Liability")
                                 {
-                                    model.PolicyInclusions = "HT";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "MPL";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
-                                if (model.UnitData[pi].Name == "Boat")
+                                if (model.UnitData[pi].Name == "Livestock")
                                 {
-                                    model.PolicyInclusions = "HB";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FL";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
                                 if (model.UnitData[pi].Name == "Motors")
                                 {
-                                    model.PolicyInclusions = "HM";
-                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                    model.PolicyInclusions = "FM";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
-                                if (model.UnitData[pi].Name == "Pets")
+                                if (model.UnitData[pi].Name == "Mobile Farm Property")
                                 {
-                                    model.PolicyInclusions = "HP";
+                                    model.PolicyInclusions = "MFP";
                                     var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
                                 }
+
+
+                                if (model.UnitData[pi].Name == "Motor Personal Liability")
+                                {
+                                    model.PolicyInclusions = "MPL";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                }
+                                if (model.UnitData[pi].Name == "Livestock")
+                                {
+                                    model.PolicyInclusions = "FL";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                }
+                                if (model.UnitData[pi].Name == "Motors")
+                                {
+                                    model.PolicyInclusions = "FM";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                }
+                                if (model.UnitData[pi].Name == "Mobile Farm Property")
+                                {
+                                    model.PolicyInclusions = "MFP";
+                                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.RLS), model.UnitData[pi].UnId, model.UnitData[pi].UnitNumber, model.UnitData[pi].UnitStatus).SingleOrDefault();
+                                }
+
+                                return RedirectToAction("", "");
                             }
                         }
                         else
@@ -519,7 +544,7 @@ namespace InsureThatAPI.Controllers
                             break;
                         }
 
-                        return RedirectToAction("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
+
                     }
                 }
             }
@@ -603,9 +628,9 @@ namespace InsureThatAPI.Controllers
             return RedirectToAction("InsuredPolicys", "Customer", new { InsuredId = 108454, CustomerId = 1 });
         }
 
-        
+
         [HttpGet]
-        public ActionResult NewPolicy(int? cid,int? insureId)
+        public ActionResult NewPolicy(int? cid, int? insureId)
         {
             if (Session["ApiKey"] != null)
             {
@@ -634,11 +659,11 @@ namespace InsureThatAPI.Controllers
                 model.InsureId = insureId;
                 HttpClient hclient = new HttpClient();
                 hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/PolicyDetails?apiKey=" + apikey + "&action=New&pcId=&trId=&prId="+model.PolicyType+"&effectiveDate=&reason=");/*insureddetails.InsuredID */
+                HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/PolicyDetails?apiKey=" + apikey + "&action=New&pcId=&trId=&prId=" + model.PolicyType + "&effectiveDate=&reason=");/*insureddetails.InsuredID */
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                 PolicyDetails pd = new PolicyDetails();
                 pd = JsonConvert.DeserializeObject<PolicyDetails>(EmpResponse);
-               
+
             }
             ViewBag.CustomerId = cid;
             model.cid = cid;
@@ -769,94 +794,94 @@ namespace InsureThatAPI.Controllers
                     if (model.MobileFarmProperty == true)
                     {
                         model.PolicyInclusions = "MFP";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("MobileFarmProperty");
                     }
                     if (model.FixedFarmProperty == true)
                     {
 
                         model.PolicyInclusions = "FFP";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("FixedFarmProperty");
                     }
                     if (model.FarmInteruption == true)
                     {
                         model.PolicyInclusions = "FI";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("FarmInteruption");
                     }
 
                     if (model.FarmLiability == true)
                     {
                         model.PolicyInclusions = "FL";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("FarmLiability");
                     }
                     if (model.Burglary == true)
                     {
                         model.PolicyInclusions = "BG";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("Burglary");
                     }
                     if (model.Electronics == true)
                     {
                         model.PolicyInclusions = "FE";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("Electronics");
                     }
                     if (model.Money == true)
                     {
                         model.PolicyInclusions = "FM";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("Money");
                     }
                     if (model.Transit == true)
                     {
                         model.PolicyInclusions = "FT";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("Transit");
                     }
                     if (model.ValuablesFarm == true)
                     {
                         model.PolicyInclusions = "FV";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("ValuablesFarm");
                     }
                     if (model.LiveStockFarm == true)
                     {
                         model.PolicyInclusions = "FLS";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("LiveStockFarm");
                     }
                     if (model.PersonalLiabilitiesFarm == true)
                     {
                         model.PolicyInclusions = "FPL";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("PersonalLiabilitiesFarm");
                     }
                     if (model.HomeBuildingFarm == true)
                     {
                         model.PolicyInclusions = "FHB";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy),null,null, null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("HomeBuildingFarm");
                     }
                     if (model.HomeContent == true)
                     {
                         model.PolicyInclusions = "FHC";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy),null,null, null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
 
                         PolicyinslustionsList.Add("HomeContent");
                     }
                     if (model.Machinery == true)
                     {
                         model.PolicyInclusions = "FM";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy),null,null, null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("Machinery");
                     }
                     if (model.MotorFarm == true)
                     {
                         model.PolicyInclusions = "FMR";
-                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null,null,null);
+                        var policyinclusions = db.IT_InsertPolicyInclusions(cid, model.PolicyInclusions, policyid, Convert.ToInt32(PolicyType.FarmPolicy), null, null, null);
                         PolicyinslustionsList.Add("MotorFarm");
                     }
                 }
@@ -903,18 +928,54 @@ namespace InsureThatAPI.Controllers
             return View();
         }
 
-        public ActionResult newcustomer(string name,string email, string phonenumber)
+        public ActionResult newcustomer(string name, string email, string phonenumber)
         {
-            if(Request.IsAjaxRequest())
+            if (Request.IsAjaxRequest())
             {
                 var db = new MasterDataEntities();
                 int insureId = 1;
                 var insertcust = db.IT_InsertCustomerMaster(email, insureId, null, null, name, null).SingleOrDefault();
-             int? insureinsert= db.IT_CC_Insert_InsuredDetails(null, null, null, null, name, null, null, null, null, null, 1, 1, phonenumber, null, null, email).SingleOrDefault();
+                int? insureinsert = db.IT_CC_Insert_InsuredDetails(null, null, null, null, name, null, null, null, null, null, 1, 1, phonenumber, null, null, email).SingleOrDefault();
             }
 
             return Json(new { results = "" });
         }
+        #region Ajax API calls on each element
+        public async System.Threading.Tasks.Task<ActionResult> ElementDetails(int PrId, int InsureId, int ElId, int UnId, string Value, int ItId)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                HttpClient hclient = new HttpClient();
+                ViewEditPolicyDetails modell = new ViewEditPolicyDetails();
+                var response = hclient.BaseAddress = new Uri("https://api.insurethat.com.au/");
+                hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                string ApiKey = string.Empty;
+                ElementDetails model = new Models.ElementDetails();
+                if (Session["ApiKey"] != null)
+                {
+                    ApiKey = Session["apiKey"].ToString();
+                    model.apiKey = ApiKey;
+                    model.ElId = ElId;
+                    model.ItId = ItId;
+                    model.ProfileUnId = -1;
+                    model.SectionUnId = -2;
+                    model.Value = Value;
+                }
+                else
+                {
+                    return RedirectToAction("Login", "AgenLogin");
+                }
+                StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
+                var responses = await hclient.PostAsync("https://api.insurethat.com.au/Api/ElementDetails", content);
+                var result = await responses.Content.ReadAsStringAsync();
+                if (result != null)
+                {
+                    modell = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(result);
+                }
+            }
+            return Json(new { results = "" });
+        }
+        #endregion
     }
 
 

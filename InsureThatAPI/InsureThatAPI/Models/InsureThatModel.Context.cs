@@ -1392,7 +1392,7 @@ namespace InsureThatAPI.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("IT_Master_GetSuburbList");
         }
     
-        public virtual ObjectResult<IT_GetPolicyInclusions_Result> IT_GetPolicyInclusions(Nullable<decimal> customerId, string policyId, Nullable<int> policyType)
+        public virtual ObjectResult<usp_GetUnit> IT_GetPolicyInclusions(Nullable<decimal> customerId, string policyId, Nullable<int> policyType)
         {
             var customerIdParameter = customerId.HasValue ?
                 new ObjectParameter("CustomerId", customerId) :
@@ -1406,7 +1406,7 @@ namespace InsureThatAPI.Models
                 new ObjectParameter("PolicyType", policyType) :
                 new ObjectParameter("PolicyType", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<IT_GetPolicyInclusions_Result>("IT_GetPolicyInclusions", customerIdParameter, policyIdParameter, policyTypeParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUnit>("IT_GetPolicyInclusions", customerIdParameter, policyIdParameter, policyTypeParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> IT_InsertPolicyInclusions(Nullable<decimal> customerId, string policyInclusions, string policyId, Nullable<int> policyType, Nullable<int> unId, Nullable<int> unitNumber, string unitStatus)

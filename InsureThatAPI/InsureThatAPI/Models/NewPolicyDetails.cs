@@ -1,4 +1,5 @@
-﻿using System;
+﻿using InsureThatAPI.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -127,13 +128,24 @@ namespace InsureThatAPI.Models
     {
         public List<PolicyDetails> PolicyListDetails { get; set; }
     }
+    public class ElementDetails{
+        public string apiKey { get; set; }
+        public int ProfileUnId { get; set; }
+        public int SectionUnId { get; set; }
+        public int ElId { get; set; }
+        public int ItId { get; set; }
+        public string Value { get; set; }
+ 
+}
+
     public class ViewEditPolicyDetails
     {
         public int? AddressID { get; set; }
         public int CustomerId { get; set; }
         public string PcId { get; set; }
         public string ApiKey { get; set; }
-        public string PolicyInclusions { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public string PolicyInclusions{ get; set; }
         public PolicyDetails PolicyData { get; set; }
         public List<InsuredDetails> InsuredDetails { get; set; }
         public List<RiskDetails> RiskData { get; set; }

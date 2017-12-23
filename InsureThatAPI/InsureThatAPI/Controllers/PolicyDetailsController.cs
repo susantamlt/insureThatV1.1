@@ -9,6 +9,8 @@ using System.Runtime.Serialization.Json;
 using System.Web;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+
 namespace InsureThatAPI.Controllers
 {
     public class PolicyDetailsController : Controller
@@ -17,13 +19,15 @@ namespace InsureThatAPI.Controllers
         public async System.Threading.Tasks.Task<ActionResult> HomeBilding(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
-                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();              
-                var units = db.usp_GetUnit(null, policydetails.PolicyId, "Home Buildings").FirstOrDefault();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null,PcId,null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Home Buildings").SingleOrDefault();            
                 if (units != null)
                 {
 
