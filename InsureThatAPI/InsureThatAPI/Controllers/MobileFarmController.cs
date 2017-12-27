@@ -33,167 +33,167 @@ namespace InsureThatAPI.Controllers
                 policyid = PcId.ToString();
                 MobileFarmContents.PolicyId = Convert.ToInt32(policyid);
             }
-            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
-            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
-            {
-                MobileFarmContents.PolicyInclusions = policyinclusion.PolicyInclusions;
-            }
-            if (Session["Policyinclustions"] != null)
-            {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
-                if (Policyincllist != null)
-                {
-                    if (Policyincllist.Contains("MobileFarmProperty"))
-                    {
-                    }
+            //var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            //if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            //{
+            //    MobileFarmContents.PolicyInclusions = policyinclusion.PolicyInclusions;
+            //}
+            //if (Session["Policyinclustions"] != null)
+            //{
+            //    List<string> PolicyInclustions = new List<string>();
+            //    var Policyincllist = Session["Policyinclustions"] as List<string>;
+            //    if (Policyincllist != null)
+            //    {
+            //        if (Policyincllist.Contains("MobileFarmProperty"))
+            //        {
+            //        }
 
-                    else
-                    {
+            //        else
+            //        {
 
-                        if (Policyincllist.Contains("FixedFarmProperty"))
-                        {
-                            return RedirectToAction("FarmLocationDetails", "FarmPolicyProperty", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("FarmInteruption"))
-                        {
-                            return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("FarmLiability"))
-                        {
-                            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Burglary"))
-                        {
-                            return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Electronics"))
-                        {
-                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Money"))
-                        {
-                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Transit"))
-                        {
-                            return RedirectToAction("Transit", "FarmPolicyTransit",  new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("ValuablesFarm"))
-                        {
-                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("LiveStockFarm"))
-                        {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Machinery"))
-                        {
-                            //  return RedirectToAction("", "", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                            // return RedirectToAction("", "", new { cid = cid });
-                        }
-                    }
-                }
-            }
-            else
-            {
+            //            if (Policyincllist.Contains("FixedFarmProperty"))
+            //            {
+            //                return RedirectToAction("FarmLocationDetails", "FarmPolicyProperty", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("FarmInteruption"))
+            //            {
+            //                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("FarmLiability"))
+            //            {
+            //                return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("Burglary"))
+            //            {
+            //                return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("Electronics"))
+            //            {
+            //                return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("Money"))
+            //            {
+            //                return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("Transit"))
+            //            {
+            //                return RedirectToAction("Transit", "FarmPolicyTransit",  new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("ValuablesFarm"))
+            //            {
+            //                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("LiveStockFarm"))
+            //            {
+            //                return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
+            //            {
+            //                return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("HomeBuildingFarm"))
+            //            {
+            //                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("HomeContent"))
+            //            {
+            //                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("Machinery"))
+            //            {
+            //                //  return RedirectToAction("", "", new { cid = cid });
+            //            }
+            //            else if (Policyincllist.Contains("MotorFarm"))
+            //            {
+            //                // return RedirectToAction("", "", new { cid = cid });
+            //            }
+            //        }
+            //    }
+            //}
+            //else
+            //{
 
-                if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
-                {
-                    if (policyinclusion.PolicyInclusions.Length > 1)
-                    {
-                        var policyinclusions = policyinclusion.PolicyInclusions.Split('-');
-                        if (policyinclusions != null && policyinclusions.Length > 0)
-                        {
+            //    if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            //    {
+            //        if (policyinclusion.PolicyInclusions.Length > 1)
+            //        {
+            //            var policyinclusions = policyinclusion.PolicyInclusions.Split('-');
+            //            if (policyinclusions != null && policyinclusions.Length > 0)
+            //            {
 
-                            if (policyinclusions[0] == "1")
-                            {
+            //                if (policyinclusions[0] == "1")
+            //                {
 
-                            }
-                            else
-                            {
-                                if (policyinclusions[1] == "1")
-                                {
-                                    return RedirectToAction("FarmLocationDetails", "FarmPolicyProperty", new { cid = cid });
-                                }
-                                if (policyinclusions[2] == "1")
-                                {
-                                    return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
-                                }
-                                if (policyinclusions[3] == "1")
-                                {
-                                    return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
-                                }
-                                if (policyinclusions[4] == "1")
-                                {
-                                    return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
-                                }
-                                if (policyinclusions[5] == "1")
-                                {
-                                    return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
-                                }
-                                if (policyinclusions[6] == "1")
-                                {
-                                    return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
-                                }
+            //                }
+            //                else
+            //                {
+            //                    if (policyinclusions[1] == "1")
+            //                    {
+            //                        return RedirectToAction("FarmLocationDetails", "FarmPolicyProperty", new { cid = cid });
+            //                    }
+            //                    if (policyinclusions[2] == "1")
+            //                    {
+            //                        return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
+            //                    }
+            //                    if (policyinclusions[3] == "1")
+            //                    {
+            //                        return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
+            //                    }
+            //                    if (policyinclusions[4] == "1")
+            //                    {
+            //                        return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
+            //                    }
+            //                    if (policyinclusions[5] == "1")
+            //                    {
+            //                        return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
+            //                    }
+            //                    if (policyinclusions[6] == "1")
+            //                    {
+            //                        return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
+            //                    }
                                
-                                if (policyinclusions[7] == "1")
-                                {
-                                    return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid });
-                                }
-                                else if ( policyinclusions[8] == "1")
-                                {
-                                    return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
-                                }
-                                else if ( policyinclusions[9] == "1")
-                                {
-                                    return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
-                                }
-                                else if ( policyinclusions[10] == "1")
-                                {
-                                    return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                                }
-                                else if ( policyinclusions[11] == "1")
-                                {
-                                    return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                                }
-                                else if (policyinclusions[12] == "1")
-                                {
-                                    return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                                }
-                                else if ( policyinclusions[13] == "1")
-                                {
-                                    //  return RedirectToAction("", "", new { cid = cid });
-                                }
-                                else if ( policyinclusions[14] == "1")
-                                {
-                                    // return RedirectToAction("", "", new { cid = cid });
-                                }
+            //                    if (policyinclusions[7] == "1")
+            //                    {
+            //                        return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid });
+            //                    }
+            //                    else if ( policyinclusions[8] == "1")
+            //                    {
+            //                        return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
+            //                    }
+            //                    else if ( policyinclusions[9] == "1")
+            //                    {
+            //                        return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
+            //                    }
+            //                    else if ( policyinclusions[10] == "1")
+            //                    {
+            //                        return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
+            //                    }
+            //                    else if ( policyinclusions[11] == "1")
+            //                    {
+            //                        return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
+            //                    }
+            //                    else if (policyinclusions[12] == "1")
+            //                    {
+            //                        return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
+            //                    }
+            //                    else if ( policyinclusions[13] == "1")
+            //                    {
+            //                        //  return RedirectToAction("", "", new { cid = cid });
+            //                    }
+            //                    else if ( policyinclusions[14] == "1")
+            //                    {
+            //                        // return RedirectToAction("", "", new { cid = cid });
+            //                    }
 
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.FarmPolicy) });
-                }
-            }
+            //                }
+            //            }
+            //        }
+            //    }
+            //    else
+            //    {
+            //        return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.FarmPolicy) });
+            //    }
+            //}
 
             ViewBag.cid = cid;
             if (cid != null)
