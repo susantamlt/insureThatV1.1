@@ -5,21 +5,24 @@
 
 <div class="row content">
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 main-head"> <h2>NEW POLICY</h2><span class="subhead1"></span></div>
-    @using (Html.BeginForm("PolicyInclustions", "Customer", FormMethod.Get, new { cid = @ViewBag.CustomerId, enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Post, new { cid = @Model.cid, enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
-
+        @Html.HiddenFor(p=>p.PolicyType,new { @class="Pt"})
+        @Html.HiddenFor(p => p.InsureId)
+        @Html.HiddenFor(p => p.cid)
         <div class="row row-gap-a">
-            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6"></div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="policy-wrapprer">
-                    <a href="@Url.Action("PolicyInclustions", "Customer",new { cid = @ViewBag.CustomerId, type=1021 })"><img src="~/images/farm-icon.png" /></a>
-                    <a href="@Url.Action("PolicyInclustions", "Customer",new { cid = @ViewBag.CustomerId, type=1021 })">FARM PROPERTY</a>
+                    @*<a href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId,insureId=Model.InsureId })" class="ptype 1021">*@<img src="~/images/farm-icon.png"  class="ptype 1021"/>@*</a>*@
+                    @*<a href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId,insureId=Model.InsureId })">*@FARM PROPERTY@*</a>*@
+                   
                 </div>
             </div>
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="policy-wrapprer">
-                    <a href="@Url.Action("PolicyInclustions", "Customer",new { cid = @ViewBag.CustomerId, type=1029 })"><img src="~/images/rural-icon.png" /></a>
-                    <a href="@Url.Action("PolicyInclustions", "Customer",new { cid = @ViewBag.CustomerId, type=1029 })">RURAL LIFESTYLE</a>
+                    @*<a href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId,insureId=Model.InsureId })" class="ptype 1029">*@<img src="~/images/rural-icon.png" class="ptypeR 1029"/>@*</a>*@
+                    @*<a href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId,insureId=Model.InsureId })">*@RURAL LIFESTYLE@*</a>*@
                 </div>
             </div>
             <div class="col-md-6 mt-50 pull-right text-right">
@@ -29,3 +32,16 @@
 
     }
 </div>
+<script>
+
+
+    $(".ptypeR").click(function () {
+        $(".Pt").val("1029");
+        var ptt = $(".Pt").val();
+
+    });
+    $(".ptype").click(function () {
+        $(".Pt").val("1021");
+
+    })
+</script>

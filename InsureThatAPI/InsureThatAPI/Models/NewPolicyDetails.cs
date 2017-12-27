@@ -9,7 +9,7 @@ namespace InsureThatAPI.Models
 
     public class PolicyTypes
     {
-        public int? InsureId { get; set; }
+        public int InsureId { get; set; }
         public int? cid { get; set; }
         public int PolicyType { get; set; }
     }
@@ -17,6 +17,7 @@ namespace InsureThatAPI.Models
     {
         public int? PolicyType { get; set; }
         public string PolicyInclusions { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
         public int? CustomerId { get; set; }
         public bool HomeBuilding { get; set; }
         public bool HomeContents { get; set; }
@@ -137,7 +138,16 @@ namespace InsureThatAPI.Models
         public string Value { get; set; }
  
 }
-
+    public class ValueData
+    {
+        public int ELId { get; set; }
+        public string Value { get; set; }
+    }
+    public class StateData
+    {
+        public int ELId { get; set; }
+        public string Value { get; set; }
+    }
     public class ViewEditPolicyDetails
     {
         public int? AddressID { get; set; }

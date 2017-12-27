@@ -176,7 +176,7 @@ namespace InsureThatAPI.CommonMethods
             string loginKey = string.Empty;
             int IyId = 9262;
             string EncrptForLogin = String.Format("{0:ddddyyyyMMdd}", DateTime.UtcNow);
-         //  EncrptForLogin = "Friday20171222";
+         //  EncrptForLogin = "Tuesday20171226";
             PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
             loginKey = Encrypt(PlainTextEncrpted, EncrptForLogin);
             LoginDetailsRef loginDetailsref = new LoginDetailsRef();
@@ -199,10 +199,10 @@ namespace InsureThatAPI.CommonMethods
 
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
                     logindetailsmodel = JsonConvert.DeserializeObject<LogInDetails>(EmpResponse);
-                    strEncrypt = Encrypt(Password, "TimsFirstEncryptionKey");//encrypt password method
-                                                                             //   strDecrypt = Decrypt(strEncrypt, "TimsFirstEncryptionKey");//decrypt password method
-
-                    if (logindetailsmodel.EncryptedPassword != null && strEncrypt == logindetailsmodel.EncryptedPassword.ToString())
+                    //strEncrypt = Encrypt(Password, "TimsFirstEncryptionKey");//encrypt password method
+                   // strDecrypt = Decrypt(strEncrypt, "TimsFirstEncryptionKey");//decrypt password method
+                    strDecrypt = Decrypt(logindetailsmodel.EncryptedPassword, "TimsFirstEncryptionKey");
+                    if (logindetailsmodel.EncryptedPassword != null && strDecrypt == Password)
                     {
                         loginDetailsref.Status = "Success";
                         logindetailsmodel.UserName = UserName;

@@ -335,11 +335,11 @@ namespace InsureThatAPI.Controllers
                 constructionDetails.PolicyId = PcId;
             }
         
-            var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
-            if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
-            {
-                constructionDetails.PolicyInclusions = policyinclusion.PolicyInclusions;
-            }
+            //var policyinclusion = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
+            //if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
+            //{
+            //    constructionDetails.PolicyInclusions = policyinclusion.PolicyInclusions;
+            //}
             if (cid != null)
             {
                 ViewBag.cid = cid;
