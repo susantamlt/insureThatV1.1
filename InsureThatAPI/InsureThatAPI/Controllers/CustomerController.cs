@@ -15,10 +15,8 @@ using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
 
 namespace InsureThatAPI.Controllers
 {
-
     public class CustomerController : Controller
     {
-
         #region PARTIAL VIEW TO STRING
         [NonAction]
         public string RenderRazorViewToString(string viewName, object model)
@@ -34,8 +32,6 @@ namespace InsureThatAPI.Controllers
             }
         }
         #endregion
-
-
         protected void Page_Load(object sender, EventArgs e)
         {
         }
@@ -184,10 +180,8 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("InsuredPolicys", "Customer", new { InsuredId = ViewBag.InsuredId, cid = customerid });
 
                     }
-
                 }
             }
-
             if (Request.IsAjaxRequest())
             {
                 //On Auto Search
@@ -337,7 +331,6 @@ namespace InsureThatAPI.Controllers
                     return RedirectToAction("NewPolicy", "Customer", new { cid = cid });
                 }
             }
-
             else
             {
                 return RedirectToAction("AdvancedCustomerSearch", "Customer");
@@ -396,7 +389,7 @@ namespace InsureThatAPI.Controllers
                 }
                 if (model != null)
                 {
-                    Session["apiKey"] = model.ApiKey;
+                  //  Session["apiKey"] = model.ApiKey;
                     if (model.PolicyData != null)
                     {
                         var insertpolicydetails = db.IT_dt_Insert_PolicyDetails(model.PolicyData.PolicyNumber, model.PolicyData.TransactionNumber, model.PolicyData.PcId, model.PolicyData.TrId, model.PolicyData.TermNumber, model.PolicyData.AccountManagerID,
@@ -473,7 +466,6 @@ namespace InsureThatAPI.Controllers
                                     }
                                     return RedirectToAction("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
                                 }
-
                                 if (model.PolicyData.PrId == 1021)
                                 {
                                     if (model.UnitData[pi].Name == "Home")
@@ -673,8 +665,9 @@ namespace InsureThatAPI.Controllers
              //   HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/PolicyDetails?apiKey=" + apikey + "&action=New&pcId=&trId=&prId=1029&InsuredId=94357&effectiveDate=&reason=");/*insureddetails.InsuredID */
 
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-                PolicyDetails pd = new PolicyDetails();
-                pd = JsonConvert.DeserializeObject<PolicyDetails>(EmpResponse);
+                PolicyDetails pds = new PolicyDetails();
+                ViewEditPolicyDetails pd = new ViewEditPolicyDetails();
+                pd = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                 if(pd!=null)
                 {
                     ////var insertresult = db.IT_dt_Insert_PolicyDetails(pd.PolicyNumber, pd.TransactionNumber, pd.PcId, pd.TrId, pd.TermNumber, pd.AccountManagerID, pd.PolicyStatus,
@@ -925,8 +918,18 @@ namespace InsureThatAPI.Controllers
                     }
                 }
                 Session["Policyinclustions"] = PolicyinslustionsList;
+                
+            }
+            if(PolicyinslustionsList!=null && PolicyinslustionsList.Count>0)
+            {
+                if(model.PolicyType == 1029)
+                {
 
-                return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
+                }
+                else if(model.PolicyType==1021)
+                {
+                    return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
+                }
             }
 
             return RedirectToAction("NewPolicy", "RuralLifeStyle", new { cid = cid });
@@ -960,8 +963,6 @@ namespace InsureThatAPI.Controllers
                 {
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     model = JsonConvert.DeserializeObject<PolicyHistory>(EmpResponse);
-
-
                 }
 
                 return View(model);
