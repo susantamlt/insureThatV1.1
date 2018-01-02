@@ -93,7 +93,7 @@
         </div>
     </div>
     <div id="screens">
-        @using (Ajax.BeginForm("ViewUpdatePolicyDetails", "Customer", new { CustomerId = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber, step = 2 }, new AjaxOptions()
+        @using (Ajax.BeginForm("HomeContents", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
         {
             HttpMethod = "GET"
 
@@ -514,7 +514,7 @@
                         <div class="row">
                             <p class="col-md-10 col-sm-10 col-xs-10">How much would it cost to replace your Home Building?</p>
                             <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60187) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value != null))
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60187) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value != ""))
                                 {
                                     <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value</span>
                                 }
@@ -523,7 +523,7 @@
                         <div class="row">
                             <p class="col-md-10 col-sm-10 col-xs-10">Cover for Home Building</p>
                             <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60187) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value != null))
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60187) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value != ""))
                                 {
                                     <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value</span>
                                 }
@@ -592,5 +592,33 @@
                 </div>
             </div>
         }
+    </div>
+}
+else
+{
+    <div class="row content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+            @using (Ajax.BeginForm("HomeContents", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+            {
+                HttpMethod = "GET"
+
+            }))
+            {
+                <div class="row content policy-full-view">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>HOME BUILDING DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 }

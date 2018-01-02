@@ -1,0 +1,820 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "Boat";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.PolicyData != null)
+{
+    <div class="row content">
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+            <h2>
+                POLICY DETAILS<span>
+                    @if (Model.PolicyData.InsuredName != null)
+                    {
+                        <span>@Model.PolicyData.InsuredName/</span>
+                    }
+                    @if (Model.PolicyData.PolicyNumber != null)
+                    {
+                        @Model.PolicyData.PolicyNumber
+                    }
+                    @if (Model.PolicyData.PolicyStatus != null)
+                    {
+                        if (Model.PolicyData.PolicyStatus == "AP")
+                        { <span>/ Endorsed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "AQ")
+                        { <span>/ Endorsement Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CQ")
+                        { <span>/ Cancellation Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "DQ")
+                        { <span>/ Discarded Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NP")
+                        { <span>/ New Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NQ")
+                        { <span>/ Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RP")
+                        { <span>/ Renewed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RQ")
+                        { <span>/ Renewal Invitation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XQ")
+                        { <span>/ Cancellation Quotation</span> }
+                    }
+                </span>
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+        </div>
+
+        <div class="mt-50 mb-50"></div>
+        <div class="p-10 col-md-12 border-bottom-1 mb-15">
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                <img src="~/images/farm-icon.png" class="policy-list-img">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                                {
+                                    <lable>Rural Lifestyle</lable>
+                                }
+                                else
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy No: @Model.PolicyData.PolicyNumber
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="screens">
+        @using (Ajax.BeginForm("Motors", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+        {
+            HttpMethod = "GET"
+
+        }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row content policy-full-view">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="well">
+                        @Html.HiddenFor(p => p.CustomerId)
+                        <h3>BOAT DETAILS</h3>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Boat Details</strong></p>
+                        </div>                        
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What is the name of your Boat?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61103) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61103).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61103).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Registration details</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61105) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61105).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61105).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Make</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61107) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61107).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61107).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Model</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61109) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61109).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61109).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Year of manufacture</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61111) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61111).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61111).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Length in metres</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61113) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61113).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61113).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Type of Boat</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61117) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "1")
+                                    {
+                                        <span>Canoe</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "2")
+                                    {
+                                        <span>Catamaran</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "3")
+                                    {
+                                        <span>Cruiser</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "4")
+                                    {
+                                        <span>Dinghy</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "5")
+                                    {
+                                        <span>Half cabin cruiser</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "6")
+                                    {
+                                        <span>Houseboat</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "7")
+                                    {
+                                        <span>Punt</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "8")
+                                    {
+                                        <span>Runabout</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "9")
+                                    {
+                                        <span>Ski boat</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "10")
+                                    {
+                                        <span>Speed boat</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "11")
+                                    {
+                                        <span>Trimaran</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "12")
+                                    {
+                                        <span>Windsurfer</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61117).Value == "13")
+                                    {
+                                        <span>Yacht</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Hull Material</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61119) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "1")
+                                    {
+                                        <span>Aluminium</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "2")
+                                    {
+                                        <span>Concrete</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "3")
+                                    {
+                                        <span>Fibreglass</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "4")
+                                    {
+                                        <span>Kevlar</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "5")
+                                    {
+                                        <span>Plastic</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "6")
+                                    {
+                                        <span>Rubber</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "7")
+                                    {
+                                        <span>Steel</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61119).Value == "8")
+                                    {
+                                        <span>Timber</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What is the top speed</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61129) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61129).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61129).Value == "1")
+                                    {
+                                        <span>20 to 30 knots</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61129).Value == "2")
+                                    {
+                                        <span>31 to 50 knots</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61129).Value == "3")
+                                    {
+                                        <span>Over 50 knots</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Under 20 knots </span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Type of mooring or storage</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61133) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61133).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61133).Value == "1")
+                                    {
+                                        <span>Your Home</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61133).Value == "2")
+                                    {
+                                        <span>Street</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61133).Value == "3")
+                                    {
+                                        <span>Boat shed</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61133).Value == "4")
+                                    {
+                                        <span>Marina</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61133).Value == "5")
+                                    {
+                                        <span>Other mooring</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Garage</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                            <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                {
+                                    <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Motor Details</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Year Manufactured</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61149) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61149).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61149).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Make and Model</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61151) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61151).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61151).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Serial Number</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61153) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61153).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61153).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Fuel Type</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61155) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "1")
+                                    {
+                                        <span>Canoe</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "2")
+                                    {
+                                        <span>Catamaran</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "3")
+                                    {
+                                        <span>Cruiser</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "4")
+                                    {
+                                        <span>Dinghy</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "5")
+                                    {
+                                        <span>Half cabin cruiser</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "6")
+                                    {
+                                        <span>Houseboat</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "7")
+                                    {
+                                        <span>Punt</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "8")
+                                    {
+                                        <span>Runabout</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "9")
+                                    {
+                                        <span>Ski boat</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "10")
+                                    {
+                                        <span>Speed boat</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "11")
+                                    {
+                                        <span>Trimaran</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "12")
+                                    {
+                                        <span>Windsurfer</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61155).Value == "13")
+                                    {
+                                        <span>Yacht</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Motor Position</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61157) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "1")
+                                    {
+                                        <span>Aluminium</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "2")
+                                    {
+                                        <span>Concrete</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "3")
+                                    {
+                                        <span>Fibreglass</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "4")
+                                    {
+                                        <span>Kevlar</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "5")
+                                    {
+                                        <span>Plastic</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "6")
+                                    {
+                                        <span>Rubber</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "7")
+                                    {
+                                        <span>Steel</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61157).Value == "8")
+                                    {
+                                        <span>Timber</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Drive Type</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61159) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "1")
+                                    {
+                                        <span>Aluminium</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "2")
+                                    {
+                                        <span>Concrete</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "3")
+                                    {
+                                        <span>Fibreglass</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "4")
+                                    {
+                                        <span>Kevlar</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "5")
+                                    {
+                                        <span>Plastic</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "6")
+                                    {
+                                        <span>Rubber</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "7")
+                                    {
+                                        <span>Steel</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61159).Value == "8")
+                                    {
+                                        <span>Timber</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Power (HP)</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61161) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61161).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61161).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Boat Operator</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-4 col-sm-4 col-xs-12">Name</p>
+                            <p class="col-md-4 col-sm-4 col-xs-12">Years Experienced</p>
+                            <p class="col-md-4 col-sm-4 col-xs-12">Types of Boat</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-4 col-sm-4 col-xs-12">
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                    {
+                                        if (Model.SectionData.ValueData[i].Element.ElId == 61187 && Model.SectionData.ValueData[i].Value != "")
+                                        {
+                                            if (Model.SectionData.ValueData[i].Value == "1")
+                                            {
+                                                <span>Peter</span><br /><br />
+                                            }
+                                            else if (Model.SectionData.ValueData[i].Value == "2")
+                                            {
+                                                <span>Merlinm</span><br /><br />
+                                            }
+                                        }
+                                    }
+                                }
+                            </p>
+                            <p class="col-md-4 col-sm-4 col-xs-12">
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                    {
+                                        if (Model.SectionData.ValueData[i].Element.ElId == 61189 && Model.SectionData.ValueData[i].Value != "")
+                                        {
+                                            <span>$@Model.SectionData.ValueData[i].Value</span><br /><br />
+                                        }
+                                    }
+                                }
+                            </p>
+                            <p class="col-md-4 col-sm-4 col-xs-12">
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                    {
+                                        if (Model.SectionData.ValueData[i].Element.ElId == 61191 && Model.SectionData.ValueData[i].Value != "")
+                                        {
+                                            <span>$@Model.SectionData.ValueData[i].Value</span><br /><br />
+                                        }
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Cover Details</strong></p>
+                            <p class="col-md-12 col-sm-12 col-xs-12"><strong>Part A Own Damage</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What is the market value of your Boat</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61207) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61207).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61207).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What is the market value of your Boat motor/s</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61209) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61209).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61209).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12">Do you have any boating accessories you need to include?</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-6 col-sm-6 col-xs-12">Description</p>
+                            <p class="col-md-6 col-sm-6 col-xs-12">Sum Assured</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-6 col-sm-6 col-xs-12">
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                    {
+                                        if (Model.SectionData.ValueData[i].Element.ElId == 61213 && Model.SectionData.ValueData[i].Value != "")
+                                        {
+                                            <span>$@Model.SectionData.ValueData[i].Value</span><br /><br />
+                                        }
+                                    }
+                                }
+                            </p>
+                            <p class="col-md-6 col-sm-6 col-xs-12">
+                                @{ 
+                                    int SumAssured = 0;
+                                }                                
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                    {
+                                        if (Model.SectionData.ValueData[i].Element.ElId == 61215 && Model.SectionData.ValueData[i].Value != "")
+                                        {
+                                            SumAssured = (SumAssured + Convert.ToInt32(Model.SectionData.ValueData[i].Value));
+                                            <span>$@Model.SectionData.ValueData[i].Value</span><br /><br />
+                                        }
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Total Sum Insured</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (SumAssured > 0)
+                                {
+                                    <span>$@SumAssured</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Cover for accessories</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60811) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60811).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60811).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12">Part-B Liability</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Limit of Liability</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61223) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61223).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61223).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61233) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61233).Value != ""))
+                                {
+                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61233).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">How many years is it since you last made an insurance claim on your boat or previous boats?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61235) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61235).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61235).Value == "1")
+                                    {
+                                        <span> 1 year </span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61235).Value == "2")
+                                    {
+                                        <span> 2 or more years </span>
+                                    }
+                                    else
+                                    {
+                                        <span> 0 year </span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Options</strong></p>
+                            <p class="col-md-12 col-sm-12 col-xs-12">Part-B Liability</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Do you require cover for coastal and inland waterways?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61253) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61253).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61253).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What is the maximum limit seaward travel</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61255) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61255).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61255).Value == "1")
+                                    {
+                                        <span>20 Kms</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61255).Value == "2")
+                                    {
+                                        <span>50 Kms</span>
+                                    }
+                                    else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61255).Value == "3")
+                                    {
+                                        <span>100 Kms</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0 Kms</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12">Optional Extra</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Do you require cover for Sail boat racing</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61259) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61259).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61259).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Interested Parties</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-left">Name of Institutions</p>
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">Location of Institution</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-left">
+                                @if (Model.ProfileData.ValueData != null && (Model.ProfileData.ValueData.Count > 0))
+                                {
+                                    for (int j = 0; j < Model.ProfileData.ValueData.Count; j++)
+                                    {
+                                        if (Model.ProfileData.ValueData[j].Element.ElId == 61277 && Model.ProfileData.ValueData[j].Value != "")
+                                        {
+                                            <span>@Model.ProfileData.ValueData[j].Value</span><br /><br />
+                                        }
+                                    }
+                                }
+                            </p>
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                                @if (Model.ProfileData.ValueData != null && (Model.ProfileData.ValueData.Count > 0))
+                                {
+                                    string oddeven = "odd";
+                                    for (int i = 0; i < Model.ProfileData.ValueData.Count; i++)
+                                    {
+                                        if (Model.ProfileData.ValueData[i].Element.ElId == 61279 && Model.ProfileData.ValueData[i].Value != "")
+                                        {
+                                            if (oddeven == "odd")
+                                            {
+                                                oddeven = "even";
+                                            }
+                                            else
+                                            {
+                                                oddeven = "odd";
+                                                <span>@Model.ProfileData.ValueData[i].Value</span><br /><br />
+                                            }
+                                        }
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+            @using (Ajax.BeginForm("Motors", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+            {
+                HttpMethod = "GET"
+
+            }))
+            {
+                <div class="row content policy-full-view">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>BOAT DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

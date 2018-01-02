@@ -1,0 +1,189 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "Liability";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.PolicyData != null)
+{
+    <div class="row content">
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+            <h2>
+                POLICY DETAILS<span>
+                    @if (Model.PolicyData.InsuredName != null)
+                    {
+                        <span>@Model.PolicyData.InsuredName/</span>
+                    }
+                    @if (Model.PolicyData.PolicyNumber != null)
+                    {
+                        @Model.PolicyData.PolicyNumber
+                    }
+                    @if (Model.PolicyData.PolicyStatus != null)
+                    {
+                        if (Model.PolicyData.PolicyStatus == "AP")
+                        { <span>/ Endorsed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "AQ")
+                        { <span>/ Endorsement Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CQ")
+                        { <span>/ Cancellation Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "DQ")
+                        { <span>/ Discarded Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NP")
+                        { <span>/ New Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NQ")
+                        { <span>/ Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RP")
+                        { <span>/ Renewed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RQ")
+                        { <span>/ Renewal Invitation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XQ")
+                        { <span>/ Cancellation Quotation</span> }
+                    }
+                </span>
+
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+        </div>
+
+        <div class="mt-50 mb-50"></div>
+        <div class="p-10 col-md-12 border-bottom-1 mb-15">
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                <img src="~/images/farm-icon.png" class="policy-list-img">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                                {
+                                    <lable>Rural Lifestyle</lable>
+                                }
+                                else
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy No: @Model.PolicyData.PolicyNumber
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+        @using (Ajax.BeginForm("Boat", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+        {
+            HttpMethod = "GET"
+
+        }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row content policy-full-view">
+                <div class="col-xs-12">
+                    <div class="well">
+                        @Html.HiddenFor(p => p.CustomerId)
+                        <h3>Liability DETAILS</h3>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Farm Structures and Farm Contents</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                            <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                {
+                                    <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Do you want cover for Personal and Farm Liabilty</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60691) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60691).Value != null))
+                                {
+                                    if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60691).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    } else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Limit of indemnity</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60671) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60671).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60671).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60681) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60681).Value != ""))
+                                {
+                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60681).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+            @using (Ajax.BeginForm("Boat", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+            {
+                HttpMethod = "GET"
+
+            }))
+            {
+                <div class="row content policy-full-view">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>Liability DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
