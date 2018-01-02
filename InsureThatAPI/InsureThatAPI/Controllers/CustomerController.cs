@@ -61,6 +61,7 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
+
             HttpClient hclient = new HttpClient();
             if (Session["IyId"] != null && Session["IyId"] != "")
             {
@@ -129,12 +130,10 @@ namespace InsureThatAPI.Controllers
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> AdvCustomerSearch(CustomerSearch customersearch, string InsuredName, string PolicyNo, string PhoneNo, string EmailId)
         {
-            //return RedirectToAction("PolicyList", "Customer", new { InsuredId = ViewBag.InsuredId, CustomerId = 1 });
-            if (((customersearch.policyNo == null || string.IsNullOrWhiteSpace(customersearch.policyNo)) && (customersearch.emailId == null || string.IsNullOrWhiteSpace(customersearch.emailId)) && (customersearch.phoneNo == null || string.IsNullOrWhiteSpace(customersearch.phoneNo))) && ((PolicyNo == null || String.IsNullOrWhiteSpace(PolicyNo)) && (InsuredName == null || String.IsNullOrWhiteSpace(InsuredName)) && (EmailId == null || String.IsNullOrWhiteSpace(EmailId)) && (PhoneNo == null || String.IsNullOrWhiteSpace(PhoneNo))))
+             if (((customersearch.policyNo == null || string.IsNullOrWhiteSpace(customersearch.policyNo)) && (customersearch.emailId == null || string.IsNullOrWhiteSpace(customersearch.emailId)) && (customersearch.phoneNo == null || string.IsNullOrWhiteSpace(customersearch.phoneNo))) && ((PolicyNo == null || String.IsNullOrWhiteSpace(PolicyNo)) && (InsuredName == null || String.IsNullOrWhiteSpace(InsuredName)) && (EmailId == null || String.IsNullOrWhiteSpace(EmailId)) && (PhoneNo == null || String.IsNullOrWhiteSpace(PhoneNo))))
             {
                 TempData["ErrorMsg"] = "Enter any details to search";
                 return RedirectToAction("AdvancedCustomerSearch", "Customer");
-
             }
             string ApiKey = " ";
             //else if ((PolicyNo ==null || String.IsNullOrWhiteSpace(PolicyNo))  && (InsuredName==null || String.IsNullOrWhiteSpace(InsuredName)) && (EmailId==null || String.IsNullOrWhiteSpace(EmailId)) && (PhoneNo==null || String.IsNullOrWhiteSpace(PhoneNo)))
@@ -301,8 +300,10 @@ namespace InsureThatAPI.Controllers
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> InsuredPolicys(int? InsuredId, int? cid)
         {
+            string apikey = null;
             if (Session["apiKey"] != null)
             {
+                apikey = Session["ApiKey"].ToString();
             }
             else
             {
@@ -317,7 +318,7 @@ namespace InsureThatAPI.Controllers
                 //  insureddetails.InsuredID = Convert.ToInt32(Session["InsuredId"]);
                 HttpClient hclient = new HttpClient();
                 hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                HttpResponseMessage Res = await hclient.GetAsync(" https://api.insurethat.com.au/Api/PolicyDetails?iyId=9262&paId=" + InsuredId + "");/*insureddetails.InsuredID */
+                HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/PolicyDetails?ApiKey="+apikey+"&IyId=9262&InsuredID=" + InsuredId);/*insureddetails.InsuredID */
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                 //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
                 policydetails = JsonConvert.DeserializeObject<GetNewPolicyDetailsRef>(EmpResponse);
@@ -631,7 +632,7 @@ namespace InsureThatAPI.Controllers
 
 
         [HttpGet]
-        public ActionResult NewPolicy(int? cid, int insureId)
+        public ActionResult NewPolicy(int? cid, int? insureId)
         {
             if (Session["ApiKey"] != null)
             {
@@ -641,7 +642,10 @@ namespace InsureThatAPI.Controllers
                 }
                 ViewBag.CustomerId = cid;
                 PolicyTypes model = new PolicyTypes();
-                model.InsureId = insureId;
+                if (insureId.HasValue)
+                {
+                    model.InsureId = insureId.Value;
+                }
                 model.cid = cid;
                 return View(model);
             }
@@ -918,19 +922,23 @@ namespace InsureThatAPI.Controllers
                     }
                 }
                 Session["Policyinclustions"] = PolicyinslustionsList;
-                
+                return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
             }
-            if(PolicyinslustionsList!=null && PolicyinslustionsList.Count>0)
-            {
-                if(model.PolicyType == 1029)
-                {
+            //if(PolicyinslustionsList!=null && PolicyinslustionsList.Count>0)
+            //{
+            //    for(int j=0;j<PolicyinslustionsList.Count;j++)
+            //    {
 
-                }
-                else if(model.PolicyType==1021)
-                {
-                    return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
-                }
-            }
+            //    }
+            //    if(model.PolicyType == 1029)
+            //    {
+            //        return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = policyid });
+            //    }
+            //    else if(model.PolicyType==1021)
+            //    {
+            //        return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
+            //    }
+            //}
 
             return RedirectToAction("NewPolicy", "RuralLifeStyle", new { cid = cid });
 
