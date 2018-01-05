@@ -1322,7 +1322,6 @@ namespace InsureThatAPI.Controllers
                 var units = policyinclu.Where(o => o.Name == "Pets").SingleOrDefault();
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
@@ -1451,6 +1450,2406 @@ namespace InsureThatAPI.Controllers
                 else
                 {
                     return RedirectToAction("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmHomeBilding(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Home Buildings").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmHomeContents", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmHomeContents(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Home Contents").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Contents&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmValuables", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmValuables(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Valuables").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Valuables&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FixedFarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FixedFarmProperty(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Fixed Farm Property").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Fixed Farm Property&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("PersonalLiabilit", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> PersonalLiabilit(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Personal Liability").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Personal Liability&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmLivestock", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmLivestock(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Livestock").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Livestock&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmMotors", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmMotors(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Motors").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Motors&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("MobileFarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> MobileFarmProperty(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Mobile Farm Property").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Mobile Farm Property&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmLiability", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmLiability(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Farm Liability").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Liability&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Burglary", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> Burglary(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Burglary").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Burglary&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmElectronics", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmElectronics(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Farm Electronics").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Electronics&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmInterruption", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmInterruption(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Farm Interruption").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Interruption&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmMachinery", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmMachinery(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Farm Machinery").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Machinery&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmMoney", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmMoney(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Farm Money").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Money&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmTransit", "PolicyDetails", new { cid = cid, PcId = PcId });
+                }
+            }
+            else
+            {
+                return RedirectToAction("Agenlogin", "Login");
+            }
+
+            return View(model);
+        }
+        public async System.Threading.Tasks.Task<ActionResult> FarmTransit(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+            }
+
+            var db = new MasterDataEntities();
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                model.PolicyInclusion = policyinclu;
+                var units = policyinclu.Where(o => o.Name == "Farm Money").SingleOrDefault();
+                if (units != null)
+                {
+                    HttpClient hclient = new HttpClient();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Money&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
+
+                    model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if (policydetails != null)
+                    {
+                        model.PolicyData = new PolicyDetails();
+                        model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                        model.PolicyData.InsuredName = policydetails.InsuredName;
+                        model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                        model.PolicyData.PrId = policydetails.PrId;
+                        model.PolicyData.PcId = policydetails.PcId;
+                        model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                        model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                    }
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
+                    if (model.SectionData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Profile")
+                        {
+                            unit_Type = "P";
+                        }
+                        else if (units.Component == "Section")
+                        {
+                            unit_Type = "S";
+                        }
+                        if (model.SectionData.RowsourceData != null && model.SectionData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.SectionData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.SectionData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.SectionData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+
+                    }
+                    else if (model.ProfileData != null)
+                    {
+                        string unit_Type = null;
+
+                        if (units.Component == "Home")
+                        {
+                            unit_Type = "H";
+                        }
+                        else if (units.Component == "Farm")
+                        {
+                            unit_Type = "F";
+                        }
+                        if (model.ProfileData.RowsourceData != null && model.ProfileData.RowsourceData.Count > 0)
+                        {
+                            for (int row = 0; row < model.ProfileData.RowsourceData.Count; row++)
+                            {
+                                var jsonRowData = JsonConvert.SerializeObject(model.ProfileData.RowsourceData[row].Options);
+                                var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, model.ProfileData.RowsourceData[row].Element.ElId, jsonRowData, null, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            }
+                        }
+                        if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
+
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+
+                        }
+                        if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
+                        {
+                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
+                            ////{
+                            var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
+                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
+                            ////}
+                        }
+                        if (model.AddressData != null)
+                        {
+                            for (int add = 0; add < model.AddressData.Count; add++)
+                            {
+                                var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        return RedirectToAction("", "");
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmHomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
                 }
             }
             else

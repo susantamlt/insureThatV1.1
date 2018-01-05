@@ -1,0 +1,548 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "Home Bilding";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.PolicyData != null)
+{
+    <div class="row content">
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+            <h2>
+                POLICY DETAILS<span>
+                    @if (Model.PolicyData.InsuredName != null)
+                    {
+                        <span>@Model.PolicyData.InsuredName/</span>
+                    }
+                    @if (Model.PolicyData.PolicyNumber != null)
+                    {
+                        @Model.PolicyData.PolicyNumber
+                    }
+                    @if (Model.PolicyData.PolicyStatus != null)
+                    {
+                        if (Model.PolicyData.PolicyStatus == "AP")
+                        { <span>/ Endorsed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "AQ")
+                        { <span>/ Endorsement Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CQ")
+                        { <span>/ Cancellation Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "DQ")
+                        { <span>/ Discarded Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NP")
+                        { <span>/ New Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NQ")
+                        { <span>/ Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RP")
+                        { <span>/ Renewed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RQ")
+                        { <span>/ Renewal Invitation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XQ")
+                        { <span>/ Cancellation Quotation</span> }
+                    }
+                </span>
+
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+        </div>
+
+        <div class="mt-50 mb-50"></div>
+        <div class="p-10 col-md-12 border-bottom-1 mb-15">
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                <img src="~/images/farm-icon.png" class="policy-list-img">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                                {
+                                    <lable>Rural Lifestyle</lable>
+                                }
+                                else
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy No: @Model.PolicyData.PolicyNumber
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+        @using (Ajax.BeginForm("FarmHomeContents", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+        {
+            HttpMethod = "GET"
+
+        }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row content policy-full-view">
+                <div class="col-xs-12">
+                    <div class="well">
+                        @Html.HiddenFor(p => p.CustomerId)
+                        <h3>HOME BUILDINGS DETAILS</h3>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Home Description</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                            <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                {
+                                    <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is your Home Building within 100 metres from Uncleared Natural Bushland, a State or National Forest or a Commercial Plantation of pine trees?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62067) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62067).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62067).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Construction Details</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What are the external walls made of?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                               @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62085) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value != null))
+                               {
+                                   if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "1")
+                                   {
+                                    <span>Asbestos cement sheet or plank</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "2")
+                                   {
+                                    <span>Brick Veneer</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "3")
+                                   {
+                                    <span>Cladding *</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "4")
+                                   {
+                                    <span>Concrete</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "5")
+                                   {
+                                    <span>Concrete Block</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "6")
+                                   {
+                                    <span>Double Brick</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "7")
+                                   {
+                                    <span>Metel</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "8")
+                                   {
+                                    <span>Mud Brick</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "9")
+                                   {
+                                    <span>Other*</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "10")
+                                   {
+                                    <span>Rock/Stone</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "11")
+                                   {
+                                    <span>Rockcote</span>
+                                   }
+                                   else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62085).Value == "12")
+                                   {
+                                    <span>Timber</span>
+                                   }
+                               }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">What is the roof made of?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62089) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "1")
+                                    {
+                                        <span>Cement tiles</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "2")
+                                    {
+                                        <span>Colourbond/zincalume</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "3")
+                                    {
+                                        <span>Corrugated Iron* (if selected a further question to ask if roof has any rust?</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "4")
+                                    {
+                                        <span>Fibro/ asbestos cement – this will require approval before completion of the quote.</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "5")
+                                    {
+                                        <span>Metel Tiles</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "6")
+                                    {
+                                        <span>Other*</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value == "7")
+                                    {
+                                        <span>Terracotta tiles</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">In what year was the home built ?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62089) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value != ""))
+                                {
+                                    <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">If the home was built before 1970:<br />In what year was the building last rewired ?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62095) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62095).Value != ""))
+                                {
+                                    <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62095).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">In what year was the building last replumbed ?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62097) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62097).Value != ""))
+                                {
+                                    <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62097).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is the Home Building watertight, well maintained, structurally sound and secure?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62099) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62099).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62099).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is the Home Building protected under heritage legislation other than a local council listing?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62109) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62109).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62109).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is the Home Building under construction or undergoing renovation, alteration or extension?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62111) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62111).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62111).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Does Your Home Building comply with the local council regulations regarding its fitness for occupancy as a domestic dwelling?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62113) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62113).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62113).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Occupancy Details</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Who normally lives in the home?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62127) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62127).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62127).Value == "1")
+                                    {
+                                        <span>Tenants</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62127).Value == "2")
+                                    {
+                                        <span>You and boarders</span>
+                                    }
+                                    else
+                                    {
+                                        <span>You</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is the Building?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62129) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62129).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62129).Value == "1")
+                                    {
+                                        <span>Tenanted</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62129).Value == "2")
+                                    {
+                                        <span>Holiday Home</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Occupied</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">In the next 12 months, will the home be unoccupied for 90 consecutive days or more?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62131) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62131).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62131).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Is the building used for business?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62133) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62133).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62133).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Home Building</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Do you require cover for accidental damage or defined events</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62133) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62133).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62133).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">How much would it cost to replace your Home Building?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62089) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value != ""))
+                                {
+                                    <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">How many years is it since you last made an insurance claim on your Home Buildings?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62127) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62127).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62127).Value == "1")
+                                    {
+                                        <span>1 year</span>
+                                    }
+                                    else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62127).Value == "2")
+                                    {
+                                        <span>2 or more years</span>
+                                    }
+                                    else
+                                    {
+                                        <span>0 year</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62089) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value != ""))
+                                {
+                                    <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62089).Value</span>
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-10 col-sm-10 col-xs-10">If your home building is tenanted, do you want the definition of Home Buildings extended to cover fitted carpets, freestanding home appliances and window covering?</p>
+                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 62133) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62133).Value != null))
+                                {
+                                    if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 62133).Value == "1")
+                                    {
+                                        <span>Yes</span>
+                                    }
+                                    else
+                                    {
+                                        <span>No</span>
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Interested Parties</strong></p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-left">Interested Party Name</p>
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">Interested Party Location</p>
+                        </div>
+                        <div class="row">
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-left">
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                    {
+                                        if (Model.SectionData.ValueData[j].Element.ElId == 62187 && Model.SectionData.ValueData[j].Value != "")
+                                        {
+                                            <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                        }
+                                    }
+                                }
+                            </p>
+                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                {
+                                    string oddeven = "odd";
+                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                    {
+                                        if (Model.SectionData.ValueData[i].Element.ElId == 62189 && Model.SectionData.ValueData[i].Value != "")
+                                        {
+                                            if (oddeven == "odd")
+                                            {
+                                                oddeven = "even";
+                                            }
+                                            else
+                                            {
+                                                oddeven = "odd";
+                                                <span>@Model.SectionData.ValueData[i].Value</span><br /><br />
+                                            }
+                                        }
+                                    }
+                                }
+                            </p>
+                        </div>
+                        <div class="row">
+                            <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="row content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+            @using (Ajax.BeginForm("FarmHomeContents", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+            {
+                HttpMethod = "GET"
+
+            }))
+            {
+                <div class="row content policy-full-view">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>HOME BUILDINGS DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
