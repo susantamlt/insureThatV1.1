@@ -1,0 +1,770 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MasterDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="MasterDataEntities" annotation:LazyLoadingEnabled="true">
+    <FunctionImport Name="UpdateCustomerDetails">
+      <Parameter Name="customerId" Mode="In" Type="Int32" />
+      <Parameter Name="CustomerName" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_InsuredDisclosureDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_InsuredDisclosureDetails_Result)">
+      <Parameter Name="InsuredDisclosureID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_UserDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_UserDetails_Result)">
+      <Parameter Name="UserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_HomeBuildingAmountDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeBuildingSumInsured" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeBuildingNoClaimPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="HomeBuildingExcess" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeBuildingNoClaimDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeBuildingAgeDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="PremiumID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_HomeContentsDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsUnspecifiedSumInsured" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeContentsNoClaimPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsExcess" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeContentsNoClaimDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsAgeDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="PremiumID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsDetailID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_HomeContentsItems">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsItemDescription" Mode="In" Type="String" />
+      <Parameter Name="HomeContentsItemSumInsured" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_InsuredDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="InsuredID" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyIds" Mode="In" Type="String" />
+      <Parameter Name="ClientType" Mode="In" Type="Int32" />
+      <Parameter Name="Title" Mode="In" Type="String" />
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="MiddleName" Mode="In" Type="String" />
+      <Parameter Name="CompanyBusinessName" Mode="In" Type="String" />
+      <Parameter Name="TradingName" Mode="In" Type="String" />
+      <Parameter Name="ABN" Mode="In" Type="String" />
+      <Parameter Name="AddressID" Mode="In" Type="Int32" />
+      <Parameter Name="PostalAddressID" Mode="In" Type="Int32" />
+      <Parameter Name="PhoneNo" Mode="In" Type="String" />
+      <Parameter Name="MobileNo" Mode="In" Type="String" />
+      <Parameter Name="DOB" Mode="In" Type="DateTime" />
+      <Parameter Name="EmailID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_InsuredDisclosureDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="PreviousInsurer" Mode="In" Type="Int32" />
+      <Parameter Name="RDBValue1" Mode="In" Type="String" />
+      <Parameter Name="RDBValue2" Mode="In" Type="String" />
+      <Parameter Name="RDBValue3" Mode="In" Type="String" />
+      <Parameter Name="RDBValue4" Mode="In" Type="String" />
+      <Parameter Name="RDBValue5" Mode="In" Type="String" />
+      <Parameter Name="RDBValue6" Mode="In" Type="String" />
+      <Parameter Name="RDBValue7" Mode="In" Type="String" />
+      <Parameter Name="DischargeDate" Mode="In" Type="DateTime" />
+      <Parameter Name="Description" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_PolicyLogDetails">
+      <Parameter Name="PolicyNumber" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyLogID" Mode="In" Type="Int32" />
+      <Parameter Name="Details" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="Int32" />
+      <Parameter Name="Timestamp" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_ValuablesDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="ValuablesUnspecifiedSumInsured" Mode="In" Type="Decimal" />
+      <Parameter Name="ValuablesExcess" Mode="In" Type="Decimal" />
+      <Parameter Name="PremiumID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Insert_ValuablesItems">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="ValuablesItemID" Mode="In" Type="Int32" />
+      <Parameter Name="ValuablesDescription" Mode="In" Type="String" />
+      <Parameter Name="ValuablesSumInsured" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertAddressDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="AddressID" Mode="In" Type="Int32" />
+      <Parameter Name="AddressLine1" Mode="In" Type="String" />
+      <Parameter Name="AddressLine2" Mode="In" Type="String" />
+      <Parameter Name="Suburb" Mode="In" Type="String" />
+      <Parameter Name="State" Mode="In" Type="String" />
+      <Parameter Name="Postcode" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertConstructionDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="ExternalWallDetails" Mode="In" Type="Int32" />
+      <Parameter Name="WallDescription" Mode="In" Type="String" />
+      <Parameter Name="RoofDetails" Mode="In" Type="Int32" />
+      <Parameter Name="RoofDescription" Mode="In" Type="String" />
+      <Parameter Name="BuildYear" Mode="In" Type="DateTime" />
+      <Parameter Name="RDBValue1" Mode="In" Type="String" />
+      <Parameter Name="RDBValue2" Mode="In" Type="String" />
+      <Parameter Name="RDBValue3" Mode="In" Type="String" />
+      <Parameter Name="RDBValue4" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertHomeLocationDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="AddressID" Mode="In" Type="Int32" />
+      <Parameter Name="BuildingDescription" Mode="In" Type="String" />
+      <Parameter Name="PropertyArea" Mode="In" Type="String" />
+      <Parameter Name="Within100MetresOfNaturalBushland" Mode="In" Type="Boolean" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertInterestedParties">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="PartyID" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="LocationID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertNewPolicyDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyNumber" Mode="In" Type="String" />
+      <Parameter Name="Broker" Mode="In" Type="String" />
+      <Parameter Name="AccountManagerID" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyStatus" Mode="In" Type="Int32" />
+      <Parameter Name="CoverPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="CoverPeriodUnit" Mode="In" Type="String" />
+      <Parameter Name="InceptionDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ExpiryDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EffectiveDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ProductID" Mode="In" Type="Int32" />
+      <Parameter Name="FloodCover" Mode="In" Type="Int32" />
+      <Parameter Name="Is_claimed" Mode="In" Type="String" />
+      <Parameter Name="RemoveStampDuty" Mode="In" Type="String" />
+      <Parameter Name="Reason_for_cancelletion" Mode="In" Type="String" />
+      <Parameter Name="alterdByUserID" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertOccupancyDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="RDBValue1" Mode="In" Type="String" />
+      <Parameter Name="RDBValue2" Mode="In" Type="String" />
+      <Parameter Name="RDBValue3" Mode="In" Type="String" />
+      <Parameter Name="RDBValue4" Mode="In" Type="String" />
+      <Parameter Name="Description" Mode="In" Type="String" />
+      <Parameter Name="OccupancyDetailsID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertPolicyInsured">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="InsuredId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_InsertSecurityDetailsFireSafetyDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="RDBValue1" Mode="In" Type="String" />
+      <Parameter Name="RDBValue2" Mode="In" Type="String" />
+      <Parameter Name="RDBValue3" Mode="In" Type="String" />
+      <Parameter Name="RDBValue4" Mode="In" Type="String" />
+      <Parameter Name="RDBValue5" Mode="In" Type="String" />
+      <Parameter Name="RDBValue6" Mode="In" Type="String" />
+      <Parameter Name="RDBValue7" Mode="In" Type="String" />
+      <Parameter Name="RDBValue8" Mode="In" Type="String" />
+      <Parameter Name="SecurityDetailsFireSafetyDetailsID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Update_InsuredDetails">
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="MiddleName" Mode="In" Type="String" />
+      <Parameter Name="MobileNo" Mode="In" Type="String" />
+      <Parameter Name="EmailID" Mode="In" Type="String" />
+      <Parameter Name="InsuredID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Update_InsuredDisclosureDetails">
+      <Parameter Name="PreviousInsurer" Mode="In" Type="Int32" />
+      <Parameter Name="DischargeDate" Mode="In" Type="DateTime" />
+      <Parameter Name="Description" Mode="In" Type="String" />
+      <Parameter Name="InsuredDisclosureID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Update_UserDetails">
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="MobileNo" Mode="In" Type="String" />
+      <Parameter Name="EmailID" Mode="In" Type="String" />
+      <Parameter Name="UserID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_IDC_Insert_FeeDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="AgencyFee" Mode="In" Type="Decimal" />
+      <Parameter Name="BrokerFee" Mode="In" Type="Decimal" />
+      <Parameter Name="FeeGST" Mode="In" Type="Decimal" />
+      <Parameter Name="FeeDetailID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_IDC_Insert_PremiumDetails">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="PremiumID" Mode="In" Type="Int32" />
+      <Parameter Name="BasePremium" Mode="In" Type="Decimal" />
+      <Parameter Name="FSL" Mode="In" Type="Decimal" />
+      <Parameter Name="GST" Mode="In" Type="Decimal" />
+      <Parameter Name="StampDuty" Mode="In" Type="Boolean" />
+      <Parameter Name="GrossPremium" Mode="In" Type="Decimal" />
+      <Parameter Name="AdjustmentPercentage" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="IT_IDC_Insert_UserDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="UserID" Mode="In" Type="Int32" />
+      <Parameter Name="UserName" Mode="In" Type="String" />
+      <Parameter Name="FirstName" Mode="In" Type="String" />
+      <Parameter Name="LastName" Mode="In" Type="String" />
+      <Parameter Name="AddressID" Mode="In" Type="Int32" />
+      <Parameter Name="PostalAddressID" Mode="In" Type="Int32" />
+      <Parameter Name="PhoneNo" Mode="In" Type="String" />
+      <Parameter Name="MobileNo" Mode="In" Type="String" />
+      <Parameter Name="EmailID" Mode="In" Type="String" />
+      <Parameter Name="MemberOf" Mode="In" Type="String" />
+      <Parameter Name="MembershipNumber" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_InsuredDetails1" ReturnType="Collection(MasterDataModel.GetCustomerDetails_Result)">
+      <Parameter Name="InsuredID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_HomeBuildingAmountDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_HomeBuildingAmountDetails_Result)">
+      <Parameter Name="HomeBuildingAmountDetailID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_HomeContentsDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_HomeContentsDetails_Result)">
+      <Parameter Name="HomeContentsDetailID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_HomeContentsItemDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_HomeContentsItemDetails_Result)">
+      <Parameter Name="HomeContentsItemID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_HomeLocationDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_HomeLocationDetails_Result)">
+      <Parameter Name="AddressID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_InsuredDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_InsuredDetails_Result1)">
+      <Parameter Name="emailid" Mode="In" Type="String" />
+      <Parameter Name="customername" Mode="In" Type="String" />
+      <Parameter Name="phonenumber" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_NewPolicyDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_NewPolicyDetails_Result)">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_PolicyInsured" ReturnType="Collection(MasterDataModel.IT_CC_GET_PolicyInsured_Result)">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_PolicyLogDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_PolicyLogDetails_Result)">
+      <Parameter Name="PolicyLogID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_ValuablesDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_ValuablesDetails_Result)">
+      <Parameter Name="ValuablesDetailID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_GET_ValuablesItemDetails" ReturnType="Collection(MasterDataModel.IT_CC_GET_ValuablesItemDetails_Result)">
+      <Parameter Name="ValuablesItemID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_HomeBuildingAmountDetails">
+      <Parameter Name="HomeBuildingAmountDetailID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeBuildingSumInsured" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeBuildingNoClaimPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="HomeBuildingExcess" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeBuildingNoClaimDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeBuildingAgeDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="PremiumID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_HomeContentDetails">
+      <Parameter Name="HomeContentsDetailID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsAgeDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsNoClaimDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsExcess" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeContentsNoClaimPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsUnspecifiedSumInsured" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_Update_HomeContentsItems">
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="HomeID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsItemDescription" Mode="In" Type="String" />
+      <Parameter Name="HomeContentsItemSumInsured" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeContentsItemID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_HomeLocationDetails">
+      <Parameter Name="AddressID" Mode="In" Type="Int32" />
+      <Parameter Name="BuildingDescription" Mode="In" Type="String" />
+      <Parameter Name="PropertyArea" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_NEWHomeContentDetails">
+      <Parameter Name="HomeContentsDetailID" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsAgeDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsNoClaimDiscount" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsExcess" Mode="In" Type="Decimal" />
+      <Parameter Name="HomeContentsNoClaimPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="HomeContentsUnspecifiedSumInsured" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_NewPolicyDetails">
+      <Parameter Name="PolicyDetailsID" Mode="In" Type="Int32" />
+      <Parameter Name="EffectiveDate" Mode="In" Type="DateTime" />
+      <Parameter Name="Reason_for_cancelletion" Mode="In" Type="String" />
+      <Parameter Name="floodCover" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_PolicyInsured">
+      <Parameter Name="InsuredId" Mode="In" Type="Int32" />
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_PolicyLogDetails">
+      <Parameter Name="PolicyLogID" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyNumber" Mode="In" Type="Int32" />
+      <Parameter Name="Details" Mode="In" Type="String" />
+      <Parameter Name="Timestamp" Mode="In" Type="DateTime" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_ValuablesDetails">
+      <Parameter Name="ValuablesDetailID" Mode="In" Type="Int32" />
+      <Parameter Name="ValuablesUnspecifiedSumInsured" Mode="In" Type="Decimal" />
+      <Parameter Name="ValuablesExcess" Mode="In" Type="Decimal" />
+    </FunctionImport>
+    <FunctionImport Name="IT_CC_UPDATE_ValuablesItemDetails">
+      <Parameter Name="ValuablesItemID" Mode="In" Type="Int32" />
+      <Parameter Name="ValuablesDescription" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_IDC_Get_CustomerLogInDetails" ReturnType="Collection(MasterDataModel.IT_IDC_Get_CustomerLogInDetails_Result)">
+      <Parameter Name="userName" Mode="In" Type="String" />
+      <Parameter Name="password" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_IDC_UPDATE_UserPasswordDetails">
+      <Parameter Name="UserID" Mode="In" Type="Int32" />
+      <Parameter Name="Password" Mode="In" Type="Int32" />
+      <Parameter Name="NewPassword" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_GetCustomerMasterDetails" ReturnType="Collection(MasterDataModel.IT_GetCustomerMasterDetails_Result)">
+      <Parameter Name="CustomerId" Mode="In" Type="Decimal" />
+      <Parameter Name="Email" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_GetCustomerQnsDetails" ReturnType="Collection(MasterDataModel.IT_GetCustomerQnsDetails_Result)">
+      <Parameter Name="CustomerId" Mode="In" Type="Decimal" />
+      <Parameter Name="SectionId" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyType" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyId" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_InsertCustomerMaster" ReturnType="Collection(Int32)">
+      <Parameter Name="Email" Mode="In" Type="String" />
+      <Parameter Name="InsureId" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyNumber" Mode="In" Type="String" />
+      <Parameter Name="PolicyType" Mode="In" Type="Int32" />
+      <Parameter Name="CustomerName" Mode="In" Type="String" />
+      <Parameter Name="TRID" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_InsertCustomerQnsData" ReturnType="Collection(Int32)">
+      <Parameter Name="CustomerId" Mode="In" Type="Decimal" />
+      <Parameter Name="SectionId" Mode="In" Type="Int32" />
+      <Parameter Name="QuestionId" Mode="In" Type="Int32" />
+      <Parameter Name="Answer" Mode="In" Type="String" />
+      <Parameter Name="PolicyType" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyId" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_InsertForgetPasswordCode" ReturnType="Collection(Int32)">
+      <Parameter Name="Guid" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_GetForgetPasswordStatus" ReturnType="Collection(Int32)">
+      <Parameter Name="Guid" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_Master_GetSuburbDetails" ReturnType="Collection(MasterDataModel.IT_Master_GetSuburbDetails_Result)">
+      <Parameter Name="Suburb" Mode="In" Type="String" />
+      <Parameter Name="Postcode" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_Master_GetSuburbList" ReturnType="Collection(String)" />
+    <FunctionImport Name="IT_GetPolicyInclusions" ReturnType="Collection(MasterDataModel.IT_GetPolicyInclusions_Result)">
+      <Parameter Name="CustomerId" Mode="In" Type="Decimal" />
+      <Parameter Name="PolicyId" Mode="In" Type="String" />
+      <Parameter Name="PolicyType" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_InsertPolicyInclusions" ReturnType="Collection(Int32)">
+      <Parameter Name="CustomerId" Mode="In" Type="Decimal" />
+      <Parameter Name="PolicyInclusions" Mode="In" Type="String" />
+      <Parameter Name="PolicyId" Mode="In" Type="String" />
+      <Parameter Name="PolicyType" Mode="In" Type="Int32" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+      <Parameter Name="UnitNumber" Mode="In" Type="Int32" />
+      <Parameter Name="UnitStatus" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_PolicyDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="PolicyNumber" Mode="In" Type="String" />
+      <Parameter Name="TransactionNumber" Mode="In" Type="String" />
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+      <Parameter Name="TrId" Mode="In" Type="Int32" />
+      <Parameter Name="TermNumber" Mode="In" Type="Int32" />
+      <Parameter Name="AccountManagerID" Mode="In" Type="String" />
+      <Parameter Name="PolicyStatus" Mode="In" Type="String" />
+      <Parameter Name="CoverPeriod" Mode="In" Type="Int32" />
+      <Parameter Name="CoverPeriodUnit" Mode="In" Type="String" />
+      <Parameter Name="InceptionDate" Mode="In" Type="DateTime" />
+      <Parameter Name="ExpiryDate" Mode="In" Type="DateTime" />
+      <Parameter Name="EffectiveDate" Mode="In" Type="DateTime" />
+      <Parameter Name="PrId" Mode="In" Type="Int32" />
+      <Parameter Name="IyId" Mode="In" Type="Int32" />
+      <Parameter Name="InsuredName" Mode="In" Type="String" />
+      <Parameter Name="RemoveStampDuty" Mode="In" Type="Boolean" />
+      <Parameter Name="CreatedByUserID" Mode="In" Type="Int32" />
+      <Parameter Name="TimeCreated" Mode="In" Type="String" />
+      <Parameter Name="IsFloodCoverRequired" Mode="In" Type="Boolean" />
+      <Parameter Name="HasMadeAClaim" Mode="In" Type="Boolean" />
+      <Parameter Name="Reason" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_Unit" ReturnType="Collection(Int32)">
+      <Parameter Name="PolicyId" Mode="In" Type="Int32" />
+      <Parameter Name="Component" Mode="In" Type="String" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+      <Parameter Name="UnitNumber" Mode="In" Type="Int32" />
+      <Parameter Name="UnitStatus" Mode="In" Type="String" />
+      <Parameter Name="ProfileUnId" Mode="In" Type="Int32" />
+      <Parameter Name="ReferralList" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_UnitDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="UnitId" Mode="In" Type="Int32" />
+      <Parameter Name="Component_Type" Mode="In" Type="String" />
+      <Parameter Name="Unit_Type" Mode="In" Type="String" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+      <Parameter Name="ElementId" Mode="In" Type="Int32" />
+      <Parameter Name="RowSourceData" Mode="In" Type="String" />
+      <Parameter Name="ValueData" Mode="In" Type="String" />
+      <Parameter Name="StateData" Mode="In" Type="String" />
+      <Parameter Name="ReferralList" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+      <Parameter Name="AddressId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="usp_dt_GetPolicyDetails" ReturnType="Collection(MasterDataModel.usp_dt_GetPolicyDetails_Result)">
+      <Parameter Name="PolicyId" Mode="In" Type="Int32" />
+      <Parameter Name="PcId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="usp_GetUnit" ReturnType="Collection(MasterDataModel.usp_GetUnit_Result)">
+      <Parameter Name="UnitId" Mode="In" Type="Int32" />
+      <Parameter Name="PolicyId" Mode="In" Type="Int32" />
+      <Parameter Name="Name" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="usp_GetUnitDetails" ReturnType="Collection(MasterDataModel.usp_GetUnitDetails_Result)">
+      <Parameter Name="UnitId" Mode="In" Type="Int32" />
+      <Parameter Name="UnitDetailsId" Mode="In" Type="Int32" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="IT_dt_Insert_Local_Element_UnitDetails" ReturnType="Collection(Int32)">
+      <Parameter Name="Component_Type" Mode="In" Type="String" />
+      <Parameter Name="Unit_Type" Mode="In" Type="String" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+      <Parameter Name="SectionName" Mode="In" Type="String" />
+      <Parameter Name="ElementId" Mode="In" Type="Int32" />
+      <Parameter Name="RowSourceData" Mode="In" Type="String" />
+      <Parameter Name="ValueData" Mode="In" Type="String" />
+      <Parameter Name="StateData" Mode="In" Type="String" />
+      <Parameter Name="ReferralList" Mode="In" Type="String" />
+      <Parameter Name="Status" Mode="In" Type="String" />
+      <Parameter Name="AddressId" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="usp_GetLocalElement_UnitDetails" ReturnType="Collection(MasterDataModel.usp_GetLocalElement_UnitDetails_Result)">
+      <Parameter Name="UnitDetailsId" Mode="In" Type="Int32" />
+      <Parameter Name="SectionName" Mode="In" Type="String" />
+      <Parameter Name="UnId" Mode="In" Type="Int32" />
+    </FunctionImport>
+  </EntityContainer>
+  <ComplexType Name="GetCustomerDetails_Result">
+    <Property Type="String" Name="MobileNo" Nullable="false" MaxLength="9" />
+    <Property Type="Int32" Name="InsuredID" Nullable="false" />
+    <Property Type="Int32" Name="ClientType" Nullable="false" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="FirstName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="LastName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="MiddleName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="CompanyBusinessName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="TradingName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="ABN" Nullable="false" MaxLength="14" />
+    <Property Type="Int32" Name="AddressID" Nullable="false" />
+    <Property Type="Int32" Name="PostalAddressID" Nullable="false" />
+    <Property Type="String" Name="PhoneNo" Nullable="false" MaxLength="9" />
+    <Property Type="DateTime" Name="DOB" Nullable="false" Precision="23" />
+    <Property Type="String" Name="EmailID" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_InsuredDisclosureDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="PreviousInsurer" Nullable="false" />
+    <Property Type="String" Name="RDBValue1" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RDBValue2" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RDBValue3" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RDBValue4" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RDBValue5" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RDBValue6" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RDBValue7" Nullable="false" MaxLength="1" />
+    <Property Type="DateTime" Name="DischargeDate" Nullable="false" Precision="23" />
+    <Property Type="String" Name="Description" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="InsuredDisclosureID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_UserDetails_Result">
+    <Property Type="Int32" Name="UserID" Nullable="false" />
+    <Property Type="String" Name="UserName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="FirstName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="LastName" Nullable="false" MaxLength="20" />
+    <Property Type="Int32" Name="AddressID" Nullable="false" />
+    <Property Type="Int32" Name="PostalAddressID" Nullable="false" />
+    <Property Type="String" Name="PhoneNo" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="MobileNo" Nullable="false" MaxLength="9" />
+    <Property Type="DateTime" Name="DOB" Nullable="false" Precision="23" />
+    <Property Type="String" Name="EmailID" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="MemberOf" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="MembershipNumber" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_InsuredDetails_Result">
+    <Property Type="Int32" Name="InsuredID" Nullable="false" />
+    <Property Type="Int32" Name="ClientType" Nullable="false" />
+    <Property Type="String" Name="Title" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="FirstName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="LastName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="MiddleName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="CompanyBusinessName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="TradingName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="ABN" Nullable="false" MaxLength="14" />
+    <Property Type="Int32" Name="AddressID" Nullable="false" />
+    <Property Type="Int32" Name="PostalAddressID" Nullable="false" />
+    <Property Type="String" Name="PhoneNo" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="MobileNo" Nullable="false" MaxLength="9" />
+    <Property Type="DateTime" Name="DOB" Nullable="false" Precision="23" />
+    <Property Type="String" Name="EmailID" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_HomeBuildingAmountDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="HomeID" Nullable="false" />
+    <Property Type="Decimal" Name="HomeBuildingSumInsured" Nullable="false" Precision="16" Scale="2" />
+    <Property Type="Int32" Name="HomeBuildingNoClaimPeriod" Nullable="false" />
+    <Property Type="Decimal" Name="HomeBuildingExcess" Nullable="false" Precision="16" Scale="2" />
+    <Property Type="Int32" Name="HomeBuildingNoClaimDiscount" Nullable="false" />
+    <Property Type="Int32" Name="HomeBuildingAgeDiscount" Nullable="false" />
+    <Property Type="Int32" Name="PremiumID" Nullable="false" />
+    <Property Type="Int32" Name="HomeBuildingAmountDetailID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_HomeContentsDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="HomeID" Nullable="false" />
+    <Property Type="Decimal" Name="HomeContentsUnspecifiedSumInsured" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="HomeContentsNoClaimPeriod" Nullable="false" />
+    <Property Type="Decimal" Name="HomeContentsExcess" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="HomeContentsNoClaimDiscount" Nullable="false" />
+    <Property Type="Int32" Name="HomeContentsAgeDiscount" Nullable="false" />
+    <Property Type="Int32" Name="PremiumID" Nullable="false" />
+    <Property Type="Int32" Name="HomeContentsDetailID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_HomeContentsItemDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="HomeID" Nullable="false" />
+    <Property Type="Int32" Name="HomeContentsItemID" Nullable="false" />
+    <Property Type="String" Name="HomeContentsItemDescription" Nullable="false" MaxLength="20" />
+    <Property Type="Decimal" Name="HomeContentsItemSumInsured" Nullable="false" Precision="18" Scale="2" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_HomeLocationDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="HomeID" Nullable="false" />
+    <Property Type="Int32" Name="AddressID" Nullable="false" />
+    <Property Type="String" Name="BuildingDescription" Nullable="false" MaxLength="200" />
+    <Property Type="String" Name="PropertyArea" Nullable="false" MaxLength="200" />
+    <Property Type="Boolean" Name="Within100MetresOfNaturalBushland" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_InsuredDetails_Result1">
+    <Property Type="Int32" Name="InsuredID" Nullable="false" />
+    <Property Type="Int32" Name="ClientType" Nullable="false" />
+    <Property Type="String" Name="Title" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="FirstName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="LastName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="MiddleName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="CompanyBusinessName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="TradingName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="ABN" Nullable="false" MaxLength="14" />
+    <Property Type="Int32" Name="AddressID" Nullable="true" />
+    <Property Type="Int32" Name="PostalAddressID" Nullable="true" />
+    <Property Type="String" Name="PhoneNo" Nullable="true" MaxLength="9" />
+    <Property Type="String" Name="MobileNo" Nullable="true" MaxLength="9" />
+    <Property Type="DateTime" Name="DOB" Nullable="false" Precision="23" />
+    <Property Type="String" Name="EmailID" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_NewPolicyDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="String" Name="PolicyNumber" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="Broker" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="AccountManagerID" Nullable="false" />
+    <Property Type="Int32" Name="PolicyStatus" Nullable="false" />
+    <Property Type="Int32" Name="CoverPeriod" Nullable="false" />
+    <Property Type="String" Name="CoverPeriodUnit" Nullable="false" MaxLength="20" />
+    <Property Type="DateTime" Name="InceptionDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="ExpiryDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="EffectiveDate" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="ProductID" Nullable="false" />
+    <Property Type="Int32" Name="FloodCover" Nullable="false" />
+    <Property Type="String" Name="Is_claimed" Nullable="false" MaxLength="1" />
+    <Property Type="String" Name="RemoveStampDuty" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="Reason_for_cancelletion" Nullable="false" MaxLength="100" />
+    <Property Type="DateTime" Name="TimeStamp" Nullable="false" Precision="23" />
+    <Property Type="String" Name="createdByUserID" Nullable="false" MaxLength="20" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_PolicyInsured_Result">
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="InsuredID" Nullable="false" />
+    <Property Type="String" Name="FirstName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="MiddleName" Nullable="true" MaxLength="20" />
+    <Property Type="String" Name="LastName" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="EmailID" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="PhoneNo" Nullable="false" MaxLength="9" />
+    <Property Type="String" Name="MobileNo" Nullable="false" MaxLength="9" />
+    <Property Type="DateTime" Name="DOB" Nullable="false" Precision="23" />
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_PolicyLogDetails_Result">
+    <Property Type="Int32" Name="PolicyNumber" Nullable="false" />
+    <Property Type="Int32" Name="PolicyLogID" Nullable="false" />
+    <Property Type="String" Name="Details" Nullable="false" MaxLength="200" />
+    <Property Type="Int32" Name="UserID" Nullable="false" />
+    <Property Type="DateTime" Name="Timestamp" Nullable="false" Precision="23" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_ValuablesDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="HomeID" Nullable="false" />
+    <Property Type="Decimal" Name="ValuablesUnspecifiedSumInsured" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Decimal" Name="ValuablesExcess" Nullable="false" Precision="18" Scale="2" />
+    <Property Type="Int32" Name="PremiumID" Nullable="false" />
+    <Property Type="Int32" Name="ValuablesDetailID" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_GET_ValuablesItemDetails_Result">
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="false" />
+    <Property Type="Int32" Name="HomeID" Nullable="false" />
+    <Property Type="Int32" Name="ValuablesItemID" Nullable="false" />
+    <Property Type="String" Name="ValuablesDescription" Nullable="false" MaxLength="20" />
+    <Property Type="Decimal" Name="ValuablesSumInsured" Nullable="false" Precision="18" Scale="2" />
+  </ComplexType>
+  <ComplexType Name="IT_CC_InsertNewPolicyDetails_Result">
+    <Property Type="Int32" Name="Column1" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="IT_IDC_Get_CustomerLogInDetails_Result">
+    <Property Type="String" Name="Username" Nullable="false" MaxLength="20" />
+    <Property Type="String" Name="Password" Nullable="false" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="IT_GetCustomerMasterDetails_Result">
+    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+    <Property Type="Decimal" Name="CustomerId" Nullable="false" Precision="18" Scale="0" />
+    <Property Type="String" Name="CustomerName" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Email" Nullable="false" MaxLength="100" />
+    <Property Type="Int32" Name="InsureId" Nullable="true" />
+    <Property Type="String" Name="PolicyNumber" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="PolicyType" Nullable="true" />
+    <Property Type="Int32" Name="TRID" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="IT_GetCustomerQnsDetails_Result">
+    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="UpdatedDate" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="SectionId" Nullable="false" />
+    <Property Type="Int32" Name="QuestionId" Nullable="false" />
+    <Property Type="String" Name="Answer" Nullable="true" MaxLength="500" />
+    <Property Type="Int32" Name="PolicyType" Nullable="false" />
+    <Property Type="String" Name="PolicyId" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="IT_Master_GetSuburbDetails_Result">
+    <Property Type="String" Name="AddressType" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="CatZoneId" Nullable="true" />
+    <Property Type="Decimal" Name="LocalityId" Nullable="true" Precision="18" Scale="0" />
+    <Property Type="String" Name="Postcode" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="StateId" Nullable="true" />
+    <Property Type="String" Name="Suburb" Nullable="true" MaxLength="250" />
+  </ComplexType>
+  <ComplexType Name="IT_GetPolicyInclusions_Result">
+    <Property Type="DateTime" Name="CreatedDate" Nullable="false" Precision="23" />
+    <Property Type="DateTime" Name="UpdatedDate" Nullable="true" Precision="23" />
+    <Property Type="String" Name="PolicyId" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="PolicyInclusions" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="PolicyType" Nullable="false" />
+    <Property Type="Int32" Name="UnId" Nullable="false" />
+    <Property Type="Int32" Name="unitNumber" Nullable="true" />
+    <Property Type="String" Name="UnitStatus" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="ComplexType1" />
+  <ComplexType Name="usp_dt_GetPolicyDetails_Result">
+    <Property Type="Int32" Name="PolicyId" Nullable="false" />
+    <Property Type="String" Name="PolicyNumber" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="TransactionNumber" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="PcId" Nullable="false" />
+    <Property Type="Int32" Name="TrId" Nullable="true" />
+    <Property Type="Int32" Name="TermNumber" Nullable="true" />
+    <Property Type="String" Name="AccountManagerID" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="PolicyStatus" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="CoverPeriod" Nullable="true" />
+    <Property Type="String" Name="CoverPeriodUnit" Nullable="true" MaxLength="50" />
+    <Property Type="DateTime" Name="InceptionDate" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="ExpiryDate" Nullable="true" Precision="23" />
+    <Property Type="DateTime" Name="EffectiveDate" Nullable="true" Precision="23" />
+    <Property Type="Int32" Name="PrId" Nullable="false" />
+    <Property Type="Int32" Name="IyId" Nullable="false" />
+    <Property Type="String" Name="InsuredName" Nullable="true" MaxLength="150" />
+    <Property Type="Boolean" Name="RemoveStampDuty" Nullable="true" />
+    <Property Type="Int32" Name="CreatedByUserID" Nullable="true" />
+    <Property Type="String" Name="TimeCreated" Nullable="true" MaxLength="50" />
+    <Property Type="Boolean" Name="IsFloodCoverRequired" Nullable="true" />
+    <Property Type="Boolean" Name="HasMadeAClaim" Nullable="true" />
+    <Property Type="String" Name="Reason" Nullable="true" MaxLength="50" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="InsureId" Nullable="false" />
+  </ComplexType>
+  <ComplexType Name="usp_GetUnit_Result">
+    <Property Type="Int32" Name="UnitId" Nullable="false" />
+    <Property Type="Int32" Name="PolicyId" Nullable="false" />
+    <Property Type="String" Name="Component" Nullable="false" MaxLength="10" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="UnId" Nullable="false" />
+    <Property Type="Int32" Name="UnitNumber" Nullable="false" />
+    <Property Type="String" Name="UnitStatus" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="ProfileUnId" Nullable="true" />
+    <Property Type="String" Name="ReferralList" Nullable="true" MaxLength="200" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+  </ComplexType>
+  <ComplexType Name="usp_GetUnitDetails_Result">
+    <Property Type="Int32" Name="UnitDetailsId" Nullable="false" />
+    <Property Type="Int32" Name="UnitId" Nullable="false" />
+    <Property Type="String" Name="Component_Type" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Unit_Type" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="UnId" Nullable="true" />
+    <Property Type="Int32" Name="ElementId" Nullable="true" />
+    <Property Type="String" Name="RowSourceData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="ValueData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="StateData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="ReferralList" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="AddressId" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="usp_GetLocalElement_UnitDetails_Result">
+    <Property Type="Int32" Name="UnitDetailsId" Nullable="false" />
+    <Property Type="String" Name="Component_Type" Nullable="false" MaxLength="50" />
+    <Property Type="String" Name="Unit_Type" Nullable="false" MaxLength="50" />
+    <Property Type="Int32" Name="UnId" Nullable="true" />
+    <Property Type="String" Name="SectionName" Nullable="true" MaxLength="80" />
+    <Property Type="Int32" Name="ElementId" Nullable="true" />
+    <Property Type="String" Name="RowSourceData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="ValueData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="StateData" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="ReferralList" Nullable="true" MaxLength="500" />
+    <Property Type="String" Name="Status" Nullable="true" MaxLength="50" />
+    <Property Type="Int32" Name="AddressId" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="ComplexType2" />
+</Schema>

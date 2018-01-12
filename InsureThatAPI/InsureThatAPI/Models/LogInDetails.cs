@@ -6,6 +6,11 @@ using System.Web;
 
 namespace InsureThatAPI.Models
 {
+    public class StatusChangePassword
+    {
+        public string status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+    }
     public class LogInDetails
     {
         [Required(ErrorMessage = "User Name is required.")]

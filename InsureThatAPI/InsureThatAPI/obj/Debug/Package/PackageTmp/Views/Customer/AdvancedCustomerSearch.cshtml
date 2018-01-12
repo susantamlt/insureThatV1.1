@@ -4,11 +4,51 @@
 }
 <div style="margin-top:40px;"></div>
 <div class="col-md-9  mt-120 mb-120">
-    <div class="col-md-9 col-sm-6 col-xs-12"><h3 class="header-title">ADVANCED SEARCH</h3></div>
-    <div class="col-md-3 col-sm-6 col-xs-12">
-        @*<a href="#" class="btn-primary btn back-btn pull-right"> Back</a>*@
+    <div class="col-md-9 col-sm-6 col-xs-12">
+        <h3 class="header-title">ADVANCED SEARCH</h3>
     </div>
+    <div class="clearfix"></div>
+    <div class="col-md-9 col-sm-9 col-xs-12"></div>
     <div style="margin-top:40px;"></div>
+    <div id="addnewcust" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Add New Customer</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="newerror"></div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12 mt-10">Email</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.TextBoxFor(model => model.emailId, new { @class = "form-control form-border-bottom", @placeholder = "Email", @id = "newemail" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12 mt-10">Name</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.TextBoxFor(model => model.insuredName, new { @class = "form-control form-border-bottom", @placeholder = "Name", @id = "newname" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12 mt-10">PHONE NO</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.TextBoxFor(model => model.phoneNo, new { @class = "form-control form-border-bottom", @placeholder = "Phone Number", @id = "newphoneno" })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    <button class="btn btn-default no-border" id="newcust" aria-hidden="true"> Save </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
     @if (TempData["ErrorMsg"] != null)
     {
         <div class="col-md-9 col-sm-6 col-xs-12 error">@TempData["ErrorMsg"]</div>
@@ -17,21 +57,15 @@
         @using (Html.BeginForm("AdvCustomerSearch", "Customer", FormMethod.Post, new { CustomerId = 1, enctype = "multipart/form-data", id = "advancedSearch", name = "advancedSearch" }))
         {
             @Html.AntiForgeryToken()
-
-            @*@using (Ajax.BeginForm("AdvCustomerSearch", "Customer", null, new AjaxOptions()
-                {
-                    HttpMethod = "POST"
-
-                }, new { @id = "advancedSearch", @name = "advancedSearch" }))
-                {*@
-            @Html.AntiForgeryToken()
             <div class="row">
                 <div class="col-md-2 col-sm-2 col-xs-12 mt-10">INSURED NAME</div>
                 <div class="col-md-4 col-sm-4 col-xs-12" id="insuredName-div">
                     @*@Html.TextBoxFor(model => model.insuredName, new { @class = "form-control form-border-bottom js-data-example-ajax", @placeholder = "Name or Company Name", @id = "name", @name = "insuredName" })*@
                     @*@Html.DropDownListFor(m=>m.insuredName,new SelectList,new { @class = "form-control form-border-bottom js-data-example-ajax", @placeholder = "Name or Company Name", @id = "name", @name = "insuredName" })*@
                     <select class="js-data-example-ajax" style="width:250px;" placeholder="Name or Company Name" id="name" name="insuredName">
-                        <option value="">Name or Company Name</option>
+                        <option value="">
+                            Name or Company Name
+                        </option>
                     </select>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-12 mt-10">POLICY NO</div>
@@ -65,8 +99,9 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-9 col-sm-9 col-xs-12"></div>
-                <div class="col-md-3 col-sm-3 col-xs-12 text-right">
+                <div class="col-md-6 col-sm-6 col-xs-12"></div>
+                <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                    <a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>
                     <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn">Search</button>
                 </div>
             </div>
@@ -100,6 +135,26 @@
 <link href="~/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
+    $("#newcust").click(function () {
+        var phonenu = $("#newphoneno").val();
+        var name = $("#newname").val();
+        var email = $("#newemail").val();
+        if (email == '' && phonenu == '' && name == '') {
+            return false;
+        }
+        else if ((email == '' && phonenu == '') || (email == '' && name == '')) {
+            return false;
+        }
+        $.ajax({
+            url: '/customer/newcustomer',
+            type: 'POST',
+            data: { "name": name, "email": email, "phonenumber": phonenu },
+            success: function (response) {
+                if (response.status == true) {
+                }
+            }
+        });
+    });
     $(document).ready(function () {
         $.validator.addMethod("regex", function (value, element, regexp) {
             if (regexp.constructor != RegExp)

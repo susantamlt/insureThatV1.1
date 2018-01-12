@@ -39,6 +39,7 @@ namespace InsureThatAPI.Models
         public string CompanyBusinessName { get; set; }
         public string TradingName { get; set; }
         public string ABN { get; set; }
+        public string Address { get; set; }
         public int? AddressID { get; set; }
         public int? PostalAddressID { get; set; }
         public string MobileNo { get; set; }

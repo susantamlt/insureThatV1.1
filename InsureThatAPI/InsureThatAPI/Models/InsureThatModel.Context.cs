@@ -1392,7 +1392,7 @@ namespace InsureThatAPI.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("IT_Master_GetSuburbList");
         }
     
-        public virtual ObjectResult<usp_GetUnit> IT_GetPolicyInclusions(Nullable<decimal> customerId, string policyId, Nullable<int> policyType)
+        public virtual ObjectResult<IT_GetPolicyInclusions_Result> IT_GetPolicyInclusions(Nullable<decimal> customerId, string policyId, Nullable<int> policyType)
         {
             var customerIdParameter = customerId.HasValue ?
                 new ObjectParameter("CustomerId", customerId) :
@@ -1406,7 +1406,7 @@ namespace InsureThatAPI.Models
                 new ObjectParameter("PolicyType", policyType) :
                 new ObjectParameter("PolicyType", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetUnit>("IT_GetPolicyInclusions", customerIdParameter, policyIdParameter, policyTypeParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<IT_GetPolicyInclusions_Result>("IT_GetPolicyInclusions", customerIdParameter, policyIdParameter, policyTypeParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> IT_InsertPolicyInclusions(Nullable<decimal> customerId, string policyInclusions, string policyId, Nullable<int> policyType, Nullable<int> unId, Nullable<int> unitNumber, string unitStatus)
@@ -1442,11 +1442,15 @@ namespace InsureThatAPI.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_InsertPolicyInclusions", customerIdParameter, policyInclusionsParameter, policyIdParameter, policyTypeParameter, unIdParameter, unitNumberParameter, unitStatusParameter);
         }
     
-        public virtual ObjectResult<Nullable<int>> IT_dt_Insert_PolicyDetails(string policyNumber, string transactionNumber, Nullable<int> pcId, Nullable<int> trId, Nullable<int> termNumber, string accountManagerID, string policyStatus, Nullable<int> coverPeriod, string coverPeriodUnit, Nullable<System.DateTime> inceptionDate, Nullable<System.DateTime> expiryDate, Nullable<System.DateTime> effectiveDate, Nullable<int> prId, Nullable<int> iyId, string insuredName, Nullable<bool> removeStampDuty, Nullable<int> createdByUserID, string timeCreated, Nullable<bool> isFloodCoverRequired, Nullable<bool> hasMadeAClaim, string reason, string status)
+        public virtual ObjectResult<Nullable<int>> IT_dt_Insert_PolicyDetails(string policyNumber, Nullable<int> insureId, string transactionNumber, Nullable<int> pcId, Nullable<int> trId, Nullable<int> termNumber, string accountManagerID, string policyStatus, Nullable<int> coverPeriod, string coverPeriodUnit, Nullable<System.DateTime> inceptionDate, Nullable<System.DateTime> expiryDate, Nullable<System.DateTime> effectiveDate, Nullable<int> prId, Nullable<int> iyId, string insuredName, Nullable<bool> removeStampDuty, Nullable<int> createdByUserID, string timeCreated, Nullable<bool> isFloodCoverRequired, Nullable<bool> hasMadeAClaim, string reason, string status)
         {
             var policyNumberParameter = policyNumber != null ?
                 new ObjectParameter("PolicyNumber", policyNumber) :
                 new ObjectParameter("PolicyNumber", typeof(string));
+    
+            var insureIdParameter = insureId.HasValue ?
+                new ObjectParameter("InsureId", insureId) :
+                new ObjectParameter("InsureId", typeof(int));
     
             var transactionNumberParameter = transactionNumber != null ?
                 new ObjectParameter("TransactionNumber", transactionNumber) :
@@ -1532,7 +1536,7 @@ namespace InsureThatAPI.Models
                 new ObjectParameter("Status", status) :
                 new ObjectParameter("Status", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_dt_Insert_PolicyDetails", policyNumberParameter, transactionNumberParameter, pcIdParameter, trIdParameter, termNumberParameter, accountManagerIDParameter, policyStatusParameter, coverPeriodParameter, coverPeriodUnitParameter, inceptionDateParameter, expiryDateParameter, effectiveDateParameter, prIdParameter, iyIdParameter, insuredNameParameter, removeStampDutyParameter, createdByUserIDParameter, timeCreatedParameter, isFloodCoverRequiredParameter, hasMadeAClaimParameter, reasonParameter, statusParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("IT_dt_Insert_PolicyDetails", policyNumberParameter, insureIdParameter, transactionNumberParameter, pcIdParameter, trIdParameter, termNumberParameter, accountManagerIDParameter, policyStatusParameter, coverPeriodParameter, coverPeriodUnitParameter, inceptionDateParameter, expiryDateParameter, effectiveDateParameter, prIdParameter, iyIdParameter, insuredNameParameter, removeStampDutyParameter, createdByUserIDParameter, timeCreatedParameter, isFloodCoverRequiredParameter, hasMadeAClaimParameter, reasonParameter, statusParameter);
         }
     
         public virtual ObjectResult<Nullable<int>> IT_dt_Insert_Unit(Nullable<int> policyId, string component, string name, Nullable<int> unId, Nullable<int> unitNumber, string unitStatus, Nullable<int> profileUnId, string referralList, string status)

@@ -33,19 +33,22 @@ namespace InsureThatAPI.Controllers
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null,PcId,null).ToList();
-                model.PolicyInclusion = policyinclu;
-                var units = policyinclu.Where(o => o.Name == "Home Buildings").SingleOrDefault();            
+               
+                var units = policyinclu.Where(o => o.Name == "Home Buildings" && o.ProfileUnId==1).FirstOrDefault();            
                 if (units != null)
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=&ProfileUnId=");
-                          var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
                     {
                         model.PolicyData = new PolicyDetails();
@@ -57,6 +60,8 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.CustomerId = cid.Value;
+                    model.PcId = PcId.ToString();
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -132,24 +137,16 @@ namespace InsureThatAPI.Controllers
                         }
                         if (model.ProfileData.ValueData != null && model.ProfileData.ValueData.Count > 0)
                         {
-                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
-                            ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
-                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
+                            
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
-                            ////}
-
-                        }
+                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
-                        {
-                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
-                            ////{
+                        {                          
                             var jsonStateData = JsonConvert.SerializeObject(model.ProfileData.StateData);
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
-                            ////}
-                        }
+                         }
                         if (model.AddressData != null)
                         {
                             for (int add = 0; add < model.AddressData.Count; add++)
@@ -170,7 +167,7 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                return RedirectToAction("Agenlogin", "Login");
+                return RedirectToAction("Agentlogin", "Login");
             }
 
             return View(model);
@@ -199,9 +196,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Contents&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Contents&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -359,9 +358,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Valuables&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Valuables&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -519,9 +520,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Property&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Property&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -680,9 +683,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Travels&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Travels&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -841,9 +846,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Liability&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Liability&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1002,9 +1009,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Boat&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Boat&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1163,9 +1172,11 @@ namespace InsureThatAPI.Controllers
                 {
 
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Motors&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Motors&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1323,9 +1334,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Pets&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Pets&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1483,9 +1496,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1500,6 +1515,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.PcId = policydetails.PcId;
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                        //model.ReferralList = policydetails.ReferralList;
                     }
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
@@ -1643,9 +1659,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Contents&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Contents&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1803,9 +1821,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Valuables&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Valuables&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1963,9 +1983,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Fixed Farm Property&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Fixed Farm Property&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -2123,9 +2145,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Personal Liability&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Personal Liability&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -2283,9 +2307,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Livestock&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Livestock&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -2443,9 +2469,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Motors&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Motors&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -2603,9 +2631,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Mobile Farm Property&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Mobile Farm Property&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -2763,9 +2793,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Liability&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Liability&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -2923,9 +2955,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Burglary&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Burglary&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -3083,9 +3117,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Electronics&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Electronics&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -3243,9 +3279,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Interruption&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Interruption&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -3403,9 +3441,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Machinery&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Machinery&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -3563,9 +3603,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Money&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Money&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -3723,9 +3765,11 @@ namespace InsureThatAPI.Controllers
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Money&SectionUnId=&ProfileUnId=");
+                    //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Money&SectionUnId="+units.UnId+"&ProfileUnId="+units.PolicyId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 

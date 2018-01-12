@@ -1,0 +1,154 @@
+﻿@model InsureThatAPI.Models.MCDrivers
+@{
+    ViewBag.Title = "Drivers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrackMC"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / MOTOR</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
+            <li>
+                <a href="@Url.Action("VehicleDescription", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text>     }>Vehicle Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("AdditionalDetails", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>    }>Additional Details</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Drivers</a>
+            </li>
+            <li>
+                <a href="@Url.Action("CoverDetails", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>     }>Cover Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OptionalExtrasExcesses", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>     }>Optional Extras and Excesses</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[5] == "1") { <text> class="success" </text>     }>Interested Parties</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("Drivers", "MotorCover", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "drivers", @name = "drivers" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.completionTrackMC, new { @id = "completiontrack" })
+                @Html.HiddenFor(p => p.CustomerId, new { @id = "customerId" })
+                <div id="ptab3">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>DRIVERS</h2></div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-12 table-8">
+                            <table class="table" style=" width: 100%; ">
+                                <thead>
+                                    <tr>
+                                        <th class="space_left">Name</th>
+                                        <th class="space_left">Date of Birth</th>
+                                        <th class="space_left">Gender</th>
+                                        <th class="space_left">Accidents and Motoring Infringements and Convictions</th>
+                                        <th class="space_left">Percentage of use of vehicle</th>
+                                        <th class="space_right">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="tname-tr-1">
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.DrivernameObj.Name, new { @class = "form-control form-border-bottom", @id = "drivername1", @data_eiid = @Model.DrivernameObj.EiId })
+                                            @Html.HiddenFor(p => p.DrivernameObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.DriverageObj.Age, new { @class = "form-control form-border-bottom", @id = "age1", @data_eiid = @Model.DriverageObj.EiId })
+                                            @Html.HiddenFor(p => p.DriverageObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.DropDownListFor(p => p.DrivergenderObj.Gender, @Model.DrivergenderObj.GenderList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "gender1", @data_eiid = @Model.DrivergenderObj.EiId })
+                                            @Html.HiddenFor(p => p.DrivergenderObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.DriveramicObj.Amic, new { @class = "form-control form-border-bottom", @id = "convictions1", @data_eiid = @Model.DriveramicObj.EiId })
+                                            @Html.HiddenFor(p => p.DriveramicObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.UsevehicleObj.Usevehicle, new { @class = "form-control form-border-bottom", @id = "percentage1", @data_eiid = @Model.UsevehicleObj.EiId })
+                                            @Html.HiddenFor(p => p.UsevehicleObj.EiId)
+                                        </td>
+                                        <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right">
+                        <a href="@Url.Action("AdditionalDetails", "MotorCover")" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button class="button-3d nomargin tab-linker quot-next-btn" rel="3">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script type="text/javascript">
+    function tnameAdd(id) {
+        var countId = id + 1;
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr-'+countId+'"><td class="no-border">@Html.TextBoxFor(p => p.DrivernameObj.Name, new { @class = "form-control form-border-bottom", @id = "drivername", @data_eiid = @Model.DrivernameObj.EiId })@Html.HiddenFor(p => p.DrivernameObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DriverageObj.Age, new { @class = "form-control form-border-bottom", @id = "age", @data_eiid = @Model.DriverageObj.EiId })@Html.HiddenFor(p => p.DriverageObj.EiId)</td><td class="no-border">@Html.DropDownListFor(p => p.DrivergenderObj.Gender, Enumerable.Empty<SelectListItem>(), new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "gender", @data_eiid = @Model.DrivergenderObj.EiId })@Html.HiddenFor(p => p.DrivergenderObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DriveramicObj.Amic, new { @class = "form-control form-border-bottom", @id = "convictions", @data_eiid = @Model.DriveramicObj.EiId })@Html.HiddenFor(p => p.DriveramicObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.UsevehicleObj.Usevehicle, new { @class = "form-control form-border-bottom", @id = "percentage", @data_eiid = @Model.UsevehicleObj.EiId })@Html.HiddenFor(p => p.UsevehicleObj.EiId)</td><td class="no-border" id="tname-'+countId+'"><a href="javascript:void(0)" onclick="tnameAdd('+countId+')" class="button-3d">+</a></td></tr>';
+        $("#tname-" + id).html(replaceA);
+        $("#tname-tr-" + id).after(html);
+        var newOptionForDRP = '<option value="">--Select--</option><option value="1">Male</option><option value="2">Female</option>';
+        $("#tname-tr-" + countId + ' #gender').html(newOptionForDRP);
+        $("#tname-tr-" + countId + ' #drivername').attr('id', 'drivername' + countId);
+        $("#tname-tr-" + countId + ' #age').attr('id', 'age' + countId);
+        $("#tname-tr-" + countId + ' #gender').attr('id', 'gender' + countId);
+        $("#tname-tr-" + countId + ' #convictions').attr('id', 'convictions' + countId);
+        $("#tname-tr-" + countId + ' #percentage').attr('id', 'percentage' + countId);
+    }
+    function tnameRemove(id) {
+        $("#tname-tr-" + id).remove();        
+    }
+</script>

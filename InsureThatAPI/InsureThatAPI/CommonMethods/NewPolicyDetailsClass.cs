@@ -579,18 +579,19 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> ExtWallMadeList = new List<SelectListItem>();
             ExtWallMadeList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "1", Text = "Asbestos cement sheet or plank" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "9", Text = "Asbestos cement sheet or plank" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "12", Text = "Fibre cement sheet or plank" });
             ExtWallMadeList.Add(new SelectListItem { Value = "2", Text = "Brick Veneer" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "3", Text = "Cladding *" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "4", Text = "Concrete" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "5", Text = "Concrete Block" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "6", Text = "Double Brick" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "7", Text = "Metel" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "10", Text = "Cladding *" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "5", Text = "Concrete" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "13", Text = "Concrete Block" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "3", Text = "Double Brick" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "4", Text = "Metel" });
             ExtWallMadeList.Add(new SelectListItem { Value = "8", Text = "Mud Brick" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "9", Text = "Other*" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "10", Text = "Rock/Stone" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "11", Text = "Rockcote" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "12", Text = "Timber" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "11", Text = "Other*" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "6", Text = "Rock/Stone" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "7", Text = "Rockcote" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "1", Text = "Timber" });
             return ExtWallMadeList;
         }
         #endregion
@@ -599,13 +600,13 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> RoofMadeList = new List<SelectListItem>();
             RoofMadeList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            RoofMadeList.Add(new SelectListItem { Value = "1", Text = "Cement tiles" });
-            RoofMadeList.Add(new SelectListItem { Value = "2", Text = "Colourbond/zincalume" });
-            RoofMadeList.Add(new SelectListItem { Value = "3", Text = "Corrugated Iron* (if selected a further question to ask if roof has any rust?" });
-            RoofMadeList.Add(new SelectListItem { Value = "4", Text = "Fibro/ asbestos cement – this will require approval before completion of the quote." });
-            RoofMadeList.Add(new SelectListItem { Value = "5", Text = "Metel Tiles" });
-            RoofMadeList.Add(new SelectListItem { Value = "6", Text = "Other*" });
-            RoofMadeList.Add(new SelectListItem { Value = "7", Text = "Terracotta tiles" });
+            RoofMadeList.Add(new SelectListItem { Value = "3", Text = "Cement tiles" });
+            RoofMadeList.Add(new SelectListItem { Value = "1", Text = "Colourbond/zincalume" });
+            RoofMadeList.Add(new SelectListItem { Value = "5", Text = "Corrugated Iron* (if selected a further question to ask if roof has any rust?" });
+            RoofMadeList.Add(new SelectListItem { Value = "6", Text = "Fibro/ asbestos cement – this will require approval before completion of the quote." });
+            RoofMadeList.Add(new SelectListItem { Value = "4", Text = "Metel Tiles" });
+            RoofMadeList.Add(new SelectListItem { Value = "7", Text = "Other*" });
+            RoofMadeList.Add(new SelectListItem { Value = "2", Text = "Terracotta tiles" });
             return RoofMadeList;
         }
         #endregion

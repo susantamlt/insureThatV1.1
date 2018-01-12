@@ -7,8 +7,71 @@
     <h4><span>RURAL LIFESTYLE POLICY</span> / PETS</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
         <h2>PETS</h2>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+        <div class="pull-right">
+            <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+            <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Referral List</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="referralList-p">No Referral List</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Premium Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style=" width: 100%; ">
+                        <thead>
+                            <tr>
+                                <th class="space_left">Section Name</th>
+                                <th class="space_left">Base</th>
+                                <th class="space_left">Fsl</th>
+                                <th class="space_left">Gst</th>
+                                <th class="space_left">Stamp Duty</th>
+                                <th class="space_right">Gross</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiumModel-p-b">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="premiumModel-p-f">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="clearfix"></div>
     <div id="errorContainer"></div>
@@ -21,10 +84,10 @@
         @Html.AntiForgeryToken()
         <div class="form">
             @Html.HiddenFor(m => m.CustomerId)
-            <div class="mt-10 mb-10 col-md-12">
+            <div class="mt-10 mb-10 col-md-12  cl-61331">
                 <p class="col-md-5 col-sm-5 col-xs-12">Do you wish to insure a :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.DropDownListFor(model => model.SpeciesObj.Species, @Model.SpeciesObj.SpeciesList, "-- Select --", new { @class = "form-control form-border-bottom select2hd", @id = "species", @name = "SpeciesObj.Species" })
+                    @Html.DropDownListFor(model => model.SpeciesObj.Species, @Model.SpeciesObj.SpeciesList, "-- Select --", new { @class = "form-control form-border-bottom select2hd commondataselection", @data_eiid = @Model.SpeciesObj.EiId, @id = "species", @name = "SpeciesObj.Species" })
                 </div>
                 @Html.HiddenFor(p => p.SpeciesObj.EiId)
             </div>
@@ -60,10 +123,10 @@
                     });
                 });
             </script>
-            <div class="mt-10 mb-10 col-md-12" id="dogbreed" @if (@Model.SpeciesObj.Species == "") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61333" id="dogbreed" @if (@Model.SpeciesObj.Species == "") { <text>style = "display: none;"</text>}>
                 <p class="col-md-5 col-sm-5 col-xs-12">Please select the breed :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.DropDownListFor(Model => Model.BreedObj.Breed, @Model.BreedObj.BreedList, new { @class = "form-control form-border-bottom select2hd", @id = "breed"})
+                    @Html.DropDownListFor(Model => Model.BreedObj.Breed, @Model.BreedObj.BreedList, new { @class = "form-control form-border-bottom select2hd commondataselection", @data_eiid = @Model.BreedObj.EiId, @id = "breed"})
                     <p class="mini-text">(In the case of a cross breed, please select the dominant breed)</p>
                 </div>
                 @Html.HiddenFor(p => p.BreedObj.EiId)
@@ -78,37 +141,37 @@
                     });
                 </script>
             </div>
-            <div class="mt-10 mb-10 col-md-12" id="other" @if (@Model.BreedObj.Breed != "301") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61337" id="other" @if (@Model.BreedObj.Breed != "301") { <text>style = "display: none;"</text>}>
                 <p class="col-md-5 col-sm-5 col-xs-12">Name of breed :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.OtherbreedObj.Otherbreed, new { @class = "form-control form-border-bottom", @id = "otherbreed" })
+                    @Html.TextBoxFor(p => p.OtherbreedObj.Otherbreed, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.OtherbreedObj.EiId, @id = "otherbreed" })
                 </div>
                 @Html.HiddenFor(p => p.OtherbreedObj.EiId)
             </div>
-            <div class="mt-10 mb-10 col-md-12">
+            <div class="mt-10 mb-10 col-md-12 cl-61339">
                 <p class="col-md-5 col-sm-5 col-xs-12">What is your pet name :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.NameObj.Name, new { @class = "form-control form-border-bottom", @id = "name" })
+                    @Html.TextBoxFor(p => p.NameObj.Name, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.NameObj.EiId, @id = "name" })
                     @Html.HiddenFor(p => p.NameObj.EiId)
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12">
+            <div class="mt-10 mb-10 col-md-12  cl-61339">
                 <p class="col-md-5 col-sm-5 col-xs-12">What is your pet date of birth :<br><span class="mini-text">(We will cover your animals up untill the age of 9 years)</span></p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @class = "form-control form-border-bottom", @id = "dateofbirth", @readonly = "readonly" })
+                    @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.DatebirthObj.EiId, @id = "dateofbirth", @readonly = "readonly" })
                     @Html.HiddenFor(p => p.DatebirthObj.EiId)
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61343">
                 <p class="col-md-5 col-sm-5 col-xs-12">Has your pet any pre-existing illness</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '0', new { @class = "preexisting" })
+                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '0', new { @class = "preexisting commondataradio", @data_eiid = @Model.PreexistingObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '1', new { @class = "preexisting" })
+                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '1', new { @class = "preexisting commondataradio", @data_eiid = @Model.PreexistingObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.PreexistingObj.EiId)
@@ -131,24 +194,24 @@
                     });
                 </script>
             </div>
-            <div class="mt-10 mb-10 col-md-12" id="desIllness" @if (@Model.PreexistingObj.Preexisting=="0") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61345" id="desIllness" @if (@Model.PreexistingObj.Preexisting=="0") { <text>style = "display: none;"</text>}>
                 <p class="col-md-5 col-sm-5 col-xs-12">If yes ,  please describe the illness</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.DescriptionillnessObj.Descriptionillness, new { @class = "form-control form-border-bottom", @id = "descriptionillness" })
+                    @Html.TextBoxFor(p => p.DescriptionillnessObj.Descriptionillness, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.DescriptionillnessObj.EiId, @id = "descriptionillness" })
                     @Html.HiddenFor(p => p.DescriptionillnessObj.EiId)
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12" id="acLimit" @if (@Model.PreexistingObj.Preexisting=="0") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61347" id="acLimit" @if (@Model.PreexistingObj.Preexisting=="0") { <text>style = "display: none;"</text>}>
                 <p class="col-md-5 col-sm-5 col-xs-12">An annual cover limit</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, new { @class = "form-control form-border-bottom", @id = "annualcoverlimit" })
+                    @Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.AnnualcoverlimitObj.EiId, @id = "annualcoverlimit" })
                     @Html.HiddenFor(p => p.AnnualcoverlimitObj.EiId)
                 </div>
             </div>            
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61349">
                 <div class="col-md-5">Excess</div>
                 <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.ExcessPetObj.Excess, @Model.ExcessPetObj.ExcessList, "-- Select --", new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
+                    @Html.DropDownListFor(model => model.ExcessPetObj.Excess, @Model.ExcessPetObj.ExcessList, "-- Select --", new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessPetObj.EiId, @id = "excess" })
                     @Html.HiddenFor(p => p.ExcessPetObj.EiId)
                 </div>
                 <div class="col-md-3">
@@ -158,16 +221,16 @@
             <div class="mt-10 mb-10 col-md-12">
                 <h3>Would you like to include following</h3>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61365">
                 <p class="col-md-3 col-sm-3 col-xs-12">Boarding fees :</p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '0', new { @class = "boardingfee" })
+                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '0', new { @class = "boardingfee commondataradio", @data_eiid = @Model.BoardingfeeObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '1', new { @class = "boardingfee" })
+                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '1', new { @class = "boardingfee commondataradio", @data_eiid = @Model.BoardingfeeObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.BoardingfeeObj.EiId)
@@ -186,21 +249,21 @@
                         });
                     </script>
                 </div>                
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text" id="aLimitbf" @if (@Model.BoardingfeeObj.Boardingfee == "0") { <text>style = "display: none;"</text>}>
-                    @Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text", @id = "annuallimitbf", @style = "width: 50%;margin-right:5px;" }) (Annual limit : The lessor of $1000 and 200 days)
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61367" id="aLimitbf" @if (@Model.BoardingfeeObj.Boardingfee == "0") { <text>style = "display: none;"</text>}>
+                    @Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text commondatatest", @data_eiid = @Model.AnnuallimitbfObj.EiId, @id = "annuallimitbf", @style = "width: 50%;margin-right:5px;" }) (Annual limit : The lessor of $1000 and 200 days)
                     @Html.HiddenFor(p => p.AnnuallimitbfObj.EiId)
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61369">
                 <p class="col-md-3 col-sm-3 col-xs-12">Death from illness :</p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '0', new { @class = "deathillness" })
+                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '0', new { @class = "deathillness commondataradio", @data_eiid = @Model.DeathillnessObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '1', new { @class = "deathillness" })
+                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '1', new { @class = "deathillness commondataradio", @data_eiid = @Model.DeathillnessObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.DeathillnessObj.EiId)
@@ -219,21 +282,21 @@
                         });
                     </script>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0") { <text>style = "display: none;"</text>}>
-                    @Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text", @id = "annuallimit", @style = "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61371" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0") { <text>style = "display: none;"</text>}>
+                    @Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text commondatatest", @data_eiid = @Model.AnnuallimitdtObj.EiId, @id = "annuallimit", @style = "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
                     @Html.HiddenFor(p => p.AnnuallimitdtObj.EiId)
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61373">
                 <p class="col-md-3 col-sm-3 col-xs-12">Death from injury :</p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '0', new { @class = "deathinjury" })
+                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '0', new { @class = "deathinjury commondataradio", @data_eiid = @Model.DeathinjuryObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '1', new { @class = "deathinjury" })
+                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '1', new { @class = "deathinjury commondataradio", @data_eiid = @Model.DeathinjuryObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.DeathinjuryObj.EiId)
@@ -252,8 +315,8 @@
                         });
                     </script>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text" id="aLimitij" @if (@Model.DeathinjuryObj.Deathinjury == "0") { <text>style = "display: none;"</text>}>
-                    @Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text", @id = "annuallimitij", @style= "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61375" id="aLimitij" @if (@Model.DeathinjuryObj.Deathinjury == "0") { <text>style = "display: none;"</text>}>
+                    @Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text commondatatest", @data_eiid = @Model.AnnuallimitijObj.EiId, @id = "annuallimitij", @style= "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
                     @Html.HiddenFor(p => p.AnnuallimitijObj.EiId)
                 </div>
             </div>
@@ -295,7 +358,20 @@
             </div>
         </div>
         <div class="clearfix"></div>
-        <input type="submit" name="newcover" value="New Cover">
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="javascript:void(0);" class="addunit HomeBuilding">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="addunit HomeContent">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="addunit FarmProperty">+  Farm Property</a></li>
+                <li><a href="javascript:void(0);" class="addunit Valuables">+  Valuables</a></li>
+                <li><a href="javascript:void(0);" class="addunit Motors">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="addunit Pets">+  Pets</a></li>
+                <li><a href="javascript:void(0);" class="addunit Liabilities">+  Liabilities </a></li>
+                <li><a href="javascript:void(0);" class="addunit Travel">+  Travel</a></li>
+                <li><a href="javascript:void(0);" class="addunit Boat">+  Boat</a></li>
+            </ul>
+        </div>
     </div>
 </div>
 <script src="~/js/datepicker.min.js"></script>
@@ -461,5 +537,127 @@
            ///     form.submit();
 //}
         });
+        $(document).on('change','.commondataselection',function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            elementAjaxCall(Value, EIId);
+        });
+        $(document).on('change','.commondataradio',function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            elementAjaxCall(Value, EIId);
+        });
+        $('.commondatatest').focusout(function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            if (Value != "") {
+                elementAjaxCall(Value, EIId);
+            }
+        });
+        $("#premium").click(function () {
+            $.ajax({
+                url: '/Customer/PremiumDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: {},
+                success: function (data) {
+                    if (data.Status == true) {
+                        var html1 = "";
+                        if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                            var html = "";
+                            $.each(data.Premium, function (index, value) {
+                                html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
+                            });
+                            if (html != '') {
+                                $('#premiumModel-p-b').html(html);
+                            }
+                        }
+                        if (data.UnderwriterFee != null) {
+                            html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
+                        }
+                        if (data.FeeGst != null) {
+                            html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
+                        }
+                        if (data.InvoiceTotal != null) {
+                            html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
+                        }
+                        if (html1 != '') {
+                            $('#premiumModel-p-f').html(html1);
+                        }
+                    }
+                }
+            });
+
+        });
     });
+    function elementAjaxCall(Value, EIId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": "0" },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                $('#' + value.Element.ElId).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + value1.Element.ElId).removeAttr('readonly');
+                                                $('#' + value1.Element.ElId).removeAttr('disabled');
+                                                $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + value1.Element.ElId).attr('disabled', 'disabled');
+                                                $('#' + value1.Element.ElId).removeAttr('readonly');
+                                                $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + value1.Element.ElId).attr('readonly', 'readonly');
+                                                $('#' + value1.Element.ElId).removeAttr('disabled');
+                                                $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + value1.Element.ElId).css({ 'text-decoration': 'line-through' });
+                                                $('#' + value1.Element.ElId).removeAttr('readonly');
+                                                $('#' + value1.Element.ElId).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + value1.Element.ElId).css({ 'text-decoration': 'line-through' });
+                                                $('#' + value1.Element.ElId).removeAttr('readonly');
+                                                $('#' + value1.Element.ElId).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + value1.Element.ElId).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                                $('#' + value1.Element.ElId).removeAttr('readonly');
+                                                $('#' + value1.Element.ElId).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                            }
+
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.referrallist != null || data.referrallist != "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallist);
+                    }
+                }
+            });
+        }
+    }
 </script>

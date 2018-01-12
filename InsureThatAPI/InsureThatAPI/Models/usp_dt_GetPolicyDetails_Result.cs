@@ -36,5 +36,6 @@ namespace InsureThatAPI.Models
         public Nullable<bool> HasMadeAClaim { get; set; }
         public string Reason { get; set; }
         public string Status { get; set; }
+        public int InsureId { get; set; }
     }
 }

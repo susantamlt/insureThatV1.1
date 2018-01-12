@@ -1,0 +1,395 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "Electronics";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.PolicyData != null)
+{
+    <div class="row content">
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+            <h2>
+                POLICY DETAILS<span>
+                    @if (Model.PolicyData.InsuredName != null)
+                    {
+                        <span>@Model.PolicyData.InsuredName/</span>
+                    }
+                    @if (Model.PolicyData.PolicyNumber != null)
+                    {
+                        @Model.PolicyData.PolicyNumber
+                    }
+                    @if (Model.PolicyData.PolicyStatus != null)
+                    {
+                        if (Model.PolicyData.PolicyStatus == "AP")
+                        { <span>/ Endorsed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "AQ")
+                        { <span>/ Endorsement Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CQ")
+                        { <span>/ Cancellation Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "DQ")
+                        { <span>/ Discarded Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NP")
+                        { <span>/ New Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NQ")
+                        { <span>/ Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RP")
+                        { <span>/ Renewed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RQ")
+                        { <span>/ Renewal Invitation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XQ")
+                        { <span>/ Cancellation Quotation</span> }
+                    }
+                </span>
+
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+        </div>
+
+        <div class="mt-50 mb-50"></div>
+        <div class="p-10 col-md-12 border-bottom-1 mb-15">
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                <img src="~/images/farm-icon.png" class="policy-list-img">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                                {
+                                    <lable>Rural Lifestyle</lable>
+                                }
+                                else
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy No: @Model.PolicyData.PolicyNumber
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row content">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+        <div class="row content policy-full-view">
+            <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                @if (Model.SectionData != null)
+                {
+                    using (Ajax.BeginForm("FarmInterruption", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row content policy-full-view">
+                            <div class="col-xs-12">
+                                <div class="well">
+                                    @Html.HiddenFor(p => p.CustomerId)
+                                    <h3>ELECTRONICS DETAILS</h3>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Burglary</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Part A</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-8 col-sm-8 col-xs-12">Locations covered</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                            @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                            {
+                                                <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Type of unit</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Make and model</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Serial number</p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">Number of units</p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">Portable Items Option </p>                                        
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Sum Insured per unit</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Total Sum Insured</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63161 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        if (Model.SectionData.ValueData[j].Value == "2")
+                                                        {
+                                                            <span>Audio visual</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "3")
+                                                        {
+                                                            <span>Computer Peripheral</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "4")
+                                                        {
+                                                            <span>Desktop Computer</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "5")
+                                                        {
+                                                            <span>Electronic Cash Register</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "6")
+                                                        {
+                                                            <span>Electronic Controller</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "7")
+                                                        {
+                                                            <span>Electronic Scales</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "1")
+                                                        {
+                                                            <span>Fax Machine</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "8")
+                                                        {
+                                                            <span>Laser Level</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "9")
+                                                        {
+                                                            <span>Laser Theodolite</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "10")
+                                                        {
+                                                            <span>Notebook Computer</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "11")
+                                                        {
+                                                            <span>Photocopier</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "12")
+                                                        {
+                                                            <span>Printer</span><br /><br />
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "13")
+                                                        {
+                                                            <span>Telephone Equipment</span><br /><br />
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63163 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63165 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>                                        
+                                        <p class="col-md-1 col-sm-1 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63167 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63169 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63171 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63173 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63177) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63177).Value != ""))
+                                            {
+                                                <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63177).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Part B - Loss of data</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">How much do you wish to cover for loss of data?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63189) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63189).Value != ""))
+                                            {
+                                                <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63189).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess for electronics</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63191) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63191).Value != ""))
+                                            {
+                                                <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63191).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    using (Ajax.BeginForm("FarmInterruption", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>ELECTRONICS DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+                <h3>Policy Sections</h3>
+                <div class="well">
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="dropdown pc pc-in">
+                        <a class="new-cover-policy" href="#">New Cover</a>
+                        <ul class="dropdown-menu col-md-12">
+                            <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
+                            <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
+                            <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
+
+                            <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
+
+                            <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
+                            <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                            <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                            <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
+                            <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
+                            <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
+                            <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
+
+                            <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
+                            <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                            <li><a href="#">+  Valuables</a></li>
+                            <li><a href="#">+  Transit</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

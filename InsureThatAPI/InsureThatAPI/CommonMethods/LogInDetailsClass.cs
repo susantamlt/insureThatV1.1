@@ -176,7 +176,7 @@ namespace InsureThatAPI.CommonMethods
             string loginKey = string.Empty;
             int IyId = 9262;
             string EncrptForLogin = String.Format("{0:ddddyyyyMMdd}", DateTime.UtcNow);
-         //  EncrptForLogin = "Tuesday20171226";
+           // EncrptForLogin = "Thursday20180111";
             PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
             loginKey = Encrypt(PlainTextEncrpted, EncrptForLogin);
             LoginDetailsRef loginDetailsref = new LoginDetailsRef();
@@ -187,16 +187,16 @@ namespace InsureThatAPI.CommonMethods
             {
 
                 HttpClient hclient = new HttpClient();
-                hclient.BaseAddress = new Uri("https://api.insurethat.com.au/");
+                string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                hclient.BaseAddress = new Uri(url);
                 hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 loginKey = loginKey.Replace("+", "%2B");
-                HttpResponseMessage Res = await hclient.GetAsync("Api/Login?loginKey=" + loginKey + "");//change controller name and field name
-                                                                                                        //   LogInDetails loginmodel = new LogInDetails();
+                HttpResponseMessage Res = await hclient.GetAsync("Login?loginKey=" + loginKey + "");//change controller name and field name
+                                                                                                     //   LogInDetails loginmodel = new LogInDetails();
                 if (Res.IsSuccessStatusCode)
                 {
                     //Storing the response details recieved from web api
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
                     logindetailsmodel = JsonConvert.DeserializeObject<LogInDetails>(EmpResponse);
                     //strEncrypt = Encrypt(Password, "TimsFirstEncryptionKey");//encrypt password method

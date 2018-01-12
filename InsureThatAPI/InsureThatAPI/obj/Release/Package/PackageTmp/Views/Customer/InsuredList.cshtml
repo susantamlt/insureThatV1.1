@@ -1,0 +1,104 @@
+﻿@model InsureThatAPI.Models.PolicyHistory
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; 
+}
+
+<div class="content">
+
+    <div class="col_half policy-full-head"><h2>Insured List<span>@Model.PolicyData.Select(p=>p.InsuredName).FirstOrDefault() / @Model.PolicyData.Select(p => p.PolicyNumber).FirstOrDefault()</span></h2></div>
+
+    <div class="col_half col_last pull-right">
+        <div class="fright">
+            <a class="btn color-bk-btn" href="@Url.Action("NewPolicy", "Customer",new { cid = ViewBag.CustomerId })">Add Policy</a>
+            <a class="btn color-bk-btn" href="@Url.Action("PolicyHistory", "RuralLifeStyle",new { PcId=Model.PolicyData.Select(p=>p.PolicyNumber).First()})">Policy History</a>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="pc-list">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2 col-xs-12">
+                    <img src="~/images/farm-icon.png" class="policy-list-img">
+                </div>
+                <div class="col-md-8 col-sm-7 col-xs-12 col-sm-offset-0 col-xs-offset-1">
+                    <div class="col_full">
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-6 p-5">
+                                Policy Type:<lable>Rural Lifestyle</lable>
+                                @*Policy Type: @if (Model.PolicyData.TrId == 1029 || Model.PolicyData.TrId == 1009)
+                                    {
+                                        <lable>Rural Life Style</lable>
+                                    }
+                                    else
+                                    { <label>Farm</label>
+                                    }*@
+                            </div>
+                            <div class="col-sm-4 col-xs-6 p-5">Policy No: @Model.PolicyData.Select(p => p.PolicyNumber).FirstOrDefault()</div>
+                            <div class="col-sm-4 col-xs-6 p-5">Insured: @Model.PolicyData.Select(p=>p.InsuredName).FirstOrDefault() </div>
+                            <div class="col-sm-4 col-xs-6 p-5">Start Date: @Model.PolicyData.Select(p => p.InceptionDate).FirstOrDefault().ToString("dd/MM/yy")</div>
+                            <div class="col-sm-4 col-xs-6 p-5">End Date: @Model.PolicyData.Select(p => p.ExpiryDate).FirstOrDefault().ToString("dd/MM/yy")</div>
+                            <div class="col-sm-4 col-xs-6 p-5">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1 col-md-2 col-sm-3 col-xs-12">
+                    <li class="dropdown" style="list-style: none;">
+                        <a href="#" class=" btn-primary btn col-md-12 mb-5 ">View Documents </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Invoice</a></li>
+                            <li><a href="#">Certification</a></li>
+                            <li><a href="#">Application</a></li>
+                            <li><a href="#">Rural Lifestyle Protection Policy PDS </a></li>
+                            <li><a href="#">Statement of Advice</a></li>
+                            <li><a href="#">Travel Protection Policy PDS </a></li>
+                            <li><a href="#">Premium Breakdown</a></li>
+                            <li><a href="#">Certificate of Currency</a></li>
+                            <li><a href="#">Key Factsheet Home Building</a></li>
+                            <li><a href="#">Key Factsheet Contents</a></li>
+                            <li><a href="#">Financial Service Guide</a></li>
+                        </ul>
+                    </li>
+                    <a href="#" class="btn-primary btn col-sm-12 col-xs-5">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content policy-full-view">
+    <div class="col_full">
+        @if (Model.PolicyData.Select(p => p.InsuredDetails).Any() != null)
+        {
+
+            <table class="table">
+                <tr class="black-head-table">
+                    <th class="space_left">Fullname</th>
+                  
+                    <th class="space_left">Phone number</th>
+                    <th class="space_left">Email Address</th>
+                    <th class="space_left">Address</th>
+                    <th class="space_right">Actions</th>
+                </tr>
+                @for (int i = 0; i<Model.PolicyData.Select(p => p.InsuredDetails).Count(); i++)
+                {
+                    
+                    <tr>
+                        <td>@Model.PolicyData.Select(p => p.InsuredDetails[i].FirstName).First()</td>
+                       
+                        <td>@Model.PolicyData.Select(p => p.InsuredDetails[i].PhoneNo).First()</td>
+                        <td>@Model.PolicyData.Select(p => p.InsuredDetails[i].EmailID).First()</td>
+                        <td><p class="policy-addr">@Model.PolicyData.Select(p => p.InsuredDetails[i].AddressID).First()</p></td>
+                        <td>
+                            <input type="button" name="submit" value="Edit" class="btn-primary btn">&nbsp;
+                            <input type="button" name="submit" value="Delete" class="btn-primary btn">
+                        </td>
+                    </tr>
+                }
+
+
+            </table>
+        
+        }
+    </div>
+</div>

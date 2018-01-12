@@ -1,0 +1,207 @@
+﻿@model InsureThatAPI.Models.MCAdditionalDetails
+@{
+    ViewBag.Title = "Additional Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrackMC"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / MOTOR</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
+            <li>
+                <a href="@Url.Action("VehicleDescription", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text> }>Vehicle Description</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Additional Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Drivers", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text> }>Drivers</a>
+            </li>
+            <li>
+                <a href="@Url.Action("CoverDetails", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text> }>Cover Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OptionalExtrasExcesses", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text> }>Optional Extras and Excesses</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[5] == "1") { <text> class="success" </text> }>Interested Parties</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("AdditionalDetails", "MotorCover", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "additionalDetails", @name = "additionalDetails" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.completionTrackMC, new { @id = "completiontrack" })
+                @Html.HiddenFor(p => p.CustomerId, new { @id = "customerId" })
+                <div id="ptab2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>ADDITIONAL DESCRIPTION</h2></div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Where is Vehicle normally kept at night?</p>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.KeptnightObj.Keptnight, '0', new { @id = "vehclekept1", @data_eiid = @Model.KeptnightObj.EiId, @checked= "checked" })<label for="radio1"><span><span></span></span>Garage</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.KeptnightObj.Keptnight, '1', new { @id = "vehclekept2", @data_eiid = @Model.KeptnightObj.EiId })<label for="radio1"><span><span></span></span>Driveway</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.KeptnightObj.Keptnight, '2', new { @id = "vehclekept3", @data_eiid = @Model.KeptnightObj.EiId })<label for="radio1"><span><span></span></span>Carport</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.KeptnightObj.Keptnight, '3', new { @id = "vehclekept4", @data_eiid = @Model.KeptnightObj.EiId })<label for="radio1"><span><span></span></span>Street</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.KeptnightObj.Keptnight, '4', new { @id = "vehclekept5", @data_eiid = @Model.KeptnightObj.EiId })<label for="radio1"><span><span></span></span>Shed</label></div>
+                            @Html.HiddenFor(p => p.KeptnightObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Address</p></div>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(p => p.AdaddressObj.Address, @Model.AdaddressObj.AddressList, new { @class = "form-control form-border-bottom", @id = "Address", @data_eiid = @Model.AdaddressObj.EiId })
+                            @Html.HiddenFor(p => p.AdaddressObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Is Vehicle registered?</p></div>
+                        <div class="col-md-8">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.VregisterObj.Register, '1', new { @id = "yes", @data_eiid = @Model.VregisterObj.EiId, @checked = "checked" })<label for="radio1"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.VregisterObj.Register, '0', new { @id = "no", @data_eiid = @Model.VregisterObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                            @Html.HiddenFor(p => p.VregisterObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Registration number</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.RnumberObj.Rnumber, new { @class = "form-control form-border-bottom", @id = "rnumber", @data_eiid = @Model.RnumberObj.EiId })
+                            @Html.HiddenFor(p => p.RnumberObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>VIN/chassis number</p></div>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(p => p.VnumberObj.Vnumber, @Model.VnumberObj.VnumberList, new { @class = "form-control form-border-bottom", @id = "chassis", @data_eiid = @Model.VnumberObj.EiId })
+                            @Html.HiddenFor(p => p.AdaddressObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Engine number</p></div>
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(p => p.EnumberObj.Enumber, @Model.EnumberObj.EnumberList, new { @class = "form-control form-border-bottom", @id = "enumber", @data_eiid = @Model.EnumberObj.EiId })
+                            @Html.HiddenFor(p => p.EnumberObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Has Vehicle been modified?</p></div>
+                        <div class="col-md-8">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.VmodifiedObj.Vmodified, '1', new { @id = "vehicle1", @data_eiid = @Model.VmodifiedObj.EiId, @checked = "checked" })<label for="radio1"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.VmodifiedObj.Vmodified, '0', new { @id = "vehicle2", @data_eiid = @Model.VmodifiedObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                            @Html.HiddenFor(p => p.VmodifiedObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>If yes, please describe modifications</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.DmodifiedObj.Dmodified, new { @class = "form-control form-border-bottom", @id = "describe", @data_eiid = @Model.DmodifiedObj.EiId })
+                            @Html.HiddenFor(p => p.DmodifiedObj.EiId)
+                            <p class="mini-text">(These will require approval from us before accepting your quotation)</p>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>What security features are installed?</p></div>
+                        <div class="col-md-8">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.CheckBoxFor(p => p.SFinstalledObj.Installed, new { @id = "alarm", @data_eiid = @Model.SFinstalledObj.EiId })<label for="checkbox1"><span><span></span></span>Alarm</label></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.CheckBoxFor(p => p.SFinstalledObj.Installed, new { @id = "immobiliser", @data_eiid = @Model.SFinstalledObj.EiId })<label for="checkbox1"><span><span></span></span>Engine immobiliser</label></div>
+                            @Html.HiddenFor(p => p.SFinstalledObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>What is the Vehicle used for?</p></div>
+                        <div class="col-md-8">
+                            <div class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">@Html.CheckBoxFor(p => p.VusedObj.Vused, new { @id = "private", @data_eiid = @Model.VusedObj.EiId })<label for="checkbox1"><span><span></span></span>Private Use</label></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">@Html.CheckBoxFor(p => p.VusedObj.Vused, new { @id = "farm", @data_eiid = @Model.VusedObj.EiId })<label for="checkbox1"><span><span></span></span>Farm use (no farm contracting)</label></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">@Html.CheckBoxFor(p => p.VusedObj.Vused, new { @id = "business", @data_eiid = @Model.VusedObj.EiId })<label for="checkbox1"><span><span></span></span>Business Use (no farm contracting)</label></div>
+                            @Html.HiddenFor(p => p.VusedObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p>If your vehicle is a truck or trailer (including horse floats) What is the carrying capacity 
+                        @Html.TextBoxFor(p => p.CcapacityObj.Ccapacity, new { @class = "form-control form-inline field-length-xs", @id = "tones", @data_eiid = @Model.CcapacityObj.EiId })
+                        @Html.HiddenFor(p => p.CcapacityObj.EiId) tonnes.</p>
+                        <p class="mini-text">(Vehicles over 10 tonnes will require approval.)</p>
+                    </div>
+                    <div class="col-md-6 pull-right text-right">
+                        <a href="@Url.Action("VehicleDescription", "MotorCover")" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button class="button-3d nomargin tab-linker quot-next-btn" rel="3">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script type="text/javascript">    
+    $(window).ready(function () {
+        var valueelement = sessionStorage.getItem("valueelement");
+        var dataelement = sessionStorage.getItem("dataelement");
+        var datafocuselement = sessionStorage.getItem("datafocuselement");
+        console.log(valueelement);
+        console.log(dataelement);
+        console.log(datafocuselement);
+        var valueelementId = valueelement.split('-sb-,');
+        $.each(valueelementId, function (index, value) {
+            var valueelementsessione = value.split('~');
+            //alert(valueelementsessione[0]);
+            //alert(valueelementsessione[1].replace('-sb-',''));
+        });
+
+        var dataelementId = dataelement.split(',');
+        $.each(dataelementId, function (index, value) {
+            var dataelementValuesessione = value.split('~');
+            //alert(dataelementValuesessione[0]);
+            //alert(dataelementValuesessione[1]);
+        });
+
+        var datafocuselementId = datafocuselement.split('~');
+        //alert(datafocuselementId[0]);
+        //alert(datafocuselementId[1]);
+    });
+</script>

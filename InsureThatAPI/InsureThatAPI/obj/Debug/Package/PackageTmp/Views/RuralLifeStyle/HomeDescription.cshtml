@@ -1,5 +1,4 @@
 ﻿@model InsureThatAPI.Models.HB2HomeDescription
-
 @{
     ViewBag.Title = "Home Building Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -76,37 +75,97 @@
         urlIdSuccess = urlId_Success.Split('-');
     }
     //var ApiKey = Session["apiKey"].ToString();
-
-
-
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>RURAL LIFESTYLE POLICY</span> / HOME Description</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+        <div class="pull-right">
+            <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+            <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Referral List</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="referralList-p">No Referral List</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Premium Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style=" width: 100%; ">
+                        <thead>
+                            <tr>
+                                <th class="space_left">Section Name</th>
+                                <th class="space_left">Base</th>
+                                <th class="space_left">Fsl</th>
+                                <th class="space_left">Gst</th>
+                                <th class="space_left">Stamp Duty</th>
+                                <th class="space_right">Gross</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiumModel-p-b">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="premiumModel-p-f">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="mt-40 mb-40 row"></div>
     <div id="processTabs">
         <ul class="process-steps clearfix col-sm-12">
             <li>
-                <a href="javascript:void(0)" class="active">Home Description</a>
+                <a href="javascript:void(0)" id="ptb1">Home Description</a>
             </li>
             <li>
-                <a href="@Url.Action("ConstructionDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text>     }>Construction Details</a>
+                <a href="javascript:void(0)" id="ptb2">Construction Details</a>
             </li>
             <li>
-                <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>     }>Occupancy Details</a>
+                <a href="javascript:void(0)" id="ptb3">Occupancy Details</a>
             </li>
 
             <li>
-                <a href="@Url.Action("InterestedParties", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>     }>Interested Parties</a>
+                <a href="javascript:void(0)" id="ptb4">Interested Parties</a>
             </li>
             <li>
-                <a href="@Url.Action("HomeBuilding", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text>     }>Home Building</a>
+                <a href="javascript:void(0)" id="ptb5">Home Building</a>
             </li>
         </ul>
-        <div id="homeBuildContain">
+        <div id="homeBuildContain">            
             <div id="ptab1">
-                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>                
                 <div id="errorContainer"></div>
                 @using (Ajax.BeginForm("HomeDescription", "RuralLifeStyle", new { cid = @ViewBag.cid }, new AjaxOptions()
                 {
@@ -121,26 +180,26 @@
                         @Html.HiddenFor(p => p.ApiKey, new { @id = "apisecret" })
                         <p>
                             I own a
-                            <select name="property" id="property" class="form-control form-inline select2hd">
+                            <select name="property" id="property" class="form-control form-inline select2hd commondataselection" data_eiid= "@Model.LocationObj.EiId">
                                 <option value="1">Building</option>
                                 <option value="2">Farm</option>
                             </select>
                             located at
-                            @Html.DropDownListFor(model => model.SubUrb, Model.SubUrb, "-- Suburb --", new { @class = "form-control form-inline select2hd select2hdc", @id = "suburb", @name = "suburb" }),
-                            @Html.DropDownListFor(model => model.LocationObj.Location, listsStates, "-- State --", new { @class = "form-control form-inline select2hd", @id = "", @name = "" }),
+                            @Html.DropDownListFor(model => model.SubUrb, Model.SubUrb, "-- Suburb --", new { @class = "form-control form-inline select2hd select2hdc commondataselection", @data_eiid = @Model.LocationObj.EiId, @id = "suburb", @name = "suburb" }),
+                            @Html.DropDownListFor(model => model.LocationObj.Location, listsStates, "-- State --", new { @class = "form-control form-inline select2hd commondataselection", @data_eiid = @Model.LocationObj.EiId, @id = "", @name = "" }),
 
                             @*<select name="state" id="state" class="form-control form-inline select2hd">
-                                <option value="">State</option>
-                                <option value="1">Melborne</option>
-                                <option value="2">Sydney</option>
-                            </select>*@,
+                                    <option value="">State</option>
+                                    <option value="1">Melborne</option>
+                                    <option value="2">Sydney</option>
+                                </select>*@
                             Postcode @*@Html.DropDownListFor(model => model.SubUrb, Model.SubUrb, "Pincode", new { @class = "form-control form-inline select2hd select2hdc", @id = "pincode", @name = "pincode" })*@
-                            <input type="text" placeholder="Number" name="postcode" id="postCode" class="form-control form-inline field-length-xs" />.
+                            <input type="text" placeholder="Number" name="postcode" id="postCode" class="form-control form-inline field-length-xs commondatatest" data_eiid="@Model.AreapropertyObj.EiId" />.
                             The building sits on a property size of
-                            @Html.TextBoxFor(p => p.AreapropertyObj.Areaproperty, new { @class = "form-control form-inline field-length-xs", @id = "areaproperty" })
-                            @Html.HiddenFor(p => p.AreapropertyObj.EiId)  
-                                <a href="#hectarModal" role="button" data-target="#hectarModal" data-toggle="modal">hectares.</a>
-                        
+                            @Html.TextBoxFor(p => p.AreapropertyObj.Areaproperty, new { @class = "form-control form-inline field-length-xs commondatatest", @data_eiid = @Model.AreapropertyObj.EiId, @id = "areaproperty" })
+                            @Html.HiddenFor(p => p.AreapropertyObj.EiId)
+                            <a href="#hectarModal" role="button" data-target="#hectarModal" data-toggle="modal">hectares.</a>
+
                             <div id="hectarModal" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -169,16 +228,15 @@
                                 </div>
                             </div>
                         </p>
-
                         <p>
                             Is your Home Building more than 100 metres from Uncleared Natural Bushland, a State or National Forest or a commercial plantation of pine trees?
                             <span class="isbuilding-located">
                                 <span class="policy-loc-row">
-                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '0')
+                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '0', new { @class = "commondataradio", @data_eiid = @Model.IsbuildinglocatedObj.EiId })
                                     <label for="radio1"><span><span></span></span>No</label>
                                 </span>
                                 <span class="policy-loc-row">
-                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '1')
+                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '1', new { @class = "commondataradio", @data_eiid = @Model.IsbuildinglocatedObj.EiId })
                                     <label for="radio1"><span><span></span></span>Yes</label>
                                 </span>
                             </span>
@@ -187,15 +245,463 @@
                         <div class="mt-10 mb-10 col-md-12 buildingAddress">
                             <p class="col-md-6 col-sm-6 col-xs-12 mt-5">Describe the building address</p>
                             <p class="col-md-6 col-sm-6 col-xs-12 text-right">
-                                @Html.DropDownListFor(model => model.DescribeaddressObj.Describeaddress, listItems, "-- Select --", new { @class = "form-control form-border-bottom", @id = "describeaddress", @name = "describeaddress" })
+                                @Html.DropDownListFor(model => model.DescribeaddressObj.Describeaddress, listItems, "-- Select --", new { @class = "form-control form-border-bottom commondataselection", @data_eiid = @Model.DescribeaddressObj.EiId, @id = "describeaddress", @name = "describeaddress" })
                                 @Html.HiddenFor(p => p.DescribeaddressObj.EiId)
                             </p>
                         </div>
                     </div>
                     <div class="col-md-6 pull-right text-right mt-30">
+                        <button type="submit" class="button-3d nomargin tab-linker quot-next-btn homedescrtn">Next</button>
+                    </div>
+                }
+            </div>
+            <div id="ptab2">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>CONSTRUCTION DETAILS</h2></div>
+                <div id="errorContainer"></div>
+                @using (Ajax.BeginForm("ConstructionDetails", "RuralLifeStyle", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+                {
+                    HttpMethod = "POST"
+                }, new { @id = "constructionDetails", @name = "constructionDetails" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="mt-10 mb-10 col-md-12">
+                        @Html.HiddenFor(p => p.CompletionTrack, new { @id = "completiontrack" })
+                        @Html.HiddenFor(p => p.CustomerId, new { @id = "customerId" })
+                        @Html.HiddenFor(p => p.ApiKey, new { @class = "apisecret" })
+                        <p class="col-md-6 col-sm-6 col-xs-12 mt-5">What is external walls made of</p>
+                        <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            @Html.DropDownListFor(p => p.ExtwallsmadeObj.Extwallsmade, @Model.ExtwallsmadeObj.ExtwallsmadeList, new { @class = "form-control form-border-bottom select2cd commondataselection", @data_eiid = @Model.ExtwallsmadeObj.EiId, @id = "60029" })
+                            @Html.HiddenFor(p => p.ExtwallsmadeObj.EiId)
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 cl-60031" id="other-external-wall" style="display: none;">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">Describe external walls </p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.DescribeexternalwallsObj.Describeexternalwall, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.DescribeexternalwallsObj.EiId, @id = "60031" })
+                            @Html.HiddenFor(p => p.DescribeexternalwallsObj.EiId)
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-6 col-sm-6 col-xs-12 mt-5">What is roof made of</p>
+                        <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            @Html.DropDownListFor(p => p.RoofmadeObj.Roofmade, @Model.RoofmadeObj.RoofmadeList, new { @class = "form-control form-border-bottom select2cd commondataselection", @data_eiid = @Model.RoofmadeObj.EiId, @id = "60033" })
+                            @Html.HiddenFor(p => p.RoofmadeObj.EiId)
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 cl-60035" id="other-roof" style="display: none;">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">Describe the roof </p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.DescribeRoofMadeOffObj.DescribeRoofMade, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.RoofmadeObj.EiId, @id = "60035" })
+                            @Html.HiddenFor(p => p.DescribeRoofMadeOffObj.EiId)
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12" id="other-roof">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">In what year was the home built?</p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.YearofBuiltObj.YearBuilt, new { @class = "form-control form-border-bottom commondatatest year", @data_eiid = @Model.YearofBuiltObj.EiId, @id = "yearbuilt" })
+                            @Html.HiddenFor(p => p.YearofBuiltObj.EiId)
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Is the Home Building watertight, well maintained, structurally sound and secure?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="watertight">
+                                <span class="policy-loc-row">
+                                    @if (@Model.WatertightObj.Watertight == false)
+                                    {
+                                        @Html.RadioButtonFor(m => m.WatertightObj.Watertight, '0', new {@class= "commondataradio", @checked = "checked", @data_eiid = @Model.WatertightObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.WatertightObj.Watertight, '0', new { @class = "commondataradio", @data_eiid = @Model.WatertightObj.EiId })
+                                    }
+                                    <label for="watertight1"><span><span></span></span>No</label>
+                                </span>
+                                <span class="policy-loc-row">
+                                    @if (@Model.WatertightObj.Watertight == true)
+                                    {
+                                        @Html.RadioButtonFor(m => m.WatertightObj.Watertight, '1', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.WatertightObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.WatertightObj.Watertight, '1', new { @class = "commondataradio", @data_eiid = @Model.WatertightObj.EiId })
+                                    }
+                                    <label for="watertight1"><span><span></span></span>Yes</label>
+                                </span>
+                            </span>
+                            @Html.HiddenFor(p => p.WatertightObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Is the Home Building protected under heritage legislation other than a local council listing?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="heritage-legislation">
+                                <span class="policy-loc-row">
+                                    @if (@Model.HeritagelegislationObj.Heritagelegislation == false) {
+                                        @Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '0', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.HeritagelegislationObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '0', new { @class = "commondataradio", @data_eiid = @Model.HeritagelegislationObj.EiId })
+                                    }
+                                    <label for="heritagelegislation"><span><span></span></span>No</label>
+                                </span>
+                                <span class="policy-loc-row">
+                                    @if (@Model.HeritagelegislationObj.Heritagelegislation == true)
+                                    {
+                                        @Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '1', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.HeritagelegislationObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '1', new { @class = "commondataradio", @data_eiid = @Model.HeritagelegislationObj.EiId })
+                                    }
+                                    <label for="heritagelegislation"><span><span></span></span>Yes</label>
+                                </span>
+                            </span>
+                            @Html.HiddenFor(p => p.HeritagelegislationObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Is the Home Building under construction or undergoing renovation, alteration or extension?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="under-construction">
+                                <span class="policy-loc-row">
+                                    @if (@Model.UnderconstructionObj.Underconstruction == false)
+                                    {
+                                        @Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '0', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.UnderconstructionObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '0', new { @class = "commondataradio", @data_eiid = @Model.UnderconstructionObj.EiId })
+                                    }
+                                    <label for="underconstruction1"><span><span></span></span>No</label>
+                                </span>
+                                <span class="policy-loc-row">
+                                    @if (@Model.UnderconstructionObj.Underconstruction == true)
+                                    {
+                                        @Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '1', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.UnderconstructionObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '1', new { @class = "commondataradio", @data_eiid = @Model.UnderconstructionObj.EiId })
+                                    }
+                                    <label for="underconstruction1"><span><span></span></span>Yes</label>
+                                </span>
+                            </span>
+                            @Html.HiddenFor(p => p.UnderconstructionObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Does your Home Building comply with the local council regulations regarding its fitness for occupancy as a domestic dwelling and as a Bread and Breakfast business?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="domestic-dwelling">
+                                <span class="policy-loc-row">
+                                    @if (@Model.DomesticdwellingObj.Domesticdwelling == false)
+                                    {
+                                        @Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '0', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.DomesticdwellingObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '0', new { @class = "commondataradio", @data_eiid = @Model.DomesticdwellingObj.EiId })
+                                    }
+                                    <label for="domesticdwelling1"><span><span></span></span>No</label>
+                                </span>
+                                <span class="policy-loc-row">
+                                    @if (@Model.DomesticdwellingObj.Domesticdwelling == true)
+                                    {
+                                        @Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '1', new { @class = "commondataradio", @checked = "checked", @data_eiid = @Model.DomesticdwellingObj.EiId })
+                                    }
+                                    else
+                                    {
+                                        @Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '1', new { @class = "commondataradio", @data_eiid = @Model.DomesticdwellingObj.EiId })
+                                    }
+                                    <label for="domesticdwelling1"><span><span></span></span>Yes</label>
+                                </span>
+                            </span>
+                            @Html.HiddenFor(p => p.DomesticdwellingObj.EiId)
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <a href="@Url.Action("HomeDescription", "RuralLifeStyle")" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                        <img src="~/images/button-devider.png">
                         <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
                     </div>
                 }
+            </div>
+            <div id="ptab3">
+                <div id="homeBuildContain">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>OCCUPANCY DETAILS</h2></div>
+                    <div id="errorContainer"></div>
+                    @using (Ajax.BeginForm("OccupancyDetails", "RuralLifeStyle", new { cid = @ViewBag.cid }, new AjaxOptions()
+                    {
+                        HttpMethod = "POST"
+                    }, new { @id = "occupancyDetails", @name = "occupancyDetails" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div id="ptab3">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            @Html.HiddenFor(p => p.CompletionTrack, new { @id = "completiontrack" })
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Normally who lives there?</p>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.WholivesObj.Wholives, '0', new { @class = "commondataradio", @data_eiid = @Model.WholivesObj.EiId })<label for="radio1"><span><span></span></span>You</label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-6 col-xs-12 policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.WholivesObj.Wholives, '1', new { @class = "commondataradio", @data_eiid = @Model.WholivesObj.EiId })<label for="radio1"><span><span></span></span>Tenent</label>
+                                    </div>
+                                    @Html.HiddenFor(p => p.WholivesObj.EiId)
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12 ">
+                                <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Is the Building?</p>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '0', new { @class = "commondataradio", @data_eiid = @Model.IsbuildingObj.EiId })<label for="radio1"><span><span></span></span>Occupied</label></div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '1', new { @class = "commondataradio", @data_eiid = @Model.IsbuildingObj.EiId })<label for="radio1"><span><span></span></span>Unoccupied</label></div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '2', new { @class = "commondataradio", @data_eiid = @Model.IsbuildingObj.EiId })<label for="radio1"><span><span></span></span>Holiday Home</label></div>
+                                    @Html.HiddenFor(p => p.IsbuildingObj.EiId)
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-9 col-sm-9 col-xs-12">
+                                    In the next 12 months, will the home be unoccupied for 90
+                                    consecutive days or more?
+                                </p>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <span class="consecutive-day">
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.ConsecutivedayObj.Consecutiveday, '0', new { @class = "commondataradio", @data_eiid = @Model.ConsecutivedayObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>No</label>
+                                        </span>
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.ConsecutivedayObj.Consecutiveday, '1', new { @class = "commondataradio", @data_eiid = @Model.ConsecutivedayObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>Yes</label>
+                                        </span>
+                                    </span>
+                                    @Html.HiddenFor(p => p.ConsecutivedayObj.EiId)
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-9 col-sm-9 col-xs-12">Is the building used for business?</p>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <span class="is-used-business">
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.IsusedbusinessObj.Isusedbusiness, '0', new { @class = "commondataradio", @data_eiid = @Model.IsusedbusinessObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>No</label>
+                                        </span>
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.IsusedbusinessObj.Isusedbusiness, '1', new { @class = "commondataradio", @data_eiid = @Model.IsusedbusinessObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>Yes</label>
+                                        </span>
+                                    </span>
+                                    @Html.HiddenFor(p => p.IsusedbusinessObj.EiId)
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-9 col-sm-9 col-xs-12">Describe the business</p>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    @Html.TextBoxFor(p => p.DescribebusinessObj.Describebusiness, new { @class = "form-control form-inline field-length-xs commondatatest", @data_eiid = @Model.DescribebusinessObj.EiId, @id = "describe" })
+                                    @Html.HiddenFor(p => p.DescribebusinessObj.EiId)
+                                </div>
+                            </div>
+                            <div class="col-md-6 pull-right text-right mt-30">
+                                <a href="@Url.Action("ConstructionDetails", "RuralLifeStyle")" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                                <img src="~/images/button-devider.png">
+                                <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div id="ptab4">
+                <div id="homeBuildContain">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>INTERESTED PARTIES</h2></div>
+                    <div id="errorContainer"></div>
+                    @using (Ajax.BeginForm("InterestedParties", "RuralLifeStyle", new { cid = @ViewBag.cid }, new AjaxOptions()
+                    {
+                        HttpMethod = "POST"
+                    }, new { @id = "interestedParties", @name = "interestedParties" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(p => p.CustomerId)
+                        @Html.HiddenFor(p => p.CompletionTrack, new { @id = "completiontrack" })
+                        <div class="mt-10 mb-10 col-md-12">
+                            <p class="col-md-4 col-sm-4 col-xs-12"> Name of Institutions <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                            <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                <img src="~/images/close-icon.png" />
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                            </p>
+                                            <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.TextBoxFor(p => p.CoverhomebuildingObj.Coverhomebuilding, new { @class = "form-control form-border-bottom commondatatest",@data_eiid = @Model.CoverhomebuildingObj.EiId, @id = "coverhomebuilding" })
+                                @Html.HiddenFor(p => p.CoverhomebuildingObj.EiId)
+                            </div>
+                        </div>
+                        <div class="mt-10 mb-10 col-md-12">
+                            <p class="col-md-4 col-sm-4 col-xs-12">Location of Institution <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.TextBoxFor(p => p.LocationObj.Location, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.LocationObj.EiId, @id = "location" })
+                                @Html.HiddenFor(p => p.LocationObj.EiId)
+                            </div>
+                        </div>
+                        <div class="col-md-6 pull-right text-right mt-30">
+                            <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle")" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                            <img src="~/images/button-devider.png">
+                            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn intersdparties">Next</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div id="ptab5">
+                <div id="homeBuildContain">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>
+                    <div id="errorContainer"></div>
+                    @using (Ajax.BeginForm("HomeBuilding", "RuralLifeStyle", new { cid = @ViewBag.cid }, new AjaxOptions() { HttpMethod = "POST" }, new { @id = "homeBuilding", @name = "homeBuilding" }))
+                    {
+                        @Html.HiddenFor(p => p.CustomerId)
+                        @Html.HiddenFor(p => p.CompletionTrack, new { @id = "completiontrck" })
+                        <div class="mt-10 mb-10 col-md-12">
+                            @Html.AntiForgeryToken()
+                            <p class="col-md-3 col-sm-3 col-xs-12">Location <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                            <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                <img src="~/images/close-icon.png" />
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                            </p>
+                                            <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                @Html.TextBoxFor(p => p.LocationObj.Location, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.LocationObj.EiId, @id = "location" })
+                                @Html.HiddenFor(p => p.LocationObj.EiId)
+                            </div>
+                        </div>
+                        <div class="mt-10 mb-10 col-md-12">
+                            <p class="col-md-6 col-sm-6 col-xs-12">How much would it cost to replace your Home Building?</p>
+                            <div class="col-md-6 col-sm-6 col-xs-12">
+                                @Html.TextBoxFor(p => p.CostforRebuildingObj.CostforRebuilding, new { @class = "form-control form-border-bottom CostforRebuilding commondatatest", @data_eiid = @Model.CostforRebuildingObj.EiId, @id = "costforRebuilding" })
+                                @Html.HiddenFor(p => p.CostforRebuildingObj.EiId)
+                                <p class="mini-text">The minimum is $500,000</p>
+                            </div>
+                        </div>
+                        <div class="mt-10 mb-10 col-md-12">
+                            <p class="col-md-4 col-sm-4 col-xs-12">Cover for Home Building</p>
+                            <div class="col-md-3 col-sm-3 col-xs-12">
+                                @Html.TextBoxFor(p => p.CoverhomebuildingObj.Coverhomebuilding, new { @class = "gray-bg-underline commondatatest", @data_eiid = @Model.CoverhomebuildingObj.EiId, @id = "coverhomebuilding" })
+                                @Html.HiddenFor(p => p.CoverhomebuildingObj.EiId)
+                            </div>
+                            <p class="col-md-5 col-sm-5 col-xs-12 mini-text">(This should be the cost of building the home today plus the cost of all fees, demolition, removal of debris and propping up that may  be required.)</p>
+                        </div>
+                        <div class="mt-10 mb-10 col-md-12 ">
+                            <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Claim free period? <a href="#costumModal3" role="button" data-target="#costumModal3" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                            <div id="costumModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                <img src="~/images/close-icon.png" />
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                            </p>
+                                            <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '0', new { @class = "commondataradio", @data_eiid = @Model.ClaimfreeperiodObj.EiId })<label for="radio1"><span><span></span></span>0 years</label></div>
+                                <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '1', new { @class = "commondataradio", @data_eiid = @Model.ClaimfreeperiodObj.EiId })<label for="radio1"><span><span></span></span>1 years</label></div>
+                                <div class="col-md-5 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '3', new { @class = "commondataradio", @data_eiid = @Model.ClaimfreeperiodObj.EiId })<label for="radio1"><span><span></span></span>2 or more years</label></div>
+                            </div>
+                            @Html.HiddenFor(p => p.ClaimfreeperiodObj.EiId)
+                        </div>
+                        <div class="mt-10 mb-10 col-md-12 ">
+                            <div class="col-md-6"><p>Please select the excess you wish to pay</p></div>
+                            <div class="col-md-3">
+                                <select class="gray-bg-underline form-control form-border-bottom field-length-sm commondataselection" data_eiid ="@Model.ExcessObj.EiId" name="ExcessObj.Excess" id="excess">
+                                    <option value="">Select</option>
+                                    <option value="1">$500</option>
+                                    <option value="2">$600</option>
+                                    <option value="3">$700</option>
+                                    <option value="4">$850</option>
+                                    <option value="5">$1200</option>
+                                    <option value="6">$2200</option>
+                                    <option value="7">$5500</option>
+                                </select>
+                                @Html.HiddenFor(p => p.ExcessObj.EiId)
+                            </div>
+                            <script type="text/javascript">
+                                $(document).ready(function () {
+                                    $('#excess').change(function () {
+                                        if ($(this).val() != '') {
+                                            $('#imposed').removeAttr('disabled');
+                                        } else {
+                                            $('#imposed').attr('disabled', 'disabled');
+                                            $('#imposed').removeAttr('checked');
+                                            $('#imposed').val('false');
+                                        }
+                                    });
+                                });
+                            </script>
+                            <div class="col-md-3">
+                                <div class="policy-loc-row">
+                                    <input type="checkbox" name="ImposedObj.Imposed" id="imposed" value="false" disabled="disabled" />
+                                    <label for="checkbox1"><span><span></span></span>Imposed</label>
+                                </div>
+                                @Html.HiddenFor(p => p.ImposedObj.EiId)
+                                <script type="text/javascript">
+                                    $(document).on('click', '#imposed', function () {
+                                        if ($(this).is(':checked') == true) {
+                                            $(this).attr('checked', 'checked');
+                                            $(this).val('true');
+                                        } else {
+                                            $(this).removeAttr('checked');
+                                            $(this).val('false');
+                                        }
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pull-right text-right mt-30">
+                            <a href="@Url.Action("InterestedParties", "RuralLifeStyle")" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                            <img src="~/images/button-devider.png">
+                            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                        </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -235,67 +741,310 @@
         <input type="submit" name="newcover" value="New Cover">
     </div>
 </div>
+<script src="~/js/datepicker.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".year").datepicker({
+            minViewMode: 2,            
+            format: 'yyyy'
+        }).on('change', function (e) {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            if (Value != "") {
+                elementAjaxCall(Value, EIId);
+            }
+        });
+    });
+</script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
 <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 <script src="~/Scripts/select2.min.js"></script>
 <script type="text/javascript">
-                function convert(degree) {
-                    var x;
-                    if (degree == "ACR") {
-                        x = document.getElementById("acres").value * 0.40468564224;
-                        document.getElementById("hectar").value = x.toPrecision(6);
+function pta2() {
+    $("#ptab1").hide();
+    $("#ptab2").show();
+    $("#ptb2").addClass("active");
+    $("#ptab3").hide();
+    $("#ptab4").hide();
+    $("#ptab5").hide();
+    $("#ptb1").removeClass("active");
+    $("#ptb3").removeClass("active");
+    $("#ptb4").removeClass("active");
+    $("#ptb5").removeClass("active");
+}
+function pta3() {
+    $("#ptab1").hide();
+    $("#ptab2").hide();
+    $("#ptb3").addClass("active");
+    $("#ptab3").show();
+    $("#ptab4").hide();
+    $("#ptab5").hide();
+    $("#ptb1").removeClass("active");
+    $("#ptb2").removeClass("active");
+    $("#ptb4").removeClass("active");
+    $("#ptb5").removeClass("active");
+}
+function pta4() {
+    $("#ptab1").hide();
+    $("#ptab2").hide();
+    $("#ptb4").addClass("active");
+    $("#ptab3").hide();
+    $("#ptab4").show();
+    $("#ptab5").hide();
+    $("#ptb1").removeClass("active");
+    $("#ptb2").removeClass("active");
+    $("#ptb3").removeClass("active");
+    $("#ptb5").removeClass("active");
+}
+function pta5() {
+    $("#ptab1").hide();
+    $("#ptab2").hide();
+    $("#ptb5").addClass("active");
+    $("#ptab3").hide();
+    $("#ptab5").show();
+    $("#ptab4").hide();
+    $("#ptb1").removeClass("active");
+    $("#ptb2").removeClass("active");
+    $("#ptb3").removeClass("active");
+    $("#ptb4").removeClass("active");
+}
+$(document).ready(function () {
+    $("#ptab1").show();
+    $("#ptb1").addClass("active");
+    $("#ptab2").hide();
+    $("#ptab3").hide();
+    $("#ptab4").hide();
+    $("#ptab5").hide();
+});
+$("#homedescrtn").click(function () {
+    pta2();
+    $("#ptb2").addClass("success");
+});
+$(".intersdparties").click(function () {
+    pta4();
+    $("#ptb4").addClass("success");
+});
+$("#occypancy").click(function () {
+    pta3();
+    $("#ptb3").addClass("success");
+});
+$("#constrdetals").click(function () {
+    pta2();
+    $("#ptb2").addClass("success");
+});
+$("#ptb2").click(function () {
+    pta2();
+});
+$("#ptb3").click(function () {
+    pta3();
+});
+$("#ptb4").click(function () {
+    pta4();
+});
+$("#ptb5").click(function () {
+    pta5();
+});
+$("#ptb1").click(function () {
+    $("#ptab1").show();
+    $("#ptb1").addClass("active");
+    $("#ptab2").hide();
+    $("#ptab3").hide();
+    $("#ptab4").hide();
+    $("#ptab5").hide();
+    $("#ptb5").removeClass("active");
+    $("#ptb2").removeClass("active");
+    $("#ptb3").removeClass("active");
+    $("#ptb4").removeClass("active");
+});
+function convert(degree) {
+    var x;
+    if (degree == "ACR") {
+        x = document.getElementById("acres").value * 0.40468564224;
+        document.getElementById("hectar").value = x.toPrecision(6);
+    }
+}
+
+var apival = $("#apisecret").val();
+
+$('#suburb').on('change', (function () {
+    var suburb = $(this).val();
+    var pincode = $("#pincode").val();
+    $.ajax({
+        type: "POST",
+        url: "/RuralLifeStyle/SubUrbStatePincode",
+        data: { "suburb": suburb, "pincode": pincode },
+        success: function (responce) {
+        }
+    });
+}));
+function elementAjaxCall(Value,EIId) {
+    if (Value != '' && EIId != '') {
+        $.ajax({
+            url: '/Customer/ElementDetails',
+            type: "POST",
+            crossOrigin: true,
+            data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": "0" },
+            success: function (data) {
+                if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                    var valuedata = data.valuedata;
+                    if (valuedata != '' && valuedata != null) {
+                        $.each(valuedata, function (index, value) {
+                            $('#' + value.Element.ElId).val(value.Value);
+                            if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                var statedata = data.stateData;
+                                if (statedata != '' && statedata != null) {
+                                    $.each(statedata, function (index1, value1) {
+                                        if (value1.Value == 'Invisible') {
+                                            $('#' + value1.Element.ElId).removeAttr('readonly');
+                                            $('#' + value1.Element.ElId).removeAttr('disabled');
+                                            $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                            $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                        } else if (value1.Value == 'Disabled') {
+                                            $('#' + value1.Element.ElId).attr('disabled', 'disabled');
+                                            $('#' + value1.Element.ElId).removeAttr('readonly');
+                                            $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                            $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                        } else if (value1.Value == 'Read Only') {
+                                            $('#' + value1.Element.ElId).attr('readonly', 'readonly');
+                                            $('#' + value1.Element.ElId).removeAttr('disabled');
+                                            $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                            $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                        } else if (value1.Value == 'Strike Through') {
+                                            $('#' + value1.Element.ElId).css({ 'text-decoration': 'line-through' });
+                                            $('#' + value1.Element.ElId).removeAttr('readonly');
+                                            $('#' + value1.Element.ElId).removeAttr('disabled');
+                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                            $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                        } else if (value1.Value == 'Required') {
+                                            $('#' + value1.Element.ElId).css({ 'text-decoration': 'line-through' });
+                                            $('#' + value1.Element.ElId).removeAttr('readonly');
+                                            $('#' + value1.Element.ElId).removeAttr('disabled');
+                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                            $('#' + value1.Element.ElId).attr('required', 'required');
+                                        } else if (value1.Value == '"Not Rendered') {
+                                            $('#' + value1.Element.ElId).css({ 'text-decoration': '' });
+                                            $('#' + value1.Element.ElId).removeAttr('readonly');
+                                            $('#' + value1.Element.ElId).removeAttr('disabled');
+                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                            $('#' + value1.Element.ElId).removeAttr('required', 'required');
+                                        }
+
+                                    });
+                                }
+                            }
+                        });
                     }
                 }
-             
-                var apival = $("#apisecret").val();
-
-                $('#suburb').on('change', (function () {
-                    var suburb = $(this).val();
-                    var pincode = $("#pincode").val();
-                    $.ajax({
-                        type: "POST",
-                        url: "/RuralLifeStyle/SubUrbStatePincode",
-                        data: { "suburb": suburb, "pincode": pincode },
-                        success: function (responce) {
-                        }
+                if (data.referrallist != null || data.referrallist != "") {
+                    $('#referralList-p').html('No Referral List');
+                } else {
+                    $('#referralList-p').html(data.referrallist);
+                }
+            }
+        });
+    }
+}
+$(document).ready(function () {
+    $(".commondataselection").change(function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        elementAjaxCall(Value, EIId);
+    });
+    $('.commondataradio').change(function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        elementAjaxCall(Value, EIId);
+    });
+    $('.commondatatest').focusout(function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        if (Value != ""){
+            elementAjaxCall(Value, EIId);
+        }
+    });
+    $("#roofmades").change(function () {
+        var value = this.value;
+        if (value == "6") {
+            $("#other-roof").show();
+        } else {
+            $("#other-roof").hide();
+        }
+    });
+});
+$(document).ready(function () {
+    $.validator.addMethod("regex", function (value, element, regexp) {
+        if (regexp.constructor != RegExp)
+            regexp = new RegExp(regexp);
+        else if (regexp.global)
+            regexp.lastIndex = 0;
+        return this.optional(element) || regexp.test(value);
+    }, "Please check your input.");
+    //$("form[name='homeDescription']").validate({
+    //    errorContainer: "#errorContainer",
+    //    errorLabelContainer: "#errorContainer",
+    //    errorElement: "li",
+    //    rules: {
+    //        property: "required",
+    //        suburb: "required",
+    //        state: "required",
+    //        postcode: "required",
+    //        "AreapropertyObj.Areaproperty": "required",
+    //        "DescribeaddressObj.Describeaddress": "required",
+    //        "IsbuildinglocatedObj.Isbuildinglocated": "required",
+    //    },
+    //    messages: {
+    //        property: "Please select property",
+    //        suburb: "Please select suburb",
+    //        state: "Please select state",
+    //        postcode: "Please enter post code",
+    //        "AreapropertyObj.Areaproperty": "Please enter size of property",
+    //        "DescribeaddressObj.Describeaddress": "Please describe the address",
+    //        "IsbuildinglocatedObj.Isbuildinglocated": "Please select Home Building more than 100 metres from Uncleared Natural Bushland",
+    //    },
+    //    onfocusout: function (element) {
+    //        this.element(element);
+    //    }/*,*/
+    //    //submitHandler: function (form) {
+    //    //    form.submit();
+    //    //}
+    //});
+});
+$("#premium").click(function () {
+    $.ajax({
+        url: '/Customer/PremiumDetails',
+        type: "POST",
+        crossOrigin: true,
+        data: {},
+        success: function (data) {
+            if (data.Status == true) {
+                var html1 = "";                
+                if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                    var html = "";
+                    $.each(data.Premium, function (index, value) {
+                        html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
                     });
-                }));
-                $(document).ready(function () {
-                    $.validator.addMethod("regex", function (value, element, regexp) {
-                        if (regexp.constructor != RegExp)
-                            regexp = new RegExp(regexp);
-                        else if (regexp.global)
-                            regexp.lastIndex = 0;
-                        return this.optional(element) || regexp.test(value);
-                    }, "Please check your input.");
-                    //$("form[name='homeDescription']").validate({
-                    //    errorContainer: "#errorContainer",
-                    //    errorLabelContainer: "#errorContainer",
-                    //    errorElement: "li",
-                    //    rules: {
-                    //        property: "required",
-                    //        suburb: "required",
-                    //        state: "required",
-                    //        postcode: "required",
-                    //        "AreapropertyObj.Areaproperty": "required",
-                    //        "DescribeaddressObj.Describeaddress": "required",
-                    //        "IsbuildinglocatedObj.Isbuildinglocated": "required",
-                    //    },
-                    //    messages: {
-                    //        property: "Please select property",
-                    //        suburb: "Please select suburb",
-                    //        state: "Please select state",
-                    //        postcode: "Please enter post code",
-                    //        "AreapropertyObj.Areaproperty": "Please enter size of property",
-                    //        "DescribeaddressObj.Describeaddress": "Please describe the address",
-                    //        "IsbuildinglocatedObj.Isbuildinglocated": "Please select Home Building more than 100 metres from Uncleared Natural Bushland",
-                    //    },
-                    //    onfocusout: function (element) {
-                    //        this.element(element);
-                    //    }/*,*/
-                    //    //submitHandler: function (form) {
-                    //    //    form.submit();
-                    //    //}
-                    //});
-                });
+                    if (html != '') {
+                        $('#premiumModel-p-b').html(html);
+                    }
+                }
+                if (data.UnderwriterFee != null) {
+                    html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
+                }
+                if (data.FeeGst != null) {
+                    html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
+                }
+                if (data.InvoiceTotal != null) {
+                    html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
+                }
+                if (html1 != '') {
+                    $('#premiumModel-p-f').html(html1);
+                }
+            }
+        }
+    });
+
+});
 </script>

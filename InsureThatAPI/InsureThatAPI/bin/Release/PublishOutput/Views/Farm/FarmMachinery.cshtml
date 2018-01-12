@@ -1,0 +1,325 @@
+﻿@model InsureThatAPI.Models.FarmMachinery
+@{
+    ViewBag.Title = "Farm Machinery / Farm Property Cover";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["CompletionTrackFPC"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / FARM PROPERTY</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="@Url.Action("FarmContents", "Farm",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1"){ <text>class = "success"</text>}>Farm Structures and Farm Contents</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Farm Machinery</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Livestock", "Farm",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1"){ <text>class = "success"</text>}>Livestock</a>
+            </li>
+            <li>
+                <a href="@Url.Action("HarvestedCropsBeehives", "Farm",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1"){ <text>class = "success"</text>}>Harvested Crops and Beehives</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("FarmMachinery", "Farm", new { cid = @ViewBag.cid }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+
+            }, new { @id = "farmMachinery", @name = "farmMachinery" }))
+            {
+                <div id="ptab2">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>FARM MACHINERY</h2></div>
+                    @Html.HiddenFor(p => p.CompletionTrackFPC, new { @id = "completiontrack" })
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>How much cover do you need for unspecified farm machinery?<br /><span class="mini-text">(You can insure unspecified items of farm machinery up to $5000 for any one item.)</span></p></div>
+                        <div class="col-md-6">
+                            @Html.TextBoxFor(p => p.FarmContentFcObj.Farmcontents, new { @class = "form-control form-border-bottom", @id = "farmcontents" })
+                            @Html.HiddenFor(p => p.FarmContentFcObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <div class="col-md-6"><p>Excess for unspecified machinery </p></div>
+                        <div class="col-md-3">
+                            @Html.DropDownListFor(Model => Model.ExcessUMObj.Excessum, @Model.ExcessUMObj.ExcessumList, "-- Select --", new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excessum" })
+                            @Html.HiddenFor(p => p.ExcessUMObj.EiId)
+                        </div>
+                        <div class="col-md-3">
+                            <div class="policy-loc-row"><input type="checkbox" name="ImposedpetsObj.Imposedum" id="imposedum"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p>Please list your specified item of machinery (valued over $5000 per item) below</p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-12 table-8">
+                            <table class="table" style=" width: 100%; ">
+                                <thead>
+                                    <tr>
+                                        <th class="space_left">Description</th>
+                                        <th class="space_left">Year</th>
+                                        <th class="space_left">Serial Number</th>
+                                        <th class="space_left">Excess</th>
+                                        <th class="space_left">Sum Insured</th>
+                                        <th class="space_right">&nbsp;</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr id="tname-tr-1">
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.DescriptionFmObj.Description, new { @class = "form-control form-border-bottom", @id = "description1" })
+                                            @Html.HiddenFor(p => p.DescriptionFmObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom year", @id = "year1", @readonly = "readonly" })
+                                            @Html.HiddenFor(p => p.YearObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @class = "form-control form-border-bottom", @id = "serialnumber1" })
+                                            @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            <div class="col-md-8 pt-10 pb-10 nopadding">
+                                                @Html.DropDownListFor(Model => Model.ExcessesFpcObj.Excess, @Model.ExcessesFpcObj.ExcessList, "-- Select --", new { @class = "form-control form-border-bottom", @id = "excess1" })
+                                                @Html.HiddenFor(p => p.ExcessesFpcObj.EiId)
+                                            </div>
+                                            <div class="col-md-4 p-0 policy-loc-row">
+                                            <input type="checkbox" name="ImposedObj.Imposed" id="imposed1"><label for="checkbox1"><span><span></span></span></label></div>
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-border-bottom", @id = "suminsured1" })
+                                            @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                        </td>
+                                        <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Total for specified items</p></div>
+                        <div class="col-md-8"><input type="text" name="totalspaceific" id="totalspaceific" class="form-control form-border-bottom"></div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right">
+                        <a href="@Url.Action("FarmContents", "Farm")" class="button-3d nomargin tab-linker quot-prev-btn">Prev</a>
+                        <img src="~/images/button-devider.png"> 
+                        <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script src="~/js/datepicker.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+    });
+</script>
+<script type="text/javascript">
+    function tnameAdd(id) {
+        var countId = id + 1;
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFmObj.Description, new { @class = "form-control form-border-bottom", @id = "description" })@Html.HiddenFor(p => p.DescriptionFmObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom year", @id = "year", @readonly = "readonly" })@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @class = "form-control form-border-bottom", @id = "serialnumber" })@Html.HiddenFor(p => p.SerialnumberObj.EiId)</td><td class="no-border"><div class="col-md-9 pt-10 pb-10">@Html.DropDownListFor(Model => Model.ExcessesFpcObj.Excess, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom", @id = "excess" })@Html.HiddenFor(p => p.ExcessesFpcObj.EiId)</div><div class="col-md-3 p-0 policy-loc-row"><input type="checkbox" name="ImposedObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span></label></div></td><td class="no-border">@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-border-bottom", @id = "suminsured" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+
+        $.ajax({
+            url: '/farm/farmajaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "farmMachinery" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tname-" + id).html(replaceA);
+                    $("#tname-tr-" + id).after(html);
+                    $("#tname-tr-" + countId + ' #excess').html(html1);
+                    $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+
+                    $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);
+                    $("#tname-tr-" + countId + ' #year').attr('id', "year" + countId);
+                    $("#tname-tr-" + countId + ' #serialnumber').attr('id', "serialnumber" + countId);
+                    $("#tname-tr-" + countId + ' #excess').attr('id', "excess" + countId);
+                    $("#tname-tr-" + countId + ' #imposed').attr('id', "imposed" + countId);
+                    $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                }
+            }
+        });
+    }
+    function tnameRemove(id) {
+        $("#tname-tr-" + id).remove();
+    }
+</script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='farmMachinery']").validate({
+            errorContainer: "#errorContainer",
+            errorLabelContainer: "#errorContainer",
+            errorElement: "li",
+            rules: {
+                "FarmContentFcObj.Farmcontents": {
+                    regex: /^[0-9]*$/,
+                },
+                "ExcessUMObj.Excessum": {
+                    required: function (element) {
+                        if ($("#farmcontents").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+                "ImposedpetsObj.Imposedum": {
+                    required: function (element) {
+                        if ($("#excessum").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+                "DescriptionFmObj.Description": {
+                    regex: /^[a-zA-Z ]*$/,
+                },
+                "YearObj.Year": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+                "SerialnumberObj.Serialnumber": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    regex: /^[0-9]*$/,
+                },
+                "ExcessesFpcObj.Excess": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+                "ImposedObj.Imposed": {
+                    required: function (element) {
+                        if ($("#Excess").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                },
+                "SuminsuredObj.Suminsured": {
+                    required: function (element) {
+                        if ($("#description").val() != "") {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    },
+                    regex: /^[0-9]*$/,
+                },
+            },
+            messages: {
+                "FarmContentFcObj.Farmcontents": {
+                    regex: "Only numeric allowed"
+                },
+                "ExcessUMObj.Excessum": {
+                    required: "Please select excessum"
+                },
+                "ImposedpetsObj.Imposedum": {
+                    required: "Please select imposed"
+                },
+                "DescriptionFmObj.Description": {
+                    regex: "Special character not allowed"
+                },
+                "YearObj.Year": {
+                    required: "Please enter year"
+                },
+                "SerialnumberObj.Serialnumber": {
+                    required: "Please enter serial number",
+                    regex: "Only numeric allowed"
+                },
+                "ExcessesFpcObj.Excess": {
+                    required: "Please select Excess"
+                },
+                "ImposedObj.Imposed": {
+                    required: "Please select imposed"
+                },
+                "SuminsuredObj.Suminsured": {
+                    required: "Please enter sum of insured",
+                    regex: "Only numeric allowed"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

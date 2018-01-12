@@ -78,7 +78,7 @@ namespace InsureThatAPI.Controllers
             else
             {
                 var policyinclusionslist = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
-                if (policyinclusionslist.PolicyInclusions != null)
+                if (policyinclusionslist!=null && policyinclusionslist.PolicyInclusions != null)
                 {
                     if (policyinclusionslist.PolicyInclusions.Length > 1)
                     {
@@ -130,10 +130,10 @@ namespace InsureThatAPI.Controllers
                         }
                     }
                 }
-                else
-                {
-                    RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 2 });
-                }
+                //else
+                //{
+                //    RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 2 });
+                //}
             }
             ViewBag.cid = cid;
             if (cid != null)

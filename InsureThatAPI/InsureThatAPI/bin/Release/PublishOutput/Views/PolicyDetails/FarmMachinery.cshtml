@@ -1,0 +1,671 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "Farm Machinery";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.PolicyData != null)
+{
+    <div class="row content">
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+            <h2>
+                POLICY DETAILS<span>
+                    @if (Model.PolicyData.InsuredName != null)
+                    {
+                        <span>@Model.PolicyData.InsuredName/</span>
+                    }
+                    @if (Model.PolicyData.PolicyNumber != null)
+                    {
+                        @Model.PolicyData.PolicyNumber
+                    }
+                    @if (Model.PolicyData.PolicyStatus != null)
+                    {
+                        if (Model.PolicyData.PolicyStatus == "AP")
+                        { <span>/ Endorsed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "AQ")
+                        { <span>/ Endorsement Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CQ")
+                        { <span>/ Cancellation Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "DQ")
+                        { <span>/ Discarded Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NP")
+                        { <span>/ New Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NQ")
+                        { <span>/ Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RP")
+                        { <span>/ Renewed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RQ")
+                        { <span>/ Renewal Invitation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XQ")
+                        { <span>/ Cancellation Quotation</span> }
+                    }
+                </span>
+
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+        </div>
+
+        <div class="mt-50 mb-50"></div>
+        <div class="p-10 col-md-12 border-bottom-1 mb-15">
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                <img src="~/images/farm-icon.png" class="policy-list-img">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                                {
+                                    <lable>Rural Lifestyle</lable>
+                                }
+                                else
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy No: @Model.PolicyData.PolicyNumber
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row content">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+        <div class="row content policy-full-view">
+            <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                @if (Model.SectionData != null)
+                {
+                    using (Ajax.BeginForm("FarmMoney", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row content policy-full-view">
+                            <div class="col-xs-12">
+                                <div class="well">
+                                    @Html.HiddenFor(p => p.CustomerId)
+                                    <h3>FARM MACHINERY DETAILS</h3>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Machinery</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-8 col-sm-8 col-xs-12">Locations covered</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                            @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                            {
+                                                <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Part A - Machinery Breakdown</strong></p>
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Unspecified Items up to 20 KW</strong></p>
+                                        <p class="col-md-12 col-sm-12 col-xs-12">HP to KW converter:</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Type of machinery</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Power (KW)</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">No. of units</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Sum Insured per unit</p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Total Sum Insured</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62967 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        if (Model.SectionData.ValueData[j].Value == "2")
+                                                        {
+                                                            <span>Compressors, electric motors, generators (not workshops)</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "3")
+                                                        {
+                                                            <span>Pumps – above ground</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "4")
+                                                        {
+                                                            <span>Pumps – submersible</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "5")
+                                                        {
+                                                            <span>Refrigeration Units other than in milking sheds</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "6")
+                                                        {
+                                                            <span>Machinery in farm workshops</span>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62969 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        if (Model.SectionData.ValueData[j].Value == "2")
+                                                        {
+                                                            <span>Up to 5</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "3")
+                                                        {
+                                                            <span>5 to 10</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "4")
+                                                        {
+                                                            <span>10 to 20</span>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62971 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62973 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62975 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Milking Sheds and Shearing Sheds</strong></p>
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Milking Sheds</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Volume of vat (litres)</p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Number of vats</p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Sum Insured per vat</p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Total Sum Insured</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62995 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        if (Model.SectionData.ValueData[j].Value == "2")
+                                                        {
+                                                            <span>Up to 2000</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "3")
+                                                        {
+                                                            <span>2000 to 5000</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "4")
+                                                        {
+                                                            <span>5000 to 10000</span>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62997 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62999 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63001 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Shearing Shed including wool presses</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-4 col-sm-4 col-xs-12">Number of Stands</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12">Sum Insured per stand</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12">Total Sum Insured</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-4 col-sm-4 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63021 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                            <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63023 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63025 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>                                        
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Type of machinery</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Power (KW)</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">No. of units</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Sum Insured per unit</p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">Total Sum Insured</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63039 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63041 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63043 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63045 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-3 col-sm-3 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63047 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63051) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63051).Value != ""))
+                                            {
+                                                <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63051).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Part B - Boilers</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Type of unit</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Make and model</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Rated power (kW)</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Pipe length (m)</p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">Number of units</p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">Sum Insured per unit</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">Total Sum Insured</p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63067 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        if (Model.SectionData.ValueData[j].Value == "2")
+                                                        {
+                                                            <span>Hot water</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "3")
+                                                        {
+                                                            <span>Boiler</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "4")
+                                                        {
+                                                            <span>Pipe Systems</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "5")
+                                                        {
+                                                            <span>Steam Boiler</span>
+                                                        }
+                                                        else if (Model.SectionData.ValueData[j].Value == "6")
+                                                        {
+                                                            <span>Steam Generator</span>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63069 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63071 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63073 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63075 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-1 col-sm-1 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63077 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                        <p class="col-md-2 col-sm-2 col-xs-12">
+                                            @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                            {
+                                                for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                                {
+                                                    if (Model.SectionData.ValueData[j].Element.ElId == 63079 && Model.SectionData.ValueData[j].Value != "")
+                                                    {
+                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                    }
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63083) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63083).Value != ""))
+                                            {
+                                                <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63083).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Part C - Refrigerated Farm Produce</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Cover for milk in vats</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63087) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63087).Value != ""))
+                                            {
+                                                <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63087).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Cover for all other produce</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63097) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63097).Value != ""))
+                                            {
+                                                <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63097).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63099) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63099).Value != ""))
+                                            {
+                                                <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 63099).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    using (Ajax.BeginForm("FarmMoney", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>FARM MACHINERY DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+                <h3>Policy Sections</h3>
+                <div class="well">
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="dropdown pc pc-in">
+                        <a class="new-cover-policy" href="#">New Cover</a>
+                        <ul class="dropdown-menu col-md-12">
+                            <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
+                            <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
+                            <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
+
+                            <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
+
+                            <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
+                            <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                            <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                            <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
+                            <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
+                            <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
+                            <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
+
+                            <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
+                            <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                            <li><a href="#">+  Valuables</a></li>
+                            <li><a href="#">+  Transit</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

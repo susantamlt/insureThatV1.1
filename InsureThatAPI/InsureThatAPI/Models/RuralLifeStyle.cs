@@ -24,10 +24,40 @@ namespace InsureThatAPI.Models
         public IEnumerable<SelectListItem> SubUrb { get; set; }
         public IEnumerable<SelectListItem> QList { get; set; }
         public SectionD SectionDatas { get; set; }
-        public string PolicyInclusions { get; set; }
+        public List<string> PolicyInclusions { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public string PolicyId { get; set; }
+        public ExtWallsMades ExtwallsmadeObj { get; set; }
+        public Describeexternalwalls DescribeexternalwallsObj { get; set; }
+        public DescribeRoofMadeof DescribeRoofMadeOffObj { get; set; }
+        public RoofMades RoofmadeObj { get; set; }
+        public YearOfBuilt YearofBuiltObj { get; set; }
+        public Watertights WatertightObj { get; set; }
+        public HeritageLegislations HeritagelegislationObj { get; set; }
+        public UnderConstructions UnderconstructionObj { get; set; }
+        public DomesticDwellings DomesticdwellingObj { get; set; }
+        public WhoLives WholivesObj { get; set; }
+        public IsBuildings IsbuildingObj { get; set; }
+        public Consecutivedays ConsecutivedayObj { get; set; }
+        public IsusedBusinesses IsusedbusinessObj { get; set; }
+        public DescribeBusinesses DescribebusinessObj { get; set; }
+        public Premiums PremiumObj { get; set; }
+        public Locations LocationObjs { get; set; }
+        public CoverHomeBuildings CoverhomebuildingObj { get; set; }
+        public Locations LocationObjss { get; set; }
+        public CostForRebuilding CostforRebuildingObj { get; set; }
+        public CoverHomeBuildings CoverhomebuildingObjs { get; set; }
+        public ClaimFreePeriods ClaimfreeperiodObj { get; set; }
+        public Excesses ExcessObj { get; set; }
+        public Imposes ImposedObj { get; set; }
+        public NoClaimDiscounts NoclaimdiscountObj { get; set; }
+        public AgeDiscounts AgediscountObj { get; set; }
+        public Premiums PremiumObjs { get; set; }
 
     }
+
+
+
     public class SectionD
     {
         public SectionDatas SectionData { get; set; }
@@ -55,7 +85,7 @@ namespace InsureThatAPI.Models
         public string AddressLine1 { get; set; }
         public string Suburb { get; set; }
         public string State { get; set; }
-        public int Postcode { get; set; } 
+        public int Postcode { get; set; }
     }
     public class SectionDatas
     {
@@ -68,26 +98,37 @@ namespace InsureThatAPI.Models
         public List<ValueDatas> ValueData { get; set; }
         public List<StateDatas> StateData { get; set; }
     }
-    public class StateDatas{
+    public class StateDatas
+    {
         public Elements Element { get; set; }
         public int State { get; set; }
     }
-    public class ValueDatas{
+    public class ValueDatas
+    {
         public Elements Element { get; set; }
         public string Value { get; set; }
     }
-    public class RowsourceDatas {
+    public class RowsourceDatas
+    {
 
         public Elements Element { get; set; }
-      //  public Elements Element { get; set; }
+        //  public Elements Element { get; set; }
         public List<Option> Options { get; set; }
     }
     public class Elements
     {
-        public int ElId { get; set; }
-        public int ItId { get; set; }
+        public int? ElId { get; set; }
+        //public int Elld { get; set; }
+        public int? ItId { get; set; }
     }
-    public class Option {
+    public class Elementss
+    {
+        public int? ElId { get; set; }
+        //public int Elld { get; set; }
+        public int? ItId { get; set; }
+    }
+    public class Option
+    {
         public string DataText { get; set; }
         public int DataValue { get; set; }
     }
@@ -156,7 +197,7 @@ namespace InsureThatAPI.Models
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
         public List<PolicyData> PolicyData { get; set; }
-      
+
     }
     public class PolicyData
     {
@@ -171,7 +212,7 @@ namespace InsureThatAPI.Models
         public int TrId { get; set; }
         public string PolicyStatus { get; set; }
         // public string PolicyAction { get; set; }
-         public string InsuredName { get; set; }
+        public string InsuredName { get; set; }
         public string PolicyType { get; set; }
     }
     public class HB2HomeBuilding

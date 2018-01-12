@@ -199,9 +199,9 @@
 
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imghome">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Home Building"))
-                                {  @Html.CheckBoxFor(p => p.HomeBuilding, new { @checked = "checked",@id="HB" })
-                                  
+                                @if (Model.PolicyInclusion != null && (Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Home Buildings") @*|| Model.PolicyInclusion.Exists(p => p.Name == "Home Building")*@))
+                                {  @Html.CheckBoxFor(p => p.HomeBuilding, new { @checked = "checked", @id = "HB" })
+
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-bulding-icon.png" class="visible-icon" />
                                     <img src="~/images/home-bulding-reverse-icon.png" class="hidden-icon" />
@@ -216,7 +216,7 @@
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.HomeBuilding)
+                                    @Html.CheckBoxFor(p => p.HomeBuilding, new { @class = "addunit HomeBuilding", @id = "Home Buildings" })
                                     @*<input type="checkbox" name="policytype" value="" />*@
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-bulding-icon.png" class="visible-icon" />
@@ -228,13 +228,13 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imghomecontent">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Home Content"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Home Contents"))
                                 {
-                                    @Html.CheckBoxFor(p => p.HomeContents, new { @checked = "checked",@id="HC" })
-                                 
+                                    @Html.CheckBoxFor(p => p.HomeContents, new { @checked = "checked", @id = "HC" })
+
                                     <img src="~/images/tick.png" class="tick" />
-                                            <img src="~/images/home-content-icon.png" class="visible-icon" />
-                                            <img src="~/images/home-content-icon-inverse.png" class="hidden-icon" />
+                                    <img src="~/images/home-content-icon.png" class="visible-icon" />
+                                    <img src="~/images/home-content-icon-inverse.png" class="hidden-icon" />
                                             <div class="checkbox-txt">Home Contents</div>
                                             <script type="text/javascript">
                                                 $(document).ready(function () {
@@ -246,7 +246,7 @@
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.HomeContents)
+                                    @Html.CheckBoxFor(p => p.HomeContents, new { @class = "addunit" })
                                     @*<input type="checkbox" name="policytype" value="" />*@
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-content-icon.png" class="visible-icon" />
@@ -258,25 +258,23 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgtravel">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Travel"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Travel"))
                                 {
-                                   
-                                    @Html.CheckBoxFor(p => p.Travels, new { @checked = "checked",@id="RLST" })
+                                    @Html.CheckBoxFor(p => p.Travels, new { @checked = "checked", @id = "RLST" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/travel-icon.png" class="visible-icon" />
                                     <img src="~/images/travel-icon-inverse.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Travel</div>
-                                            <script type="text/javascript">
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgtravel").addClass("menuitemshow");
                                                     document.getElementById("RLST").checked = true;
                                                 });
-                                            </script>
-
+                                    </script>
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Travels)
+                                    @Html.CheckBoxFor(p => p.Travels, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/travel-icon.png" class="visible-icon" />
                                     <img src="~/images/travel-icon-inverse.png" class="hidden-icon" />
@@ -287,26 +285,26 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgvaluables">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Valuables"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Valuables"))
                                 {
 
-                                    @Html.CheckBoxFor(p => p.Valuables, new { @checked = "checked" ,@id="RLSV"})
+                                    @Html.CheckBoxFor(p => p.Valuables, new { @checked = "checked", @id = "RLSV" })
                                     @*@Html.HiddenFor(p => p.Valuables, new { value = "True" })*@
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/valueble-icon.png" class="visible-icon" />
                                     <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Valuables</div>
-                                            <script type="text/javascript">
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgvaluables").addClass("menuitemshow");
                                                     document.getElementById("RLSV").checked = true;
                                                 });
-                                            </script>
+                                    </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Valuables)
+                                    @Html.CheckBoxFor(p => p.Valuables, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/valueble-icon.png" class="visible-icon" />
                                     <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
@@ -317,24 +315,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmproperty">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Farm Property"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Farm Property"))
                                 {
-                                    @Html.CheckBoxFor(p => p.FarmProperty, new { @checked = "checked",@id="RLSFarm" })
+                                    @Html.CheckBoxFor(p => p.FarmProperty, new { @checked = "checked", @id = "RLSFarm" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/farm-property-icon.png" class="visible-icon" />
                                     <img src="~/images/farm-property-inv-icon.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Farm Property</div>
-                                        <script type="text/javascript">
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgfarmproperty").addClass("menuitemshow");
                                                     document.getElementById("RLSFarm").checked = true;
                                                 });
-                                        </script>
+                                    </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.FarmProperty)
+                                    @Html.CheckBoxFor(p => p.FarmProperty, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/farm-property-icon.png" class="visible-icon" />
                                     <img src="~/images/farm-property-inv-icon.png" class="hidden-icon" />
@@ -345,7 +343,7 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgliabilities">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Liability"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Liability"))
                                 {
                                     <div>
                                         @Html.CheckBoxFor(p => p.Liability, new { @checked = "checked", @id = "checkLiab" })
@@ -358,7 +356,7 @@
                                                 $(document).ready(function () {
                                                     $(".imgliabilities").addClass("menuitemshow");
                                                     document.getElementById("checkLiab").checked = true;
-                                                   
+
                                                 });
                                         </script>
                                     </div>
@@ -367,7 +365,7 @@
                                 else
                                 {
 
-                                    @Html.CheckBoxFor(p => p.Liability)
+                                    @Html.CheckBoxFor(p => p.Liability, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/liability-icon.png" class="visible-icon" />
                                     <img src="~/images/liability-inverse-icon.png" class="hidden-icon" />
@@ -378,25 +376,25 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgboat">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Boat"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Boat"))
                                 {
-                                  
-                                    @Html.CheckBoxFor(p => p.Boat, new { @checked = "checked" ,@id="RLSBoat"})
+
+                                    @Html.CheckBoxFor(p => p.Boat, new { @checked = "checked", @id = "RLSBoat" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/boat-icon.png" class="visible-icon" />
                                     <img src="~/images/boat-icon-inverse.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Boat</div>
-                                        <script type="text/javascript">
+                                    <div class="checkbox-txt">Boat</div>
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgboat").addClass("menuitemshow");
                                                     document.getElementById("RLSBoat").checked = true;
                                                 });
-                                        </script>
+                                    </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Boat)
+                                    @Html.CheckBoxFor(p => p.Boat, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/boat-icon.png" class="visible-icon" />
                                     <img src="~/images/boat-icon-inverse.png" class="hidden-icon" />
@@ -407,25 +405,25 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmotor">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Motor"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Motor"))
                                 {
-                                    @Html.CheckBoxFor(p => p.Motor, new { @checked = "checked",@id="RLSMotor" })
-                                 
+                                    @Html.CheckBoxFor(p => p.Motor, new { @checked = "checked", @id = "RLSMotor" })
+
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/motor-icon.png" class="visible-icon" />
                                     <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Motors</div>
-                                        <script type="text/javascript">
+                                    <div class="checkbox-txt">Motors</div>
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgmotor").addClass("menuitemshow");
                                                     document.getElementById("RLSMotor").checked = true;
                                                 });
-                                        </script>
+                                    </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Motor)
+                                    @Html.CheckBoxFor(p => p.Motor, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/motor-icon.png" class="visible-icon" />
                                     <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
@@ -436,25 +434,25 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgpet">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Pet"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Pet"))
                                 {
-                                    @Html.CheckBoxFor(p => p.Pet, new { @checked = "checked",@id="Pet" })
-                                
+                                    @Html.CheckBoxFor(p => p.Pet, new { @checked = "checked", @id = "Pet" })
+
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/pet-icon.png" class="visible-icon" />
                                     <img src="~/images/inv-pet-icon.png" class="hidden-icon" />
-                                            <div class="checkbox-txt">Pets</div>
-                                            <script type="text/javascript">
+                                    <div class="checkbox-txt">Pets</div>
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgpet").addClass("menuitemshow");
                                                     document.getElementById("Pet").checked = true;
                                                 });
-                                            </script>
+                                    </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Pet)
+                                    @Html.CheckBoxFor(p => p.Pet, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/pet-icon.png" class="visible-icon" />
                                     <img src="~/images/inv-pet-icon.png" class="hidden-icon" />
@@ -472,39 +470,39 @@
                     <div class="spl-checkbox-btns clearfix">
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmobilefarmpolicy">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Mobile Farm Property"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Mobile Farm Property"))
                                 {
                                     @Html.CheckBoxFor(p => p.MobileFarmProperty, new { @checked = "checked" })
-                                   
+
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/mobile-farm.png" class="visible-icon" />
                                     <img src="~/images/mobile-farm-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Mobile Farm Property</div>
-                                        <script type="text/javascript">
+                                    <div class="checkbox-txt">Mobile Farm Property</div>
+                                    <script type="text/javascript">
                                                 $(document).ready(function () {
                                                     $(".imgmobilefarmpolicy").addClass("menuitemshow");
                                                 });
-                                        </script>
+                                    </script>
 
                                 }
-                                else if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Mobile Farm Property"))
+                                else if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Mobile Farm Property"))
                                 {
                                     @Html.CheckBoxFor(p => p.MobileFarmProperty, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.MobileFarmProperty, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/mobile-farm.png" class="visible-icon" />
                                     <img src="~/images/mobile-farm-inv.png" class="hidden-icon" />
-                                                <div class="checkbox-txt">Mobile Farm Property</div>
-                                                <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgmobilefarmpolicy").addClass("menuitemshow");
-                                                    });
-                                                </script>
+                                    <div class="checkbox-txt">Mobile Farm Property</div>
+                                    <script type="text/javascript">
+                                                $(document).ready(function () {
+                                                    $(".imgmobilefarmpolicy").addClass("menuitemshow");
+                                                });
+                                    </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.MobileFarmProperty)
+                                    @Html.CheckBoxFor(p => p.MobileFarmProperty, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/mobile-farm.png" class="visible-icon" />
                                     <img src="~/images/mobile-farm-inv.png" class="hidden-icon" />
@@ -515,23 +513,23 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfixedfarmpolicy">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Fixed Farm Property"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Fixed Farm Property"))
                                 {
                                     @Html.CheckBoxFor(p => p.FixedFarmProperty, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.FixedFarmProperty, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/fixed-farm.png" class="visible-icon" />
-                                        <img src="~/images/fixed-farm-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Fixed Farm Property</div>
+                                    <img src="~/images/fixed-farm-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Fixed Farm Property</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfixedfarmpolicy").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfixedfarmpolicy").addClass("menuitemshow");
+                                                });
                                         </script>
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.FixedFarmProperty)
+                                    @Html.CheckBoxFor(p => p.FixedFarmProperty, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/fixed-farm.png" class="visible-icon" />
                                     <img src="~/images/fixed-farm-inv.png" class="hidden-icon" />
@@ -541,23 +539,23 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarminteruption">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Farm Interuption"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Farm Interuption"))
                                 {
                                     @Html.CheckBoxFor(p => p.FarmInteruption, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.FarmInteruption, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/farm-interption.png" class="visible-icon" />
-                                        <img src="~/images/farm-interption-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Farm Interruption</div>
+                                    <img src="~/images/farm-interption-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Farm Interruption</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarminteruption").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarminteruption").addClass("menuitemshow");
+                                                });
                                         </script>
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.FarmInteruption)
+                                    @Html.CheckBoxFor(p => p.FarmInteruption, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/farm-interption.png" class="visible-icon" />
                                     <img src="~/images/farm-interption-inv.png" class="hidden-icon" />
@@ -567,24 +565,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmliability">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Farm Liability"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Farm Liability"))
                                 {
                                     @Html.CheckBoxFor(p => p.FarmLiability, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.FarmLiability, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/farm-liability.png" class="visible-icon" />
-                                        <img src="~/images/farm-liability-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Farm Liability</div>
+                                    <img src="~/images/farm-liability-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Farm Liability</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmliability").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmliability").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.FarmLiability)
+                                    @Html.CheckBoxFor(p => p.FarmLiability, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/farm-liability.png" class="visible-icon" />
                                     <img src="~/images/farm-liability-inv.png" class="hidden-icon" />
@@ -595,24 +593,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgburglary">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Burglary"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Burglary"))
                                 {
                                     @Html.CheckBoxFor(p => p.Burglary, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.Burglary, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/burglary.png" class="visible-icon" />
-                                        <img src="~/images/burglary-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Burglary</div>
+                                    <img src="~/images/burglary-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Burglary</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgburglary").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgburglary").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Burglary)
+                                    @Html.CheckBoxFor(p => p.Burglary, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/burglary.png" class="visible-icon" />
                                     <img src="~/images/burglary-inv.png" class="hidden-icon" />
@@ -623,7 +621,7 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgelectronics">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Electronics"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Electronics"))
                                 {
                                     @Html.CheckBoxFor(p => p.Electronics, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.Electronics, new { value = "True" })
@@ -632,15 +630,15 @@
                                     <img src="~/images/electroics-inv.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Electronics</div>
                                     <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgelectronics").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgelectronics").addClass("menuitemshow");
+                                                });
                                     </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Electronics)
+                                    @Html.CheckBoxFor(p => p.Electronics, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/electroics.png" class="visible-icon" />
                                     <img src="~/images/electroics-inv.png" class="hidden-icon" />
@@ -651,24 +649,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmoney">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Money"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Money"))
                                 {
                                     @Html.CheckBoxFor(p => p.Money, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.Money, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/insurance.png" class="visible-icon" />
-                                        <img src="~/images/insurance-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Money</div>
+                                    <img src="~/images/insurance-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Money</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgmoney").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgmoney").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Money)
+                                    @Html.CheckBoxFor(p => p.Money, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/insurance.png" class="visible-icon" />
                                     <img src="~/images/insurance-inv.png" class="hidden-icon" />
@@ -679,24 +677,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgtransit">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Transit"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Transit"))
                                 {
                                     @Html.CheckBoxFor(p => p.Transit, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.Transit, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/transit.png" class="visible-icon" />
-                                        <img src="~/images/transit-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Transit</div>
+                                    <img src="~/images/transit-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Transit</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgtransit").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgtransit").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Transit)
+                                    @Html.CheckBoxFor(p => p.Transit, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/transit.png" class="visible-icon" />
                                     <img src="~/images/transit-inv.png" class="hidden-icon" />
@@ -707,24 +705,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmvaluables">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Valuables"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Valuables"))
                                 {
                                     @Html.CheckBoxFor(p => p.ValuablesFarm, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.ValuablesFarm, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/valueble-icon.png" class="visible-icon" />
-                                        <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Valuables</div>
+                                    <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Valuables</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmvaluables").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmvaluables").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.ValuablesFarm)
+                                    @Html.CheckBoxFor(p => p.ValuablesFarm, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/valueble-icon.png" class="visible-icon" />
                                     <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
@@ -735,24 +733,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmlivestock">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Live Stock"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "LiveStock"))
                                 {
                                     @Html.CheckBoxFor(p => p.LiveStockFarm, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.LiveStockFarm, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/livestock.png" class="visible-icon" />
-                                        <img src="~/images/livestock-inv.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Livestock</div>
+                                    <img src="~/images/livestock-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Livestock</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmlivestock").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmlivestock").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.LiveStockFarm)
+                                    @Html.CheckBoxFor(p => p.LiveStockFarm, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/livestock.png" class="visible-icon" />
                                     <img src="~/images/livestock-inv.png" class="hidden-icon" />
@@ -763,24 +761,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmpersonalliabilities">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Personal Liabilities"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Personal Liabilities Farm"))
                                 {
                                     @Html.CheckBoxFor(p => p.PersonalLiabilitiesFarm, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.PersonalLiabilitiesFarm, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/personal-liability.png" class="visible-icon" />
-                                            <img src="~/images/personal-liability-inv.png" class="hidden-icon" />
-                                            <div class="checkbox-txt">Personal Liability</div>
+                                    <img src="~/images/personal-liability-inv.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Personal Liability</div>
                                             <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmpersonalliabilities").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmpersonalliabilities").addClass("menuitemshow");
+                                                });
                                             </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.PersonalLiabilitiesFarm)
+                                    @Html.CheckBoxFor(p => p.PersonalLiabilitiesFarm, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/personal-liability.png" class="visible-icon" />
                                     <img src="~/images/personal-liability-inv.png" class="hidden-icon" />
@@ -791,24 +789,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmhomebuilding">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Home Building"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Home Building"))
                                 {
                                     @Html.CheckBoxFor(p => p.HomeBuildingFarm, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.HomeBuildingFarm, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-bulding-icon.png" class="visible-icon" />
-                                        <img src="~/images/home-bulding-reverse-icon.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Home Building</div>
+                                    <img src="~/images/home-bulding-reverse-icon.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Home Building</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmhomebuilding").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmhomebuilding").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.HomeBuildingFarm)
+                                    @Html.CheckBoxFor(p => p.HomeBuildingFarm, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-bulding-icon.png" class="visible-icon" />
                                     <img src="~/images/home-bulding-reverse-icon.png" class="hidden-icon" />
@@ -819,24 +817,24 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmhomecontent">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Home Content"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Home Content"))
                                 {
                                     @Html.CheckBoxFor(p => p.HomeContent, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.HomeContent, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-content-icon.png" class="visible-icon" />
-                                        <img src="~/images/home-content-icon-inverse.png" class="hidden-icon" />
-                                        <div class="checkbox-txt">Home Content</div>
+                                    <img src="~/images/home-content-icon-inverse.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Home Content</div>
                                         <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmhomecontent").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmhomecontent").addClass("menuitemshow");
+                                                });
                                         </script>
 
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.HomeContent)
+                                    @Html.CheckBoxFor(p => p.HomeContent, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/home-content-icon.png" class="visible-icon" />
                                     <img src="~/images/home-content-icon-inverse.png" class="hidden-icon" />
@@ -847,7 +845,7 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmmechinery">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Machinery"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Machinery"))
                                 {
                                     @Html.CheckBoxFor(p => p.Machinery, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.Machinery, new { value = "True" })
@@ -856,48 +854,43 @@
                                     <img src="~/images/machinery-inv.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Machinery</div>
                                     <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgfarmmechinery").addClass("menuitemshow");
-                                                    });
+                                                $(document).ready(function () {
+                                                    $(".imgfarmmechinery").addClass("menuitemshow");
+                                                });
                                     </script>
-
                                 }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.Machinery)
+                                    @Html.CheckBoxFor(p => p.Machinery, new { @class = "addunit" })
                                     <img src="~images/tick.png" class="tick" />
                                     <img src="~/images/machinery.png" class="visible-icon" />
                                     <img src="~/images/machinery-inv.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Machinery</div>
-
                                 }
                             </div>
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmotorfarm">
-                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.Name == "Motor"))
+                                @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Exists(p => p.PolicyInclusions == "Motor"))
                                 {
                                     @Html.CheckBoxFor(p => p.MotorFarm, new { @checked = "checked" })
                                     @Html.HiddenFor(p => p.MotorFarm, new { value = "True" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/motor-icon.png" class="visible-icon" />
-                                            <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
-                                            <div class="checkbox-txt">Motor</div>
+                                    <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
+                                    <div class="checkbox-txt">Motor</div>
                                             <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $(".imgmotorfarm").addClass("menuitemshow");
-                                                    });
-                                            </script>
-
-                                }
+                                                $(document).ready(function () {
+                                                    $(".imgmotorfarm").addClass("menuitemshow");
+                                                });
+                                            </script>                                }
                                 else
                                 {
-                                    @Html.CheckBoxFor(p => p.MotorFarm)
+                                    @Html.CheckBoxFor(p => p.MotorFarm, new { @class = "addunit" })
                                     <img src="~/images/tick.png" class="tick" />
                                     <img src="~/images/motor-icon.png" class="visible-icon" />
                                     <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
                                     <div class="checkbox-txt">Motor</div>
-
                                 }
                             </div>
                         </label>
@@ -906,7 +899,6 @@
                     </div>
                     <div class="col-md-9 col-sm-9 col-xs-12 selcttext">* Fixed Farm Property needs to be selected to proceed.You may also select other covers according to your needs.</div>
                 }
-
             }
             else
             {
@@ -917,7 +909,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imghome">
 
-                                @Html.CheckBoxFor(p => p.HomeBuilding)
+                                @Html.CheckBoxFor(p => p.HomeBuilding, new { @class = "addunit" })
                                 @*<input type="checkbox" name="policytype" value="" />*@
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/home-bulding-icon.png" class="visible-icon" />
@@ -929,7 +921,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imghomecontent">
 
-                                @Html.CheckBoxFor(p => p.HomeContents)
+                                @Html.CheckBoxFor(p => p.HomeContents, new { @class = "addunit" })
                                 @*<input type="checkbox" name="policytype" value="" />*@
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/home-content-icon.png" class="visible-icon" />
@@ -941,7 +933,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgtravel">
 
-                                @Html.CheckBoxFor(p => p.Travels)
+                                @Html.CheckBoxFor(p => p.Travels, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/travel-icon.png" class="visible-icon" />
                                 <img src="~/images/travel-icon-inverse.png" class="hidden-icon" />
@@ -951,7 +943,7 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgvaluables">
-                                @Html.CheckBoxFor(p => p.Valuables)
+                                @Html.CheckBoxFor(p => p.Valuables, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/valueble-icon.png" class="visible-icon" />
                                 <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
@@ -961,7 +953,7 @@
                         </label>
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmproperty">
-                                @Html.CheckBoxFor(p => p.FarmProperty)
+                                @Html.CheckBoxFor(p => p.FarmProperty, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/farm-property-icon.png" class="visible-icon" />
                                 <img src="~/images/farm-property-inv-icon.png" class="hidden-icon" />
@@ -972,7 +964,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgliabilities">
 
-                                @Html.CheckBoxFor(p => p.Liability)
+                                @Html.CheckBoxFor(p => p.Liability, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/liability-icon.png" class="visible-icon" />
                                 <img src="~/images/liability-inverse-icon.png" class="hidden-icon" />
@@ -983,7 +975,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgboat">
 
-                                @Html.CheckBoxFor(p => p.Boat)
+                                @Html.CheckBoxFor(p => p.Boat, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/boat-icon.png" class="visible-icon" />
                                 <img src="~/images/boat-icon-inverse.png" class="hidden-icon" />
@@ -994,7 +986,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmotor">
 
-                                @Html.CheckBoxFor(p => p.Motor)
+                                @Html.CheckBoxFor(p => p.Motor, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/motor-icon.png" class="visible-icon" />
                                 <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
@@ -1005,7 +997,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgpet">
 
-                                @Html.CheckBoxFor(p => p.Pet)
+                                @Html.CheckBoxFor(p => p.Pet, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/pet-icon.png" class="visible-icon" />
                                 <img src="~/images/inv-pet-icon.png" class="hidden-icon" />
@@ -1023,7 +1015,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmobilefarmpolicy">
 
-                                @Html.CheckBoxFor(p => p.MobileFarmProperty)
+                                @Html.CheckBoxFor(p => p.MobileFarmProperty, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/mobile-farm.png" class="visible-icon" />
                                 <img src="~/images/mobile-farm-inv.png" class="hidden-icon" />
@@ -1034,8 +1026,8 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfixedfarmpolicy">
 
-                                @Html.CheckBoxFor(p => p.FixedFarmProperty)
-                                <img src="~/images/tick.png" class="tick" />
+                                @Html.CheckBoxFor(p => p.FixedFarmProperty, new { @class = "addunit" })
+                                < img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/fixed-farm.png" class="visible-icon" />
                                 <img src="~/images/fixed-farm-inv.png" class="hidden-icon" />
                                 <div class="checkbox-txt">Fixed Farm Property</div>
@@ -1045,7 +1037,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarminteruption">
 
-                                @Html.CheckBoxFor(p => p.FarmInteruption)
+                                @Html.CheckBoxFor(p => p.FarmInteruption, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/farm-interption.png" class="visible-icon" />
                                 <img src="~/images/farm-interption-inv.png" class="hidden-icon" />
@@ -1056,7 +1048,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmliability">
 
-                                @Html.CheckBoxFor(p => p.FarmLiability)
+                                @Html.CheckBoxFor(p => p.FarmLiability, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/farm-liability.png" class="visible-icon" />
                                 <img src="~/images/farm-liability-inv.png" class="hidden-icon" />
@@ -1067,7 +1059,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgburglary">
 
-                                @Html.CheckBoxFor(p => p.Burglary)
+                                @Html.CheckBoxFor(p => p.Burglary, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/burglary.png" class="visible-icon" />
                                 <img src="~/images/burglary-inv.png" class="hidden-icon" />
@@ -1078,7 +1070,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgelectronics">
 
-                                @Html.CheckBoxFor(p => p.Electronics)
+                                @Html.CheckBoxFor(p => p.Electronics, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/electroics.png" class="visible-icon" />
                                 <img src="~/images/electroics-inv.png" class="hidden-icon" />
@@ -1089,7 +1081,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmoney">
 
-                                @Html.CheckBoxFor(p => p.Money)
+                                @Html.CheckBoxFor(p => p.Money, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/insurance.png" class="visible-icon" />
                                 <img src="~/images/insurance-inv.png" class="hidden-icon" />
@@ -1100,7 +1092,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgtransit">
 
-                                @Html.CheckBoxFor(p => p.Transit)
+                                @Html.CheckBoxFor(p => p.Transit, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/transit.png" class="visible-icon" />
                                 <img src="~/images/transit-inv.png" class="hidden-icon" />
@@ -1111,7 +1103,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmvaluables">
 
-                                @Html.CheckBoxFor(p => p.ValuablesFarm)
+                                @Html.CheckBoxFor(p => p.ValuablesFarm, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/valueble-icon.png" class="visible-icon" />
                                 <img src="~/images/valuble-inversion-iocn.png" class="hidden-icon" />
@@ -1122,7 +1114,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmlivestock">
 
-                                @Html.CheckBoxFor(p => p.LiveStockFarm)
+                                @Html.CheckBoxFor(p => p.LiveStockFarm, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/livestock.png" class="visible-icon" />
                                 <img src="~/images/livestock-inv.png" class="hidden-icon" />
@@ -1133,7 +1125,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmpersonalliabilities">
 
-                                @Html.CheckBoxFor(p => p.PersonalLiabilitiesFarm)
+                                @Html.CheckBoxFor(p => p.PersonalLiabilitiesFarm, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/personal-liability.png" class="visible-icon" />
                                 <img src="~/images/personal-liability-inv.png" class="hidden-icon" />
@@ -1144,7 +1136,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmhomebuilding">
 
-                                @Html.CheckBoxFor(p => p.HomeBuildingFarm)
+                                @Html.CheckBoxFor(p => p.HomeBuildingFarm, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/home-bulding-icon.png" class="visible-icon" />
                                 <img src="~/images/home-bulding-reverse-icon.png" class="hidden-icon" />
@@ -1155,7 +1147,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmhomecontent">
 
-                                @Html.CheckBoxFor(p => p.HomeContent)
+                                @Html.CheckBoxFor(p => p.HomeContent, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/home-content-icon.png" class="visible-icon" />
                                 <img src="~/images/home-content-icon-inverse.png" class="hidden-icon" />
@@ -1166,7 +1158,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgfarmmechinery">
 
-                                @Html.CheckBoxFor(p => p.Machinery)
+                                @Html.CheckBoxFor(p => p.Machinery, new { @class = "addunit" })
                                 <img src="~images/tick.png" class="tick" />
                                 <img src="~/images/machinery.png" class="visible-icon" />
                                 <img src="~/images/machinery-inv.png" class="hidden-icon" />
@@ -1177,7 +1169,7 @@
                         <label class="col-lg-3 col-md-3 col-sm-3 col-xs-6">
                             <div class="checkbox-img imgmotorfarm">
 
-                                @Html.CheckBoxFor(p => p.MotorFarm)
+                                @Html.CheckBoxFor(p => p.MotorFarm, new { @class = "addunit" })
                                 <img src="~/images/tick.png" class="tick" />
                                 <img src="~/images/motor-icon.png" class="visible-icon" />
                                 <img src="~/images/motor-icon-inverse.png" class="hidden-icon" />
@@ -1201,22 +1193,57 @@
     }
 </div>
 <script type="text/javascript">
-                                                    $(document).ready(function () {
-                                                        $('input:checkbox').change(function () {
-                                                            if ($(this).is(":checked")) {
-                                                                $(this).parent().addClass("menuitemshow");
-                                                            } else {
-                                                                $(this).parent().removeClass("menuitemshow");
-                                                            }
-                                                        });
-                                                    });
+                                                //$(".addunit").click(function () {
+                                                //    var unit = null;
+                                                //    var elementname = null;
+                                                //    if ($(this).hasClass("HomeBuilding"))
+                                                //        unit = "Home Buildings";
+                                                //    else if ($(this).hasClass("HomeContent"))
+                                                //        unit = "Home Content";
+                                                //    else if ($(this).hasClass("Valuables"))
+                                                //        unit = "Valuables";
+                                                //    else if ($(this).hasClass("FarmProperty"))
+                                                //        unit = "Farm Property";
+                                                //    else if ($(this).hasClass("Travels"))
+                                                //        unit = "Travels";
+                                                //    else if ($(this).hasClass("Liability"))
+                                                //        unit = "Liability";
+                                                //    else if ($(this).hasClass("Boat"))
+                                                //        unit = "Boat";
+                                                //    else if ($(this).hasClass("Pets"))
+                                                //        unit = "Pets";
+                                                //    else if ($(this).hasClass("Motors"))
+                                                //        unit = "Motors";
+                                                //    $.ajax({
+                                                //        url: '/Customer/AddUnit',
+                                                //        type: "POST",
+                                                //        crossOrigin: true,
+                                                //        data: { unit: unit },
+                                                //        success: function (data) {
+                                                //            if (data.status == "Success") {
 
 
-                                                    function toggle(source) {
-                                                        checkboxes = document.getElementsByName('policytype');
-                                                        for (var i = 0, n = checkboxes.length; i < n; i++) {
-                                                            checkboxes[i].checked = source.checked;
-                                                            $(".checkbox-img").addClass("menuitemshow");
+                                                //            }
+                                                //        }
+                                                //    });
+
+                                                //});
+                                                $(document).ready(function () {
+                                                    $('input:checkbox').change(function () {
+                                                        if ($(this).is(":checked")) {
+                                                            $(this).parent().addClass("menuitemshow");
+                                                        } else {
+                                                            $(this).parent().removeClass("menuitemshow");
                                                         }
+                                                    });
+                                                });
+
+
+                                                function toggle(source) {
+                                                    checkboxes = document.getElementsByName('policytype');
+                                                    for (var i = 0, n = checkboxes.length; i < n; i++) {
+                                                        checkboxes[i].checked = source.checked;
+                                                        $(".checkbox-img").addClass("menuitemshow");
                                                     }
+                                                }
 </script>

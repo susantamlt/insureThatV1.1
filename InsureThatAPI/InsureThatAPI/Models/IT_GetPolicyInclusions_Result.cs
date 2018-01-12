@@ -11,7 +11,7 @@ namespace InsureThatAPI.Models
 {
     using System;
     
-    public partial class usp_GetUnit
+    public partial class IT_GetPolicyInclusions_Result
     {
         public System.DateTime CreatedDate { get; set; }
         public Nullable<System.DateTime> UpdatedDate { get; set; }

@@ -12,12 +12,14 @@ namespace InsureThatAPI.Models
         public int InsureId { get; set; }
         public int? cid { get; set; }
         public int PolicyType { get; set; }
+        public bool Policy { get; set; }
     }
     public class PolicyInclustions
     {
         public int? PolicyType { get; set; }
         public string PolicyInclusions { get; set; }
-        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusionssess { get; set; }
+        public List<IT_GetPolicyInclusions_Result> PolicyInclusion { get; set; }
         public int? CustomerId { get; set; }
         public bool HomeBuilding { get; set; }
         public bool HomeContents { get; set; }
@@ -104,7 +106,11 @@ namespace InsureThatAPI.Models
         //public PolicyDetails PolicyData { get; set; }
         public List<InsuredDetails> InsuredDetails { get; set; }
         //public List<RiskDetails> RiskData { get; set; }
-        //public List<PremiumDetails> PremiumData { get; set; }
+        //public List<PremiumDetails> PremiumData { get; set; }'
+
+        public List<string> IdentifierUpdates { get; set; }
+        public string ReferralList { get; set; }
+        public string UserMessage { get; set; }
         public List<UnitDatas> UnitData { get; set; }
         public string Status { get; set; }
         //public List<string> ErrorMessage { get; set; }
@@ -129,33 +135,73 @@ namespace InsureThatAPI.Models
     {
         public List<PolicyDetails> PolicyListDetails { get; set; }
     }
-    public class ElementDetails{
-        public string apiKey { get; set; }
+    public class ElementDetails
+    {
+        public string ApiKey { get; set; }
         public int ProfileUnId { get; set; }
         public int SectionUnId { get; set; }
         public int ElId { get; set; }
         public int ItId { get; set; }
         public string Value { get; set; }
- 
-}
-    public class ValueData
+        public int PcId { get; set; }
+        public int TrId { get; set; }
+        public List<ValueData> ValueData { get; set; }
+        public List<StateData> StateData { get; set; }
+        public List<RowsourceDatas> RowsourceData { get; set; }
+        public FocusElement FocusElement { get; set; }
+        public string ReferralList { get; set; }
+        public string UserMessage { get; set; }
+        public bool Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+
+
+    }
+    public class FocusElement
     {
         public int ELId { get; set; }
+        public int ItId { get; set; }
+    }
+    public class ValueData
+    {
+        public Elements Element { get; set; }
+        public string Value { get; set; }
+    }
+    public class ValueDatass
+    {
+        public Elementss Element { get; set; }
         public string Value { get; set; }
     }
     public class StateData
     {
-        public int ELId { get; set; }
+        public Elements Element { get; set; }
+        public int State { get; set; }
         public string Value { get; set; }
+    }
+    public class PremiumDetail
+    {
+
+        public string ApiKey { get; set; }
+        public int PcId { get; set; }
+        public int TrId { get; set; }
+      //  public int MyProperty { get; set; }
+        public List<PremiumDetails> PremiumData { get; set; }
+        public float UnderwriterFee { get; set; }
+        public float FeeGst { get; set; }
+        public float InvoiceTotal { get; set; }
+        public bool Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+
     }
     public class ViewEditPolicyDetails
     {
+
         public int? AddressID { get; set; }
         public int CustomerId { get; set; }
         public string PcId { get; set; }
         public string ApiKey { get; set; }
         public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
-        public string PolicyInclusions{ get; set; }
+        public List<IT_GetPolicyInclusions_Result> PolicyInclusionssess { get; set; }
+        public string PolicyInclusions { get; set; }
         public PolicyDetails PolicyData { get; set; }
         public List<InsuredDetails> InsuredDetails { get; set; }
         public List<RiskDetails> RiskData { get; set; }
@@ -165,11 +211,20 @@ namespace InsureThatAPI.Models
         public SectionDatas SectionData { get; set; }
         public ProfileDatas ProfileData { get; set; }
         public string Status { get; set; }
+        public bool SelectedInclusion { get; set; }
         public List<string> ErrorMessage { get; set; }
         public string ReferralList { get; set; }
 
         public List<string> ReferralFullList { get; set; }
         public string Reason { get; set; }
+        public List<string> IdentifierUpdates { get; set; }
+        public List<ValueData> ValueData { get; set; }
+        public List<StateData> StateData { get; set; }
+        public ElementDetails ElementData { get; set; }
+        public string UserMessage { get; set; }
+
+
+
     }
     public class AddressData
     {
@@ -178,18 +233,18 @@ namespace InsureThatAPI.Models
         public string Suburb { get; set; }
         public string State { get; set; }
         public int Postcode { get; set; }
-        
-        
-}
+
+
+    }
     public class UnitDatas
     {
         public string Component { get; set; }
-        public string Name{ get; set; }
+        public string Name { get; set; }
         public int UnId { get; set; }
         public int? UnitNumber { get; set; }
         public string UnitStatus { get; set; }
         public int? ProfileUnId { get; set; }
-     }
+    }
     public class ViewEditPolicyDetailss
     {
         public int CustomerId { get; set; }

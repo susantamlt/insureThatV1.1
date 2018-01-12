@@ -1,0 +1,249 @@
+﻿@model InsureThatAPI.Models.MCCoverDetails
+@{
+    ViewBag.Title = "CoverDetails";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var urlIdSuccess = new string[] { };
+    var urlId_Success = Session["completionTrackMC"].ToString();
+    if (urlId_Success != null)
+    {
+        urlIdSuccess = urlId_Success.Split('-');
+    }
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>RURAL LIFESTYLE POLICY</span> / MOTOR</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="mt-40 mb-40 row"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
+            <li>
+                <a href="@Url.Action("VehicleDescription", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[0] == "1") { <text> class="success" </text> }>Vehicle Description</a>
+            </li>
+            <li>
+                <a href="@Url.Action("AdditionalDetails", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1") { <text> class="success" </text> }>Additional Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("Drivers", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text> }>Drivers</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" class="active">Cover Details</a>
+            </li>
+            <li>
+                <a href="@Url.Action("OptionalExtrasExcesses", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[4] == "1") { <text> class="success" </text> }>Optional Extras and Excesses</a>
+            </li>
+            <li>
+                <a href="@Url.Action("InterestedParties", "MotorCover")" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[5] == "1") { <text> class="success" </text> }>Interested Parties</a>
+            </li>
+        </ul>
+        <div>
+            <div id="errorContainer"></div>
+            @using (Ajax.BeginForm("CoverDetails", "MotorCover", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
+            {
+                HttpMethod = "POST"
+            }, new { @id = "coverDetails", @name = "coverDetails" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(p => p.completionTrackMC, new { @id = "completiontrack" })
+                @Html.HiddenFor(p => p.CustomerId, new { @id = "customerId" })
+                <div id="ptab4">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>COVER DETAILS</h2></div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Tell us about the cover you require</p>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CoveroptionObj.Coveroption, '0', new { @id = "comprehensive", @data_eiid = @Model.CoveroptionObj.EiId, @checked = "checked" })<label for="radio1"><span><span></span></span>Comprehensive Cover</label></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CoveroptionObj.Coveroption, '1', new { @id = "tppd", @data_eiid = @Model.CoveroptionObj.EiId })<label for="radio1"><span><span></span></span>Third Party Property Damage, Fire &amp; Theft </label></div>
+                            <div class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CoveroptionObj.Coveroption, '2', new { @id = "tppdonly", @data_eiid = @Model.CoveroptionObj.EiId })<label for="radio1"><span><span></span></span>Third Party Property Damage Only </label></div>
+                            @Html.HiddenFor(p => p.CoveroptionObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Cover Type</p>
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CovertypeObj.Covertype, '0', new { @id = "market", @data_eiid = @Model.CovertypeObj.EiId, @checked = "checked" })<label for="radio1"><span><span></span></span>Market Value</label></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CovertypeObj.Covertype, '1', new { @id = "agreed", @data_eiid = @Model.CovertypeObj.EiId })<label for="radio1"><span><span></span></span>Agreed Value</label></div>
+                            @Html.HiddenFor(p => p.CovertypeObj.EiId)
+                        </div>
+                    </div>
+                    <h5>Comprehensive Cover / Fire and Theft</h5>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Market Value</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.MaxMarvalObj.Marketvalue, new { @class = "form-control form-border-bottom", @id = "marketvalue", @data_eiid = @Model.MaxMarvalObj.EiId })
+                            @Html.HiddenFor(p => p.MaxMarvalObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Cover for Caravan annex</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.CaravanannexObj.Annex, new { @class = "form-control form-border-bottom", @id = "rgstnumber", @data_eiid = @Model.CaravanannexObj.EiId })
+                            @Html.HiddenFor(p => p.CaravanannexObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Cover for unspecified items</p></div>
+                        <div class="col-md-4">
+                            @Html.TextBoxFor(p => p.UnspecifieditemsObj.Item, new { @class = "form-control form-border-bottom", @id = "item", @data_eiid = @Model.UnspecifieditemsObj.EiId })
+                            @Html.HiddenFor(p => p.UnspecifieditemsObj.EiId)
+                        </div>
+                        <div class="col-md-4"><p class="mini-text">(maximum payment per item is $500)</p></div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>Does the Vehicle have any non-standard accessories that You wish to insure?</p></div>
+                        <div class="col-md-6">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.AccessoriesObj.Accessories, '1', new { @id = "renewalyes", @data_eiid = @Model.AccessoriesObj.EiId, @checked = "checked" })<label for="radio1"><span><span></span></span>Yes</label></div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.AccessoriesObj.Accessories, '0', new { @id = "renewalno", @data_eiid = @Model.AccessoriesObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                        </div>
+                        @Html.HiddenFor(p => p.AccessoriesObj.EiId)
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Has Vehicle been modified?</p></div>
+                        <div class="col-md-8">
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                @Html.RadioButtonFor(p => p.Vehiclemodified, '1', new { @id = "vehicle1", @checked = "checked" })<label for="radio1"><span><span></span></span>Yes</label>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                @Html.RadioButtonFor(p => p.Vehiclemodified, '0', new { @id = "vehicle2"})<label for="radio1"><span><span></span></span>No</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-12 table-8">
+                            <table class="table" style=" width: 100%; ">
+                                <tr>
+                                    <th class="space_left">Description</th>
+                                    <th class="space_left">Replacement Value</th>
+                                    <th class="space_right">&nbsp;</th>
+                                </tr>
+                                <tr id="tname-tr-1">
+                                    <td class="no-border">
+                                        @Html.DropDownListFor(p => p.DescriptionObj.Description, @Model.DescriptionObj.DescriptionList, new { @class = "form-control form-border-bottom", @id = "description1", @data_eiid = @Model.DescriptionObj.EiId })
+                                        @Html.HiddenFor(p => p.DescriptionObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.SumnsuredObj.Suminsured, new { @class = "form-control form-border-bottom suminsured", @id = "suminsured1", @data_eiid = @Model.SumnsuredObj.EiId })
+                                        @Html.HiddenFor(p => p.SumnsuredObj.EiId)
+                                    </td>
+                                    <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Total cover for additional items</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.tCAitems, new { @class = "form-control form-border-bottom", @id = "totalcover" })
+                        </div>
+                    </div>
+                    <h5>Third Party Property Damage</h5>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>Limit of Indemnity</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.LimitindemnityObj.Indemnity, new { @class = "form-control form-border-bottom", @id = "indemnity", @data_eiid = @Model.LimitindemnityObj.EiId })
+                            @Html.HiddenFor(p => p.LimitindemnityObj.EiId)
+                        </div>
+                    </div>
+                    <h5>No Claim Rating</h5>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-3 col-sm-12 col-xs-12 policy-loc-row">Rating</p>
+                        <div class="col-md-9 col-sm-12 col-xs-12">
+                            <div class="col-md-2 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RatingObj.Rating, '1', new { @id = "buildingtype", @data_eiid = @Model.RatingObj.EiId, @checked = "checked" })<label for="radio1"><span><span></span></span>1</label></div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RatingObj.Rating, '2', new { @id = "holidayhome", @data_eiid = @Model.RatingObj.EiId })<label for="radio1"><span><span></span></span>2</label></div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RatingObj.Rating, '3', new { @id = "other", @data_eiid = @Model.RatingObj.EiId })<label for="radio1"><span><span></span></span>3</label></div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RatingObj.Rating, '4', new { @id = "buildingtype1", @data_eiid = @Model.RatingObj.EiId })<label for="radio1"><span><span></span></span>4</label></div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RatingObj.Rating, '5', new { @id = "holidayhome1", @data_eiid = @Model.RatingObj.EiId })<label for="radio1"><span><span></span></span>5</label></div>
+                            <div class="col-md-2 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RatingObj.Rating, '6', new { @id = "other1", @data_eiid = @Model.RatingObj.EiId })<label for="radio1"><span><span></span></span>6</label></div>
+                            @Html.HiddenFor(p => p.LimitindemnityObj.EiId)
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-4"><p>No Claim Bonus</p></div>
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(p => p.NoclaimbonusObj.Bonus, new { @class = "form-control form-border-bottom", @id = "bonus", @data_eiid = @Model.NoclaimbonusObj.EiId })
+                            @Html.HiddenFor(p => p.NoclaimbonusObj.EiId)
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right">
+                        <a href="@Url.Action("Drivers", "MotorCover")" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button class="button-3d nomargin tab-linker quot-next-btn" rel="3">Next</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="policy-loc-row">
+            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+            </script>
+            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <input type="submit" name="newcover" value="New Cover">
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).on('keyup', '.suminsured', function () {
+        var sum = 0;
+        $(".suminsured").each(function () {
+            sum += +$(this).val();
+        });
+        $("#totalcover").val(sum);
+    });
+    function tnameAdd(id) {
+        var countId = id + 1;
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom", @id = "description", @data_eiid = @Model.DescriptionObj.EiId })@Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SumnsuredObj.Suminsured, new { @class = "form-control form-border-bottom suminsured", @id = "suminsured", @data_eiid = @Model.SumnsuredObj.EiId })@Html.HiddenFor(p => p.SumnsuredObj.EiId)</td><td class="no-border" id="tname-'+countId+'"><a href="javascript:void(0)" onclick="tnameAdd('+countId+')" class="button-3d">+</a></td></tr>';
+        $.ajax({
+            url: '/motorcover/motorajaxcontent',
+            type: 'POST',
+            data: {"id":countId,"content":"coverDetails" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tname-" + id).html(replaceA);
+                    $("#tname-tr-" + id).after(html);
+                    $("#tname-tr-" + countId + ' #description').html(html1);
+                    $("#tname-tr-" + countId + ' #description').attr('id', 'description' + countId);
+                    $("#tname-tr-" + countId + ' #suminsured').attr('id', 'suminsured' + countId);
+                }
+            }
+        });
+    }
+    function tnameRemove(id) {
+        $("#tname-tr-" + id).remove();
+        var sum = 0;
+        $(".suminsured").each(function () {
+            sum += +$(this).val();
+        });
+        $("#totalcover").val(sum);
+    }
+</script>

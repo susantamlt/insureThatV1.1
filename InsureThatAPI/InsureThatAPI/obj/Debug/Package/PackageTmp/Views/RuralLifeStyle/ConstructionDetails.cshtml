@@ -9,7 +9,6 @@
         urlIdSuccess = urlId_Success.Split('-');
     }
     //var ApiKey = Session["apiKey"].ToString();
-
 }
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
@@ -28,7 +27,6 @@
             <li>
                 <a href="@Url.Action("OccupancyDetails", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1") { <text> class="success" </text>   }>Occupancy Details</a>
             </li>
-
             <li>
                 <a href="@Url.Action("InterestedParties", "RuralLifeStyle",new {cid=@Model.CustomerId })" @if (urlIdSuccess != null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1") { <text> class="success" </text>   }>Interested Parties</a>
             </li>
@@ -52,11 +50,11 @@
                         @Html.HiddenFor(p => p.ApiKey, new { @class = "apisecret" })
                         <p class="col-md-6 col-sm-6 col-xs-12 mt-5">What is external walls made of</p>
                         <p class="col-md-6 col-sm-6 col-xs-12 text-right">
-                            @Html.DropDownListFor(p => p.ExtwallsmadeObj.Extwallsmade, @Model.ExtwallsmadeObj.ExtwallsmadeList, new { @class = "form-control form-border-bottom select2cd commondataselection", @data_eiid = @Model.ExtwallsmadeObj.EiId, @id = "extwallsmade" })
+                            @Html.DropDownListFor(p => p.ExtwallsmadeObj.Extwallsmade, @Model.ExtwallsmadeObj.ExtwallsmadeList, new { @class = "form-control form-border-bottom select2cd commondataselection", @data_eiid = @Model.ExtwallsmadeObj.EiId, @id = "60029" })
                             @Html.HiddenFor(p => p.ExtwallsmadeObj.EiId)
                         </p>
                     </div>
-                    <div class="mt-10 mb-10 col-md-12" id="other-external-wall"  style="display: none;">
+                    <div class="mt-10 mb-10 col-md-12" id="other-external-wall 60031"  style="display: none;">
                         <p class="col-md-6 col-sm-6 col-xs-6 mt-5">Describe external walls </p>
                         <p class="col-md-6 col-sm-6 col-xs-6 text-right">
                             @Html.TextBoxFor(p => p.DescribeexternalwallsObj.Describeexternalwall, new { @class = "form-control form-border-bottom commondataselection", @data_eiid = @Model.DescribeexternalwallsObj.EiId,@id="descrbExtrnal" })
@@ -218,7 +216,35 @@
     var apival = $(".apisecret").val();
   
     $(document).ready(function () {
+        $("#60029").change(function () {          
+            var Value = this.value;
+            //alert(Value);
+            var EIId = $("#60029").data('eiid');
+            //alert(EIId);
+            if (Value != '' && EIId != '') {
+                $.ajax({
+                    url: '/Customer/ElementDetails',
+                    type: "POST",
+                    crossOrigin: true,
+                    data: { "PrId": "1029", "ElId": EIId, "Value":Value, "ItId": "0" },
+                    success: function (data) {
+                        if (data.valuedata != null && data.valuedata.count>0)
+                        {
+                            var valuedata = data.valuedata;
+                            if (valuedata != '' && valuedata != null) {
+                                $.each(valuedata, function (index, value) {
+                                    var splittedvalueElement = value.split('~');
+                                  //  if (splitteddataFocusElement[0] == splitteddataElement[0]) {
+                                        alert(splittedvalueElement[1]);
+                                    //}
+                                });
+                            }              
+                        }
+                    }
+                });
+            }
 
+        });
         //$("#extwallsmade").change(function ()
 
 
@@ -273,42 +299,42 @@
                 }              
             }          
         }
-        $("#extwallsmade").change(function () {
-            var value = this.value;
-            var EiId = $("#extwallsmade").data('eiid');
-            if (value != '' && EiId != '') {
+        //$("#extwallsmade").change(function () {
+        //    var value = this.value;
+        //    var EiId = $("#extwallsmade").data('eiid');
+        //    if (value != '' && EiId != '') {
 
-            } else {
-                return false;
-            }
-            //var dataToSend = {
-            //    "apiKey": apival,"ProfileUnId": 1,"SectionUnId": 2,"ElId": EiId,"ItId": 0,"Value": value
-            //};  
-            alert(apival);
-            alert(EiId);
-            alert(value);
-            $.ajax({
-                type: "POST",
-                crossOrigin: true,
-                url: "https://api.insurethat.com.au/Api/ElementDetails",
-                data: { "apiKey": apival, "ProfileUnId": 1, "SectionUnId": 2, "ElId": EiId, "ItId": 0, "Value": value },
-                ////data: JSON.stringify(dataToSend),
-                success: function (data) {
-                    if (data != '' && data != null)
-                    {
-                        if (data.Element != null && data.Element != '')
-                        {
+        //    } else {
+        //        return false;
+        //    }
+        //    //var dataToSend = {
+        //    //    "apiKey": apival,"ProfileUnId": 1,"SectionUnId": 2,"ElId": EiId,"ItId": 0,"Value": value
+        //    //};  
+        //    alert(apival);
+        //    alert(EiId);
+        //    alert(value);
+        //    $.ajax({
+        //        type: "POST",
+        //        crossOrigin: true,
+        //        url: "https://api.insurethat.com.au/Api/ElementDetails",
+        //        data: { "apiKey": apival, "ProfileUnId": 1, "SectionUnId": 2, "ElId": EiId, "ItId": 0, "Value": value },
+        //        ////data: JSON.stringify(dataToSend),
+        //        success: function (data) {
+        //            if (data != '' && data != null)
+        //            {
+        //                if (data.Element != null && data.Element != '')
+        //                {
 
-                        }
-                    }
-                }
-            });
-            //if (value == "9" || value == "3") {
-            //    $("#other-external-wall").show();
-            //} else {
-            //    $("#other-external-wall").hide();
-            //}
-        });
+        //                }
+        //            }
+        //        }
+        //    });
+        //    //if (value == "9" || value == "3") {
+        //    //    $("#other-external-wall").show();
+        //    //} else {
+        //    //    $("#other-external-wall").hide();
+        //    //}
+        //});
   
     
         $("#roofmades").change(function () {
@@ -369,51 +395,51 @@
 <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
 <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 <script type="text/javascript">
-                $(document).ready(function () {
-                    $("form[name='constructionDetails']").validate({
-                        errorContainer: "#errorContainer",
-                        errorLabelContainer: "#errorContainer",
-                        errorElement: "li",
-                        rules: {
-                            "ExtwallsmadeObj.Extwallsmade": "required",
-                            "DescribeexternalwallsObj.Describeexternalwall": {
-                                required: function (el) {
-                                    if ($("#extwallsmade").val() == 9 || $("#extwallsmade").val() == 3) {
-                                        return true;
-                                    }
-                                },
-                            },
-                            "RoofmadeObj.Roofmade": "required",
-                            "DescribeRoofMadeOffObj.DescribeRoofMade": {
-                                required: function (el) {
-                                    if ($("#roofmades").val() == 6) {
-                                        return true;
-                                    }
-                                },
-                            },
-                            "YearofBuiltObj.YearBuilt": "required",
-                            "WatertightObj.Watertight": "required",
-                            "HeritagelegislationObj.Heritagelegislation": "required",
-                            "UnderconstructionObj.Underconstruction": "required",
-                            "DomesticdwellingObj.Domesticdwelling": "required",
-                        },
-                        messages: {
-                            "ExtwallsmadeObj.Extwallsmade": "Please select external walls made",
-                            "DescribeexternalwallsObj.Describeexternalwall": "Please enter describe external walls",
-                            "RoofmadeObj.Roofmade": "Please select Roof made of",
-                            "DescribeRoofMadeOffObj.DescribeRoofMade": "Please enter describe the Roof",
-                            "YearofBuiltObj.YearBuilt": "Please enter in which year was the home built",
-                            "WatertightObj.Watertight": "Please select home building watertight",
-                            "HeritagelegislationObj.Heritagelegislation": "Please select home building protected under heritage legislation",
-                            "UnderconstructionObj.Underconstruction": "Please select home building under construction",
-                            "DomesticdwellingObj.Domesticdwelling": "Please select home domestic dwelling",
-                        },
-                        onfocusout: function (element) {
-                            this.element(element);
-                        },
-                        submitHandler: function (form) {
-                            form.submit();
-                        }
-                    });
-                });
+                //$(document).ready(function () {
+                //    $("form[name='constructionDetails']").validate({
+                //        errorContainer: "#errorContainer",
+                //        errorLabelContainer: "#errorContainer",
+                //        errorElement: "li",
+                //        rules: {
+                //            "ExtwallsmadeObj.Extwallsmade": "required",
+                //            "DescribeexternalwallsObj.Describeexternalwall": {
+                //                required: function (el) {
+                //                    if ($("#extwallsmade").val() == 9 || $("#extwallsmade").val() == 3) {
+                //                        return true;
+                //                    }
+                //                },
+                //            },
+                //            "RoofmadeObj.Roofmade": "required",
+                //            "DescribeRoofMadeOffObj.DescribeRoofMade": {
+                //                required: function (el) {
+                //                    if ($("#roofmades").val() == 6) {
+                //                        return true;
+                //                    }
+                //                },
+                //            },
+                //            "YearofBuiltObj.YearBuilt": "required",
+                //            "WatertightObj.Watertight": "required",
+                //            "HeritagelegislationObj.Heritagelegislation": "required",
+                //            "UnderconstructionObj.Underconstruction": "required",
+                //            "DomesticdwellingObj.Domesticdwelling": "required",
+                //        },
+                //        messages: {
+                //            "ExtwallsmadeObj.Extwallsmade": "Please select external walls made",
+                //            "DescribeexternalwallsObj.Describeexternalwall": "Please enter describe external walls",
+                //            "RoofmadeObj.Roofmade": "Please select Roof made of",
+                //            "DescribeRoofMadeOffObj.DescribeRoofMade": "Please enter describe the Roof",
+                //            "YearofBuiltObj.YearBuilt": "Please enter in which year was the home built",
+                //            "WatertightObj.Watertight": "Please select home building watertight",
+                //            "HeritagelegislationObj.Heritagelegislation": "Please select home building protected under heritage legislation",
+                //            "UnderconstructionObj.Underconstruction": "Please select home building under construction",
+                //            "DomesticdwellingObj.Domesticdwelling": "Please select home domestic dwelling",
+                //        },
+                //        onfocusout: function (element) {
+                //            this.element(element);
+                //        },
+                //        submitHandler: function (form) {
+                //            form.submit();
+                //        }
+                //    });
+                //});
 </script>
