@@ -176,7 +176,7 @@ namespace InsureThatAPI.CommonMethods
             string loginKey = string.Empty;
             int IyId = 9262;
             string EncrptForLogin = String.Format("{0:ddddyyyyMMdd}", DateTime.UtcNow);
-           // EncrptForLogin = "Thursday20180111";
+           // EncrptForLogin = "Sunday20180114";
             PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
             loginKey = Encrypt(PlainTextEncrpted, EncrptForLogin);
             LoginDetailsRef loginDetailsref = new LoginDetailsRef();
@@ -185,7 +185,6 @@ namespace InsureThatAPI.CommonMethods
             loginDetailsref.ErrorMessage = new List<string>();
             try
             {
-
                 HttpClient hclient = new HttpClient();
                 string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                 hclient.BaseAddress = new Uri(url);

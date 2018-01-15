@@ -47,9 +47,9 @@
             </h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
-            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
-            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         </div>
 
         <div class="mt-50 mb-50"></div>
@@ -81,13 +81,39 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yyyy")</div>
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yyyy")</div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: @Model.PolicyData.CoverPeriod &nbsp;@Model.PolicyData.CoverPeriodUnit</div>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
-                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                    @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+                    {
+                        <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                    }
+                    else
+                    {
+                        <a href="#Bindcovermodel" class="btn-primary btn col-md-12">Bind Policy</a>
+                    }                    
+                </div>
+                <div id="Bindcovermodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="Bindcovermodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Bind Quotation</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>If all the inclustions are completed then you can continue and bind the cover and complete the policy.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" id="bindcover" aria-hidden="true"> Bind </button>
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -650,22 +676,21 @@
                         for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
                         {
                             <div class="policy-loc-row">
-                                @Html.RadioButtonFor(m => m.SelectedInclusion, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
-                                @*<input type="radio" name="location1" class="inclusions"  data_name="@Model.PolicyInclusion[i].Name"/>*@
+                                @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
                                 <script type="text/javascript">
                                     $(document).ready(function () {
-                                        $(this).click(function () {
-                                            var name = $(this).data('name');
-                                            $("#policy-ed-del-wrap1").fadeIn('slow');
+                                        $('.inclusions').click(function () {
+                                            var name = $(this).attr('data-name');
+                                            var nid = $(this).attr('data-nid');
+                                            $('.policy-ed-del-wrapper').hide();
+                                            $("#policy-ed-del-wrap-" + nid).show();
 
                                         });
                                     });
                                 </script>
-                                <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                                    <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId"  data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId"  data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                    <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyInclusion[i].Status" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
                                     <a class="btn color-bk-btn policy-delet-wrap" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" href="javascript:void(0);">Delete</a>
-                                  
-                                    
                                 </div>
                             </div>
                         }
@@ -677,10 +702,14 @@
                                 var selectedcid = $(this).data('cid');
                                 var selectedTrId = $(this).data('trid');
                                 var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                               // var prId = $(this).data('prId');
+                                var prId = 1029;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/EndorsePolicy",
-                                    data: { "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid },
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus},
                                     success: function (responce) {
                                     }
                                 });
@@ -692,6 +721,15 @@
                                     type: "POST",
                                     url: "/Customer/DeleteSection",
                                     data: { "cid": selectedcid, "unid": selectedunid },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                            $("#bindcover").click(function () {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/BindCover",
+                                    data: {},
                                     success: function (responce) {
                                     }
                                 });
@@ -708,21 +746,21 @@
                             <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
                             <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
                             <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
-                            <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>                         
+                            <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
                             <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
                             <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
                         </ul>
                         <script type="text/javascript">
-                                        $(document).on('click', 'ul.unit > li', function () {
-                                            var unitname = $(this).children("a").attr("class");
-                                            $.ajax({
-                                                type: "POST",
-                                                url: "/Customer/AddUnit",
-                                                data: { "unit": unitname },
-                                                success: function (responce) {
-                                                }
-                                            });
-                                        });
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
                         </script>
                     </div>
                 </div>

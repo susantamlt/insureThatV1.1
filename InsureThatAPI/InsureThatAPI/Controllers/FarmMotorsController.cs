@@ -912,33 +912,34 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(MCInterestedParties.CustomerId, Convert.ToInt32(RLSSection.Motor), MCInterestedParties.MCPartyLocationObj.EiId, MCInterestedParties.MCPartyLocationObj.Location.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
                 }
-                if (Session["completionTrackFMC"] != null)
-                {
-                    Session["completionTrackFMC"] = Session["completionTrackFMC"];
-                    MCInterestedParties.completionTrackMC = Session["completionTrackFMC"].ToString();
-                    if (MCInterestedParties.completionTrackMC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MCInterestedParties.completionTrackMC.ToCharArray();
+                //if (Session["completionTrackFMC"] != null)
+                //{
+                //    Session["completionTrackFMC"] = Session["completionTrackFMC"];
+                //    MCInterestedParties.completionTrackMC = Session["completionTrackFMC"].ToString();
+                //    if (MCInterestedParties.completionTrackMC != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = MCInterestedParties.completionTrackMC.ToCharArray();
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 10)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackFMC"] = Completionstring;
-                        MCInterestedParties.completionTrackMC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackFMC"] = "0-0-0-0-0-1"; ;
-                    MCInterestedParties.completionTrackMC = Session["completionTrackFMC"].ToString();
-                }
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 10)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["completionTrackFMC"] = Completionstring;
+                //        MCInterestedParties.completionTrackMC = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["completionTrackFMC"] = "0-0-0-0-0-1"; ;
+                //    MCInterestedParties.completionTrackMC = Session["completionTrackFMC"].ToString();
+                //}
+             //   return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                 return RedirectToAction("VehicleDescription", new { cid = MCInterestedParties.CustomerId });
             }
             return View(MCInterestedParties);

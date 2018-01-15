@@ -885,7 +885,7 @@ namespace InsureThatAPI.Controllers
             {
                 for (int unitselected = 0; unitselected <= PolicyinslustionsList.Count(); unitselected++)
                 {
-                    var policyinclusions = db.IT_InsertPolicyInclusions(cid, PolicyinslustionsList[unitselected], policyid, model.PolicyType, null, null, null).SingleOrDefault();
+                    //var policyinclusions = db.IT_InsertPolicyInclusions(cid, PolicyinslustionsList[unitselected], policyid, model.PolicyType, null, null, null).SingleOrDefault();
 
                 }
                 if (model.PolicyType == (int)PolicyType.RLS)
@@ -904,7 +904,7 @@ namespace InsureThatAPI.Controllers
 
 
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> InsuredList(string PolicyNumber)
+        public async System.Threading.Tasks.Task<ActionResult> InsuredList(int cid,string PolicyNumber)
         {
             if (Session["apiKey"] != null)
             {
@@ -922,7 +922,7 @@ namespace InsureThatAPI.Controllers
                 hclient.BaseAddress = new Uri(url);
                 hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 string ApiKey = string.Empty;
-
+                ViewBag.cid = cid;
                 ApiKey = Session["apiKey"].ToString();
                 HttpResponseMessage Res = await hclient.GetAsync("PolicyHistory?apiKey=" + ApiKey + "&policyNumber=" + PolicyNumber);
                 if (Res.IsSuccessStatusCode)
@@ -1144,7 +1144,7 @@ namespace InsureThatAPI.Controllers
         #endregion
 
         #region AJAX call for Endorsing Policy
-        public async System.Threading.Tasks.Task<ActionResult> EndorsePolicy(string name,int PcId, int cid, int trId, int unid, int profileid)
+        public async System.Threading.Tasks.Task<ActionResult> EndorsePolicy(string name,int PcId, int cid, int trId, int unid, int profileid, string policyStatus, int prId)
         {
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             if (Request.IsAjaxRequest())
@@ -1154,6 +1154,66 @@ namespace InsureThatAPI.Controllers
                     var db = new MasterDataEntities();
                   
                     string apikey = Session["ApiKey"].ToString();
+                    if(policyStatus=="NP"||policyStatus=="AP"||policyStatus=="CP")
+                    {
+
+                    }
+                    else
+                    {
+                        Session["unId"] = unid;
+                        Session["profileId"] = profileid;
+                        if (prId==1029)
+                        {
+                            if (name == "Home")
+                            {
+                                return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId });
+
+                            }
+                            if (name=="Home Building")
+                            {
+                                return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId });
+                            }
+                            else if(name=="Home Content")
+                            {
+                                return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid,PcId=PcId });
+                            }
+                            else if(name=="valuables")
+                            {
+                                return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid,PcId=PcId });
+                            }
+                            else if(name=="Farm Property")
+                            {
+                                return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
+                            }
+                            else if(name=="Liability")
+                            {
+                                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
+                            }
+                            else if(name=="Pets")
+                            {
+                                return RedirectToAction("PetsCover", "Pets", new { cid = cid ,PcId=PcId});
+
+                            }
+                            else if(name=="Motor")
+                            {
+                                return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId });
+                            }
+                            else if(name=="Boat")
+                            {
+                                return RedirectToAction("BoatDetails", "Boat", new { cid = cid ,PcId=PcId});
+
+                            }
+                            else if(name=="Travel")
+                            {
+                                return RedirectToAction("TravelCover", "Travel", new { cid = cid,PcId=PcId });
+                            }
+
+                        }
+                        else if(prId==1021)
+                        {
+
+                        }
+                    }
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -1296,6 +1356,64 @@ namespace InsureThatAPI.Controllers
                         //        message = "Failed to delete section, please try again."
                         //    });
                         //}
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("AgenLogin", "Login");
+                }
+            }
+            return Json(new
+            {
+                Status = false
+            });
+        }
+
+        #endregion
+
+        #region AJAX Action to Bind Quotation
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> BindCover(int cid, int unid)
+        {
+            if (Request.IsAjaxRequest())
+            {
+                if (Session["ApiKey"] != null)
+                {
+                    var db = new MasterDataEntities();
+                    ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+                    HttpClient hclient = new HttpClient();
+                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                    hclient.BaseAddress = new Uri(url);
+                    string apikey = Session["ApiKey"].ToString();
+                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    HttpResponseMessage deleteS = await hclient.GetAsync("PolicyDetails?apiKey="+apikey+"&action=Bind&pcId=&trId=&prId=&InsuredId=&effectiveDate=&reason=");
+                    var EmpResponse = deleteS.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails.Status == "Success")
+                        {
+                            Session["ApiKey"] = unitdetails.ApiKey;
+                        }
+                        //if (unitdetails. == "CP")
+                        //{
+                        //    return Json(new
+                        //    {
+                        //        Status = "Success"
+                        //    });
+                        //}
+                        //else
+                        //{
+                        //    return Json(new
+                        //    {
+                        //        Status = "Failure",
+                        //        message = "Failed to delete section, please try again."
+                        //    });
+                        //}
+                        return Json(new
+                        {
+                            Status = true
+                        });
                     }
                 }
                 else

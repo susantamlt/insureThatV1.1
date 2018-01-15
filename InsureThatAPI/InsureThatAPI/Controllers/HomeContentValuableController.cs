@@ -17,7 +17,7 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult HomeContent(int? cid)
+        public ActionResult HomeContent(int cid,int? PcId)
         {
             if (Session["Policyinclustions"] != null)
             {
@@ -25,7 +25,7 @@ namespace InsureThatAPI.Controllers
                 var Policyincllist = Session["Policyinclustions"] as List<string>;
                 if (Policyincllist != null)
                 {
-                    if (Policyincllist.Contains("HomeContents"))
+                    if (Policyincllist.Contains("Home Contents"))
                     {
 
                     }
@@ -64,13 +64,17 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid,type=1 });
+               // RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid,type=1029 });
             }
             MasterDataEntities db = new MasterDataEntities();
             NewPolicyDetailsClass HCmodel = new NewPolicyDetailsClass();
             List<SelectListItem> HCList = new List<SelectListItem>();
             HCList = HCmodel.excessRate();
             var suburblist = db.IT_Master_GetSuburbList().ToList();
+            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+
+            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Home Buildings");
+
             // var Suburb = new List<KeyValuePair<string, string>>();
             // List<SelectListItem> listItems = new List<SelectListItem>();
             HomeContent HomeContent = new HomeContent();
@@ -129,6 +133,7 @@ namespace InsureThatAPI.Controllers
         {
             NewPolicyDetailsClass HCmodel = new NewPolicyDetailsClass();
             List<SelectListItem> HCList = new List<SelectListItem>();
+           
             HCList = HCmodel.excessRate();
             if (cid != null)
             {

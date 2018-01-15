@@ -11,7 +11,7 @@
     <div class="col_half col_last pull-right">
         <div class="fright">
             <a class="btn color-bk-btn"  href="@Url.Action("NewPolicy", "Customer",new { cid=@ViewBag.cid})">Add Policy</a>
-            <a class="btn color-bk-btn" href="@Url.Action("InsuredList", "Customer",new { PolicyNumber=Model.PolicyData.Select(p=>p.PolicyNumber).First()})">View Insured</a>
+            <a class="btn color-bk-btn" href="@Url.Action("InsuredList", "Customer",new {cid = @ViewBag.cid, PolicyNumber=Model.PolicyData.Select(p=>p.PolicyNumber).First()})">View Insured</a>
 
         </div>
     </div>
@@ -27,11 +27,12 @@
                     <div class="col_full">
                         <div class="row">
                             <div class="col-sm-4 col-xs-6 p-5">
-                                Policy Type: <lable>Rural Lifestyle</lable> @if ((Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1029) || Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1009)
+                                Policy Type: <lable>Rural Lifestyle</lable>
+                                @if (Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1029)
                                 {
                                     <lable>Rural Life Style</lable>
                                 }
-                                else
+                                else if(Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1021)
                                 { <label>Farm</label>
                                 }
                             </div>

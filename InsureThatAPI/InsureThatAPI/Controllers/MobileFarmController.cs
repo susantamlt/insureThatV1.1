@@ -288,32 +288,32 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(MobileFarmContents.CustomerId, Convert.ToInt32(FarmPolicySection.MobileFarmProperty), MobileFarmContents.ExcessFarmContentFPObj.EiId, MobileFarmContents.ExcessFarmContentFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
                 }
-                if (Session["CompletionTrackFPC"] != null)
-                {
-                    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                    MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                    if (MobileFarmContents.CompletionTrackFPC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MobileFarmContents.CompletionTrackFPC.ToCharArray();
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 0)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["CompletionTrackFPC"] = Completionstring;
-                        MobileFarmContents.CompletionTrackFPC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["CompletionTrackFPC"] = "1-0-0-0"; ;
-                    MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                }
+                //if (Session["CompletionTrackFPC"] != null)
+                //{
+                //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
+                //    MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //    if (MobileFarmContents.CompletionTrackFPC != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = MobileFarmContents.CompletionTrackFPC.ToCharArray();
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 0)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["CompletionTrackFPC"] = Completionstring;
+                //        MobileFarmContents.CompletionTrackFPC = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["CompletionTrackFPC"] = "1-0-0-0"; ;
+                //    MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //}
                 return RedirectToAction("FarmMachinery", new { cid = MobileFarmContents.CustomerId });
             }
 
@@ -371,16 +371,16 @@ namespace InsureThatAPI.Controllers
             {
                 MobileFarmMachinery.PolicyInclusions = policyinclusion.PolicyInclusions;
             }
-            if (Session["CompletionTrackFPC"] != null)
-            {
-                Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-            }
-            else
-            {
-                Session["CompletionTrackFPC"] = "0-0-0-0"; ;
-                MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-            }
+            //if (Session["CompletionTrackFPC"] != null)
+            //{
+            //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
+            //    MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+            //}
+            //else
+            //{
+            //    Session["CompletionTrackFPC"] = "0-0-0-0"; ;
+            //    MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+            //}
         
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.MobileFarmProperty), Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
             if (details != null && details.Any())
@@ -473,33 +473,33 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(MobileFarmMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.MobileFarmProperty), MobileFarmMachinery.FPSumOfInsuredFMObj.EiId, MobileFarmMachinery.FPSumOfInsuredFMObj.SuminsuredFM.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
                 }
-                if (Session["CompletionTrackFPC"] != null)
-                {
-                    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                    MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                    if (MobileFarmMachinery.CompletionTrackFPC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MobileFarmMachinery.CompletionTrackFPC.ToCharArray();
+                //if (Session["CompletionTrackFPC"] != null)
+                //{
+                //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
+                //    MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //    if (MobileFarmMachinery.CompletionTrackFPC != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = MobileFarmMachinery.CompletionTrackFPC.ToCharArray();
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 2)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["CompletionTrackFPC"] = Completionstring;
-                        MobileFarmMachinery.CompletionTrackFPC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["CompletionTrackFPC"] = "0-1-0-0"; ;
-                    MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                }
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 2)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["CompletionTrackFPC"] = Completionstring;
+                //        MobileFarmMachinery.CompletionTrackFPC = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["CompletionTrackFPC"] = "0-1-0-0"; ;
+                //    MobileFarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //}
                 return RedirectToAction("Livestock", new { cid = MobileFarmMachinery.CustomerId });
             }
             return View(MobileFarmMachinery);
@@ -638,33 +638,33 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(MobileLiveStock.CustomerId, Convert.ToInt32(FarmPolicySection.MobileFarmProperty), MobileLiveStock.FPExcessLivestockObj.EiId, MobileLiveStock.FPExcessLivestockObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
                 }
-                if (Session["CompletionTrackFPC"] != null)
-                {
-                    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                    MobileLiveStock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                    if (MobileLiveStock.CompletionTrackFPC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MobileLiveStock.CompletionTrackFPC.ToCharArray();
+                //if (Session["CompletionTrackFPC"] != null)
+                //{
+                //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
+                //    MobileLiveStock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //    if (MobileLiveStock.CompletionTrackFPC != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = MobileLiveStock.CompletionTrackFPC.ToCharArray();
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 4)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["CompletionTrackFPC"] = Completionstring;
-                        MobileLiveStock.CompletionTrackFPC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["CompletionTrackFPC"] = "0-0-1-0"; ;
-                    MobileLiveStock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                }
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 4)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["CompletionTrackFPC"] = Completionstring;
+                //        MobileLiveStock.CompletionTrackFPC = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["CompletionTrackFPC"] = "0-0-1-0"; ;
+                //    MobileLiveStock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //}
                 return RedirectToAction("WorkingDogsBeehives", new { cid = MobileLiveStock.CustomerId });
             }
             return View(MobileLiveStock);
@@ -810,33 +810,33 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(MobileWorkingDogsBeehives.CustomerId, Convert.ToInt32(FarmPolicySection.MobileFarmProperty), MobileWorkingDogsBeehives.FPExcessBeehivesObj.EiId, MobileWorkingDogsBeehives.FPExcessBeehivesObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
                 }
-                if (Session["CompletionTrackFPC"] != null)
-                {
-                    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                    MobileWorkingDogsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                    if (MobileWorkingDogsBeehives.CompletionTrackFPC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MobileWorkingDogsBeehives.CompletionTrackFPC.ToCharArray();
+                //if (Session["CompletionTrackFPC"] != null)
+                //{
+                //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
+                //    MobileWorkingDogsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //    if (MobileWorkingDogsBeehives.CompletionTrackFPC != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = MobileWorkingDogsBeehives.CompletionTrackFPC.ToCharArray();
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 6)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["CompletionTrackFPC"] = Completionstring;
-                        MobileWorkingDogsBeehives.CompletionTrackFPC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["CompletionTrackFPC"] = "0-0-0-1"; ;
-                    MobileWorkingDogsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                }
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 6)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["CompletionTrackFPC"] = Completionstring;
+                //        MobileWorkingDogsBeehives.CompletionTrackFPC = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["CompletionTrackFPC"] = "0-0-0-1"; ;
+                //    MobileWorkingDogsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //}
                 return RedirectToAction("FarmLocationDetails", "FarmPolicyProperty", new { cid = MobileWorkingDogsBeehives.CustomerId });
             }
             return View(MobileWorkingDogsBeehives);

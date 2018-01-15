@@ -26,7 +26,7 @@ namespace InsureThatAPI.Controllers
                 if (Policyincllist != null)
                 {                
                         
-                        if (Policyincllist.Contains("FarmProperty"))
+                        if (Policyincllist.Contains("Farm Property"))
                         {
                         }
                         else {if (Policyincllist.Contains("Liability"))
@@ -45,7 +45,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                         }
-                        else if (Policyincllist.Contains("Pet"))
+                        else if (Policyincllist.Contains("Pets"))
                         {
                             return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                         }
@@ -101,57 +101,57 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.FarmProperty), Convert.ToInt32(PolicyType.RLS),policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == FarmContents.DescriptionFCObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FarmContents.DescriptionFCObj.EiId).FirstOrDefault();
-                    FarmContents.DescriptionFCObj.Description = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.YearObj.EiId))
-                {
-                    FarmContents.YearObj.Year = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.YearObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.MaterialsObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FarmContents.MaterialsObj.EiId).FirstOrDefault();
-                    FarmContents.MaterialsObj.Materials = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.CoolroomFcObj.EiId))
-                {
-                    FarmContents.CoolroomFcObj.Coolroom = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.CoolroomFcObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.SuminsuredObj.EiId))
-                {
-                    FarmContents.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.SuminsuredObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.confirmfsObj.EiId))
-                {
-                    FarmContents.confirmfsObj.Confirm = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.confirmfsObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.FarmfencingObj.EiId))
-                {
-                    FarmContents.FarmfencingObj.Farmfencing = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmfencingObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.FarmcencingTcObj.EiId))
-                {
-                    FarmContents.FarmcencingTcObj.Totalcover = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmcencingTcObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.FarmstructuresObj.EiId))
-                {
-                    FarmContents.FarmstructuresObj.Farmstructures = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmstructuresObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.FarmContentFcObj.EiId))
-                {
-                    FarmContents.FarmContentFcObj.Farmcontents = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmContentFcObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmContents.ExcessesFpcObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FarmContents.ExcessesFpcObj.EiId).FirstOrDefault();
-                    FarmContents.ExcessesFpcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-            }
+            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.FarmProperty), Convert.ToInt32(PolicyType.RLS),policyid).ToList();
+            //if (details != null && details.Any())
+            //{
+            //    if (details.Exists(q => q.QuestionId == FarmContents.DescriptionFCObj.EiId))
+            //    {
+            //        var loc = details.Where(q => q.QuestionId == FarmContents.DescriptionFCObj.EiId).FirstOrDefault();
+            //        FarmContents.DescriptionFCObj.Description = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.YearObj.EiId))
+            //    {
+            //        FarmContents.YearObj.Year = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.YearObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.MaterialsObj.EiId))
+            //    {
+            //        var loc = details.Where(q => q.QuestionId == FarmContents.MaterialsObj.EiId).FirstOrDefault();
+            //        FarmContents.MaterialsObj.Materials = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.CoolroomFcObj.EiId))
+            //    {
+            //        FarmContents.CoolroomFcObj.Coolroom = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.CoolroomFcObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.SuminsuredObj.EiId))
+            //    {
+            //        FarmContents.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.SuminsuredObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.confirmfsObj.EiId))
+            //    {
+            //        FarmContents.confirmfsObj.Confirm = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.confirmfsObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.FarmfencingObj.EiId))
+            //    {
+            //        FarmContents.FarmfencingObj.Farmfencing = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmfencingObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.FarmcencingTcObj.EiId))
+            //    {
+            //        FarmContents.FarmcencingTcObj.Totalcover = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmcencingTcObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.FarmstructuresObj.EiId))
+            //    {
+            //        FarmContents.FarmstructuresObj.Farmstructures = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmstructuresObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.FarmContentFcObj.EiId))
+            //    {
+            //        FarmContents.FarmContentFcObj.Farmcontents = Convert.ToString(details.Where(q => q.QuestionId == FarmContents.FarmContentFcObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == FarmContents.ExcessesFpcObj.EiId))
+            //    {
+            //        var loc = details.Where(q => q.QuestionId == FarmContents.ExcessesFpcObj.EiId).FirstOrDefault();
+            //        FarmContents.ExcessesFpcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+            //    }
+            //}
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -689,33 +689,33 @@ namespace InsureThatAPI.Controllers
                 {
                     db.IT_InsertCustomerQnsData(HarvestedCropsBeehives.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), HarvestedCropsBeehives.ExcessBObj.EiId, HarvestedCropsBeehives.ExcessBObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
                 }
-                if (Session["CompletionTrackFPC"] != null)
-                {
-                    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                    HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                    if (HarvestedCropsBeehives.CompletionTrackFPC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = HarvestedCropsBeehives.CompletionTrackFPC.ToCharArray();
+                //if (Session["CompletionTrackFPC"] != null)
+                //{
+                //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
+                //    HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //    if (HarvestedCropsBeehives.CompletionTrackFPC != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = HarvestedCropsBeehives.CompletionTrackFPC.ToCharArray();
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 6)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["CompletionTrackFPC"] = Completionstring;
-                        HarvestedCropsBeehives.CompletionTrackFPC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["CompletionTrackFPC"] = "0-0-0-1"; ;
-                    HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-                }
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 6)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["CompletionTrackFPC"] = Completionstring;
+                //        HarvestedCropsBeehives.CompletionTrackFPC = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["CompletionTrackFPC"] = "0-0-0-1"; ;
+                //    HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
+                //}
                 return RedirectToAction("PetsCover","Pets", new { cid = HarvestedCropsBeehives.CustomerId });
             }
             return View(HarvestedCropsBeehives);

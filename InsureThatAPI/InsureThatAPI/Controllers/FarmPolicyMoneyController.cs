@@ -215,7 +215,7 @@ namespace InsureThatAPI.Controllers
                     db.IT_InsertCustomerQnsData(FPMoney.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FPMoney.ExcessFPMoneyObj.EiId, FPMoney.ExcessFPMoneyObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
                 }
             }
-            return RedirectToAction("FarmPolicyTransit", "Transit", new { cid = cid });
+            return RedirectToAction("Transit","FarmPolicyTransit" , new { cid = cid });
         }
     }
 }

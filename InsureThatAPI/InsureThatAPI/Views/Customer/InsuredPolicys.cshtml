@@ -61,15 +61,18 @@
                                         <div class="col-sm-4 col-xs-6 p-5">Policy No: @Model.PolicyData[i].PolicyNumber</div>
                                         <div class="col-sm-4 col-xs-6 p-5">Insured: @Model.PolicyData.Select(o => o.InsuredName).FirstOrDefault()</div>
                                         <div class="clearfix"></div>
-                                        <div class="col-sm-4 col-xs-6 p-5">Start Date: @Model.PolicyData[i].InceptionDate.ToString("dd/MM/yy")</div>
-                                        <div class="col-sm-4 col-xs-6 p-5">End Date: @Model.PolicyData[i].ExpiryDate.ToString("dd/MM/yy")</div>
+                                        <div class="col-sm-4 col-xs-6 p-5">Start Date: @Model.PolicyData[i].InceptionDate.ToString("dd/MM/yyyy")</div>
+                                        <div class="col-sm-4 col-xs-6 p-5">End Date: @Model.PolicyData[i].ExpiryDate.ToString("dd/MM/yyyy")</div>
                                         <div class="col-sm-4 col-xs-6 p-5">Duration: @Model.PolicyData[i].CoverPeriod&nbsp; @Model.PolicyData[i].CoverPeriodUnit </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1 col-md-2 col-sm-3 col-xs-12">
                                 <a href="@Url.Action("ViewUpdatePolicyDetails", "Customer",new {cid=@ViewBag.CustomerId, PcId= @Model.PolicyData[i].PcId})" class="btn-primary btn col-sm-12 col-xs-5">View Details</a>
+                                @if (Model.PolicyData[i].PolicyStatus == "NP" || Model.PolicyData[i].PolicyStatus == "RP" || Model.PolicyData[i].PolicyStatus == "AP")
+                                {
                                 <a href="#" class="btn-primary btn col-sm-12 col-xs-5">Cancel Policy</a>
+                                }
                             </div>
                         </div>
                     </div>
