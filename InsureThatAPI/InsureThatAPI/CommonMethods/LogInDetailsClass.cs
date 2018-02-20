@@ -50,7 +50,6 @@ namespace InsureThatAPI.CommonMethods
             public List<string> errorcodes { get; set; }
         }
         #endregion
-
         #region Fields
 
         //salt value - any string
@@ -176,7 +175,7 @@ namespace InsureThatAPI.CommonMethods
             string loginKey = string.Empty;
             int IyId = 9262;
             string EncrptForLogin = String.Format("{0:ddddyyyyMMdd}", DateTime.UtcNow);
-           // EncrptForLogin = "Sunday20180114";
+            //EncrptForLogin = "Monday20180219";
             PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
             loginKey = Encrypt(PlainTextEncrpted, EncrptForLogin);
             LoginDetailsRef loginDetailsref = new LoginDetailsRef();
@@ -190,19 +189,25 @@ namespace InsureThatAPI.CommonMethods
                 hclient.BaseAddress = new Uri(url);
                 hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 loginKey = loginKey.Replace("+", "%2B");
+                loginDetailsref.ErrorMessage.Add("APISTARTED");
                 HttpResponseMessage Res = await hclient.GetAsync("Login?loginKey=" + loginKey + "");//change controller name and field name
-                                                                                                     //   LogInDetails loginmodel = new LogInDetails();
+                loginDetailsref.ErrorMessage.Add("APIExecuted");                                                                                 //   LogInDetails loginmodel = new LogInDetails();
                 if (Res.IsSuccessStatusCode)
                 {
+                    loginDetailsref.ErrorMessage.Add(Res.StatusCode.ToString());
                     //Storing the response details recieved from web api
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    loginDetailsref.ErrorMessage.Add("Got Responce");
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
                     logindetailsmodel = JsonConvert.DeserializeObject<LogInDetails>(EmpResponse);
+                    loginDetailsref.ErrorMessage.Add("Deserialized");
                     //strEncrypt = Encrypt(Password, "TimsFirstEncryptionKey");//encrypt password method
-                   // strDecrypt = Decrypt(strEncrypt, "TimsFirstEncryptionKey");//decrypt password method
+                    // strDecrypt = Decrypt(strEncrypt, "TimsFirstEncryptionKey");//decrypt password method
                     strDecrypt = Decrypt(logindetailsmodel.EncryptedPassword, "TimsFirstEncryptionKey");
+                    loginDetailsref.ErrorMessage.Add(strDecrypt);
                     if (logindetailsmodel.EncryptedPassword != null && strDecrypt == Password)
                     {
+                        loginDetailsref.ErrorMessage.Add("Success");
                         loginDetailsref.Status = "Success";
                         logindetailsmodel.UserName = UserName;
                         logindetailsmodel.Password = Password;
@@ -220,6 +225,7 @@ namespace InsureThatAPI.CommonMethods
             }
             catch (Exception xp)
             {
+                loginDetailsref.ErrorMessage.Add("Catch");
                 loginDetailsref.Status = "Failure";
                 loginDetailsref.ErrorMessage.Add(xp.Message);
             }
@@ -231,6 +237,5 @@ namespace InsureThatAPI.CommonMethods
         }
 
         #endregion
-
     }
 }

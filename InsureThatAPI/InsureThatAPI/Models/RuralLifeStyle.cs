@@ -12,19 +12,27 @@ namespace InsureThatAPI.Models
     }
     public class HB2HomeDescription
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
+        public string PolicyStatus { get; set; }
         public string ApiKey { get; set; }
+        public int? Postcode { get; set; }
         public string CompletionTrack { get; set; }
         public PropertyTypes PropertytypeObj { get; set; }
         public Locations LocationObj { get; set; }
         public DescribeAddresses DescribeaddressObj { get; set; }
+        public bool SelectedInclusion { get; set; }
         public Addresses AddressObj { get; set; }
         public Areapropertys AreapropertyObj { get; set; }
         public IsBuildingLocateds IsbuildinglocatedObj { get; set; }
-        public IEnumerable<SelectListItem> SubUrb { get; set; }
+        public IEnumerable<SelectListItem> SubUrbs { get; set; }
+        public string Suburb { get; set; }
         public IEnumerable<SelectListItem> QList { get; set; }
         public SectionD SectionDatas { get; set; }
-        public List<string> PolicyInclusions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
         public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public string PolicyId { get; set; }
         public ExtWallsMades ExtwallsmadeObj { get; set; }
@@ -53,9 +61,21 @@ namespace InsureThatAPI.Models
         public NoClaimDiscounts NoclaimdiscountObj { get; set; }
         public AgeDiscounts AgediscountObj { get; set; }
         public Premiums PremiumObjs { get; set; }
-
+        public NameOfInstitutionsRls NameInstitutionsObj { get; set; }
+        public LastRewired LastRewiredObj { get; set; }
+        public LastReplumbed LastReplumbedObj { get; set; }
+        public locatedOnAFarm locatedfarmObj { get; set; }
+        public TypeOfBuilding TypeOfBuildingObj { get; set; }
+        public DescribeBuilding DescribeBuildingObj { get; set; }
+        public UnrepairedDamage UnrepaireddamageObj { get; set; }
+        public WindowCoverings WindowCoveringsObj { get; set; }
+        public MortgageeProtectionCover ProtectionCoverObj { get; set; }
     }
-
+    public class NameOfInstitutionsRls
+    {
+        public string Name { get; set; }
+        public int EiId { get; set; }
+    }
 
 
     public class SectionD
@@ -97,11 +117,12 @@ namespace InsureThatAPI.Models
         public List<RowsourceDatas> RowsourceData { get; set; }
         public List<ValueDatas> ValueData { get; set; }
         public List<StateDatas> StateData { get; set; }
+        public AddressDatas AddressData { get; set; }
     }
     public class StateDatas
     {
         public Elements Element { get; set; }
-        public int State { get; set; }
+        public string State { get; set; }
     }
     public class ValueDatas
     {
@@ -130,7 +151,7 @@ namespace InsureThatAPI.Models
     public class Option
     {
         public string DataText { get; set; }
-        public int DataValue { get; set; }
+        public string DataValue { get; set; }
     }
 
     public class HB2ConstructionDetails
@@ -252,7 +273,7 @@ namespace InsureThatAPI.Models
     public class CostForRebuilding
     {
         public int EiId { get; set; }
-        public int CostforRebuilding { get; set; }
+        public int? CostforRebuilding { get; set; }
     }
     public class BaseSmokeAlarms
     {
@@ -296,7 +317,7 @@ namespace InsureThatAPI.Models
     }
     public class DescribeBusinesses
     {
-        public int Describebusiness { get; set; }
+        public string Describebusiness { get; set; }
         public int EiId { get; set; }
     }
     public class IsusedBusinesses
@@ -328,10 +349,11 @@ namespace InsureThatAPI.Models
     {
         public string Excess { get; set; }
         public int EiId { get; set; }
+        public List<Option> ExcessList { get; set; }
     }
     public class ClaimFreePeriods
     {
-        public string Claimfreeperiod { get; set; }
+        public int Claimfreeperiod { get; set; }
         public int EiId { get; set; }
     }
     public class CoverHomeBuildings
@@ -346,22 +368,22 @@ namespace InsureThatAPI.Models
     }
     public class DomesticDwellings
     {
-        public bool Domesticdwelling { get; set; }
+        public int Domesticdwelling { get; set; }
         public int EiId { get; set; }
     }
     public class UnderConstructions
     {
-        public bool Underconstruction { get; set; }
+        public int Underconstruction { get; set; }
         public int EiId { get; set; }
     }
     public class HeritageLegislations
     {
-        public bool Heritagelegislation { get; set; }
+        public int Heritagelegislation { get; set; }
         public int EiId { get; set; }
     }
     public class Watertights
     {
-        public bool Watertight { get; set; }
+        public int Watertight { get; set; }
         public int EiId { get; set; }
     }
     public class RoofMades
@@ -435,5 +457,45 @@ namespace InsureThatAPI.Models
     {
         public int QuestionId { get; set; }
         public string Answer { get; set; }
+    }
+    public class LastRewired
+    {
+        public string Rewired { get; set; }
+        public int EiId { get; set; }
+    }
+    public class LastReplumbed
+    {
+        public string Replumbed { get; set; }
+        public int EiId { get; set; }
+    }
+    public class locatedOnAFarm
+    {
+        public string locatedonafarm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class TypeOfBuilding
+    {
+        public string Typeofbuilding { get; set; }
+        public int EiId { get; set; }
+    }
+    public class DescribeBuilding
+    {
+        public string Describebuilding { get; set; }
+        public int EiId { get; set; }
+    }
+    public class UnrepairedDamage
+    {
+        public string Damage { get; set; }
+        public int EiId { get; set; }
+    }
+    public class WindowCoverings
+    {
+        public string Coverings { get; set; }
+        public int EiId { get; set; }
+    }
+    public class MortgageeProtectionCover
+    {
+        public string Coverings { get; set; }
+        public int EiId { get; set; }
     }
 }

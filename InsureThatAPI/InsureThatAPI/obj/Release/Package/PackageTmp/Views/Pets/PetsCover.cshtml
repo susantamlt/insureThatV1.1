@@ -7,12 +7,75 @@
     <h4><span>RURAL LIFESTYLE POLICY</span> / PETS</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
         <h2>PETS</h2>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+        <div class="pull-right">
+            <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+            <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Referral List</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="referralList-p">No Referral List</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Premium Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style=" width: 100%; ">
+                        <thead>
+                            <tr>
+                                <th class="space_left">Section Name</th>
+                                <th class="space_left">Base</th>
+                                <th class="space_left">Fsl</th>
+                                <th class="space_left">Gst</th>
+                                <th class="space_left">Stamp Duty</th>
+                                <th class="space_right">Gross</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiumModel-p-b">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="premiumModel-p-f">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="clearfix"></div>
     <div id="errorContainer"></div>
-    @using (Ajax.BeginForm("PetsCover", "Pets", new { cid = @ViewBag.cid}, new AjaxOptions()
+    @using (Ajax.BeginForm("PetsCover", "Pets", new { cid = @ViewBag.cid }, new AjaxOptions()
     {
         HttpMethod = "POST"
 
@@ -20,11 +83,14 @@
     {
         @Html.AntiForgeryToken()
         <div class="form">
-            @Html.HiddenFor(m => m.CustomerId)
-            <div class="mt-10 mb-10 col-md-12">
+            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+
+            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+            <div class="mt-10 mb-10 col-md-12  cl-61331">
                 <p class="col-md-5 col-sm-5 col-xs-12">Do you wish to insure a :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.DropDownListFor(model => model.SpeciesObj.Species, @Model.SpeciesObj.SpeciesList, "-- Select --", new { @class = "form-control form-border-bottom select2hd", @id = "species", @name = "SpeciesObj.Species" })
+                    @Html.DropDownListFor(model => model.SpeciesObj.Species, @Model.SpeciesObj.SpeciesList, "-- Select --", new { @class = "form-control form-border-bottom select2hd commondataselection", @data_eiid = @Model.SpeciesObj.EiId, @id = "species", @name = "SpeciesObj.Species" })
+                    <label id="SpeciesObj.Species-error" class="error" for="SpeciesObj.Species"></label>
                 </div>
                 @Html.HiddenFor(p => p.SpeciesObj.EiId)
             </div>
@@ -40,7 +106,7 @@
                                 data: { "Species": text, "SpeciesV": value },
                                 success: function (response) {
                                     var html = '';
-                                    if (response.status==true){
+                                    if (response.status == true) {
                                         $.each(response.result, function (i, v) {
                                             html += '<option value="' + v.Value + '">' + v.Text + '</option>';
                                         });
@@ -60,11 +126,12 @@
                     });
                 });
             </script>
-            <div class="mt-10 mb-10 col-md-12" id="dogbreed" @if (@Model.SpeciesObj.Species == "") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61333" id="dogbreed" @if (@Model.SpeciesObj.Species == "") { <text> style="display: none;" </text> }>
                 <p class="col-md-5 col-sm-5 col-xs-12">Please select the breed :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.DropDownListFor(Model => Model.BreedObj.Breed, @Model.BreedObj.BreedList, new { @class = "form-control form-border-bottom select2hd", @id = "breed"})
+                    @Html.DropDownListFor(Model => Model.BreedObj.Breed, @Model.BreedObj.BreedList, new { @class = "form-control form-border-bottom select2hd commondataselection", @data_eiid = @Model.BreedObj.EiId, @id = "breed" })
                     <p class="mini-text">(In the case of a cross breed, please select the dominant breed)</p>
+                    <label id="BreedObj.Breed-error" class="error" for="BreedObj.Breed"></label>
                 </div>
                 @Html.HiddenFor(p => p.BreedObj.EiId)
                 <script type="text/javascript">
@@ -73,52 +140,58 @@
                             var value = this.value;
                             if (value == "301") {
                                 $("#other").show();
+                            } else {
+                                $("#other").hide();
                             }
                         });
                     });
                 </script>
             </div>
-            <div class="mt-10 mb-10 col-md-12" id="other" @if (@Model.BreedObj.Breed != "301") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61337" id="other" @if (@Model.BreedObj.Breed != "301") { <text> style="display: none;" </text> }>
                 <p class="col-md-5 col-sm-5 col-xs-12">Name of breed :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.OtherbreedObj.Otherbreed, new { @class = "form-control form-border-bottom", @id = "otherbreed" })
+                    @Html.TextBoxFor(p => p.OtherbreedObj.Otherbreed, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.OtherbreedObj.EiId, @id = "otherbreed" })
+                    <label id="OtherbreedObj.Otherbreed-error" class="error" for="OtherbreedObj.Otherbreed"></label>
                 </div>
                 @Html.HiddenFor(p => p.OtherbreedObj.EiId)
             </div>
-            <div class="mt-10 mb-10 col-md-12">
+            <div class="mt-10 mb-10 col-md-12 cl-61339">
                 <p class="col-md-5 col-sm-5 col-xs-12">What is your pet name :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.NameObj.Name, new { @class = "form-control form-border-bottom", @id = "name" })
+                    @Html.TextBoxFor(p => p.NameObj.Name, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.NameObj.EiId, @id = "name" })
                     @Html.HiddenFor(p => p.NameObj.EiId)
+                    <label id="NameObj.Nam-error" class="error" for="NameObj.Nam"></label>
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12">
+            <div class="mt-10 mb-10 col-md-12  cl-61339">
                 <p class="col-md-5 col-sm-5 col-xs-12">What is your pet date of birth :<br><span class="mini-text">(We will cover your animals up untill the age of 9 years)</span></p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @class = "form-control form-border-bottom", @id = "dateofbirth", @readonly = "readonly" })
+                    @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @class = "form-control form-border-bottom year commondatatest", @data_eiid = @Model.DatebirthObj.EiId, @id = "dateofbirth", @readonly = "readonly" })
                     @Html.HiddenFor(p => p.DatebirthObj.EiId)
+                    <label id="DatebirthObj.Datebirth-error" class="error" for="DatebirthObj.Datebirth"></label>
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61343">
                 <p class="col-md-5 col-sm-5 col-xs-12">Has your pet any pre-existing illness</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '0', new { @class = "preexisting" })
+                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '0', new { @class = "preexisting commondataradio", @data_eiid = @Model.PreexistingObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '1', new { @class = "preexisting" })
+                            @Html.RadioButtonFor(m => m.PreexistingObj.Preexisting, '1', new { @class = "preexisting commondataradio", @data_eiid = @Model.PreexistingObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.PreexistingObj.EiId)
-                    </span>                    
+                        <label id="PreexistingObj.Preexisting-error" class="error" for="PreexistingObj.Preexisting"></label>
+                    </span>
                 </div>
                 <script type="text/javascript">
                     $(document).ready(function () {
                         $('.preexisting').click(function () {
                             var val = $(this).val();
-                            if ($(this).val()=='1'){
+                            if ($(this).val() == '1') {
                                 $('#desIllness').show();
                                 $('#acLimit').show();
                             } else {
@@ -131,46 +204,52 @@
                     });
                 </script>
             </div>
-            <div class="mt-10 mb-10 col-md-12" id="desIllness" @if (@Model.PreexistingObj.Preexisting=="0") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61345" id="desIllness" @if (@Model.PreexistingObj.Preexisting == "0") { <text> style="display: none;" </text> }>
                 <p class="col-md-5 col-sm-5 col-xs-12">If yes ,  please describe the illness</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.DescriptionillnessObj.Descriptionillness, new { @class = "form-control form-border-bottom", @id = "descriptionillness" })
+                    @Html.TextBoxFor(p => p.DescriptionillnessObj.Descriptionillness, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.DescriptionillnessObj.EiId, @id = "descriptionillness" })
                     @Html.HiddenFor(p => p.DescriptionillnessObj.EiId)
+                    <label id="DescriptionillnessObj.Descriptionillness-error" class="error" for="DescriptionillnessObj.Descriptionillness"></label>
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12" id="acLimit" @if (@Model.PreexistingObj.Preexisting=="0") { <text>style = "display: none;"</text>}>
+            <div class="mt-10 mb-10 col-md-12 cl-61347" id="acLimit" @if (@Model.PreexistingObj.Preexisting == "0") { <text> style="display: none;" </text> }>
                 <p class="col-md-5 col-sm-5 col-xs-12">An annual cover limit</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, new { @class = "form-control form-border-bottom", @id = "annualcoverlimit" })
+                    @Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.AnnualcoverlimitObj.EiId, @id = "annualcoverlimit" })
                     @Html.HiddenFor(p => p.AnnualcoverlimitObj.EiId)
+                    <label id="AnnualcoverlimitObj.Annualcoverlimit-error" class="error" for="AnnualcoverlimitObj.Annualcoverlimit"></label>
                 </div>
-            </div>            
-            <div class="mt-10 mb-10 col-md-12 ">
+            </div>
+            <div class="mt-10 mb-10 col-md-12 cl-61349">
                 <div class="col-md-5">Excess</div>
                 <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.ExcessPetObj.Excess, @Model.ExcessPetObj.ExcessList, "-- Select --", new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
+                    @Html.DropDownListFor(model => model.ExcessPetObj.Excess, @Model.ExcessPetObj.ExcessList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessPetObj.EiId, @id = "excess" })
                     @Html.HiddenFor(p => p.ExcessPetObj.EiId)
                 </div>
                 <div class="col-md-3">
-                    <div class="policy-loc-row"><input type="checkbox" name="ImposedpetsObj.Imposed" id="imposed"  @if (@Model.ExcessPetObj.Excess != "") { <text>checked="checked"</text>}><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                    <div class="policy-loc-row">
+                        <input type="checkbox" name="ImposedpetsObj.Imposed" id="imposed" @if (@Model.ExcessPetObj.Excess != "") { <text> checked="checked" </text>  }><label for="checkbox1"><span><span></span></span>Imposed</label>
+                        <label id="ImposedpetsObj.Imposed-error" class="error" for="ImposedpetsObj.Imposed"></label>
+                    </div>
                 </div>
             </div>
             <div class="mt-10 mb-10 col-md-12">
                 <h3>Would you like to include following</h3>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61365">
                 <p class="col-md-3 col-sm-3 col-xs-12">Boarding fees :</p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '0', new { @class = "boardingfee" })
+                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '0', new { @class = "boardingfee commondataradio", @data_eiid = @Model.BoardingfeeObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '1', new { @class = "boardingfee" })
+                            @Html.RadioButtonFor(m => m.BoardingfeeObj.Boardingfee, '1', new { @class = "boardingfee commondataradio", @data_eiid = @Model.BoardingfeeObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.BoardingfeeObj.EiId)
+                        <label id="BoardingfeeObj.Boardingfee-error" class="error" for="BoardingfeeObj.Boardingfee"></label>
                     </span>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -185,25 +264,27 @@
                             });
                         });
                     </script>
-                </div>                
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text" id="aLimitbf" @if (@Model.BoardingfeeObj.Boardingfee == "0") { <text>style = "display: none;"</text>}>
-                    @Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text", @id = "annuallimitbf", @style = "width: 50%;margin-right:5px;" }) (Annual limit : The lessor of $1000 and 200 days)
+                </div>
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61367" id="aLimitbf" @if (@Model.BoardingfeeObj.Boardingfee == "0") { <text> style="display: none;" </text>  }>
+                    @Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text commondatatest", @data_eiid = @Model.AnnuallimitbfObj.EiId, @id = "annuallimitbf", @style = "width: 50%;margin-right:5px;" }) (Annual limit : The lessor of $1000 and 200 days)
                     @Html.HiddenFor(p => p.AnnuallimitbfObj.EiId)
+                    <label id="AnnuallimitbfObj.Annuallimitbf-error" class="error" for="AnnuallimitbfObj.Annuallimitbf"></label>
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61369">
                 <p class="col-md-3 col-sm-3 col-xs-12">Death from illness :</p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '0', new { @class = "deathillness" })
+                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '0', new { @class = "deathillness commondataradio", @data_eiid = @Model.DeathillnessObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '1', new { @class = "deathillness" })
+                            @Html.RadioButtonFor(m => m.DeathillnessObj.Deathillness, '1', new { @class = "deathillness commondataradio", @data_eiid = @Model.DeathillnessObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.DeathillnessObj.EiId)
+                        <label id="DeathillnessObj.Deathillness-error" class="error" for="DeathillnessObj.Deathillness"></label>
                     </span>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -219,24 +300,26 @@
                         });
                     </script>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0") { <text>style = "display: none;"</text>}>
-                    @Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text", @id = "annuallimit", @style = "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61371" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0") { <text> style="display: none;" </text>  }>
+                    @Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text commondatatest", @data_eiid = @Model.AnnuallimitdtObj.EiId, @id = "annuallimit", @style = "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
                     @Html.HiddenFor(p => p.AnnuallimitdtObj.EiId)
+                    <label id="AnnuallimitdtObj.Annuallimit-error" class="error" for="AnnuallimitdtObj.Annuallimit"></label>
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
+            <div class="mt-10 mb-10 col-md-12 cl-61373">
                 <p class="col-md-3 col-sm-3 col-xs-12">Death from injury :</p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '0', new { @class = "deathinjury" })
+                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '0', new { @class = "deathinjury commondataradio", @data_eiid = @Model.DeathinjuryObj.EiId })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '1', new { @class = "deathinjury" })
+                            @Html.RadioButtonFor(m => m.DeathinjuryObj.Deathinjury, '1', new { @class = "deathinjury commondataradio", @data_eiid = @Model.DeathinjuryObj.EiId })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.DeathinjuryObj.EiId)
+                        <label id="DeathinjuryObj.Deathinjury-error" class="error" for="DeathinjuryObj.Deathinjury"></label>
                     </span>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -252,214 +335,441 @@
                         });
                     </script>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text" id="aLimitij" @if (@Model.DeathinjuryObj.Deathinjury == "0") { <text>style = "display: none;"</text>}>
-                    @Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text", @id = "annuallimitij", @style= "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61375" id="aLimitij" @if (@Model.DeathinjuryObj.Deathinjury == "0") { <text> style="display: none;" </text>  }>
+                    @Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text commondatatest", @data_eiid = @Model.AnnuallimitijObj.EiId, @id = "annuallimitij", @style = "width: 50%;margin-right:5px;" }) (Annual limit : $1500)
                     @Html.HiddenFor(p => p.AnnuallimitijObj.EiId)
+                    <label id="AnnuallimitijObj.Annuallimitij-error" class="error" for="AnnuallimitijObj.Annuallimitij"></label>
                 </div>
             </div>
         </div>
         <div class="col-md-6 pull-right text-right">
-            <input type="submit" name="submit" value="Submit" />
+            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Submit</button>
         </div>
     }
 </div>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $('#location1').click(function () {
-                        $("#policy-ed-del-wrap1").fadeIn('slow');
-                        $("#policy-ed-del-wrap2").fadeOut('slow');
-                    });
-                });
+        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+        {
+            for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+            {
+                <div class="policy-loc-row">
+                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('.inclusions').click(function () {
+                                var name = $(this).attr('data-name');
+                                var nid = $(this).attr('data-nid');
+                                $('.policy-ed-del-wrapper').hide();
+                                $("#policy-ed-del-wrap-" + nid).show();
+
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" href="javascript:void(0);">Delete</a>
+                    </div>
+                </div>
+            }
+            <script>
+                        $(".policy-edit-wrap").click(function () {
+                            var selectedname = $(this).data('name');
+                            var selectedunid = $(this).data('unid');
+                            var selectedprofileid = $(this).data('profileid');
+                            var selectedcid = $(this).data('cid');
+                            var selectedTrId = $(this).data('trid');
+                            var PcId = $(this).data('pcid');
+                            var policyStatus = $(this).data('policystatus');
+                            // var prId = $(this).data('prId');
+                            var prId = 1029;
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/EndorsePolicy",
+                                data: {
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                                },
+                                success: function (responce) {
+                                }
+                            });
+                        });
+                        $(".policy-delet-wrap").click(function () {
+                            var selectedunid = $(this).data('unid');
+                            var selectedcid = $(this).data('cid');
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/Deleteunit",
+                                data: { "cid": selectedcid, "unid": selectedunid },
+                                success: function (responce) {
+                                }
+                            });
+                        });
+                        $("#bindcover").click(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/BindCover",
+                                data: {},
+                                success: function (responce) {
+                                }
+                            });
+                        });
             </script>
-            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $('#location2').click(function () {
-                        $("#policy-ed-del-wrap2").fadeIn('slow');
-                        $("#policy-ed-del-wrap1").fadeOut('slow');
-                    });
-                });
-            </script>
-            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @disabled = "disabled" })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i]</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
+
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                }
+            }
+
+        }
         <div class="clearfix"></div>
-        <input type="submit" name="newcover" value="New Cover">
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
+            <ul class="dropdown-menu col-md-12 unit">
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+            </ul>
+            <script type="text/javascript">
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                var cid = $("#ciid").val();
+                                var pcid = $("#pcidd").val();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                    success: function (responce) {
+
+                                        window.location.href = responce;
+                                    }
+                                });
+                            });
+            </script>
+        </div>
     </div>
 </div>
+
 <script src="~/js/datepicker.min.js"></script>
 <script type="text/javascript">
-    $(function () {
-        $("#dateofbirth").datepicker({ format: 'dd-mm-yyyy' });
-    });
+                        $(function () {
+                            $("#dateofbirth").datepicker({ format: 'dd-mm-yyyy' });
+                        });
 </script>
 <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
 <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $.validator.addMethod("regex", function (value, element, regexp) {
-            if (regexp.constructor != RegExp)
-                regexp = new RegExp(regexp);
-            else if (regexp.global)
-                regexp.lastIndex = 0;
-            return this.optional(element) || regexp.test(value);
-        }, "Please check your input.");
-        $("form[name='petsCover']").validate({
-            errorContainer: "#errorContainer",
-            errorLabelContainer: "#errorContainer",
-            errorElement: "li",
-            rules: {
-                "SpeciesObj.Species":"required",
-                "BreedObj.Breed": "required",
-                "OtherbreedObj.Otherbreed": {
-                    required: function (element) {
-                        if ($("#breed").val() == "301") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "NameObj.Name": {
-                    required: true,
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "DatebirthObj.Datebirth": "required",
-                "PreexistingObj.Preexisting" : "required",
-                "DescriptionillnessObj.Descriptionillness" : {
-                    required: function (element) {
-                        if ($(".preexisting:checked").val() == "1") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "AnnualcoverlimitObj.Annualcoverlimit": {
-                    required: function (element) {
-                        if ($(".preexisting:checked").val() == "1") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    regex: /^[0-9]*$/,
-                },
-                "ExcessPetObj.Excess": {
-                    required: function (element) {
-                        if ($("#annualcoverlimit").val() == "" && $(".preexisting:checked").val() == "1") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                },
-                "ImposedpetsObj.Imposed": {
-                    required: function (element) {
-                        if ($("#excess").val() != "") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                },
-                "BoardingfeeObj.Boardingfee": "required",
-                "AnnuallimitbfObj.Annuallimitbf": {
-                    required: function (element) {
-                        if ($(".boardingfee").val() != "0") {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    },
-                    regex: /^[0-9]*$/,
-                },
-                "DeathillnessObj.Deathillness": "required",
-                "AnnuallimitdtObj.Annuallimit": {
-                    required: function (element) {
-                        if ($(".deathillness").val() != "0") {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    },
-                    regex: /^[0-9]*$/,
-                },
-                "DeathinjuryObj.Deathinjury": "required",
-                "AnnuallimitijObj.Annuallimitij": {
-                    required: function (element) {
-                        if ($(".deathinjury").val() != "0") {
-                            return false;
-                        } else {
-                            return true;
-                        }
-                    },
-                    regex: /^[0-9]*$/,
-                },
+                        $(document).ready(function () {
+                            $.validator.addMethod("regex", function (value, element, regexp) {
+                                if (regexp.constructor != RegExp)
+                                    regexp = new RegExp(regexp);
+                                else if (regexp.global)
+                                    regexp.lastIndex = 0;
+                                return this.optional(element) || regexp.test(value);
+                            }, "Please check your input.");
+                            $("form[name='petsCover']").validate({
+                                rules: {
+                                    "SpeciesObj.Species": "required",
+                                    "BreedObj.Breed": "required",
+                                    "OtherbreedObj.Otherbreed": {
+                                        required: function (element) {
+                                            if ($("#breed").val() == "301") {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        },
+                                        regex: /^[a-zA-Z ]*$/,
+                                    },
+                                    "NameObj.Name": {
+                                        required: true,
+                                        regex: /^[a-zA-Z ]*$/,
+                                    },
+                                    "DatebirthObj.Datebirth": "required",
+                                    "PreexistingObj.Preexisting": "required",
+                                    "DescriptionillnessObj.Descriptionillness": {
+                                        required: function (element) {
+                                            if ($(".preexisting:checked").val() == "1") {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        },
+                                        regex: /^[a-zA-Z ]*$/,
+                                    },
+                                    "AnnualcoverlimitObj.Annualcoverlimit": {
+                                        required: function (element) {
+                                            if ($(".preexisting:checked").val() == "1") {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        },
+                                        regex: /^[0-9]*$/,
+                                    },
+                                    "ExcessPetObj.Excess": {
+                                        required: function (element) {
+                                            if ($("#annualcoverlimit").val() == "" && $(".preexisting:checked").val() == "1") {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        },
+                                    },
+                                    "ImposedpetsObj.Imposed": {
+                                        required: function (element) {
+                                            if ($("#excess").val() != "") {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
+                                        },
+                                    },
+                                    "BoardingfeeObj.Boardingfee": "required",
+                                    "AnnuallimitbfObj.Annuallimitbf": {
+                                        required: function (element) {
+                                            if ($(".boardingfee").val() != "0") {
+                                                return false;
+                                            } else {
+                                                return true;
+                                            }
+                                        },
+                                        regex: /^[0-9]*$/,
+                                    },
+                                    "DeathillnessObj.Deathillness": "required",
+                                    "AnnuallimitdtObj.Annuallimit": {
+                                        required: function (element) {
+                                            if ($(".deathillness").val() != "0") {
+                                                return false;
+                                            } else {
+                                                return true;
+                                            }
+                                        },
+                                        regex: /^[0-9]*$/,
+                                    },
+                                    "DeathinjuryObj.Deathinjury": "required",
+                                    "AnnuallimitijObj.Annuallimitij": {
+                                        required: function (element) {
+                                            if ($(".deathinjury").val() != "0") {
+                                                return false;
+                                            } else {
+                                                return true;
+                                            }
+                                        },
+                                        regex: /^[0-9]*$/,
+                                    },
 
-            },
-            messages: {
-                "SpeciesObj.Species": "Please select pets type",
-                "BreedObj.Breed": "Please select breed",
-                "OtherbreedObj.Otherbreed": {
-                    required: "Please enter breed name",
-                    regex:"Special character not allowed"
-                },
-                "NameObj.Name": {
-                    required: "Please enter name",
-                    regex: "Special character not allowed"
-                },
-                "DatebirthObj.Datebirth": "Please select date of birth",
-                "PreexistingObj.Preexisting": "Please select pre-existing",
-                "DescriptionillnessObj.Descriptionillness": {
-                    required: "Please enter description illness",
-                    regex: "Special character not allowed"
-                },
-                "AnnualcoverlimitObj.Annualcoverlimit": {
-                    required: "Please enter annual cover limit",
-                    regex: "Only numeric is allowed"
-                },
-                "ExcessPetObj.Excess": {
-                    required: "Please select excess",
-                },
-                "ImposedpetsObj.Imposed": {
-                    required: "Please select imposed"
-                },
-                "BoardingfeeObj.Boardingfee": "Please select boarding fee",
-                "AnnuallimitbfObj.Annuallimitbf": {
-                    required: "Please enter annual limit",
-                    regex: "Only numeric is allowed"
-                },
-                "DeathillnessObj.Deathillness": "Please select death of illness",
-                "AnnuallimitdtObj.Annuallimit": {
-                    required: "Please enter annual limit",
-                    regex: "Only numeric is allowed"
-                },
-                "DeathinjuryObj.Deathinjury": "Please select death in jury",
-                "AnnuallimitijObj.Annuallimitij": {
-                    required: "Please enter annual limit",
-                    regex: "Only numeric is allowed"
-                },
-            },
-            onfocusout: function (element) {
-                this.element(element);
-            },
-          //  submitHandler: function (form) {
-           ///     form.submit();
-//}
-        });
-    });
+                                },
+                                messages: {
+                                    "SpeciesObj.Species": "Please select pets type",
+                                    "BreedObj.Breed": "Please select breed",
+                                    "OtherbreedObj.Otherbreed": {
+                                        required: "Please enter breed name",
+                                        regex: "Special character not allowed"
+                                    },
+                                    "NameObj.Name": {
+                                        required: "Please enter name",
+                                        regex: "Special character not allowed"
+                                    },
+                                    "DatebirthObj.Datebirth": "Please select date of birth",
+                                    "PreexistingObj.Preexisting": "Please select pre-existing",
+                                    "DescriptionillnessObj.Descriptionillness": {
+                                        required: "Please enter description illness",
+                                        regex: "Special character not allowed"
+                                    },
+                                    "AnnualcoverlimitObj.Annualcoverlimit": {
+                                        required: "Please enter annual cover limit",
+                                        regex: "Only numeric is allowed"
+                                    },
+                                    "ExcessPetObj.Excess": {
+                                        required: "Please select excess",
+                                    },
+                                    "ImposedpetsObj.Imposed": {
+                                        required: "Please select imposed"
+                                    },
+                                    "BoardingfeeObj.Boardingfee": "Please select boarding fee",
+                                    "AnnuallimitbfObj.Annuallimitbf": {
+                                        required: "Please enter annual limit",
+                                        regex: "Only numeric is allowed"
+                                    },
+                                    "DeathillnessObj.Deathillness": "Please select death of illness",
+                                    "AnnuallimitdtObj.Annuallimit": {
+                                        required: "Please enter annual limit",
+                                        regex: "Only numeric is allowed"
+                                    },
+                                    "DeathinjuryObj.Deathinjury": "Please select death in jury",
+                                    "AnnuallimitijObj.Annuallimitij": {
+                                        required: "Please enter annual limit",
+                                        regex: "Only numeric is allowed"
+                                    },
+                                },
+                                onfocusout: function (element) {
+                                    this.element(element);
+                                },
+                                submitHandler: function (form) {
+                                    form.submit();
+                                }
+                            });
+                            $(document).on('change', '.commondataselection', function () {
+                                var Value = $(this).val();
+                                var EIId = $(this).data('eiid');
+                                var ItId = "0";
+                                elementAjaxCall(Value, EIId, ItId);
+                            });
+                            $(document).on('change', '.commondataradio', function () {
+                                var Value = $(this).val();
+                                var EIId = $(this).data('eiid');
+                                var ItId = "0";
+                                elementAjaxCall(Value, EIId, ItId);
+                            });
+                            $(document).on('focusout', ".commondatatest", function () {
+                                var Value = $(this).val();
+                                var EIId = $(this).data('eiid');
+                                var ItIdN = $(this).data('itid');
+                                if (ItIdN == 'undefined' || ItIdN == "") {
+                                    var ItId = "0";
+                                } else {
+                                    var ItId = ItIdN;
+                                }
+                                if (Value != "") {
+                                    elementAjaxCall(Value, EIId, ItId);
+                                }
+                            });
+                            $("#premium").click(function () {
+                                $.ajax({
+                                    url: '/Customer/PremiumDetails',
+                                    type: "POST",
+                                    crossOrigin: true,
+                                    data: {},
+                                    success: function (data) {
+                                        if (data.Status == true) {
+                                            var html1 = "";
+                                            if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                                                var html = "";
+                                                $.each(data.Premium, function (index, value) {
+                                                    html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
+                                                });
+                                                if (html != '') {
+                                                    $('#premiumModel-p-b').html(html);
+                                                }
+                                            }
+                                            if (data.UnderwriterFee != null) {
+                                                html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
+                                            }
+                                            if (data.FeeGst != null) {
+                                                html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
+                                            }
+                                            if (data.InvoiceTotal != null) {
+                                                html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
+                                            }
+                                            if (html1 != '') {
+                                                $('#premiumModel-p-f').html(html1);
+                                            }
+                                        }
+                                    }
+                                });
+
+                            });
+                        });
+                        function elementAjaxCall(Value, EIId, ItId) {
+                            if (Value != '' && EIId != '') {
+                                $.ajax({
+                                    url: '/Customer/ElementDetails',
+                                    type: "POST",
+                                    crossOrigin: true,
+                                    data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                                    success: function (data) {
+                                        if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                                            var valuedata = data.valuedata;
+                                            if (valuedata != '' && valuedata != null) {
+                                                $.each(valuedata, function (index, value) {
+                                                    var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                                    //$('#' + StateIdNewOne).val(value.Value);
+                                                    if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                                        var statedata = data.stateData;
+                                                        if (statedata != '' && statedata != null) {
+                                                            $.each(statedata, function (index1, value1) {
+                                                                var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                                                if (value1.Value == 'Invisible') {
+                                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                                } else if (value1.Value == 'Disabled') {
+                                                                    $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                                } else if (value1.Value == 'Read Only') {
+                                                                    $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                                } else if (value1.Value == 'Strike Through') {
+                                                                    $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                                } else if (value1.Value == 'Required') {
+                                                                    $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                                    $('#' + StateIdNew).attr('required', 'required');
+                                                                } else if (value1.Value == '"Not Rendered') {
+                                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                                }
+
+                                                            });
+                                                        }
+                                                    }
+                                                });
+                                            }
+                                        }
+                                        if (data.referrallist != null || data.referrallist != "") {
+                                            $('#referralList-p').html('No Referral List');
+                                        } else {
+                                            $('#referralList-p').html(data.referrallist);
+                                        }
+                                    }
+                                });
+                            }
+                        }
 </script>

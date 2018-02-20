@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using InsureThatAPI.Models;
 using InsureThatAPI.CommonMethods;
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace InsureThatAPI.Controllers
 {
@@ -18,7 +21,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Machinery(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> Machinery(int? cid, int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> MachineryItemTypeofUnit = new List<SelectListItem>();
@@ -26,7 +29,15 @@ namespace InsureThatAPI.Controllers
             List<SelectListItem> VolumeOfVatMachinery = new List<SelectListItem>();
             List<SelectListItem> MachineryTypeOfUnit = new List<SelectListItem>();
             List<SelectListItem> excessToPay = new List<SelectListItem>();
-
+            string ApiKey = null;
+            if (Session["ApiKey"] != null)
+            {
+                ApiKey = Session["ApiKey"].ToString();
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
             MachineryItemTypeofUnit = commonModel.TypeOfMachinery();
             PowerMachinery = commonModel.Power();
             VolumeOfVatMachinery = commonModel.VolumeOfVat();
@@ -34,57 +45,35 @@ namespace InsureThatAPI.Controllers
             excessToPay = commonModel.excessRate();
 
             FPMachinery FPMachinery = new FPMachinery();
+
+            var Policyincllist = new List<SessionModel>();
             if (Session["Policyinclustions"] != null)
             {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
+                Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
                 if (Policyincllist != null)
                 {
-                    if (Policyincllist.Contains("Machinery"))
+                    if (Policyincllist.Exists(p => p.name == "Machinery"))
                     {
 
                     }
                     else
                     {
-                        if (Policyincllist.Contains("Electronics"))
+                        if (Policyincllist.Exists(p => p.name == "Motor"))
                         {
-                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
+                            return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Contains("Money"))
+                        if (Policyincllist.Exists(p => p.name == "Machinery"))
                         {
-                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
+                            if (Session["unId"] == null && Session["profileId"] == null)
+                            {
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Machinery").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Machinery").Select(p => p.ProfileId).First();
+                            }
                         }
-                        else if (Policyincllist.Contains("Transit"))
+                        else
                         {
-                            return RedirectToAction("FarmPolicyTransit", "Transit", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("ValuablesFarm"))
-                        {
-                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("LiveStockFarm"))
-                        {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Burglary"))
-                        {
-                              return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                             return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid });
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+
                         }
                     }
                 }
@@ -181,134 +170,253 @@ namespace InsureThatAPI.Controllers
 
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.Machinery), Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
-            
-            if (details != null && details.Any())
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+
+            if (cid != null)
             {
-                if (details.Exists(q => q.QuestionId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId).FirstOrDefault();
-                    FPMachinery.UnSpecTypeOfMachineryFPObj.TypeofMachinery = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.UnSpecPowerFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.UnSpecPowerFPObj.EiId).FirstOrDefault();
-                    FPMachinery.UnSpecPowerFPObj.Power = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId))
-                {
-                    FPMachinery.UnSpecMachNoOfUnitsFPObj.NoOfUnits = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.UnSpecMachSumInsuredFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.UnSpecMachTotalSumInsuredFPObj.TotalSumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FPMachinery.MilkingVolumeOfVatFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.MilkingVolumeOfVatFPObj.EiId).FirstOrDefault();
-                    FPMachinery.MilkingVolumeOfVatFPObj.VolumeOfVat = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.MilkingNoOfVatsFPObj.EiId))
-                {
-                    FPMachinery.MilkingNoOfVatsFPObj.NoOfVats = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.MilkingNoOfVatsFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.MilkingSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.MilkingSumInsuredFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.MilkingSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.ShearingNoOfStandsFPObj.EiId))
-                {
-                    FPMachinery.ShearingNoOfStandsFPObj.NoOfStands = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.ShearingNoOfStandsFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.ShearingSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.ShearingSumInsuredFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.ShearingSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.ShearingTotalSumInsuredFPObj.TotalSumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FPMachinery.ExcessMachineryFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.ExcessMachineryFPObj.EiId).FirstOrDefault();
-                    FPMachinery.ExcessMachineryFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierTypeOfUnitFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.BolierTypeOfUnitFPObj.EiId).FirstOrDefault();
-                    FPMachinery.BolierTypeOfUnitFPObj.TypeofUnit = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierMakeAndModelFPObj.EiId))
-                {
-                    FPMachinery.BolierMakeAndModelFPObj.MakeAndModel = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.BolierMakeAndModelFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierRatedPowerFPObj.EiId))
-                {
-                    FPMachinery.BolierRatedPowerFPObj.RatedPower = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.BolierRatedPowerFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierPipeLengthFPObj.EiId))
-                {
-                    FPMachinery.BolierPipeLengthFPObj.PipeLength = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.BolierPipeLengthFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierNoOfUnitsFPObj.EiId))
-                {
-                    FPMachinery.BolierNoOfUnitsFPObj.NoOfUnits = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.BolierNoOfUnitsFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.BolierSumInsuredFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.BolierSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.BolierTotalSumInsuredFPObj.EiId))
-                {
-                    FPMachinery.BolierTotalSumInsuredFPObj.TotalSumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.BolierTotalSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FPMachinery.ExcessBolierFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.ExcessBolierFPObj.EiId).FirstOrDefault();
-                    FPMachinery.ExcessBolierFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.CoverMilkInVatsFPObj.EiId))
-                {
-                    FPMachinery.CoverMilkInVatsFPObj.MilkInVats = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.CoverMilkInVatsFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPMachinery.CoverAllOtherProduceFPObj.EiId))
-                {
-                    FPMachinery.CoverAllOtherProduceFPObj.AllOtherProduce = Convert.ToString(details.Where(q => q.QuestionId == FPMachinery.CoverAllOtherProduceFPObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FPMachinery.ExcessCoverFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPMachinery.ExcessCoverFPObj.EiId).FirstOrDefault();
-                    FPMachinery.ExcessCoverFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
+                ViewBag.cid = cid;
+                FPMachinery.CustomerId = cid.Value;
             }
+            else
+            {
+                ViewBag.cid = FPMachinery.CustomerId;
+            }
+            
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = 0;
+            int profileid = 0;
+            int Fprofileid = 0;
 
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                FPMachinery.CustomerId = cid.Value;
+            }
+            else
+            {
+                ViewBag.cid = FPMachinery.CustomerId;
+            }
+            if (Session["unId"] != null && Session["ProfileId"] != null)
+            {
+                unid = Convert.ToInt32(Session["unId"]);
+                profileid = Convert.ToInt32(Session["profileId"]);
+            }
+            if (Session["FProfileId"] != null)
+            {
+                Fprofileid = Convert.ToInt32(Session["FprofileId"]);
+            }
+            if (Session["Policyinclustions"] != null)
+            {
+                FPMachinery.PolicyInclusions = Policyincllist;
+            }
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPMachinery.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
+                {
+                    FPMachinery.PolicyInclusion = policyinclusions;
+                }
+                FPMachinery.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    policyid = PcId.ToString();
+                    FPMachinery.PolicyId = policyid;
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Machinery");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+
+                    int sectionId = policyinclusions.Where(p => p.Name == "Machinery" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Machinery" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+            }
+            else
+            {
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                {
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Machinery&SectionUnId=&ProfileUnId=" + Fprofileid);
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Machinery"))
+                            {
+                                var policyhomelist = Policyincllist.FindAll(p => p.name == "Machinery").ToList();
+                                if (policyhomelist != null && policyhomelist.Count() > 0)
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Machinery").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Machinery").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                                else
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Machinery").First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Machinery").First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (PcId == null && Session["unId"] != null && (Session["profileId"] != null || (profileid != null && profileid < 0)))
+                    {
+                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                        var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponse != null)
+                        {
+                            unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                            if (unitdetails != null && unitdetails.SectionData != null)
+                            {
+                                Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            }
+                        }
+                    }
+                }
+            }
+            if (unitdetails != null)
+            {
+                if (unitdetails.ProfileData != null)
+                {
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierMakeAndModelFPObj.MakeAndModel = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierNoOfUnitsFPObj.NoOfUnits = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierPipeLengthFPObj.PipeLength = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierRatedPowerFPObj.RatedPower = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierSumInsuredFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierTotalSumInsuredFPObj.TotalSumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.BolierTypeOfUnitFPObj.TypeofUnit = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.CoverAllOtherProduceFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.CoverAllOtherProduceFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.CoverAllOtherProduceFPObj.AllOtherProduce = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.CoverMilkInVatsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.CoverMilkInVatsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.CoverMilkInVatsFPObj.MilkInVats = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ExcessBolierFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.ExcessBolierFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.ExcessBolierFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ExcessCoverFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.ExcessCoverFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.ExcessCoverFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ExcessMachineryFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.ExcessMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.ExcessMachineryFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.MilkingNoOfVatsFPObj.NoOfVats = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.MilkingSumInsuredFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.MilkingVolumeOfVatFPObj.VolumeOfVat = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.ShearingNoOfStandsFPObj.NoOfStands = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.ShearingSumInsuredFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.ShearingTotalSumInsuredFPObj.TotalSumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.UnSpecMachNoOfUnitsFPObj.NoOfUnits = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.UnSpecMachSumInsuredFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.UnSpecMachTotalSumInsuredFPObj.TotalSumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.UnSpecPowerFPObj.Power = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPMachinery.UnSpecTypeOfMachineryFPObj.TypeofMachinery = val;
+                    }
+                }
+            }
             return View(FPMachinery);
         }
 
@@ -346,128 +454,13 @@ namespace InsureThatAPI.Controllers
             else
             {
                 ViewBag.cid = FPMachinery.CustomerId;
+                cid = FPMachinery.CustomerId;
             }
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (FPMachinery.UnSpecTypeOfMachineryFPObj != null && FPMachinery.UnSpecTypeOfMachineryFPObj.EiId > 0 && FPMachinery.UnSpecTypeOfMachineryFPObj.TypeofMachinery != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.UnSpecTypeOfMachineryFPObj.EiId, FPMachinery.UnSpecTypeOfMachineryFPObj.TypeofMachinery.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
+            Session["unId"] = null;
+            Session["profileId"] = null;
 
-                if (FPMachinery.UnSpecPowerFPObj != null && FPMachinery.UnSpecPowerFPObj.EiId > 0 && FPMachinery.UnSpecPowerFPObj.Power != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.UnSpecPowerFPObj.EiId, FPMachinery.UnSpecPowerFPObj.Power.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.UnSpecMachNoOfUnitsFPObj != null && FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId > 0 && FPMachinery.UnSpecMachNoOfUnitsFPObj.NoOfUnits != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId, FPMachinery.UnSpecMachNoOfUnitsFPObj.NoOfUnits.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.UnSpecMachSumInsuredFPObj != null && FPMachinery.UnSpecMachSumInsuredFPObj.EiId > 0 && FPMachinery.UnSpecMachSumInsuredFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.UnSpecMachSumInsuredFPObj.EiId, FPMachinery.UnSpecMachSumInsuredFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.UnSpecMachTotalSumInsuredFPObj != null && FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId > 0 && FPMachinery.UnSpecMachTotalSumInsuredFPObj.TotalSumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId, FPMachinery.UnSpecMachTotalSumInsuredFPObj.TotalSumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.MilkingVolumeOfVatFPObj != null && FPMachinery.MilkingVolumeOfVatFPObj.EiId > 0 && FPMachinery.MilkingVolumeOfVatFPObj.VolumeOfVat != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.MilkingVolumeOfVatFPObj.EiId, FPMachinery.MilkingVolumeOfVatFPObj.VolumeOfVat.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.MilkingNoOfVatsFPObj != null && FPMachinery.MilkingNoOfVatsFPObj.EiId > 0 && FPMachinery.MilkingNoOfVatsFPObj.NoOfVats != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.MilkingNoOfVatsFPObj.EiId, FPMachinery.MilkingNoOfVatsFPObj.NoOfVats.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.MilkingSumInsuredFPObj != null && FPMachinery.MilkingSumInsuredFPObj.EiId > 0 && FPMachinery.MilkingSumInsuredFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.MilkingSumInsuredFPObj.EiId, FPMachinery.MilkingSumInsuredFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.MilkingTotalSumInsuredFPObj != null && FPMachinery.MilkingTotalSumInsuredFPObj.EiId > 0 && FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.MilkingTotalSumInsuredFPObj.EiId, FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.ShearingNoOfStandsFPObj != null && FPMachinery.ShearingNoOfStandsFPObj.EiId > 0 && FPMachinery.ShearingNoOfStandsFPObj.NoOfStands != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.ShearingNoOfStandsFPObj.EiId, FPMachinery.ShearingNoOfStandsFPObj.NoOfStands.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.ShearingSumInsuredFPObj != null && FPMachinery.ShearingSumInsuredFPObj.EiId > 0 && FPMachinery.ShearingSumInsuredFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.ShearingSumInsuredFPObj.EiId, FPMachinery.ShearingSumInsuredFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPMachinery.MilkingTotalSumInsuredFPObj != null && FPMachinery.MilkingTotalSumInsuredFPObj.EiId > 0 && FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.MilkingTotalSumInsuredFPObj.EiId, FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.ExcessMachineryFPObj != null && FPMachinery.ExcessMachineryFPObj.EiId > 0 && FPMachinery.ExcessMachineryFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.ExcessMachineryFPObj.EiId, FPMachinery.ExcessMachineryFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.BolierTypeOfUnitFPObj != null && FPMachinery.BolierTypeOfUnitFPObj.EiId > 0 && FPMachinery.BolierTypeOfUnitFPObj.TypeofUnit != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierTypeOfUnitFPObj.EiId, FPMachinery.BolierTypeOfUnitFPObj.TypeofUnit.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPMachinery.BolierMakeAndModelFPObj != null && FPMachinery.BolierMakeAndModelFPObj.EiId > 0 && FPMachinery.BolierMakeAndModelFPObj.MakeAndModel != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierMakeAndModelFPObj.EiId, FPMachinery.BolierMakeAndModelFPObj.MakeAndModel.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.BolierRatedPowerFPObj != null && FPMachinery.BolierRatedPowerFPObj.EiId > 0 && FPMachinery.BolierRatedPowerFPObj.RatedPower != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierRatedPowerFPObj.EiId, FPMachinery.BolierRatedPowerFPObj.RatedPower.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.BolierPipeLengthFPObj != null && FPMachinery.BolierPipeLengthFPObj.EiId > 0 && FPMachinery.BolierPipeLengthFPObj.PipeLength != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierPipeLengthFPObj.EiId, FPMachinery.BolierPipeLengthFPObj.PipeLength.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.BolierNoOfUnitsFPObj != null && FPMachinery.BolierNoOfUnitsFPObj.EiId > 0 && FPMachinery.BolierNoOfUnitsFPObj.NoOfUnits != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierNoOfUnitsFPObj.EiId, FPMachinery.BolierNoOfUnitsFPObj.NoOfUnits.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.BolierSumInsuredFPObj != null && FPMachinery.BolierSumInsuredFPObj.EiId > 0 && FPMachinery.BolierSumInsuredFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierSumInsuredFPObj.EiId, FPMachinery.BolierSumInsuredFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPMachinery.BolierTotalSumInsuredFPObj != null && FPMachinery.BolierTotalSumInsuredFPObj.EiId > 0 && FPMachinery.BolierTotalSumInsuredFPObj.TotalSumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.BolierTotalSumInsuredFPObj.EiId, FPMachinery.BolierTotalSumInsuredFPObj.TotalSumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.ExcessBolierFPObj != null && FPMachinery.ExcessBolierFPObj.EiId > 0 && FPMachinery.ExcessBolierFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.ExcessBolierFPObj.EiId, FPMachinery.ExcessBolierFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.CoverMilkInVatsFPObj != null && FPMachinery.CoverMilkInVatsFPObj.EiId > 0 && FPMachinery.CoverMilkInVatsFPObj.MilkInVats != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.CoverMilkInVatsFPObj.EiId, FPMachinery.CoverMilkInVatsFPObj.MilkInVats.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPMachinery.CoverAllOtherProduceFPObj != null && FPMachinery.CoverAllOtherProduceFPObj.EiId > 0 && FPMachinery.CoverAllOtherProduceFPObj.AllOtherProduce != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.CoverAllOtherProduceFPObj.EiId, FPMachinery.CoverAllOtherProduceFPObj.AllOtherProduce.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMachinery.ExcessCoverFPObj != null && FPMachinery.ExcessCoverFPObj.EiId > 0 && FPMachinery.ExcessCoverFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMachinery.CustomerId, Convert.ToInt32(FarmPolicySection.Machinery), FPMachinery.ExcessCoverFPObj.EiId, FPMachinery.ExcessCoverFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-            }
-            return View(FPMachinery);
+            return RedirectToAction("BindCover", "Customer", new { cid = cid, PcId = FPMachinery.PcId });
         }
 
     }

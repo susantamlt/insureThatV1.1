@@ -11,7 +11,17 @@ namespace InsureThatAPI.Models
     }
     public class BoatDetails
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         public string CompletionTrackB { get; set; }
         public BoatNames BoatnameObj { get; set; }
         public RegistrationDetails RegistrationdetailObj { get; set; }
@@ -26,6 +36,39 @@ namespace InsureThatAPI.Models
         public TypeOfMooringStorage MooringstorageObj { get; set; }
         public OtherPleaseDetails otherpleasedetailObj { get; set; }
         public AddressesBD AddressObj { get; set; }
+
+        public YearOfManufacture YearmanufactureMDObj { get; set; }
+        public MakeAndModel MakemodelObj { get; set; }
+        public SerialNumbersMD SerialnumberObj { get; set; }
+        public FuelType FueltypeObj { get; set; }
+        public MotorPosition MotorpositionObj { get; set; }
+        public DriveType DrivetypeObj { get; set; }
+        public Detectors DetectorMDObj { get; set; }
+        public Powers PowerObj { get; set; }
+        public MarketValues MarketvalueObj { get; set; }
+
+        public NameBOs NameboObj { get; set; }
+        public YearsExperienced YearsexperienceObj { get; set; }
+        public TypesofBoat TypesboatObj { get; set; }
+
+        public MarketValues MarketvalueCDObj { get; set; }
+        public MotorValues MotorvalueObj { get; set; }
+        public AccessoryDescription AccessorydescriptionObj { get; set; }
+        public AccessorySumInsured AccessorysuminsureObj { get; set; }
+        public string Coverforaccessories { get; set; }
+        public string Totalcoverboat { get; set; }
+        public LiabilityCD LiabilityObj { get; set; }
+        public ExcessCD ExcesscdObj { get; set; }
+        public ClaimFreePeriod FreeperiodObj { get; set; }
+        public NoClaimDiscount NodiscountObj { get; set; }
+        public string Totalsumassured { get; set; }
+
+        public Waterways WaterwayObj { get; set; }
+        public LimitSeawardTravel LimitseawardObj { get; set; }
+        public SailBoats SailboatObj { get; set; }
+
+        public NameOfInstitutions InstitutionsObj { get; set; }
+        public LocationsIPB LocationObj { get; set; }
     }
     public class MotorDetails
     {

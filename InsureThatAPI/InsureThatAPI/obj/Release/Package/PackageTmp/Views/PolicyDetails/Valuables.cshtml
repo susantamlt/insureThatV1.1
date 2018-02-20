@@ -1,6 +1,6 @@
 ﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
 @{
-    ViewBag.Title = "Valuables";
+    ViewBag.Title = "Home Bilding";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @if (Model.PolicyData != null)
@@ -47,9 +47,9 @@
             </h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
-            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
-            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         </div>
 
         <div class="mt-50 mb-50"></div>
@@ -87,109 +87,182 @@
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                     <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
-                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="screens">
-        @using (Ajax.BeginForm("FarmProperty", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 3 }, new AjaxOptions()
-        {
-            HttpMethod = "GET"
+                    @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+                    {
+                        @*<a href="#cancelpolicymodel" class="btn-primary btn col-md-12">Cancel Policy</a>*@
+                        <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12" data-toggle="modal">Cancel Policy</button>
 
-        }))
-        {
-            @Html.AntiForgeryToken()
-            <div class="row content policy-full-view">
-                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                    <div class="well">
-                        @Html.HiddenFor(p => p.CustomerId)
-                        <h3>VALUABLES DETAILS</h3>
-                        <div class="row">
-                            <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Valuables</strong></p>
-                        </div>
-                        <div class="row">
-                            <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
-                            <p class="col-md-4 col-sm-4 col-xs-12 text-right">
-                                @if (Model.AddressData != null && Model.AddressData.Count > 0)
-                                {
-                                    <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
-                                }
-                            </p>
-                        </div>
-                        <div class="row">
-                            <p class="col-md-10 col-sm-10 col-xs-10">How much would it cost to replace your unspecified contents </p>
-                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60383) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60383).Value != ""))
-                                {
-                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60383).Value</span>
-                                }
-                            </p>
-                        </div>
-                        <div class="row">
-                            <p class="col-md-6 col-sm-6 col-xs-12 text-left">Description</p>
-                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">Sum Insured</p>
-                        </div>
-                        <div class="row">
-                            <p class="col-md-6 col-sm-6 col-xs-12 text-left">
-                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
-                                {
-                                    for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
-                                    {
-                                        if (Model.SectionData.ValueData[j].Element.ElId == 60391 && Model.SectionData.ValueData[j].Value != "")
-                                        {
-                                            <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
-                                        }
-                                    }
-                                }
-                            </p>
-                            <p class="col-md-6 col-sm-6 col-xs-12 text-right">
-                                @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
-                                {
-                                    for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
-                                    {
-                                        if (Model.SectionData.ValueData[i].Element.ElId == 60393 && Model.SectionData.ValueData[i].Value != "")
-                                        {
-                                            <span>@Model.SectionData.ValueData[i].Value</span><br /><br />
-                                        }
-                                    }
-                                }
-                            </p>
-                        </div>
-                        <div class="row">
-                            <p class="col-md-10 col-sm-10 col-xs-10">Please select the excess you wish to pay</p>
-                            <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60399) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60399).Value != ""))
-                                {
-                                    <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60399).Value</span>
-                                }
-                            </p>
-                        </div>
-                        <div class="row">
-                            <p class="col-md-10 col-sm-10 col-xs-10">Premium</p>
-                            <p class="col-md-2 col-sm-2 col-xs-2 text-right"></p>
-                        </div>
-                        <div class="row">
-                            <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                    }
+                    else
+                    {
+                        <a href="#Bindcovermodel" class="btn-primary btn col-md-12">Bind Policy</a>
+                    }
+                </div>
+                <div id="cancelpolicymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="cancelpolicymodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Cancel Policy</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure cancelling this policy. Action can not be reversed.</p>
+                                <p>Select reson for cancelling</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                <button class="btn btn-default no-border" id="cancelpo" aria-hidden="true"> Confirm </button>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div id="Bindcovermodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="Bindcovermodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Bind Quotation</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>If all the inclustions are completed then you can continue and bind the cover and complete the policy.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" id="bindcover" aria-hidden="true"> Bind </button>
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </div>
             </div>
-        }
     </div>
 }
-else
-{
-    <div class="row content">
-        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
-            @using (Ajax.BeginForm("FarmProperty", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
-            {
-                HttpMethod = "GET"
+<div class="row content">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+        <div class="row content policy-full-view">
+            <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                @if (Model.SectionData != null)
+                {
+                    using (Ajax.BeginForm("FarmProperty", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
 
-            }))
-            {
-                <div class="row content policy-full-view">
-                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+
+                            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+                            <h3 class="col-md-9 col-sm-9 col-xs-12">VALUABLES DETAILS</h3>
+                            @if (Model.ReferralList != "")
+                            {
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <div class="pull-right">
+                                        <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+                                    </div>
+                                </div>
+                                <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="pull-left">Referral List</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                    <img src="~/images/close-icon.png" />
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>@Html.Raw(HttpUtility.HtmlDecode(Model.ReferralList));</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Valuables</strong></p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                                <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                    @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                    {
+                                        <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">How much would it cost to replace your unspecified contents </p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60383) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60383).Value != ""))
+                                    {
+                                        <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60383).Value</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-6 col-sm-6 col-xs-12 text-left">Description</p>
+                                <p class="col-md-6 col-sm-6 col-xs-12 text-right">Sum Insured</p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-6 col-sm-6 col-xs-12 text-left">
+                                    @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                    {
+                                        for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
+                                        {
+                                            if (Model.SectionData.ValueData[j].Element.ElId == 60391 && Model.SectionData.ValueData[j].Value != "")
+                                            {
+                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                            }
+                                        }
+                                    }
+                                </p>
+                                <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                                    @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                    {
+                                        for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
+                                        {
+                                            if (Model.SectionData.ValueData[i].Element.ElId == 60393 && Model.SectionData.ValueData[i].Value != "")
+                                            {
+                                                <span>@Model.SectionData.ValueData[i].Value</span><br /><br />
+                                            }
+                                        }
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">Please select the excess you wish to pay</p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60399) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60399).Value != ""))
+                                    {
+                                        <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60399).Value</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">Premium</p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right"></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    using (Ajax.BeginForm("FarmProperty", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
                         <div class="well">
                             @Html.HiddenFor(p => p.CustomerId)
                             <h3>VALUABLES DETAILS</h3>
@@ -200,9 +273,140 @@ else
                                 <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
                             </div>
                         </div>
+                    }
+                }
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+                <h3>Policy Sections</h3>
+                <div class="well">
+                    @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                    {
+                        for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                        {
+                            <div class="policy-loc-row">
+                                @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('.inclusions').click(function () {
+                                            var name = $(this).attr('data-name');
+                                            var nid = $(this).attr('data-nid');
+                                            $('.policy-ed-del-wrapper').hide();
+                                            $("#policy-ed-del-wrap-" + nid).show();
+
+                                        });
+                                    });
+                                </script>
+                                <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                    <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                    <a class="btn color-bk-btn policy-delet-wrap" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" href="javascript:void(0);">Delete</a>
+                                </div>
+                            </div>
+                        }
+                        <script>
+                            $(".policy-edit-wrap").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                                    },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                            $(".policy-delet-wrap").click(function () {
+                                var selectedunid = $(this).data('unid');
+                                var selectedcid = $(this).data('cid');
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/Deleteunit",
+                                    data: { "cid": selectedcid, "unid": selectedunid },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                            $("#bindcover").click(function () {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/BindCover",
+                                    data: {},
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                        </script>
+                    }
+                    else
+                    {
+                        if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+                        {
+                            for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                            {
+                                <div class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @disabled = "disabled" })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i]</label>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('.inclusions').click(function () {
+                                                var name = $(this).attr('data-name');
+                                                var nid = $(this).attr('data-nid');
+                                                $('.policy-ed-del-wrapper').hide();
+                                                $("#policy-ed-del-wrap-" + nid).show();
+
+                                            });
+                                        });
+                                    </script>
+                                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                        <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Edit</a>&nbsp;
+                                        <a class="btn color-bk-btn policy-delet-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Delete</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    }
+                    <div class="clearfix"></div>
+                    <div class="dropdown pc pc-in">
+                        <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
+                        <ul class="dropdown-menu col-md-12 unit">
+                            <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                            <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                            <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                            <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                            <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                            <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                            <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                            <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                            <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+                        </ul>
+                        <script type="text/javascript">
+                                        $(document).on('click', 'ul.unit > li', function () {
+                                            var unitname = $(this).children("a").attr("class");
+                                            var cid = $("#ciid").val();
+                                            var pcid = $("#pcidd").val();
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Customer/AddUnit",
+                                                data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                                success: function (responce) {
+
+                                                    window.location.href = responce;
+                                                }
+                                            });
+                                        });
+                        </script>
                     </div>
                 </div>
-            }
+            </div>
         </div>
     </div>
-}
+</div>

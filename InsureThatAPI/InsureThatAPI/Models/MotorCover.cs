@@ -11,19 +11,82 @@ namespace InsureThatAPI.Models
     }
     public class MCVehicleDescription
     {
+        public List<SelectListItem> MCOPTList { get; set; }
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         public string completionTrackMC { get; set; }
         public GLVCategory LscategoryObj { get; set; }
         public GLVMake McmakeObj { get; set; }
         public GLVYear McyearObj { get; set; }
         public GLVFamily MCfamilyObj { get; set; }
         public GLVSelectCorDetails MCscdObj { get; set; }
-        public int Estimatedrv { get; set; }
+        public int? Estimatedrv { get; set; }
         public FMMCMake FmmcmakeObj { get; set; }
         public FMMCYear FmmcyearObj { get; set; }
         public FMMCType FmmctypeObj { get; set; }
         public FMMCSelectCorDetails FmmcscdObj { get; set; }
         public FMOwnersManual OwnersmanualObj { get; set; }
+        public MCADKeptAtNight KeptnightObj { get; set; }
+        public MCADAddress AdaddressObj { get; set; }
+        public MCADVehicleRegistered VregisterObj { get; set; }
+        public MCADRegistrationNumber RnumberObj { get; set; }
+        public MCADVinNumber VnumberObj { get; set; }
+        public MCADEngineNumber EnumberObj { get; set; }
+        public MCADVehicleModified VmodifiedObj { get; set; }
+        public MCADdescribeModified DmodifiedObj { get; set; }
+        public MCADSecurityFeaturesInstalled SFinstalledObj { get; set; }
+        public MCADVehicleUsed VusedObj { get; set; }
+        public MCADCarryingCapacity CcapacityObj { get; set; }
+        public DriverName DrivernameObj { get; set; }
+        public DriverAge DriverageObj { get; set; }
+        public DriverGender DrivergenderObj { get; set; }
+        public DriverAmic DriveramicObj { get; set; }
+        public UseOfVehicle UsevehicleObj { get; set; }
+        public CoverOptionCD CoveroptionObj { get; set; }
+        public CoverTypeCD CovertypeObj { get; set; }
+        public MaximumMarketValue MaxMarvalObj { get; set; }
+        public CaravanAnnex CaravanannexObj { get; set; }
+        public UnspecifiedItems UnspecifieditemsObj { get; set; }
+        public NonStandardAccessories AccessoriesObj { get; set; }
+        public string Vehiclemodified { get; set; }
+        public AccessoryDescriptionCD DescriptionObj { get; set; }
+        public SumInsuredCD SumnsuredObj { get; set; }
+        public string tCAitems { get; set; }
+        public LimitOfIndemnityDC LimitindemnityObj { get; set; }
+        public RatingDC RatingObj { get; set; }
+        public NoClaimBonus NoclaimbonusObj { get; set; }
+        public MCInterestedPartyName MCPartynameObj { get; set; }
+        public MCInterestedPartyLocation MCPartyLocationObj { get; set; }
+        public HireCarOption CaroptionObj { get; set; }
+        public BasicExcess ExcessObj { get; set; }
+        public bool MCOEimposed { get; set; }
+        public EstimatedRetailValue EstimatedValueObj { get; set; }
+        public Excess21UnderPEE Excess21UnderObj { get; set; }
+        public Excess25UnderPEE Excess25UnderObj { get; set; }
+    }
+    public class Excess21UnderPEE
+    {
+        public string Excess21Under { get; set; }
+        public int EiId { get; set; }
+    }
+    public class Excess25UnderPEE
+    {
+        public string Excess25Under { get; set; }
+        public int EiId { get; set; }
+    }
+    public class EstimatedRetailValue
+    {
+        public string EstimatedValue { get; set; }
+        public int EiId { get; set; }
     }
     public class MCAdditionalDetails
     {
@@ -39,8 +102,8 @@ namespace InsureThatAPI.Models
         public MCADdescribeModified DmodifiedObj { get; set; }
         public MCADSecurityFeaturesInstalled SFinstalledObj { get; set; }
         public MCADVehicleUsed VusedObj { get; set; }
-        public MCADCarryingCapacity  CcapacityObj  { get; set; }
-    }    
+        public MCADCarryingCapacity CcapacityObj { get; set; }
+    }
     public class MCCoverDetails
     {
         public int CustomerId { get; set; }

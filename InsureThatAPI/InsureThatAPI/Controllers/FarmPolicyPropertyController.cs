@@ -20,103 +20,19 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult FarmLocationDetails(int? cid)
+        public ActionResult FarmLocationDetails(int? cid, int? PcId)
         {
-            if (Session["Policyinclustions"] != null)
-            {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
-                if (Policyincllist != null)
-                {
-                    if (Policyincllist.Contains("FixedFarmProperty"))
-                    {
+            List<SessionModel> PolicyInclustions = new List<SessionModel>();
 
-                    }
-                    else
-                    {
-                      
-                         if (Policyincllist.Contains("FarmInteruption"))
-                        {
-                            return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("FarmLiability"))
-                        {
-                            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Burglary"))
-                        {
-                            return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Electronics"))
-                        {
-                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Money"))
-                        {
-                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Transit"))
-                        {
-                            return RedirectToAction("FarmPolicyTransit", "Transit", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("ValuablesFarm"))
-                        {
-                              return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("LiveStockFarm"))
-                        {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Machinery"))
-                        {
-                            //  return RedirectToAction("", "", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                            // return RedirectToAction("", "", new { cid = cid });
-                        }
-                    }
-                }
-            }
-            else
-            {
-                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 2 });
-            }
             FarmLocationDetails FarmLocationDetails = new FarmLocationDetails();
             ViewBag.cid = cid;
             if (cid != null)
             {
                 FarmLocationDetails.CustomerId = cid.Value;
             }
-
-            if (Session["completionTrackPFP"] != null)
-            {
-                Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                FarmLocationDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            else
-            {
-                Session["completionTrackPFP"] = "0-0-0-0-0"; ;
-                FarmLocationDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.FixedFarmProperty),Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
-            {
-            }
+
             return View(FarmLocationDetails);
         }
         [HttpPost]
@@ -134,43 +50,146 @@ namespace InsureThatAPI.Controllers
             }
             if (cid.HasValue && cid > 0)
             {
-                if (Session["completionTrackPFP"] != null)
-                {
-                    Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                    FarmLocationDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                    if (FarmLocationDetails.completionTrackPFP != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = FarmLocationDetails.completionTrackPFP.ToCharArray();
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 0)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackPFP"] = Completionstring;
-                        FarmLocationDetails.completionTrackPFP = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackPFP"] = "1-0-0-0-0"; ;
-                    FarmLocationDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                }
+                //if (Session["completionTrackPFP"] != null)
+                //{
+                //    Session["completionTrackPFP"] = Session["completionTrackPFP"];
+                //    FarmLocationDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
+                //    if (FarmLocationDetails.completionTrackPFP != null)
+                //    {
+                //        string Completionstring = string.Empty;
+                //        char[] arr = FarmLocationDetails.completionTrackPFP.ToCharArray();
+                //        for (int i = 0; i < arr.Length; i++)
+                //        {
+                //            char a = arr[i];
+                //            if (i == 0)
+                //            {
+                //                a = '1';
+                //            }
+                //            Completionstring = Completionstring + a;
+                //        }
+                //        Session["completionTrackPFP"] = Completionstring;
+                //        FarmLocationDetails.completionTrackPFP = Completionstring;
+                //    }
+                //}
+                //else
+                //{
+                //    Session["completionTrackPFP"] = "1-0-0-0-0"; ;
+                //    FarmLocationDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
+                //}
                 return RedirectToAction("FarmDetails", new { cid = cid });
             }
             return View(FarmLocationDetails);
         }
         [HttpGet]
-        public ActionResult FarmDetails(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> FarmDetails(int? cid, int? PcId)
         {
+            string ApiKey = null;
+            if (Session["ApiKey"] != null)
+            {
+                ApiKey = Session["ApiKey"].ToString();
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
+            var Policyincllist = new List<SessionModel>();
+            if (Session["Policyinclustions"] != null)
+            {
+                Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+                if (Policyincllist != null)
+                {
+                    if (Policyincllist != null)
+                    {
+                        if (Policyincllist.Exists(p => p.name == "Fixed Farm Property"))
+                        {
+
+                        }
+                        else
+                        {
+                            if (Policyincllist.Exists(p => p.name == "Mobile Farm Property"))
+                            {
+                                return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
+                            {
+                                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
+                            {
+                                return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Burglary"))
+                            {
+                                return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                            {
+                                return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Money"))
+                            {
+                                return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Transit"))
+                            {
+                                return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                            {
+                                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                            {
+                                return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                            {
+                                return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Building"))
+                            {
+                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Content"))
+                            {
+                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                            {
+                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Motor"))
+                            {
+                                return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
+                            }
+                            if (Policyincllist.Exists(p => p.name == "Fixed Farm Property"))
+                            {
+                                if (Session["unId"] == null && Session["profileId"] == null)
+                                {
+                                    Session["unId"] = Policyincllist.Where(p => p.name == "Fixed Farm Property").Select(p => p.UnitId).First();
+                                    Session["profileId"] = Policyincllist.Where(p => p.name == "Fixed Farm Property").Select(p => p.ProfileId).First();
+                                }
+                            }
+                            else
+                            {
+                                return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 1021 });
+            }
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass FarmDetailsmodel = new NewPolicyDetailsClass();
             List<SelectListItem> constructionTypeList = new List<SelectListItem>();
             constructionTypeList = FarmDetailsmodel.constructionType();
             FarmDetails FarmDetails = new FarmDetails();
+
+            #region Farm Details
             FarmDetails.DescriptionFBObj = new DetailedDescription();
             FarmDetails.DescriptionFBObj.EiId = 62255;
             FarmDetails.YearconstructedFBObj = new YearConstructedFB();
@@ -184,6 +203,43 @@ namespace InsureThatAPI.Controllers
             FarmDetails.SuminsuredFBObj.EiId = 62263;
             FarmDetails.UnrepaireddamageObj = new UnrepairedDamageFS();
             FarmDetails.UnrepaireddamageObj.EiId = 62309;
+            #endregion
+            #region Farm Structures
+            List<SelectListItem> ExcessRateList = new List<SelectListItem>();
+            ExcessRateList = FarmDetailsmodel.ExcessRateFS();
+
+            FarmDetails.SublimitObj = new SubLimitFarmFencing();
+            FarmDetails.SublimitObj.EiId = 62283;
+            FarmDetails.TotalcoverObj = new TotalCoverFarmFencing();
+            FarmDetails.TotalcoverObj.EiId = 62287;
+            FarmDetails.OtherstructurefcObj = new OtherFarmStructuresFC();
+            FarmDetails.OtherstructurefcObj.EiId = 62291;
+            FarmDetails.RoofwallsObj = new RoofAndWallsFS();
+            FarmDetails.RoofwallsObj.EiId = 62297;
+            //FarmStructures.UnrepaireddamageObj = new UnrepairedDamageFS();
+            //FarmStructures.UnrepaireddamageObj.EiId = 62309;
+            FarmDetails.ExcesshcObj = new HarvestedCropsExcess();
+            FarmDetails.ExcesshcObj.ExcessHCList = ExcessRateList;
+            FarmDetails.ExcesshcObj.EiId = 62315;
+            #endregion
+            #region HarvestedCrops
+            List<SelectListItem> ExcessRateLists = new List<SelectListItem>();
+            ExcessRateLists = FarmDetailsmodel.excessRate();
+
+            FarmDetails.SuminsuredhcObj = new HarvestedCropsSumInsured();
+            FarmDetails.SuminsuredhcObj.EiId = 62329;
+            FarmDetails.ExcesshcObj = new HarvestedCropsExcess();
+            FarmDetails.ExcesshcObj.ExcessHCList = ExcessRateLists;
+            FarmDetails.ExcesshcObj.EiId = 62331;
+            #endregion
+            #region Interested Parties
+            FarmDetails.PartynameObj = new InterestedPartyName();
+            FarmDetails.PartynameObj.EiId = 62345;
+            FarmDetails.PartylocationObj = new InterestedPartyLocation();
+            FarmDetails.PartylocationObj.EiId = 62347;
+            FarmDetails.TotalsuminsuredObj = new InterestedTotalSumInsured();
+            FarmDetails.TotalsuminsuredObj.EiId = 62349;
+            #endregion
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -193,45 +249,201 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = FarmDetails.CustomerId;
             }
-            if (Session["completionTrackPFP"] != null)
+
+            var db = new MasterDataEntities();
+            string policyid = null;
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = 0;
+            int profileid = 0;
+            int Fprofileid = 0;
+            if (Session["unId"] != null && Session["ProfileId"] != null)
             {
-                Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                FarmDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
+                unid = Convert.ToInt32(Session["unId"]);
+                profileid = Convert.ToInt32(Session["profileId"]);
+            }
+            if (Session["FProfileId"] != null)
+            {
+                Fprofileid = Convert.ToInt32(Session["FprofileId"]);
+            }
+            if (Session["Policyinclustions"] != null)
+            {
+                FarmDetails.PolicyInclusions = Policyincllist;
+            }
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FarmDetails.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
+                {
+                    FarmDetails.PolicyInclusion = policyinclusions;
+                }
+                FarmDetails.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    policyid = PcId.ToString();
+                    FarmDetails.PolicyId = policyid;
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Fixed Farm Property");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+
+                    int sectionId = policyinclusions.Where(p => p.Name == "Fixed Farm Property" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Fixed Farm Property" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
             }
             else
             {
-                Session["completionTrackPFP"] = "0-0-0-0-0"; ;
-                FarmDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                {
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Fixed Farm Property&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Fixed Farm Property"))
+                            {
+                                var policyhomelist = Policyincllist.FindAll(p => p.name == "Fixed Farm Property").ToList();
+                                if (policyhomelist != null && policyhomelist.Count() > 0)
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Fixed Farm Property").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Fixed Farm Property").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                                else
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Fixed Farm Property").First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Fixed Farm Property").First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (PcId == null && Session["unId"] != null && (Session["profileId"] != null || (Fprofileid != null && Fprofileid < 0)))
+                    {
+                        if (profileid == null || profileid == 0)
+                        {
+                            profileid = Fprofileid;
+                        }
+                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                        var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponse != null)
+                        {
+                            unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                            if (unitdetails != null && unitdetails.SectionData != null)
+                            {
+                                Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            }
+                        }
+                    }
+                }
             }
-            var db = new MasterDataEntities();
-            string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
-            if (details != null && details.Any())
+            if (unitdetails != null)
             {
-                if (details.Exists(q => q.QuestionId == FarmDetails.DescriptionFBObj.EiId))
+                if (unitdetails.ProfileData != null)
                 {
-                    FarmDetails.DescriptionFBObj.Description = /*Convert.ToString(*/details.Where(q => q.QuestionId == FarmDetails.DescriptionFBObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == FarmDetails.YearconstructedFBObj.EiId))
-                {
-                    FarmDetails.YearconstructedFBObj.Year = details.Where(q => q.QuestionId == FarmDetails.YearconstructedFBObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == FarmDetails.ConstructionFBObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FarmDetails.ConstructionFBObj.EiId).FirstOrDefault();
-                    FarmDetails.ConstructionFBObj.Construction = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == FarmDetails.ContaincoolroomObj.EiId))
-                {
-                    FarmDetails.ContaincoolroomObj.Coolroom = details.Where(q => q.QuestionId == FarmDetails.ConstructionFBObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == FarmDetails.SuminsuredFBObj.EiId))
-                {
-                    FarmDetails.SuminsuredFBObj.Suminsured = details.Where(q => q.QuestionId == FarmDetails.SuminsuredFBObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == FarmDetails.UnrepaireddamageObj.EiId))
-                {
-                    FarmDetails.UnrepaireddamageObj.Unrepaireddamage = details.Where(q => q.QuestionId == FarmDetails.UnrepaireddamageObj.EiId).FirstOrDefault().Answer;
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.ConstructionFBObj.Construction = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.ContaincoolroomObj.Coolroom = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.DescriptionFBObj.Description = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.ExcesshcObj.Excess = val;
+                    }
+                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcObjH.EiId))
+                    //{
+                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcObjH.EiId).Select(p => p.Value).FirstOrDefault();
+                    //    FarmDetails.ExcesshcObjH.Excess = val;
+                    //}
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.OtherstructurefcObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.OtherstructurefcObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.OtherstructurefcObj.Otherstructure = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.PartylocationObj.Location = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.PartynameObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartynameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.PartynameObj.Name = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.RoofwallsObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.RoofwallsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.RoofwallsObj.Roofwalls = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SublimitObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SublimitObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.SublimitObj.Sublimit = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.SuminsuredFBObj.Suminsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.SuminsuredFBObj.Suminsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.SuminsuredFBObj.Suminsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredhcObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredhcObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.SuminsuredhcObj.Suminsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.TotalcoverObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.TotalcoverObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.TotalcoverObj.Totalcover = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.UnrepaireddamageObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.UnrepaireddamageObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.UnrepaireddamageObj.Unrepaireddamage = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.YearconstructedFBObj.Year = val;
+                    }
                 }
             }
             return View(FarmDetails);
@@ -254,425 +466,13 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FarmDetails.CustomerId;
             }
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (FarmDetails.DescriptionFBObj != null && FarmDetails.DescriptionFBObj.EiId > 0 && FarmDetails.DescriptionFBObj.Description != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmDetails.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmDetails.DescriptionFBObj.EiId, FarmDetails.DescriptionFBObj.Description.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmDetails.YearconstructedFBObj != null && FarmDetails.YearconstructedFBObj.EiId > 0 && FarmDetails.YearconstructedFBObj.Year != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmDetails.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmDetails.YearconstructedFBObj.EiId, FarmDetails.YearconstructedFBObj.Year.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmDetails.ConstructionFBObj != null && FarmDetails.ConstructionFBObj.EiId > 0 && FarmDetails.ConstructionFBObj.Construction != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmDetails.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmDetails.ConstructionFBObj.EiId, FarmDetails.ConstructionFBObj.Construction.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmDetails.ContaincoolroomObj != null && FarmDetails.ContaincoolroomObj.EiId > 0 && FarmDetails.ContaincoolroomObj.Coolroom != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmDetails.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmDetails.ContaincoolroomObj.EiId, FarmDetails.ContaincoolroomObj.Coolroom.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmDetails.SuminsuredFBObj != null && FarmDetails.SuminsuredFBObj.EiId > 0 && FarmDetails.SuminsuredFBObj.Suminsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmDetails.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmDetails.SuminsuredFBObj.EiId, FarmDetails.SuminsuredFBObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmDetails.UnrepaireddamageObj != null && FarmDetails.UnrepaireddamageObj.EiId > 0 && FarmDetails.UnrepaireddamageObj.Unrepaireddamage != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmDetails.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmDetails.YearconstructedFBObj.EiId, FarmDetails.UnrepaireddamageObj.Unrepaireddamage.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (Session["completionTrackPFP"] != null)
-                {
-                    Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                    FarmDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                    if (FarmDetails.completionTrackPFP != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = FarmDetails.completionTrackPFP.ToCharArray();
+            Session["unId"] = null;
+            Session["profileId"] = null;
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 2)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackPFP"] = Completionstring;
-                        FarmDetails.completionTrackPFP = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackPFP"] = "0-1-0-0-0"; ;
-                    FarmDetails.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                }
-                return RedirectToAction("FarmStructures", new { cid = cid });
-            }
+            return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid, PcId = FarmDetails.PolicyId });
+
             return View(FarmDetails);
         }
-        [HttpGet]
-        public ActionResult FarmStructures(int? cid)
-        {
-            NewPolicyDetailsClass FarmStructuresmodel = new NewPolicyDetailsClass();
-            List<SelectListItem> ExcessRateList = new List<SelectListItem>();
-            ExcessRateList = FarmStructuresmodel.ExcessRateFS();
-            FarmStructures FarmStructures = new FarmStructures();
-            FarmStructures.SublimitObj = new SubLimitFarmFencing();
-            FarmStructures.SublimitObj.EiId = 62283;
-            FarmStructures.TotalcoverObj = new TotalCoverFarmFencing();
-            FarmStructures.TotalcoverObj.EiId = 62287;
-            FarmStructures.OtherstructurefcObj = new OtherFarmStructuresFC();
-            FarmStructures.OtherstructurefcObj.EiId = 62291;
-            FarmStructures.RoofwallsObj = new RoofAndWallsFS();
-            FarmStructures.RoofwallsObj.EiId = 62297;
-            //FarmStructures.UnrepaireddamageObj = new UnrepairedDamageFS();
-            //FarmStructures.UnrepaireddamageObj.EiId = 62309;
-            FarmStructures.ExcesshcObj = new HarvestedCropsExcess();
-            FarmStructures.ExcesshcObj.ExcessHCList = ExcessRateList;
-            FarmStructures.ExcesshcObj.EiId = 62315;
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-                FarmStructures.CustomerId = cid.Value;
-            }
-            else
-            {
-                ViewBag.cid = FarmStructures.CustomerId;
-            }
-            if (Session["completionTrackPFP"] != null)
-            {
-                Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                FarmStructures.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            else
-            {
-                Session["completionTrackPFP"] = "0-0-0-0-0"; ;
-                FarmStructures.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            var db = new MasterDataEntities();
-            string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.FixedFarmProperty),Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == FarmStructures.SublimitObj.EiId))
-                {
-                    FarmStructures.SublimitObj.Sublimit = Convert.ToString(details.Where(q => q.QuestionId == FarmStructures.SublimitObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmStructures.TotalcoverObj.EiId))
-                {
-                    FarmStructures.TotalcoverObj.Totalcover = Convert.ToString(details.Where(q => q.QuestionId == FarmStructures.TotalcoverObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmStructures.OtherstructurefcObj.EiId))
-                {
-                    FarmStructures.OtherstructurefcObj.Otherstructure = Convert.ToString(details.Where(q => q.QuestionId == FarmStructures.OtherstructurefcObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FarmStructures.RoofwallsObj.EiId))
-                {
-                    FarmStructures.RoofwallsObj.Roofwalls = Convert.ToString(details.Where(q => q.QuestionId == FarmStructures.RoofwallsObj.EiId).FirstOrDefault().Answer);
-                }
-                //if (details.Exists(q => q.QuestionId == FarmStructures.UnrepaireddamageObj.EiId))
-                //{
-                //    FarmStructures.UnrepaireddamageObj.Unrepaireddamage = Convert.ToString(details.Where(q => q.QuestionId == FarmStructures.UnrepaireddamageObj.EiId).FirstOrDefault().Answer);
-                //}
-                if (details.Exists(q => q.QuestionId == FarmStructures.ExcesshcObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FarmStructures.ExcesshcObj.EiId).FirstOrDefault();
-                    FarmStructures.ExcesshcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-            }
-            return View(FarmStructures);
-        }
-        [HttpPost]
-        public ActionResult FarmStructures(int? cid, FarmStructures FarmStructures)
-        {
-            NewPolicyDetailsClass FarmStructuresmodel = new NewPolicyDetailsClass();
-            List<SelectListItem> ExcessRateList = new List<SelectListItem>();
-            ExcessRateList = FarmStructuresmodel.ExcessRateFS();
-            FarmStructures.ExcesshcObj.ExcessHCList = ExcessRateList;
-            var db = new MasterDataEntities();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-                FarmStructures.CustomerId = cid.Value;
-            }
-            else
-            {
-                ViewBag.cid = FarmStructures.CustomerId;
-            }
-            string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (FarmStructures.SublimitObj != null && FarmStructures.SublimitObj.EiId > 0 && FarmStructures.SublimitObj.Sublimit != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmStructures.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmStructures.SublimitObj.EiId, FarmStructures.SublimitObj.Sublimit.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmStructures.TotalcoverObj != null && FarmStructures.TotalcoverObj.EiId > 0 && FarmStructures.TotalcoverObj.Totalcover != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmStructures.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmStructures.TotalcoverObj.EiId, FarmStructures.TotalcoverObj.Totalcover.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmStructures.OtherstructurefcObj != null && FarmStructures.OtherstructurefcObj.EiId > 0 && FarmStructures.OtherstructurefcObj.Otherstructure != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmStructures.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmStructures.TotalcoverObj.EiId, FarmStructures.OtherstructurefcObj.Otherstructure.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FarmStructures.RoofwallsObj != null && FarmStructures.RoofwallsObj.EiId > 0 && FarmStructures.RoofwallsObj.Roofwalls != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmStructures.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmStructures.RoofwallsObj.EiId, FarmStructures.RoofwallsObj.Roofwalls.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                //if (FarmStructures.UnrepaireddamageObj != null && FarmStructures.UnrepaireddamageObj.EiId > 0 && FarmStructures.UnrepaireddamageObj.Unrepaireddamage != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmStructures.CustomerId, 1, FarmStructures.UnrepaireddamageObj.EiId, FarmStructures.UnrepaireddamageObj.Unrepaireddamage.ToString());
-                //}
-                if (FarmStructures.ExcesshcObj != null && FarmStructures.ExcesshcObj.EiId > 0 && FarmStructures.ExcesshcObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FarmStructures.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FarmStructures.ExcesshcObj.EiId, FarmStructures.ExcesshcObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (Session["completionTrackPFP"] != null)
-                {
-                    Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                    FarmStructures.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                    if (FarmStructures.completionTrackPFP != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = FarmStructures.completionTrackPFP.ToCharArray();
 
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 4)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackPFP"] = Completionstring;
-                        FarmStructures.completionTrackPFP = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackPFP"] = "0-0-1-0-0"; ;
-                    FarmStructures.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                }
-                return RedirectToAction("HarvestedCrops", new { cid = cid });
-            }
-            return View(FarmStructures);
-        }
-        [HttpGet]
-        public ActionResult HarvestedCrops(int? cid)
-        {
-            NewPolicyDetailsClass HarvestedCropsmodel = new NewPolicyDetailsClass();
-            List<SelectListItem> ExcessRateList = new List<SelectListItem>();
-            ExcessRateList = HarvestedCropsmodel.excessRate();
-            HarvestedCrops HarvestedCrops = new HarvestedCrops();
-            HarvestedCrops.SuminsuredhcObj = new HarvestedCropsSumInsured();
-            HarvestedCrops.SuminsuredhcObj.EiId = 62329;
-            HarvestedCrops.ExcesshcObj = new HarvestedCropsExcess();
-            HarvestedCrops.ExcesshcObj.ExcessHCList = ExcessRateList;
-            HarvestedCrops.ExcesshcObj.EiId = 62331;
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-                HarvestedCrops.CustomerId = cid.Value;
-            }
-            else
-            {
-                ViewBag.cid = HarvestedCrops.CustomerId;
-            }
-            if (Session["completionTrackPFP"] != null)
-            {
-                Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                HarvestedCrops.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            else
-            {
-                Session["completionTrackPFP"] = "0-0-0-0-0"; ;
-                HarvestedCrops.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            var db = new MasterDataEntities();
-            string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.FixedFarmProperty),Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == HarvestedCrops.SuminsuredhcObj.EiId))
-                {
-                    HarvestedCrops.SuminsuredhcObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == HarvestedCrops.SuminsuredhcObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == HarvestedCrops.ExcesshcObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == HarvestedCrops.ExcesshcObj.EiId).FirstOrDefault();
-                    HarvestedCrops.ExcesshcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-            }
-            return View(HarvestedCrops);
-        }
-        [HttpPost]
-        public ActionResult HarvestedCrops(int? cid, HarvestedCrops HarvestedCrops)
-        {
-            NewPolicyDetailsClass HarvestedCropsmodel = new NewPolicyDetailsClass();
-            List<SelectListItem> ExcessRateList = new List<SelectListItem>();
-            ExcessRateList = HarvestedCropsmodel.excessRate();
-            HarvestedCrops.ExcesshcObj.ExcessHCList = ExcessRateList;
-            var db = new MasterDataEntities();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-                HarvestedCrops.CustomerId = cid.Value;
-            }
-            else
-            {
-                ViewBag.cid = HarvestedCrops.CustomerId;
-            }
-            string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (Session["completionTrackPFP"] != null)
-                {
-                    if (HarvestedCrops.SuminsuredhcObj != null && HarvestedCrops.SuminsuredhcObj.EiId > 0 && HarvestedCrops.SuminsuredhcObj.Suminsured != null)
-                    {
-                        db.IT_InsertCustomerQnsData(HarvestedCrops.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), HarvestedCrops.SuminsuredhcObj.EiId, HarvestedCrops.SuminsuredhcObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                    }
-                    if (HarvestedCrops.ExcesshcObj != null && HarvestedCrops.ExcesshcObj.EiId > 0 && HarvestedCrops.ExcesshcObj.Excess != null)
-                    {
-                        db.IT_InsertCustomerQnsData(HarvestedCrops.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), HarvestedCrops.ExcesshcObj.EiId, HarvestedCrops.ExcesshcObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                    }
-                    Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                    HarvestedCrops.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                    if (HarvestedCrops.completionTrackPFP != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = HarvestedCrops.completionTrackPFP.ToCharArray();
-
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 6)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackPFP"] = Completionstring;
-                        HarvestedCrops.completionTrackPFP = Completionstring;
-                    }
-
-                }
-                else
-                {
-                    Session["completionTrackPFP"] = "0-0-0-1-0"; ;
-                    HarvestedCrops.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                }
-                return RedirectToAction("InterestedParties", new { cid = cid });
-            }
-            return View(HarvestedCrops);
-        }
-        [HttpGet]
-        public ActionResult InterestedParties(int? cid)
-        {
-            InterestedPartiesHC InterestedPartiesHC = new InterestedPartiesHC();
-            InterestedPartiesHC.PartynameObj = new InterestedPartyName();
-            InterestedPartiesHC.PartynameObj.EiId = 62345;
-            InterestedPartiesHC.PartylocationObj = new InterestedPartyLocation();
-            InterestedPartiesHC.PartylocationObj.EiId = 62347;
-            InterestedPartiesHC.TotalsuminsuredObj = new InterestedTotalSumInsured();
-            InterestedPartiesHC.TotalsuminsuredObj.EiId = 62349;
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-                InterestedPartiesHC.CustomerId = cid.Value;
-            }
-            else
-            {
-                ViewBag.cid = InterestedPartiesHC.CustomerId;
-            }
-            if (Session["completionTrackPFP"] != null)
-            {
-                Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                InterestedPartiesHC.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            else
-            {
-                Session["completionTrackPFP"] = "0-0-0-0-0"; ;
-                InterestedPartiesHC.completionTrackPFP = Session["completionTrackPFP"].ToString();
-            }
-            var db = new MasterDataEntities();
-            string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.FixedFarmProperty),Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == InterestedPartiesHC.PartynameObj.EiId))
-                {
-                    InterestedPartiesHC.PartynameObj.Name = Convert.ToString(details.Where(q => q.QuestionId == InterestedPartiesHC.PartynameObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == InterestedPartiesHC.PartylocationObj.EiId))
-                {
-                    InterestedPartiesHC.PartylocationObj.Location = Convert.ToString(details.Where(q => q.QuestionId == InterestedPartiesHC.PartylocationObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == InterestedPartiesHC.TotalsuminsuredObj.EiId))
-                {
-                    InterestedPartiesHC.TotalsuminsuredObj.Totalsuminsured = Convert.ToString(details.Where(q => q.QuestionId == InterestedPartiesHC.TotalsuminsuredObj.EiId).FirstOrDefault().Answer);
-                }
-            }
-            return View(InterestedPartiesHC);
-        }
-        [HttpPost]
-        public ActionResult InterestedParties(int? cid, InterestedPartiesHC InterestedPartiesHC)
-        {
-            var db = new MasterDataEntities();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-                InterestedPartiesHC.CustomerId = cid.Value;
-            }
-            else
-            {
-                ViewBag.cid = InterestedPartiesHC.CustomerId;
-            }
-            string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (InterestedPartiesHC.PartynameObj != null && InterestedPartiesHC.PartynameObj.EiId > 0 && InterestedPartiesHC.PartynameObj.Name != null)
-                {
-                    db.IT_InsertCustomerQnsData(InterestedPartiesHC.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), InterestedPartiesHC.PartynameObj.EiId, InterestedPartiesHC.PartynameObj.Name.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (InterestedPartiesHC.PartylocationObj != null && InterestedPartiesHC.PartylocationObj.EiId > 0 && InterestedPartiesHC.PartylocationObj.Location != null)
-                {
-                    db.IT_InsertCustomerQnsData(InterestedPartiesHC.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), InterestedPartiesHC.PartylocationObj.EiId, InterestedPartiesHC.PartylocationObj.Location.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (InterestedPartiesHC.TotalsuminsuredObj != null && InterestedPartiesHC.TotalsuminsuredObj.EiId > 0 && InterestedPartiesHC.TotalsuminsuredObj.Totalsuminsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(InterestedPartiesHC.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), InterestedPartiesHC.TotalsuminsuredObj.EiId, InterestedPartiesHC.TotalsuminsuredObj.Totalsuminsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (Session["completionTrackPFP"] != null)
-                {
-                    Session["completionTrackPFP"] = Session["completionTrackPFP"];
-                    InterestedPartiesHC.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                    if (InterestedPartiesHC.completionTrackPFP != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = InterestedPartiesHC.completionTrackPFP.ToCharArray();
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 8)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackPFP"] = Completionstring;
-                        InterestedPartiesHC.completionTrackPFP = Completionstring;
-                    }
-
-                }
-                else
-                {
-                    Session["completionTrackPFP"] = "0-0-0-0-1"; ;
-                    InterestedPartiesHC.completionTrackPFP = Session["completionTrackPFP"].ToString();
-                }
-                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid });
-            }
-            return View(InterestedPartiesHC);
-        }
     }
 }

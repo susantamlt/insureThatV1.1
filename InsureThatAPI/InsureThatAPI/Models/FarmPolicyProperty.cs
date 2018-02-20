@@ -18,6 +18,9 @@ namespace InsureThatAPI.Models
     public class FarmDetails
     {
         public int CustomerId { get; set; }
+        public string PolicyId { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
         public string completionTrackPFP { get; set; }
         [DataType(DataType.MultilineText)]
         public string  Aboutfarmstructures { get; set; }
@@ -27,18 +30,24 @@ namespace InsureThatAPI.Models
         public ContainCoolroomFB ContaincoolroomObj { get; set; }
         public SumInsuredsFB SuminsuredFBObj { get; set; }
         public UnrepairedDamageFS UnrepaireddamageObj { get; set; }
+        public SubLimitFarmFencing SublimitObj { get; set; }
+        public TotalCoverFarmFencing TotalcoverObj { get; set; }
+        public OtherFarmStructuresFC OtherstructurefcObj { get; set; }
+        public RoofAndWallsFS RoofwallsObj { get; set; }
+        public HarvestedCropsExcess ExcesshcObj { get; set; }
+        public int? Imposed { get; set; }
+        public HarvestedCropsSumInsured SuminsuredhcObj { get; set; }
+        public HarvestedCropsExcess ExcesshcObjH { get; set; }
+        public int? ImposedH { get; set; }
+        public InterestedPartyName PartynameObj { get; set; }
+        public InterestedPartyLocation PartylocationObj { get; set; }
+        public InterestedTotalSumInsured TotalsuminsuredObj { get; set; }
     }
     public class FarmStructures
     {
         public int CustomerId { get; set; }
         public string completionTrackPFP { get; set; }
-        public SubLimitFarmFencing SublimitObj { get; set; }
-        public TotalCoverFarmFencing TotalcoverObj { get; set; }
-        public OtherFarmStructuresFC OtherstructurefcObj { get; set; }
-        public RoofAndWallsFS RoofwallsObj { get; set; }
-        public UnrepairedDamageFS UnrepaireddamageObj { get; set; }
-        public HarvestedCropsExcess ExcesshcObj { get; set; }
-        public int Imposed { get; set; }
+       
     }
     public class HarvestedCrops
     {
@@ -48,14 +57,7 @@ namespace InsureThatAPI.Models
         public HarvestedCropsExcess ExcesshcObj { get; set; }
         public int Imposed { get; set; }
     }
-    public class InterestedPartiesHC
-    {
-        public int CustomerId { get; set; }
-        public string completionTrackPFP { get; set; }
-        public InterestedPartyName PartynameObj { get; set; }
-        public InterestedPartyLocation PartylocationObj { get; set; }
-        public InterestedTotalSumInsured TotalsuminsuredObj { get; set; }
-    }
+
     public class DetailedDescription
     {
         public string Description { get; set; }

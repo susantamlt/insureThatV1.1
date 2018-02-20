@@ -1,0 +1,364 @@
+﻿@model InsureThatAPI.Models.DisclosureDetails
+    @{
+        ViewBag.Title = "Disclosure Details";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+        <h4><span>FARM PROTECTION POLICY</span> / DISCLOSURE</h4>
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
+            <h2>INSURED'S DISCLOSURE DETAILS</h2>
+        </div>
+        @using (Ajax.BeginForm("DisclosureDetails", "Disclosure", new AjaxOptions()
+        {
+            HttpMethod = "POST"
+
+        }, new { @id = "disclosureDetails", @name = "disclosureDetails" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-12 col-sm-12 col-xs-12">If the answer to any question marked with an asterisk (*) is "Yes", full details must be entered under "Provide Details" below.</p>
+                <p class="col-md-8 col-sm-8 col-xs-12">Previous insurer</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(p => p.PreviousinsurerObj.Pinsurer, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.PreviousinsurerObj.EiId, @id = "pinsurer" })
+                    @Html.HiddenFor(p => p.PreviousinsurerObj.EiId)
+                    <label id="PreviousinsurerObj.Pinsurer-error" class="error" for="PreviousinsurerObj.Pinsurer"></label>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">* Have you ever had an insurer refuse cover or cancel or refuse to renew a policy or refuse to pay a claim?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RenewpolicyObj.Rpolicy, '1', new { @id = "rpolicyyes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.RenewpolicyObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.RenewpolicyObj.Rpolicy, '0', new { @id = "rpolicyno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.RenewpolicyObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="RenewpolicyObj.Rpolicy-error" class="error" for="RenewpolicyObj.Rpolicy" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.RenewpolicyObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">* Have You been convicted of a criminal offence in the last 10 years?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CriminaloffenceObj.Offence, '1', new { @id = "offenceyes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.CriminaloffenceObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.CriminaloffenceObj.Offence, '0', new { @id = "offenceno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.CriminaloffenceObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="CriminaloffenceObj.Offence-error" class="error" for="CriminaloffenceObj.Offence" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.CriminaloffenceObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">* Have You served a prison sentence in the last 10 years?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.PrisonsentenceObj.Sentence, '1', new { @id = "sentenceyes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.PrisonsentenceObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.PrisonsentenceObj.Sentence, '0', new { @id = "sentenceno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.PrisonsentenceObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="PrisonsentenceObj.Sentence-error" class="error" for="PrisonsentenceObj.Sentence" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.PrisonsentenceObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">Are You an undischarged bankrupt?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.UndischargedObj.Undischarge, '1', new { @id = "undischargeyes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.UndischargedObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.UndischargedObj.Undischarge, '0', new { @id = "undischargeno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.UndischargedObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="UndischargedObj.Undischarge-error" class="error" for="UndischargedObj.Undischarge" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.UndischargedObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">Have You been bankrupt in the last 10 years?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.BankruptObj.Bankrupt, '1', new { @id = "bankruptyes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.BankruptObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.BankruptObj.Bankrupt, '0', new { @id = "bankruptno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.BankruptObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="BankruptObj.Bankrupt-error" class="error" for="BankruptObj.Bankrupt" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.BankruptObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">Discharge date</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(p => p.DateObj.Date, new { @class = "form-control form-border-bottom vlidationInsure year commondatatest", @data_eiid = @Model.DateObj.EiId, @id = "date", @readonly = "readonly" })
+                    @Html.HiddenFor(p => p.DateObj.EiId)
+                    <label id="DateObj.Date-error" class="error" for="DateObj.Date"></label>
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">* Is any of the property that You wish to cover in immediate danger of being lost or damaged or is it already damaged?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.ImmediatedangerObj.Danger, '1', new { @id = "dangeryes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.ImmediatedangerObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.ImmediatedangerObj.Danger, '0', new { @id = "dangerno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.ImmediatedangerObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="ImmediatedangerObj.Danger-error" class="error" for="ImmediatedangerObj.Danger" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.ImmediatedangerObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">* Do You wish to tell Us something extra as part of Your Duty of Disclosure?</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DutydisclosureObj.Dutydisclosure, '1', new { @id = "dutydisclosureyes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DutydisclosureObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DutydisclosureObj.Dutydisclosure, '0', new { @id = "dutydisclosureno", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DutydisclosureObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
+                    <label id="DutydisclosureObj.Dutydisclosure-error" class="error" for="DutydisclosureObj.Dutydisclosure" style="clear:both;"></label>
+                    @Html.HiddenFor(p => p.DutydisclosureObj.EiId)
+                </div>
+            </div>
+            <div class="clearfix mb-md-30 mt-10 mb-10">
+                <p class="col-md-8 col-sm-8 col-xs-12">Duty of Disclosure date</p>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(p => p.DetailsboxObj.Details, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DetailsboxObj.EiId, @id = "details"})
+                    @Html.HiddenFor(p => p.DetailsboxObj.EiId)
+                    <label id="DetailsboxObj.Details-error" class="error" for="DetailsboxObj.Details"></label>
+                </div>
+            </div>
+            <div class="col-md-6 pull-right text-right mt-30">
+                <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn3">Submit</button>
+            </div>
+        }
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+        <h3>Policy Sections</h3>
+        <div class="well">
+            <div class="policy-loc-row">
+                <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#location1').click(function () {
+                            $("#policy-ed-del-wrap1").fadeIn('slow');
+                            $("#policy-ed-del-wrap2").fadeOut('slow');
+                        });
+                    });
+                </script>
+                <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                    <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                </div>
+            </div>
+            <div class="policy-loc-row">
+                <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('#location2').click(function () {
+                            $("#policy-ed-del-wrap2").fadeIn('slow');
+                            $("#policy-ed-del-wrap1").fadeOut('slow');
+                        });
+                    });
+                </script>
+                <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                    <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="dropdown pc pc-in">
+                <a class="new-cover-policy" href="#">New Cover</a>
+                <ul class="dropdown-menu col-md-12 unit">
+                    <li><a href="javascript:void(0);" class="HomeBuilding">+  Home Buildings</a></li>
+                    <li><a href="javascript:void(0);" class="HomeContent">+  Home Content</a></li>
+                    <li><a href="javascript:void(0);" class="FarmProperty">+  Farm Property</a></li>
+                    <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                    <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                    <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                    <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                    <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                    <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+                </ul>
+                <script type="text/javascript">
+                    $(document).on('click', 'ul.unit > li', function () {
+                        var nClass = $(this).children("a").attr("class");
+                        alert(nClass);
+                    });
+                </script>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/datepicker.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $(".year").datepicker({
+                minViewMode: 2,
+                format: 'dd/mm/yyyy'
+            });
+        });
+    </script>
+    <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+    <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.validator.addMethod("regex", function (value, element, regexp) {
+                if (regexp.constructor != RegExp)
+                    regexp = new RegExp(regexp);
+                else if (regexp.global)
+                    regexp.lastIndex = 0;
+                return this.optional(element) || regexp.test(value);
+            }, "Please check your input.");
+            $("form[name='disclosureDetails']").validate({
+                rules: {
+                    "PreviousinsurerObj.Pinsurer": {
+                        required: true,
+                        regex: /^[a-zA-Z ]*$/,
+                    },
+                    "RenewpolicyObj.Rpolicy": "required",
+                    "CriminaloffenceObj.Offence": "required",
+                    "PrisonsentenceObj.Sentence": "required",
+                    "UndischargedObj.Undischarge": "required",
+                    "BankruptObj.Bankrupt": "required",
+                    "DateObj.Date": "required",
+                    "ImmediatedangerObj.Danger": "required",
+                    "DutydisclosureObj.Dutydisclosure": "required",
+                    "DetailsboxObj.Details": {
+                        required: true,
+                        regex: /^[a-zA-Z ]*$/,
+                    },
+                },
+                messages: {
+                    "PreviousinsurerObj.Pinsurer": {
+                        required: "Please enter previous insurer",
+                        regex: "Special character & numeric not allowed",
+                    },
+                    "RenewpolicyObj.Rpolicy": "Please select insurer refuse cover or cancel or refuse to renew a policy or refuse to pay a claim",
+                    "CriminaloffenceObj.Offence": "Please select criminal offence in the last 10 years",
+                    "PrisonsentenceObj.Sentence": "Please select prison sentence in the last 10 years",
+                    "UndischargedObj.Undischarge": "Please select undischarged bankrupt",
+                    "BankruptObj.Bankrupt": "Please select bankrupt in the last 10 years?",
+                    "DateObj.Date": "Please select date",
+                    "ImmediatedangerObj.Danger": "Please select immediate danger of being lost or damaged or is it already damaged",
+                    "DutydisclosureObj.Dutydisclosure": "Please select Your Duty of Disclosure",
+                    "DetailsboxObj.Details": {
+                        required: "Please enter details",
+                        regex: "Special character & numeric not allowed",
+                    },
+                },
+                onfocusout: function (element) {
+                    this.element(element);
+                },
+                submitHandler: function (form) {
+                    form.submit();
+                }
+            });
+            $(document).on('change', '.commondataselection', function () {
+                var Value = $(this).val();
+                var EIId = $(this).data('eiid');
+                var ItId = "0";
+                elementAjaxCall(Value, EIId, ItId);
+            });
+            $(document).on('change', '.commondataradio', function () {
+                var Value = $(this).val();
+                var EIId = $(this).data('eiid');
+                var ItId = "0";
+                elementAjaxCall(Value, EIId, ItId);
+            });
+            $(document).on('focusout', ".commondatatest", function () {
+                var Value = $(this).val();
+                var EIId = $(this).data('eiid');
+                var ItIdN = $(this).data('itid');
+                if (ItIdN == 'undefined' || ItIdN == "") {
+                    var ItId = "0";
+                } else {
+                    var ItId = ItIdN;
+                }
+                if (Value != "") {
+                    elementAjaxCall(Value, EIId, ItId);
+                }
+            });
+            $("#premium").click(function () {
+                $.ajax({
+                    url: '/Customer/PremiumDetails',
+                    type: "POST",
+                    crossOrigin: true,
+                    data: {},
+                    success: function (data) {
+                        if (data.Status == true) {
+                            var html1 = "";
+                            if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                                var html = "";
+                                $.each(data.Premium, function (index, value) {
+                                    html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
+                                });
+                                if (html != '') {
+                                    $('#premiumModel-p-b').html(html);
+                                }
+                            }
+                            if (data.UnderwriterFee != null) {
+                                html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
+                            }
+                            if (data.FeeGst != null) {
+                                html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
+                            }
+                            if (data.InvoiceTotal != null) {
+                                html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
+                            }
+                            if (html1 != '') {
+                                $('#premiumModel-p-f').html(html1);
+                            }
+                        }
+                    }
+                });
+
+            });
+        });
+        function elementAjaxCall(Value, EIId, ItId) {
+            if (Value != '' && EIId != '') {
+                $.ajax({
+                    url: '/Customer/ElementDetails',
+                    type: "POST",
+                    crossOrigin: true,
+                    data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                    success: function (data) {
+                        if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                            var valuedata = data.valuedata;
+                            if (valuedata != '' && valuedata != null) {
+                                $.each(valuedata, function (index, value) {
+                                    var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                    //$('#' + StateIdNewOne).val(value.Value);
+                                    if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                        var statedata = data.stateData;
+                                        if (statedata != '' && statedata != null) {
+                                            $.each(statedata, function (index1, value1) {
+                                                var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                                if (value1.Value == 'Invisible') {
+                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                } else if (value1.Value == 'Disabled') {
+                                                    $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                } else if (value1.Value == 'Read Only') {
+                                                    $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                } else if (value1.Value == 'Strike Through') {
+                                                    $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                } else if (value1.Value == 'Required') {
+                                                    $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                    $('#' + StateIdNew).attr('required', 'required');
+                                                } else if (value1.Value == '"Not Rendered') {
+                                                    $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                    $('#' + StateIdNew).removeAttr('readonly');
+                                                    $('#' + StateIdNew).removeAttr('disabled');
+                                                    $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                    $('#' + StateIdNew).removeAttr('required', 'required');
+                                                }
+
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        }
+                        if (data.referrallist != null || data.referrallist != "") {
+                            $('#referralList-p').html('No Referral List');
+                        } else {
+                            $('#referralList-p').html(data.referrallist);
+                        }
+                    }
+                });
+            }
+        }
+    </script>

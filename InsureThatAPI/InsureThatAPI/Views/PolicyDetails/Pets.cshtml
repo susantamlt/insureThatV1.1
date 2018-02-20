@@ -47,9 +47,12 @@
             </h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
-            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
-            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+@if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+{
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+}
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         </div>
 
         <div class="mt-50 mb-50"></div>
@@ -73,7 +76,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
                                 Policy No: @Model.PolicyData.PolicyNumber
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured: @Model.PolicyData.InsuredName</div>
 
                         </div>
                     </div>
@@ -86,8 +89,61 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
-                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                    <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1">
+                        <div class="dropdown" style="list-style: none;">
+                            <a href="#" class=" btn-primary btn col-md-12 mb-5 vwdoc">View Documents </a>
+                            <ul class="dropdown-menu"></ul>
+                        </div>
+                    </div>
+                    @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+                    {
+                        @*<a href="#cancelpolicymodel" class="btn-primary btn col-md-12">Cancel Policy</a>*@
+                        <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12" data-toggle="modal">Cancel Policy</button>
+
+                    }
+                    else
+                    {
+                        <a href="#Bindcovermodel" class="btn-primary btn col-md-12">Bind Policy</a>
+                    }
+                </div>
+                <div id="cancelpolicymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="cancelpolicymodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Cancel Policy</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure cancelling this policy. Action can not be reversed.</p>
+                                <p>Please enter reason for cancellation <input name="cancelreason" class="cancelpol col-sm-2 form-control form-inline field-length-xs" type="text" /></p>
+  </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                <button class="btn btn-default no-border" id="cancelpo" aria-hidden="true"> Confirm </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Bindcovermodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="Bindcovermodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Bind Quotation</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>If all the inclustions are completed then you can continue and bind the cover and complete the policy.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" id="bindcover" aria-hidden="true"> Bind </button>
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,15 +155,13 @@
             <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                 @if (Model.SectionData != null)
                 {
-                    using (Ajax.BeginForm("HomeBilding", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
-                    {
-                        HttpMethod = "GET"
-
-                    }))
+                    using (Html.BeginForm("ActionName", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
                     {
                         @Html.AntiForgeryToken()
                         <div class="well">
-                            @Html.HiddenFor(p => p.CustomerId)
+                            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+
+                            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
                             <h3 class="col-md-9 col-sm-9 col-xs-12">PETS DETAILS</h3>
                             @if (Model.ReferralList != "")
                             {
@@ -984,6 +1038,7 @@
                                             {
                                                 <span>Egyptian Mau</span>
                                             }
+
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "29")
                                             {
                                                 <span>European Shorthair</span>
@@ -998,246 +1053,245 @@
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "32")
                                             {
-                                                <span>German Rex</span>
+                                                <span> German Rex </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "33")
                                             {
-                                                <span>Havana Brown</span>
+                                                <span> Havana Brown </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "34")
                                             {
-                                                <span>Highlander</span>
+                                                <span> Highlander </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "35")
                                             {
-                                                <span>Himalayan/Colorpoint Persian</span>
+                                                <span> Himalayan / Colorpoint Persian </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "36")
                                             {
-                                                <span>Japanese Bobtail</span>
+                                                <span> Japanese Bobtail </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "37")
                                             {
-                                                <span>Javanese</span>
+                                                <span> Javanese </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "38")
                                             {
-                                                <span>Khao Manee</span>
-                                            }
+                                                <span> Khao Manee </span>                                            }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "39")
                                             {
-                                                <span>Korat</span>
+                                                <span> Korat </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "40")
                                             {
-                                                <span>Korean Bobtail</span>
+                                                <span> Korean Bobtail </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "41")
                                             {
-                                                <span>Korn Ja</span>
+                                                <span> Korn Ja </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "42")
                                             {
-                                                <span>Kurilian Bobtail</span>
+                                                <span> Kurilian Bobtail </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "43")
                                             {
-                                                <span>Kurilian Bobtail/Kuril Islands Bobtail</span>
+                                                <span> Kurilian Bobtail / Kuril Islands Bobtail</span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "44")
                                             {
-                                                <span>LaPerm</span>
+                                                <span> LaPerm </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "45")
                                             {
-                                                <span>Lykoi</span>
+                                                <span> Lykoi </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "46")
                                             {
-                                                <span>Maine Coon</span>
+                                                <span> Maine Coon </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "47")
                                             {
-                                                <span>Manx</span>
+                                                <span> Manx </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "48")
                                             {
-                                                <span>Mekong Bobtail</span>
+                                                <span> Mekong Bobtail </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "49")
                                             {
-                                                <span>Minskin</span>
+                                                <span> Minskin </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "50")
                                             {
-                                                <span>Munchkin</span>
+                                                <span> Munchkin </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "51")
                                             {
-                                                <span>Napoleon</span>
+                                                <span> Napoleon </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "52")
                                             {
-                                                <span>Nebelung</span>
+                                                <span> Nebelung </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "53")
                                             {
-                                                <span>Norwegian Forest Cat</span>
+                                                <span> Norwegian Forest Cat</span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "54")
                                             {
-                                                <span>Ocicat</span>
+                                                <span> Ocicat </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "55")
                                             {
-                                                <span>Ojos Azules</span>
+                                                <span> Ojos Azules </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "56")
                                             {
-                                                <span>or Don Sphynx</span>
+                                                <span> or Don Sphynx</span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "57")
                                             {
-                                                <span>Oregon Rex</span>
+                                                <span> Oregon Rex </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "58")
                                             {
-                                                <span>Oriental Bicolor</span>
+                                                <span> Oriental Bicolor </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "59")
                                             {
-                                                <span>Oriental Longhair</span>
+                                                <span> Oriental Longhair </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "60")
                                             {
-                                                <span>Oriental Shorthair</span>
+                                                <span> Oriental Shorthair </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "301")
                                             {
                                                 if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61337).Value == "")
                                                 {
-                                                    <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61337).Value</span>
+                                                    <span> @Model.SectionData.ValueData.Find(p => p.Element.ElId == 61337).Value </span>
                                                 }
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "61")
                                             {
-                                                <span>PerFold Cat</span>
+                                                <span> PerFold Cat </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "62")
                                             {
-                                                <span>Persian (Modern Persian Cat)</span>
+                                                <span> Persian(Modern Persian Cat) </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "63")
                                             {
-                                                <span>Persian (Traditional Persian Cat)</span>
+                                                <span> Persian(Traditional Persian Cat) </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "64")
                                             {
-                                                <span>Peterbald</span>
+                                                <span> Peterbald </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "65")
                                             {
-                                                <span>Pixie-bob</span>
+                                                <span> Pixie - bob </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "66")
                                             {
-                                                <span>Raas</span>
+                                                <span> Raas </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "67")
                                             {
-                                                <span>Ragamuffin</span>
+                                                <span> Ragamuffin </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "68")
                                             {
-                                                <span>Ragdoll</span>
+                                                <span> Ragdoll </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "69")
                                             {
-                                                <span>Russian Blue</span>
+                                                <span> Russian Blue </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "70")
                                             {
-                                                <span>Russian White, Black and Tabby</span>
+                                                <span> Russian White, Black and Tabby </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "71")
                                             {
-                                                <span>Sam Sawet</span>
+                                                <span> Sam Sawet </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "72")
                                             {
-                                                <span>Savannah</span>
+                                                <span> Savannah </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "73")
                                             {
-                                                <span>Scottish Fold</span>
+                                                <span> Scottish Fold </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "74")
                                             {
-                                                <span>Selkirk Rex</span>
+                                                <span> Selkirk Rex </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "75")
                                             {
-                                                <span>Serengeti</span>
+                                                <span> Serengeti </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "76")
                                             {
-                                                <span>Serrade petit</span>
+                                                <span> Serrade petit </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "77")
                                             {
-                                                <span>Siamese</span>
+                                                <span> Siamese </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "78")
                                             {
-                                                <span>Siberian</span>
+                                                <span> Siberian </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "79")
                                             {
-                                                <span>Singapura</span>
+                                                <span> Singapura </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "80")
                                             {
-                                                <span>Snowshoe</span>
+                                                <span> Snowshoe </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "81")
                                             {
-                                                <span>Sokoke</span>
+                                                <span> Sokoke </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "82")
                                             {
-                                                <span>Somali</span>
+                                                <span> Somali </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "83")
                                             {
-                                                <span>Sphynx</span>
+                                                <span> Sphynx </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "84")
                                             {
-                                                <span>Suphalak</span>
+                                                <span> Suphalak </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "85")
                                             {
-                                                <span>Thai</span>
+                                                <span> Thai </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "86")
                                             {
-                                                <span>Tonkinese</span>
+                                                <span> Tonkinese </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "87")
                                             {
-                                                <span>Toyger</span>
+                                                <span> Toyger </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "88")
                                             {
-                                                <span>Turkish Angora</span>
+                                                <span> Turkish Angora </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "89")
                                             {
-                                                <span>Turkish Van</span>
+                                                <span> Turkish Van </span>
                                             }
                                             else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61333).Value == "90")
                                             {
-                                                <span>Ukrainian Levkoy</span>
+                                                <span> Ukrainian Levkoy </span>
                                             }
                                         }
                                     }
@@ -1381,6 +1435,9 @@
                     {
                         <div class="well">
                             @Html.HiddenFor(p => p.CustomerId)
+                            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+
+                            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
                             <h3>PETS DETAILS</h3>
                             <div class="row">
                                 <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
@@ -1395,41 +1452,214 @@
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
                 <h3>Policy Sections</h3>
                 <div class="well">
-                    <div class="policy-loc-row">
-                        <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#location1').click(function () {
-                                    $("#policy-ed-del-wrap1").fadeIn('slow');
-                                    $("#policy-ed-del-wrap2").fadeOut('slow');
+                    @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                    {
+                        for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                        {
+                            <div class="policy-loc-row">
+                                @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('.inclusions').click(function () {
+                                            var name = $(this).attr('data-name');
+                                            var nid = $(this).attr('data-nid');
+                                            $('.policy-ed-del-wrapper').hide();
+                                            $("#policy-ed-del-wrap-" + nid).show();
+                                        });
+                                    });
+                                </script>
+                                <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                    <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                    <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnitId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                                </div>
+                            </div>
+                        }
+                        <script>
+                            $(".viewsectn").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var unitid = $(this).data('unitid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/ViewSection",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": policyStatus, "prId": prId, "unitid": unitid
+                                    },
+                                    success: function (responce) {
+                                        window.location.href = responce;
+                                    }
+                                });
+                            });
+                            $(".policy-edit-wrap").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, calltype:null
+                                    },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                            $(".policy-delet-wrap").click(function () {
+                                var r = confirm("Are you sure you want to delete this section?");
+                                if (r == true) {
+                                    var PcId = $("#pcidd").val();
+                                    var selectedunid = $(this).data('unid');
+                                    var selectedcid = $(this).data('cid');
+                                    var PcId = $(this).data('pcid');
+                                    var selectedname = $(this).data('name');
+                                    var selectedprofileid = $(this).data('profileid');
+                                    var selectedTrId = $(this).data('trid');
+                                    var policyStatus = $(this).data('policystatus');
+                                    var currId = $(this).attr("id");
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/DeleteUnit",
+                                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                        success: function (responce) {
+                                            if (responce.Status == true) {
+                                                var prentId = $('#' + currId).parent().parent().attr("id");
+                                                $('#' + prentId).remove();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                            $(".policy-delet-wrap").click(function () {
+                                var selectedunid = $(this).data('unid');
+                                var selectedcid = $(this).data('cid');
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/Deleteunit",
+                                    data: { "cid": selectedcid, "unid": selectedunid },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                            $("#bindcover").click(function () {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/BindCover",
+                                    data: {},
+                                    success: function (responce) {
+                                    }
                                 });
                             });
                         </script>
-                        <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-                        </div>
-                    </div>
-                    <div class="policy-loc-row">
-                        <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#location2').click(function () {
-                                    $("#policy-ed-del-wrap2").fadeIn('slow');
-                                    $("#policy-ed-del-wrap1").fadeOut('slow');
-                                });
-                            });
-                        </script>
-                        <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-                        </div>
-                    </div>
+                    }
+                    else
+                    {
+                        if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+                        {
+                            for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                            {
+                                <div class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @disabled = "disabled" })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i]</label>
+                                    <script type="text/javascript">
+                                        $(document).ready(function () {
+                                            $('.inclusions').click(function () {
+                                                var name = $(this).attr('data-name');
+                                                var nid = $(this).attr('data-nid');
+                                                $('.policy-ed-del-wrapper').hide();
+                                                $("#policy-ed-del-wrap-" + nid).show();
+
+                                            });
+                                        });
+                                    </script>
+                                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                        <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Edit</a>&nbsp;
+                                        <a class="btn color-bk-btn policy-delet-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Delete</a>
+                                    </div>
+                                </div>
+                            }
+                        }
+
+                    }
                     <div class="clearfix"></div>
                     <div class="dropdown pc pc-in">
-                        <a class="new-cover-policy" href="#">New Cover</a>
-                        <ul class="dropdown-menu col-md-12">
-                            <li><a href="#">+  Valuables</a></li>
-                            <li><a href="#">+  Motor</a></li>
+                        <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
+                        <ul class="dropdown-menu col-md-12 unit">
+                            <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                            <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                            <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                            <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                            <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                            <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                            <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                            <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                            <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
                         </ul>
+                        <script type="text/javascript">
+                                        $(document).on('click', 'ul.unit > li', function () {
+                                            var unitname = $(this).children("a").attr("class");
+                                            var cid = $("#ciid").val();
+                                            var pcid = $("#pcidd").val();
+
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Customer/AddUnit",
+                                                data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                                success: function (responce) {
+
+                                                    window.location.href = responce;
+                                                }
+                                            });
+                                        });
+                        </script>
+                        <script>
+                                        $("#cancelpo").click(function () {
+                                            var PcId = $("#pcidd").val();
+                                            var selectedcid = $("#ciid").val();
+                                            var selectedTrId = $("#tridd").val();
+                                            var reson = $(".cancelpol").val();
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Customer/CancelPolicy",
+                                                data: {
+                                                    "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson
+                                                },
+                                                success: function (responce) {
+                                                }
+                                            });
+
+                                        });
+                                        $(".vwdoc").mouseover(function () {
+                                            $(".dropdown ul").html('');
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "/Customer/ViewDocument",
+                                                data: {
+                                                }, success: function (data) {
+                                                    if (!$.isEmptyObject(data.dt) && data.dt.length > 0) {
+                                                        var valuedata = data.dt;
+                                                        if (valuedata != '' && valuedata != null) {
+                                                            $.each(valuedata, function (index, value) {
+                                                                $(".dropdown ul").append('<li><a href="#">' + value.Name + '</a></li>');
+                                                                ////$(".repalcedoc").html(replaceText);
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        });
+                        </script>
                     </div>
                 </div>
             </div>

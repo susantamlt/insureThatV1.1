@@ -416,13 +416,13 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> constructionType()
         {
             List<SelectListItem> constructionList = new List<SelectListItem>();
-            constructionList.Add(new SelectListItem { Value = "1", Text = "Metal walls on Metal frame" });
-            constructionList.Add(new SelectListItem { Value = "2", Text = "Metal walls on Timber frrame" });
-            constructionList.Add(new SelectListItem { Value = "3", Text = "Timber walls on Timber frame" });
-            constructionList.Add(new SelectListItem { Value = "4", Text = "Timber walls on Iron frame" });
+            constructionList.Add(new SelectListItem { Value = "1", Text = "Metal walls on Metal Frame" });
+            constructionList.Add(new SelectListItem { Value = "2", Text = "Metal walls on Timber Frame" });
+            constructionList.Add(new SelectListItem { Value = "3", Text = "Timber walls on Timber Frame" });
+            constructionList.Add(new SelectListItem { Value = "4", Text = "Timber walls on Iron Frame" });
             constructionList.Add(new SelectListItem { Value = "5", Text = "Sandwich panel – EPS" });
-            constructionList.Add(new SelectListItem { Value = "6", Text = "Open sides – metal frame" });
-            constructionList.Add(new SelectListItem { Value = "7", Text = "Open sides – timber frame" });
+            constructionList.Add(new SelectListItem { Value = "6", Text = "Open sides – Metal Frame" });
+            constructionList.Add(new SelectListItem { Value = "7", Text = "Open sides – Timber Frame" });
             constructionList.Add(new SelectListItem { Value = "8", Text = "Brick" });
             return constructionList;
         }
@@ -431,10 +431,9 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> excessRate()
         {
             List<SelectListItem> excessList = new List<SelectListItem>();
-            excessList.Add(new SelectListItem { Value = "250", Text = "$250" });
-            excessList.Add(new SelectListItem { Value = "350", Text = "$350" });
-            excessList.Add(new SelectListItem { Value = "450", Text = "$450" });
-            excessList.Add(new SelectListItem { Value = "550", Text = "$550" });
+            excessList.Add(new SelectListItem { Value = "500", Text = "$500" });
+            excessList.Add(new SelectListItem { Value = "1000", Text = "$1000" });
+            excessList.Add(new SelectListItem { Value = "2000", Text = "$2000" });
             return excessList;
         }
         #endregion
@@ -442,6 +441,7 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> descriptionLS()
         {
             List<SelectListItem> descriptionList = new List<SelectListItem>();
+            descriptionList.Add(new SelectListItem { Value = "", Text = "--Select--" });
             descriptionList.Add(new SelectListItem { Value = "1", Text = "Alpacas" });
             descriptionList.Add(new SelectListItem { Value = "2", Text = "Bulls" });
             descriptionList.Add(new SelectListItem { Value = "3", Text = "Calves" });
@@ -507,19 +507,8 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> FuelTypeList = new List<SelectListItem>();
             FuelTypeList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            FuelTypeList.Add(new SelectListItem { Value = "1", Text = "Canoe" });
-            FuelTypeList.Add(new SelectListItem { Value = "2", Text = "Catamaran" });
-            FuelTypeList.Add(new SelectListItem { Value = "3", Text = "Cruiser" });
-            FuelTypeList.Add(new SelectListItem { Value = "4", Text = "Dinghy" });
-            FuelTypeList.Add(new SelectListItem { Value = "5", Text = "Half cabin cruiser" });
-            FuelTypeList.Add(new SelectListItem { Value = "6", Text = "Houseboat" });
-            FuelTypeList.Add(new SelectListItem { Value = "7", Text = "Punt" });
-            FuelTypeList.Add(new SelectListItem { Value = "8", Text = "Runabout" });
-            FuelTypeList.Add(new SelectListItem { Value = "9", Text = "Ski boat" });
-            FuelTypeList.Add(new SelectListItem { Value = "10", Text = "Speed boat" });
-            FuelTypeList.Add(new SelectListItem { Value = "11", Text = "Trimaran" });
-            FuelTypeList.Add(new SelectListItem { Value = "12", Text = "Windsurfer" });
-            FuelTypeList.Add(new SelectListItem { Value = "13", Text = "Yacht" });
+            FuelTypeList.Add(new SelectListItem { Value = "Diesel", Text = "Diesel" });
+            FuelTypeList.Add(new SelectListItem { Value = "Petrol", Text = "Petrol" });
             return FuelTypeList;
         }
         #endregion
@@ -528,14 +517,8 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> MotorPositionList = new List<SelectListItem>();
             MotorPositionList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            MotorPositionList.Add(new SelectListItem { Value = "1", Text = "Aluminium" });
-            MotorPositionList.Add(new SelectListItem { Value = "2", Text = "Concrete" });
-            MotorPositionList.Add(new SelectListItem { Value = "3", Text = "Fibreglass" });
-            MotorPositionList.Add(new SelectListItem { Value = "4", Text = "Kevlar" });
-            MotorPositionList.Add(new SelectListItem { Value = "5", Text = "Plastic" });
-            MotorPositionList.Add(new SelectListItem { Value = "6", Text = "Rubber" });
-            MotorPositionList.Add(new SelectListItem { Value = "7", Text = "Steel" });
-            MotorPositionList.Add(new SelectListItem { Value = "8", Text = "Timber" });
+            MotorPositionList.Add(new SelectListItem { Value = "Shaft", Text = "Shaft" });
+            MotorPositionList.Add(new SelectListItem { Value = "Stern", Text = "Stern" });
             return MotorPositionList;
         }
         #endregion
@@ -560,8 +543,8 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> BoatOperatorList = new List<SelectListItem>();
             BoatOperatorList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            BoatOperatorList.Add(new SelectListItem { Value = "1", Text = "Peter" });
-            BoatOperatorList.Add(new SelectListItem { Value = "2", Text = "Merlinm" });
+            BoatOperatorList.Add(new SelectListItem { Value = "Peter", Text = "Peter" });
+            BoatOperatorList.Add(new SelectListItem { Value = "Merlinm", Text = "Merlinm" });
             return BoatOperatorList;
         }
         #endregion
@@ -582,16 +565,16 @@ namespace InsureThatAPI.CommonMethods
             ExtWallMadeList.Add(new SelectListItem { Value = "9", Text = "Asbestos cement sheet or plank" });
             ExtWallMadeList.Add(new SelectListItem { Value = "12", Text = "Fibre cement sheet or plank" });
             ExtWallMadeList.Add(new SelectListItem { Value = "2", Text = "Brick Veneer" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "10", Text = "Cladding *" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "10", Text = "Cladding" });
             ExtWallMadeList.Add(new SelectListItem { Value = "5", Text = "Concrete" });
             ExtWallMadeList.Add(new SelectListItem { Value = "13", Text = "Concrete Block" });
             ExtWallMadeList.Add(new SelectListItem { Value = "3", Text = "Double Brick" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "4", Text = "Metel" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "4", Text = "Metal" });
             ExtWallMadeList.Add(new SelectListItem { Value = "8", Text = "Mud Brick" });
-            ExtWallMadeList.Add(new SelectListItem { Value = "11", Text = "Other*" });
             ExtWallMadeList.Add(new SelectListItem { Value = "6", Text = "Rock/Stone" });
             ExtWallMadeList.Add(new SelectListItem { Value = "7", Text = "Rockcote" });
             ExtWallMadeList.Add(new SelectListItem { Value = "1", Text = "Timber" });
+            ExtWallMadeList.Add(new SelectListItem { Value = "11", Text = "Other" });
             return ExtWallMadeList;
         }
         #endregion
@@ -602,11 +585,11 @@ namespace InsureThatAPI.CommonMethods
             RoofMadeList.Add(new SelectListItem { Value = "", Text = "--Select--" });
             RoofMadeList.Add(new SelectListItem { Value = "3", Text = "Cement tiles" });
             RoofMadeList.Add(new SelectListItem { Value = "1", Text = "Colourbond/zincalume" });
-            RoofMadeList.Add(new SelectListItem { Value = "5", Text = "Corrugated Iron* (if selected a further question to ask if roof has any rust?" });
-            RoofMadeList.Add(new SelectListItem { Value = "6", Text = "Fibro/ asbestos cement – this will require approval before completion of the quote." });
-            RoofMadeList.Add(new SelectListItem { Value = "4", Text = "Metel Tiles" });
-            RoofMadeList.Add(new SelectListItem { Value = "7", Text = "Other*" });
+            RoofMadeList.Add(new SelectListItem { Value = "5", Text = "Corrugated Iron" });
+            RoofMadeList.Add(new SelectListItem { Value = "6", Text = "Fibro/ asbestos cement" });
+            RoofMadeList.Add(new SelectListItem { Value = "4", Text = "Metal Tiles" });
             RoofMadeList.Add(new SelectListItem { Value = "2", Text = "Terracotta tiles" });
+            RoofMadeList.Add(new SelectListItem { Value = "7", Text = "Other" });
             return RoofMadeList;
         }
         #endregion
@@ -708,11 +691,91 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> VehicleMake()
         {
             List<SelectListItem> VehicleMakeList = new List<SelectListItem>();
-            VehicleMakeList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            VehicleMakeList.Add(new SelectListItem { Value = "1", Text = "Abarth" });
-            VehicleMakeList.Add(new SelectListItem { Value = "2", Text = "Alpha Romeo" });
-            VehicleMakeList.Add(new SelectListItem { Value = "3", Text = "Astin Martin " });
-            VehicleMakeList.Add(new SelectListItem { Value = "4", Text = "Audi etc" });
+            VehicleMakeList.Add(new SelectListItem { Value = "ABARTH", Text = "ABARTH" });
+            VehicleMakeList.Add(new SelectListItem { Value = "ALFA ROMEO", Text = "ALFA ROMEO" });
+            VehicleMakeList.Add(new SelectListItem { Value = "ASTON MARTIN", Text = "ASTON MARTIN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "AUDI", Text = "AUDI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "AUSTIN", Text = "AUSTIN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "BENTLEY", Text = "BENTLEY" });
+            VehicleMakeList.Add(new SelectListItem { Value = "BERTONE", Text = "BERTONE" });
+            VehicleMakeList.Add(new SelectListItem { Value = "BMW", Text = "BMW" });
+            VehicleMakeList.Add(new SelectListItem { Value = "BMW ALPINA", Text = "BMW ALPINA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "BUICK", Text = "BUICK" });
+            VehicleMakeList.Add(new SelectListItem { Value = "CATERHAM", Text = "CATERHAM" });
+            VehicleMakeList.Add(new SelectListItem { Value = "CHERY", Text = "CHERY" });
+            VehicleMakeList.Add(new SelectListItem { Value = "CHEVROLET", Text = "CHEVROLET" });
+            VehicleMakeList.Add(new SelectListItem { Value = "CHRYSLER", Text = "CHRYSLER" });
+            VehicleMakeList.Add(new SelectListItem { Value = "CITROEN", Text = "CITROEN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "CORSA SPECIALIZED VEHI", Text = "CORSA SPECIALIZED VEHI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "DAEWOO", Text = "DAEWOO" });
+            VehicleMakeList.Add(new SelectListItem { Value = "DAIHATSU", Text = "DAIHATSU" });
+            VehicleMakeList.Add(new SelectListItem { Value = "DAIMLER", Text = "DAIMLER" });
+            VehicleMakeList.Add(new SelectListItem { Value = "DATSUN", Text = "DATSUN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "DE TOMASO", Text = "DE TOMASO" });
+            VehicleMakeList.Add(new SelectListItem { Value = "DODGE", Text = "DODGE" });
+            VehicleMakeList.Add(new SelectListItem { Value = "EUNOS", Text = "EUNOS" });
+            VehicleMakeList.Add(new SelectListItem { Value = "FERRARI", Text = "FERRARI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "FIAT", Text = "FIAT" });
+            VehicleMakeList.Add(new SelectListItem { Value = "FORD", Text = "FORD" });
+            VehicleMakeList.Add(new SelectListItem { Value = "GEELY", Text = "GEELY" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HILLMAN", Text = "HILLMAN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HINO", Text = "HINO" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HOLDEN", Text = "HOLDEN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HOLDEN HDT", Text = "HOLDEN HDT" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HONDA", Text = "HONDA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HSV", Text = "HSV" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HUMBER", Text = "HUMBER" });
+            VehicleMakeList.Add(new SelectListItem { Value = "HYUNDAI", Text = "HYUNDAI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "INFINITI", Text = "INFINITI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "ISUZU", Text = "ISUZU" });
+            VehicleMakeList.Add(new SelectListItem { Value = "JAGUAR", Text = "JAGUAR" });
+            VehicleMakeList.Add(new SelectListItem { Value = "KIA", Text = "KIA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LADA", Text = "LADA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LAMBORGHINI", Text = "LAMBORGHINI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LANCIA", Text = "LANCIA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LDV", Text = "LDV" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LEXUS", Text = "LEXUS" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LEYLAND", Text = "LEYLAND" });
+            VehicleMakeList.Add(new SelectListItem { Value = "LOTUS", Text = "LOTUS" });
+            VehicleMakeList.Add(new SelectListItem { Value = "M.G.", Text = "M.G." });
+            VehicleMakeList.Add(new SelectListItem { Value = "MASERATI", Text = "MASERATI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MAZDA", Text = "MAZDA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "McLAREN", Text = "McLAREN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MERCEDES-AMG", Text = "MERCEDES-AMG" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MERCEDES-BENZ", Text = "MERCEDES-BENZ" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MERCEDES-MAYBACH", Text = "MERCEDES-MAYBACH" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MINI", Text = "MINI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MITSUBISHI", Text = "MITSUBISHI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MORGAN", Text = "MORGAN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "MORRIS", Text = "MORRIS" });
+            VehicleMakeList.Add(new SelectListItem { Value = "NISSAN", Text = "NISSAN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "NISSAN SPECIAL VEHICLE", Text = "NISSAN SPECIAL VEHICLE" });
+            VehicleMakeList.Add(new SelectListItem { Value = "OPEL", Text = "OPEL" });
+            VehicleMakeList.Add(new SelectListItem { Value = "PEUGEOT", Text = "PEUGEOT" });
+            VehicleMakeList.Add(new SelectListItem { Value = "PONTIAC", Text = "PONTIAC" });
+            VehicleMakeList.Add(new SelectListItem { Value = "PORSCHE", Text = "PORSCHE" });
+            VehicleMakeList.Add(new SelectListItem { Value = "PROTON", Text = "PROTON" });
+            VehicleMakeList.Add(new SelectListItem { Value = "RAMBLER", Text = "RAMBLER" });
+            VehicleMakeList.Add(new SelectListItem { Value = "RENAULT", Text = "RENAULT" });
+            VehicleMakeList.Add(new SelectListItem { Value = "ROLLS-ROYCE", Text = "ROLLS-ROYCE" });
+            VehicleMakeList.Add(new SelectListItem { Value = "ROVER", Text = "ROVER" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SAAB", Text = "SAAB" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SEAT", Text = "SEAT" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SKODA", Text = "SKODA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SMART", Text = "SMART" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SSANGYONG", Text = "SSANGYONG" });
+            VehicleMakeList.Add(new SelectListItem { Value = "STANDARD", Text = "STANDARD" });
+            VehicleMakeList.Add(new SelectListItem { Value = "STUDEBAKER", Text = "STUDEBAKER" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SUBARU", Text = "SUBARU" });
+            VehicleMakeList.Add(new SelectListItem { Value = "SUZUKI", Text = "SUZUKI" });
+            VehicleMakeList.Add(new SelectListItem { Value = "TESLA", Text = "TESLA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "TOYOTA", Text = "TOYOTA" });
+            VehicleMakeList.Add(new SelectListItem { Value = "TRIUMPH", Text = "TRIUMPH" });
+            VehicleMakeList.Add(new SelectListItem { Value = "VANDEN PLAS", Text = "VANDEN PLAS" });
+            VehicleMakeList.Add(new SelectListItem { Value = "VAUXHALL", Text = "VAUXHALL" });
+            VehicleMakeList.Add(new SelectListItem { Value = "VOLKSWAGEN", Text = "VOLKSWAGEN" });
+            VehicleMakeList.Add(new SelectListItem { Value = "VOLVO", Text = "VOLVO" });
+            VehicleMakeList.Add(new SelectListItem { Value = "WOLSELEY", Text = "WOLSELEY" });
             return VehicleMakeList;
         }
         #endregion
@@ -902,6 +965,206 @@ namespace InsureThatAPI.CommonMethods
             MachineryTypeOfUnitList.Add(new SelectListItem { Value = "3", Text = "Steam Generator" });
 
             return MachineryTypeOfUnitList;
+        }
+        #endregion
+        #region Claim Type Farm
+        public List<SelectListItem> ClaimTypeFarm()
+        {
+            List<SelectListItem> ClaimTypeFarmList = new List<SelectListItem>();
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "4", Text = "Electronics breakdown" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "5", Text = "Electronics loss of data" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "9", Text = "Liability general" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "9", Text = "Liability general" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "10", Text = "Liability general and product" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "12", Text = "Liability product" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "13", Text = "Livestock death" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "14", Text = "Livestock infertility" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "15", Text = "Livestock loss of use excluding infertility" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "16", Text = "Livestock unborn foal" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "17", Text = "Machinery accidental breakdown" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "18", Text = "Machinery deterioration of frozen food" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "19", Text = "Motor vehicle damage loading/unloading" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "20", Text = "Motor vehicle fire" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "21", Text = "Motor vehicle hail damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "22", Text = "Motor vehicle multiple vehicle accident" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "23", Text = "Motor vehicle single vehicle accident" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "24", Text = "Motor vehicle theft" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "25", Text = "Motor vehicle windscreen damage only" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "29", Text = "Profits loss" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "31", Text = "Property damage collapse" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "31", Text = "Property damage collapse" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "31", Text = "Property damage collapse" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "32", Text = "Property damage discharge of liquid" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "32", Text = "Property damage discharge of liquid" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "32", Text = "Property damage discharge of liquid" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "33", Text = "Property damage earthquake" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "33", Text = "Property damage earthquake" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "33", Text = "Property damage earthquake" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "34", Text = "Property damage explosion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "34", Text = "Property damage explosion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "34", Text = "Property damage explosion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "35", Text = "Property damage fire" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "35", Text = "Property damage fire" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "35", Text = "Property damage fire" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "36", Text = "Property damage flood" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "36", Text = "Property damage flood" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "36", Text = "Property damage flood" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "37", Text = "Property damage fusion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "37", Text = "Property damage fusion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "37", Text = "Property damage fusion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "38", Text = "Property damage glass" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "38", Text = "Property damage glass" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "38", Text = "Property damage glass" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "39", Text = "Property damage hail" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "39", Text = "Property damage hail" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "39", Text = "Property damage hail" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "40", Text = "Property damage lightning" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "40", Text = "Property damage lightning" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "40", Text = "Property damage lightning" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "41", Text = "Property damage malicious act" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "41", Text = "Property damage malicious act" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "41", Text = "Property damage malicious act" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "42", Text = "Property damage over spraying" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "42", Text = "Property damage over spraying" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "42", Text = "Property damage over spraying" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "43", Text = "Property damage pollution" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "43", Text = "Property damage pollution" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "43", Text = "Property damage pollution" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "44", Text = "Property damage riot" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "44", Text = "Property damage riot" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "44", Text = "Property damage riot" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "45", Text = "Property damage spontaneous combustion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "45", Text = "Property damage spontaneous combustion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "45", Text = "Property damage spontaneous combustion" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "46", Text = "Property damage storm and tempest" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "46", Text = "Property damage storm and tempest" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "46", Text = "Property damage storm and tempest" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "47", Text = "Property damage storm excluding hail" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "47", Text = "Property damage storm excluding hail" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "47", Text = "Property damage storm excluding hail" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "48", Text = "Property damage water damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "48", Text = "Property damage water damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "48", Text = "Property damage water damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "49", Text = "Property loss armed hold up" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "49", Text = "Property loss armed hold up" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "50", Text = "Property loss burglary" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "50", Text = "Property loss burglary" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "50", Text = "Property loss burglary" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "51", Text = "Property loss lost or misplaced" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "51", Text = "Property loss lost or misplaced" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "51", Text = "Property loss lost or misplaced" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "52", Text = "Property loss non delivery" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "52", Text = "Property loss non delivery" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "53", Text = "Property loss riot" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "53", Text = "Property loss riot" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "54", Text = "Property loss snatch and grab" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "54", Text = "Property loss snatch and grab" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "54", Text = "Property loss snatch and grab" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "55", Text = "Property loss theft" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "55", Text = "Property loss theft" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "55", Text = "Property loss theft" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "56", Text = "Transit damage" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "57", Text = "Transit loss" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "60", Text = "Money loss at location when secured" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "61", Text = "Money loss during transit" });
+            ClaimTypeFarmList.Add(new SelectListItem { Value = "62", Text = "Money loss at location when unsecured" });
+            return ClaimTypeFarmList;
+        }
+        #endregion
+        #region Claim Type Rular Lifestyle
+        public List<SelectListItem> ClaimTypeRular()
+        {
+            List<SelectListItem> ClaimTypeRularList = new List<SelectListItem>();
+            ClaimTypeRularList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "1", Text = "Boat multiple craft accident" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "2", Text = "Boat single craft accident" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "3", Text = "Boat sunk" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "9", Text = "Liability general" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "19", Text = "Motor vehicle damage loading/unloading" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "20", Text = "Motor vehicle fire" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "21", Text = "Motor vehicle hail damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "22", Text = "Motor vehicle multiple vehicle accident" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "23", Text = "Motor vehicle single vehicle accident" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "24", Text = "Motor vehicle theft" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "25", Text = "Motor vehicle windscreen damage only" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "30", Text = "Property damage accidental damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "31", Text = "Property damage collapse" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "31", Text = "Property damage collapse" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "31", Text = "Property damage collapse" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "32", Text = "Property damage discharge of liquid" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "32", Text = "Property damage discharge of liquid" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "33", Text = "Property damage earthquake" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "33", Text = "Property damage earthquake" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "33", Text = "Property damage earthquake" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "34", Text = "Property damage explosion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "34", Text = "Property damage explosion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "34", Text = "Property damage explosion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "35", Text = "Property damage fire" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "35", Text = "Property damage fire" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "35", Text = "Property damage fire" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "36", Text = "Property damage flood" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "36", Text = "Property damage flood" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "36", Text = "Property damage flood" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "37", Text = "Property damage fusion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "37", Text = "Property damage fusion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "37", Text = "Property damage fusion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "38", Text = "Property damage glass" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "38", Text = "Property damage glass" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "38", Text = "Property damage glass" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "39", Text = "Property damage hail" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "39", Text = "Property damage hail" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "39", Text = "Property damage hail" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "40", Text = "Property damage lightning" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "40", Text = "Property damage lightning" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "40", Text = "Property damage lightning" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "41", Text = "Property damage malicious act" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "41", Text = "Property damage malicious act" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "41", Text = "Property damage malicious act" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "42", Text = "Property damage over spraying" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "42", Text = "Property damage over spraying" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "42", Text = "Property damage over spraying" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "43", Text = "Property damage pollution" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "43", Text = "Property damage pollution" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "43", Text = "Property damage pollution" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "44", Text = "Property damage riot" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "44", Text = "Property damage riot" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "44", Text = "Property damage riot" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "45", Text = "Property damage spontaneous combustion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "45", Text = "Property damage spontaneous combustion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "45", Text = "Property damage spontaneous combustion" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "46", Text = "Property damage storm and tempest" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "46", Text = "Property damage storm and tempest" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "46", Text = "Property damage storm and tempest" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "47", Text = "Property damage storm excluding hail" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "47", Text = "Property damage storm excluding hail" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "47", Text = "Property damage storm excluding hail" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "48", Text = "Property damage water damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "48", Text = "Property damage water damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "48", Text = "Property damage water damage" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "49", Text = "Property loss armed hold up" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "50", Text = "Property loss burglary" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "50", Text = "Property loss burglary" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "51", Text = "Property loss lost or misplaced" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "51", Text = "Property loss lost or misplaced" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "52", Text = "Property loss non delivery" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "53", Text = "Property loss riot" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "54", Text = "Property loss snatch and grab" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "54", Text = "Property loss snatch and grab" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "55", Text = "Property loss theft" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "55", Text = "Property loss theft" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "68", Text = "Pet illness" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "69", Text = "Pet injury" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "70", Text = "Pet euthanised" });
+            ClaimTypeRularList.Add(new SelectListItem { Value = "71", Text = "Travel claim" });
+            return ClaimTypeRularList;
         }
         #endregion
     }

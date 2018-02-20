@@ -8,10 +8,18 @@ namespace InsureThatAPI.Models
 {
     public class Pets
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
         public Speciesed SpeciesObj { get; set; }
         public Breeds BreedObj { get; set; }
         public OtherBreeds OtherbreedObj { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public Names NameObj { get; set; }
         public DateOfBirth DatebirthObj { get; set; }
         public PreExistings PreexistingObj { get; set; }

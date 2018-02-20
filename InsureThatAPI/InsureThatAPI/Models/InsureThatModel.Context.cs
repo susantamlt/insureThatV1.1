@@ -1741,5 +1741,46 @@ namespace InsureThatAPI.Models
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_GetLocalElement_UnitDetails_Result>("usp_GetLocalElement_UnitDetails", unitDetailsIdParameter, sectionNameParameter, unIdParameter);
         }
+    
+        public virtual int IT_dt_Delete_Unit(Nullable<int> unitId, Nullable<int> policyId, string component, string name, Nullable<int> unId, Nullable<int> unitNumber, string unitStatus, Nullable<int> profileUnId, string status)
+        {
+            var unitIdParameter = unitId.HasValue ?
+                new ObjectParameter("UnitId", unitId) :
+                new ObjectParameter("UnitId", typeof(int));
+    
+            var policyIdParameter = policyId.HasValue ?
+                new ObjectParameter("PolicyId", policyId) :
+                new ObjectParameter("PolicyId", typeof(int));
+    
+            var componentParameter = component != null ?
+                new ObjectParameter("Component", component) :
+                new ObjectParameter("Component", typeof(string));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var unIdParameter = unId.HasValue ?
+                new ObjectParameter("UnId", unId) :
+                new ObjectParameter("UnId", typeof(int));
+    
+            var unitNumberParameter = unitNumber.HasValue ?
+                new ObjectParameter("UnitNumber", unitNumber) :
+                new ObjectParameter("UnitNumber", typeof(int));
+    
+            var unitStatusParameter = unitStatus != null ?
+                new ObjectParameter("UnitStatus", unitStatus) :
+                new ObjectParameter("UnitStatus", typeof(string));
+    
+            var profileUnIdParameter = profileUnId.HasValue ?
+                new ObjectParameter("ProfileUnId", profileUnId) :
+                new ObjectParameter("ProfileUnId", typeof(int));
+    
+            var statusParameter = status != null ?
+                new ObjectParameter("Status", status) :
+                new ObjectParameter("Status", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("IT_dt_Delete_Unit", unitIdParameter, policyIdParameter, componentParameter, nameParameter, unIdParameter, unitNumberParameter, unitStatusParameter, profileUnIdParameter, statusParameter);
+        }
     }
 }

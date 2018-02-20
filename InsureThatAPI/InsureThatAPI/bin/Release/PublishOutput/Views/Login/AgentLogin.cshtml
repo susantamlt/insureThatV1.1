@@ -1,15 +1,12 @@
 ﻿@model InsureThatAPI.Models.LogInDetails
 @{
     Layout = "";
-
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 <head>
-
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="SemiColonWeb" />
-
     <!-- Stylesheets
     ============================================= -->
     <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Raleway:300,400,500,600,700" rel="stylesheet" type="text/css" />
@@ -129,10 +126,19 @@
                                                 <li style="color:green;">@TempData["Success"]</li>
                                             }
                                         </div>*@
-                                    <div id="errormessages">
-                                        @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
+                                    @*<div id="errormessages">
+                                        @if (ViewBag.ErrorMessage != null)
                                         {
                                             <li style="color:red;">@ViewBag.ErrorMessage</li>
+                                        }
+                                    </div>*@
+                                    <div id="errormessages">
+                                        @if (Model.Errors != null && Model.Errors.Count()>0)
+                                        {
+                                            for (int i = 0; i < Model.Errors.Count(); i++)
+                                            {
+                                            <li style="color:red;">@Model.Errors[i]</li>
+                                            }
                                         }
                                     </div>
                                 </div>

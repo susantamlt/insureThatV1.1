@@ -8,7 +8,17 @@ namespace InsureThatAPI.Models
 {
     public class HomeContent
     {
+        public int? Pincode { get; set; }
+        public string Sub { get; set; }
+        public string Address { get; set; }
+        public string state { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string PolicyStatus { get; set; }
+        public int? PcId { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
         public int CustomerId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public Addresses AddressObj { get; set; }
         public LocationNew LocationObj { get; set; }
         public CostToReplaces CosttoreplaceObj { get; set; }
         public RequireCovers RequirecoverObj  { get; set; }
@@ -19,10 +29,21 @@ namespace InsureThatAPI.Models
         public SumInsures SuminsuredObj { get; set; }
         public TotalCovers TotalcoverObj { get; set; }
         public IEnumerable<SelectListItem> SubUrb { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions{ get; set; }
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
     }
     public class ValuablesHC
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string PolicyStatus { get; set; }
+        public int? PcId { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
         public int CustomerId { get; set; }
+        public Addresses AddressObj { get; set; }
         public LocationNew LocationObj { get; set; }
         public ExcessesPay ExcesspayObj { get; set; }
         public SumInsures SuminsuredObj { get; set; }
@@ -30,6 +51,7 @@ namespace InsureThatAPI.Models
         public TotalCovers TotalcoverObj { get; set; }
         public Unspecifics UnspecificObj { get; set; }
         public IEnumerable<SelectListItem> SubUrb { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
     }
     public class Unspecifics
     {

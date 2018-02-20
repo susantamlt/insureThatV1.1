@@ -11,7 +11,19 @@ namespace InsureThatAPI.Models
     }
     public class FarmContents
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
         public int CustomerId { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public int? PcId { get; set; }
+    
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+     
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         public string CompletionTrackFPC { get; set; }
         public DescriptionsFC DescriptionFCObj { get; set; }
         public YearFPC YearObj { get; set; }
@@ -22,8 +34,31 @@ namespace InsureThatAPI.Models
         public FarmFencingFC FarmfencingObj { get; set; }
         public FarmFencingTC FarmcencingTcObj { get; set; }
         public OtherFarmStructures FarmstructuresObj { get; set; }
-        public FarmContentsFC FarmContentFcObj{ get; set; }
+        public FarmContentsFC FarmContentFcObj { get; set; }
         public ExcessesFPC ExcessesFpcObj { get; set; }
+
+        public FarmContentsFC FarmContentFMObj { get; set; }
+        public ExcessforUM ExcessUMObj { get; set; }
+        public DescriptionsFM DescriptionFmObj { get; set; }
+        public YearFPC YearFMObj { get; set; }
+        public SerialNumbers SerialnumberObj { get; set; }
+        public ExcessesFPC ExcessesFMObj { get; set; }
+        public SumOfInsured SuminsuredFMObj { get; set; }
+        public TotalSpecifiedItems TotalspecifieditemObj { get; set; }
+
+        public DescriptionsFC DescriptionLSObj { get; set; }
+        public NumberOfAnimals NumberanimalObj { get; set; }
+        public SumInsuredPerAnimals SuminsuredperObj { get; set; }
+        public SumOfInsured SuminsuredLSObj { get; set; }
+        public TotalForLiveStock TotallivestockObj { get; set; }
+        public DogAttackOption DogattackObj { get; set; }
+        public ExcessesFPC ExcessesLSObj { get; set; }
+
+        public SumOfInsured SuminsureHCVdObj { get; set; }
+        public ExcessesFPC ExcessesHCVObj { get; set; }
+        public SumOfInsuredHCB SuminsuredHbcObj { get; set; }
+        public NumberOfHives NumberhiveObj { get; set; }
+        public ExcessesBeehives ExcessBObj { get; set; }
     }
     public class FarmMachinery
     {

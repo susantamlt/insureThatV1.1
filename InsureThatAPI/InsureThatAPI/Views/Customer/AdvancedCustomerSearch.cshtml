@@ -57,6 +57,7 @@
         @using (Html.BeginForm("AdvCustomerSearch", "Customer", FormMethod.Post, new { CustomerId = 1, enctype = "multipart/form-data", id = "advancedSearch", name = "advancedSearch" }))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(o=>o.Actntype)
             <div class="row">
                 <div class="col-md-2 col-sm-2 col-xs-12 mt-10">INSURED NAME</div>
                 <div class="col-md-4 col-sm-4 col-xs-12" id="insuredName-div">
@@ -85,7 +86,7 @@
 
                     @Html.HiddenFor(model => model.InsuredId, new { @class = "form-control form-border-bottom", @id = "insuredid" })
 
-
+                    @Html.HiddenFor(model => model.Actntype)
                 </div>
             </div>
             <div class="row">
@@ -101,40 +102,68 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-12"></div>
                 <div class="col-md-6 col-sm-6 col-xs-12 text-right">
-                    <a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>
-                    <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn">Search</button>
+                    @if (Model.Actntype != null && Model.Actntype == "Attach")
+                    {
+                        <button type="button" name="submit-search" class="form-control form-border-bottom btn search-btn attachpolicy">Attach</button>
+                    }
+                    else
+                    {
+                        @*<a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>*@
+                        <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn" disabled="disabled">Continue</button>
+                    }
                 </div>
             </div>
             <div id="show"></div>
         }
+        @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Get, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            if (Model.Actntype== null || Model.Actntype != "Attach")
+            {
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12"></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                        <button type="submit" class="form-control form-border-bottom btn newcut text-right" role="button" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:5px;line-height:22px;">
+                            New Customer
+                        </button>
+                    </div>
+                </div>
+            }
+        }
     </div>
 </div>
 <style type="text/css">
-    .device-lg #slider .emphasis-title h1 {
-        font-size: 52px;
-    }
-
-    .device-md #slider .emphasis-title h1 {
-        font-size: 44px;
-    }
-
-    #wrapper {
-        background: url(../images/bg-pattern.png), url(../images/yellow-overlay.png) no-repeat right top;
-    }
-
-    .error {
-        color: #FF0000;
-    }
+    .device-lg #slider .emphasis-title h1 {font-size: 52px;}
+    .device-md #slider .emphasis-title h1 {font-size: 44px;}
+    #wrapper {background: url(../images/yellow-overlay.png) no-repeat right top;}
+    .error {color: #FF0000;}
 </style>
 <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
 <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
-@*<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>*@
-@*<script src="https://select2.org/data-sources/ajax"></script>*@
-@*<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/select2.min.js"></script>*@
 <link href="~/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
+    //$(".newcut").click(function () {
+    //    $.ajax({
+    //        url: '/customer/NewPolicy',
+    //        type: 'GET',
+    //        data: {  },
+    //        success: function (response) {
+    //            window.location.href = responce;
+    //        }
+    //    });
+    //});
+    $(".attachpolicy").click(function () {
+        $.ajax({
+            url: '/customer/Attach',
+            type: 'Post',
+            data: {},
+            success: function (responce) {
+                window.location.href = responce;
+            }
+        });
+    });
+    
     $("#newcust").click(function () {
         var phonenu = $("#newphoneno").val();
         var name = $("#newname").val();
@@ -209,19 +238,19 @@
             },
             messages: {
                 insuredName: {
-                    required: "Please enter Insured name",
+                    required: "Please enter insured name",
                     regex: "Special character not allowed"
                 },
                 emailId: {
-                    required: "Please enter a Email address.",
+                    required: "Please enter a email address.",
                     email: "Please enter a valid email address."
                 },
                 policyNo: {
-                    required: "Please enter a Policy number.",
+                    required: "Please enter a policy number.",
                     regex: "Special character not allowed"
                 },
                 phoneNo: {
-                    required: "Please enter a Phone number.",
+                    required: "Please enter a phone number.",
                     number: "Please enter a valid phone number."
                 },
             },
@@ -247,6 +276,7 @@
     });
     $(function () {
         $('.js-data-example-ajax').select2({
+
             ajax: {
                 url: '/customer/customersearch',
                 type: 'POST',
@@ -271,6 +301,7 @@
         $('#name').on('change', (function () {
             var id = $(this).val();
             var name = $(this).text();
+            $('.search-btn').attr("disabled", "disabled");
             $.ajax({
                 type: "POST",
                 url: "/customer/AdvCustomerSearch",
@@ -303,12 +334,16 @@
                         });
                         //var pNumber = pNumber1.replace(' ', '');
                         //$('#phonenu').val(pNumber.replace(' ', ''));
+
+                        $('.search-btn').prop("disabled", false);
                     }
                     $('#email').val(responce.results[0].EmailID);
+
                 }
             });
         }));
         $('.ajax-keypress').keyup(function (e) {
+            $('.search-btn').prop("disabled", false);
             var id = $(this).attr('id');
             var val = $(this).val();
             var len = val.length;
@@ -350,6 +385,7 @@
                             }
 
                             $('#email').val(responce.results[0].EmailID);
+                            $('.search-btn').prop("disabled", false);
                         }
                     }
                 });

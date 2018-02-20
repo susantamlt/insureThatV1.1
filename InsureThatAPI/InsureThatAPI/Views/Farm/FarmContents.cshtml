@@ -2,199 +2,1517 @@
 @{
     ViewBag.Title = "Farm Contents / Farm Property Cover";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var urlIdSuccess = new string[] { };
-    var urlId_Success = Session["CompletionTrackFPC"].ToString();
-    if (urlId_Success != null)
-    {
-        urlIdSuccess = urlId_Success.Split('-');
-    }
+    List<SelectListItem> listsExcessFC = new List<SelectListItem>();
+    listsExcessFC.Add(new SelectListItem { Value = "250", Text = "$250" });
+    listsExcessFC.Add(new SelectListItem { Value = "500", Text = "$500" });
+    listsExcessFC.Add(new SelectListItem { Value = "1000", Text = "$1,000" });
+    listsExcessFC.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
+    listsExcessFC.Add(new SelectListItem { Value = "5000", Text = "$5,000" });
+    listsExcessFC.Add(new SelectListItem { Value = "10000", Text = "$10,000" });
+    List<SelectListItem> listsExcessFM1 = new List<SelectListItem>();
+    listsExcessFM1.Add(new SelectListItem { Value = "250", Text = "$250" });
+    listsExcessFM1.Add(new SelectListItem { Value = "750", Text = "$750" });
+    listsExcessFM1.Add(new SelectListItem { Value = "1250", Text = "$1,250" });
+    listsExcessFM1.Add(new SelectListItem { Value = "2500", Text = "$2,250" });
+    List<SelectListItem> listsExcessFM2 = new List<SelectListItem>();
+    listsExcessFM2.Add(new SelectListItem { Value = "250", Text = "$250" });
+    listsExcessFM2.Add(new SelectListItem { Value = "500", Text = "$500" });
+    listsExcessFM2.Add(new SelectListItem { Value = "1000", Text = "$1,000" });
+    listsExcessFM2.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>RURAL LIFESTYLE POLICY</span> / FARM PROPERTY</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
+        <div class="pull-right">
+            <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
+            <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+            <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Save Policy</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you wish to save and exit.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    <button class="btn btn-default no-border savepolicyP" data-dismiss="modal" aria-hidden="true"> Save </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Referral List</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (Model.Referels != null && Model.Referels.Count() > 0)
+                    {
+                        for (int j = 0; j < Model.Referels.Count(); j++)
+                        {
+                            @Model.Referels[j]<br />
+                        }
+                    }
+                    else
+                    {
+                        <p>No Referral List</p>
+                    }
+                    <p id="referralList-p"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Premium Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style=" width: 100%; ">
+                        <thead>
+                            <tr>
+                                <th class="space_left">Section Name</th>
+                                <th class="space_left">Base</th>
+                                <th class="space_left">FSL</th>
+                                <th class="space_left">GST</th>
+                                <th class="space_left">Stamp Duty</th>
+                                <th class="space_right">Gross</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiumModel-p-b">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="premiumModel-p-f">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="mt-40 mb-40 row"></div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     <div id="processTabs">
         <ul class="process-steps clearfix col-sm-12">
             <li>
-                <a href="javascript:void(0)" class="active">Farm Structures and Farm Contents</a>
+                <a href="javascript:void(0)" id="ptb1">Farm Structures and Farm Contents</a>
             </li>
             <li>
-                <a href="@Url.Action("FarmMachinery", "Farm",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[1] == "1"){ <text>class = "success"</text>}>Farm Machinery</a>
+                <a href="javascript:void(0)" id="ptb2">Farm Machinery</a>
             </li>
             <li>
-                <a href="@Url.Action("Livestock", "Farm",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[2] == "1"){ <text>class = "success"</text>}>Livestock</a>
+                <a href="javascript:void(0)" id="ptb3">Livestock</a>
             </li>
             <li>
-                <a href="@Url.Action("HarvestedCropsBeehives", "Farm",new {cid=@Model.CustomerId })" @if(urlIdSuccess!= null && urlIdSuccess.Length > 0 && urlIdSuccess[3] == "1"){ <text>class = "success"</text>}>Harvested Crops and Beehives</a>
+                <a href="javascript:void(0)" id="ptb4">Harvested Crops and Beehives</a>
             </li>
         </ul>
-        <div>
-            <div id="errorContainer"></div>
-            @using (Ajax.BeginForm("FarmContents", "Farm", new { cid = @ViewBag.cid }, new AjaxOptions()
-            {
-                HttpMethod = "POST"
+        @using (Ajax.BeginForm("FarmContents", "Farm", new { cid = @ViewBag.cid }, new AjaxOptions()
+        {
+            HttpMethod = "POST"
 
-            }, new { @id = "farmContents", @name = "farmContents" }))
-            {
-                <div id="ptab1">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head"><h2>FARM STRUCTURES AND FARM CONTENTS</h2></div>
-                    <div class="mt-10 mb-10 col-md-12">
-                        @Html.HiddenFor(m => m.CustomerId)
-                        <h5>Farm Building Details</h5>
-                        <p>What type of Farm Building do you need to cover?</p>
+        }, new { @id = "farmContents", @name = "farmContents" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+            <div id="ptab1">
+                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2 style="font-size: 21px;margin-bottom: 0;">FARM STRUCTURES AND FARM CONTENTS</h2></div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p><a href="#FarmContentsModal3" role="button" data-target="#FarmContentsModal3" data-toggle="modal">Click here to see the information about Farm Contents?</a></p>
+                    <p><a href="#FarmStructuresModal3" role="button" data-target="#FarmStructuresModal3" data-toggle="modal">Click here to see the information about Farm Structures</a></p>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <h5>Farm Building Details</h5>
+                    <p>What type of Farm Building do you need to cover?</p>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-12 table-8">
+                        <table class="table" style=" width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th class="space_left">Description</th>
+                                    <th class="space_left">Year</th>
+                                    <th class="space_left">Construction</th>
+                                    <th class="space_left">Coolroom</th>
+                                    <th class="space_left">Sum Insured</th>
+                                    <th class="space_right">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="tnameFC-tr-1">
+                                    <td class="no-border">
+                                        @*@Html.DropDownListFor(Model => Model.DescriptionFCObj.Description, @Model.DescriptionFCObj.DescriptionList, "-- Select --", new { @class = "form-control form-border-bottom description vlidationInsure commondataselection", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = "0", @id = "description1" })*@
+                                        @Html.TextBoxFor(p => p.DescriptionFCObj.Description, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = "0", @id = "description1", @data_regex = "AN" })
+                                        @Html.HiddenFor(p => p.DescriptionFCObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = "0", @id = "year1", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.YearObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.DropDownListFor(Model => Model.MaterialsObj.Materials, @Model.MaterialsObj.MaterialsList, "-- Select --", new { @class = "form-control form-border-bottom vlidationInsure commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = "0", @id = "materials1" })
+                                        @Html.HiddenFor(p => p.MaterialsObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        <div class="policy-loc-row">
+                                            <input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom1" class="vlidationInsure"><label for="checkbox1"><span><span></span></span></label>
+                                        </div>
+                                    </td>
+                                    <td class="no-border">
+                                        $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @style = "display:inline-block;width:90%;", @class = "form-control form-border-bottom  vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "0", @id = "suminsured1", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                    </td>
+                                    <td class="no-border" id="tnameFC-1"><a href="javascript:void(0)" onclick="tnameAddFC(1)" class="button-3d">+</a></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="no-border"><label id="DescriptionFCObj.Description-error" class="error" for="DescriptionFCObj.Description"></label></td>
+                                    <td class="no-border"><label id="YearObj.Year-error" class="error" for="YearObj.Year"></label></td>
+                                    <td class="no-border"><label id="MaterialsObj.Materials-error" class="error" for="MaterialsObj.Materials"></label></td>
+                                    <td class="no-border"><label id="CoolroomFcObj.Coolroom-error" class="error" for="CoolroomFcObj.Coolroom"></label></td>
+                                    <td class="no-border"><label id="SuminsuredObj.Suminsured-error" class="error" for="SuminsuredObj.Suminsured"></label></td>
+                                    <td class="no-border">&nbsp;</td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
-                    <div class="mt-10 mb-10 col-md-12">
-                        @Html.HiddenFor(p => p.CompletionTrackFPC, new { @id = "completiontrack" })
-                        <div class="col-md-12 table-8">
-                            <table class="table" style=" width: 100%; ">
-                                <thead>
-                                    <tr>
-                                        <th class="space_left">Description</th>
-                                        <th class="space_left">Year</th>
-                                        <th class="space_left">Construction</th>
-                                        <th class="space_left">Coolroom</th>
-                                        <th class="space_left">Sum Insured</th>
-                                        <th class="space_right">&nbsp;</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr id="tname-tr-1">
-                                        <td class="no-border">
-                                            @Html.DropDownListFor(Model => Model.DescriptionFCObj.Description, @Model.DescriptionFCObj.DescriptionList, "-- Select --", new { @class = "form-control form-border-bottom description", @id = "description1" })
-                                            @Html.HiddenFor(p => p.DescriptionFCObj.EiId)
-                                        </td>
-                                        <td class="no-border">
-                                            @Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom year", @id = "year1", @readonly = "readonly" })
-                                            @Html.HiddenFor(p => p.YearObj.EiId)
-                                        </td>
-                                        <td class="no-border">
-                                            @Html.DropDownListFor(Model => Model.MaterialsObj.Materials, @Model.MaterialsObj.MaterialsList, "-- Select --", new { @class = "form-control form-border-bottom", @id = "materials1" })
-                                            @Html.HiddenFor(p => p.MaterialsObj.EiId)
-                                        </td>
-                                        <td class="no-border"><div class="policy-loc-row">
-                                            <input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom1"><label for="checkbox1"><span><span></span></span></label></div>
-                                        </td>
-                                        <td class="no-border">
-                                            @Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-border-bottom sumoftotalcover", @id = "suminsured1" })
-                                            @Html.HiddenFor(p => p.SuminsuredObj.EiId)
-                                        </td>
-                                        <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-8 col-sm-8 col-xs-12">Do you confirm that all Farm Structures to be insured are structurally sound, well maintained and have no unrepaired damage?</p>
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <div class="policy-loc-row">
+                            @if (@Model.confirmfsObj.Confirm == "1")
+                            {
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '1', new { @class = "buildingtype vlidationInsure commondataradio", @data_eiid = @Model.confirmfsObj.EiId, @id = "buildingtype", @checked = "checked" })
+                                    <label for="radio1"><span><span></span></span>Yes</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '0', new { @class = "buildingtype vlidationInsure commondataradio", @data_eiid = @Model.confirmfsObj.EiId, @id = "buildingtype1" })
+                                    <label for="radio1"><span><span></span></span>No</label>
+                                </div>
+                            }
+                            else if (@Model.confirmfsObj.Confirm == "0")
+                            {
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '1', new { @class = "buildingtype vlidationInsure commondataradio", @data_eiid = @Model.confirmfsObj.EiId, @id = "buildingtype" })
+                                    <label for="radio1"><span><span></span></span>Yes</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '0', new { @class = "buildingtype vlidationInsure commondataradio", @data_eiid = @Model.confirmfsObj.EiId, @id = "buildingtype1", @checked = "checked" })
+                                    <label for="radio1"><span><span></span></span>No</label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '1', new { @class = "buildingtype vlidationInsure commondataradio", @data_eiid = @Model.confirmfsObj.EiId, @id = "buildingtype" })
+                                    <label for="radio1"><span><span></span></span>Yes</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '0', new { @class = "buildingtype vlidationInsure commondataradio", @data_eiid = @Model.confirmfsObj.EiId, @id = "buildingtype1" })
+                                    <label for="radio1"><span><span></span></span>No</label>
+                                </div>
+                            }
+                            @Html.HiddenFor(p => p.confirmfsObj.EiId)
                         </div>
-                    </div>                
-                    <div class="mt-10 mb-10 col-md-12">
-                        <p class="col-md-8 col-sm-8 col-xs-12">Do you confirm that all Farm Structures to be insured are structurally sound, well maintained and have no unrepaired damage?</p>
-                        <div class="col-md-4 col-sm-4 col-xs-12">
+                        <label id="confirmfsObj.Confirm-error" class="error" for="confirmfsObj.Confirm"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-6"><p>Please advise the cost per kilometre to replace your fencing</p></div>
+                    <div class="col-md-6">
+                        $@Html.TextBoxFor(p => p.FarmfencingObj.Farmfencing, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmfencingObj.EiId, @id = "farmfencing", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.FarmfencingObj.EiId)
+                        <label id="FarmfencingObj.Farmfencing-error" class="error" for="FarmfencingObj.Farmfencing"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-6"><p>What is the total replacement cost of fencing cover you would like?</p></div>
+                    <div class="col-md-6">
+                        $@Html.TextBoxFor(p => p.FarmcencingTcObj.Totalcover, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmcencingTcObj.EiId, @id = "totalcover", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.FarmcencingTcObj.EiId)
+                        <label id="FarmcencingTcObj.Totalcover-error" class="error" for="FarmcencingTcObj.Totalcover"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-6">
+                        <p>
+                            Please advise how much you would like the rest of your <a href="#FarmStructuresModal3" role="button" data-target="#FarmStructuresModal3" data-toggle="modal">Farm Structures</a> to be insured<br />
+                            <span class="mini-text">(includes covered ways, exterior light fittings, irrigation systems, pens, sheep dips, stockyards, pipes, cables, power and telephone poles, silos, solar power units, tanks and windmills)</span>
+                        </p>
+                    </div>
+                    <div id="FarmStructuresModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="FarmStructuresModal3" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Farm Structures</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Farm Structures means:</p>
+                                    <p>All farm buildings or permanent structures including:</p>
+                                    <ul style="list-style:none">
+                                        <li>(1) Covered ways.</li>
+                                        <li>(2) Exterior light fittings and their controllers.</li>
+                                        <li>(3) Irrigation systems and their controllers.</li>
+                                        <li>(4) Paved or concrete (but not gravelled) driveways, paths terraces and courts.</li>
+                                        <li>(5) Fixed pens, sheep dips and stockyards.
+                                        <li>(6) Pipes and cables.</li>
+                                        <li>(7) Power and telephone poles.</li>
+                                        <li>(8) Fixed silos.</li>
+                                        <li>(9) Fixed solar power units and their controllers and inverters.</li>
+                                        <li>(10) Tanks.</li>
+                                        <li>(11) Fixed Farm Fencing but not hedges.</li>
+                                        <li>(12) Windmills but not wind turbines.</li>
+                                    </ul>
+                                    <p>It does not mean any:</p>
+                                    <ul style="list-style:none">
+                                        <li>(1) Home Buildings.</li>
+                                        <li>(2) Glasshouses, shade houses and structures designed to house growing plants.</li>
+                                    </ul>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        $@Html.TextBoxFor(p => p.FarmstructuresObj.Farmstructures, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmstructuresObj.EiId, @id = "farmstructures", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.FarmstructuresObj.EiId)
+                        <label id="FarmstructuresObj.Farmstructures-error" class="error" for="FarmstructuresObj.Farmstructures"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-6"><p>How much cover do you need to replace your <a href="#FarmContentsModal3" role="button" data-target="#FarmContentsModal3" data-toggle="modal">Farm Contents?</a></p></div>
+                    <div class="col-md-6">
+                        $@Html.TextBoxFor(p => p.FarmContentFcObj.Farmcontents, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmContentFcObj.EiId, @id = "farmstructuresFc", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.FarmContentFcObj.EiId)
+                        <label id="FarmContentFcObj.Farmcontents-error" class="error" for="FarmContentFcObj.Farmcontents"></label>
+                    </div>
+                </div>
+                <div id="FarmContentsModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="FarmContentsModal3" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Farm Contents</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <ul style="list-style:none">
+                                    <li>(1) All farm contents on Your farm; and</li>
+                                    <li>(2) Any office equipment in Your Home Buildings.</li>
+                                    <li>(3) Portable pens, sheep dips and stockyards;</li>
+                                    <li>(4) Portable silos;</li>
+                                    <li>(5) Portable solar power units</li>
+                                    <li>(6) Portable farm fencing.</li>
+                                </ul>
+                                <p>It does not mean any:</p>
+                                <ul style="list-style:none">
+                                    <li>(1) Item that can be more specifically insured under another section of this policy;</li>
+                                    <li>(2) Home Contents;</li>
+                                    <li>(3) Valuables;</li>
+                                    <li>(4) Mobile phone, laptop computer, hand held computer or global positioning system unless they are used for or connected to Your business as specified in the Certificate;</li>
+                                    <li>(5) Aircraft; balloon; drone; craft that travels on a cushion of air; rocket or an accessory to such items;</li>
+                                    <li>(6) Business book, document, record or plan except for the material on which they are written or stored. We do cover blank stationery.</li>
+                                    <li>(7) Cash, cheque, postal note, money order, stamp, credit card voucher or negotiable instrument;</li>
+                                    <li>(8) Jewellery, fur, precious metal or stone;</li>
+                                    <li>(9) Living creature;</li>
+                                    <li>(10) Farm Machinery nor self-propelled or motor drawn machine or implement not designed specifically for agricultural purposes or used primarily for agricultural purposes;</li>
+                                    <li>(11) Harvested crops;</li>
+                                    <li>(12) Animal semen or embryos, and their containers (cover available under Livestock in the Farm Property section);</li>
+                                    <li>(13) Beehives (cover available under Beehives in the Farm Property section);</li>
+                                    <li>(14) Motor vehicle, motorcycle, motor scooter or an accessory to such items;</li>
+                                    <li>(15) Property that is described under Farm Structures;</li>
+                                    <li>(16) Vehicle that runs on rails or an accessory to such a vehicle;</li>
+                                    <li>(17) Watercraft or an accessory to a watercraft</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12 ">
+                    <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(Model => Model.ExcessesFpcObj.Excess, listsExcessFC, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessesFpcObj.EiId, @id = "excessFC" })
+                        @Html.HiddenFor(p => p.ExcessesFpcObj.EiId)
+                        <label id="ExcessesFpcObj.Excess-error" class="error" for="ExcessesFpcObj.Excess"></label>
+                    </div>
+                </div>
+                <div class="col-md-6 pull-right text-right">
+                    <button type="button" class="button-3d nomargin tab-linker quot-next-btn homedescrtn" id="ptabbtn1">Save & Continue</button>
+                </div>
+            </div>
+            <div id="ptab2">
+                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>FARM MACHINERY</h2></div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-6"><p>How much cover do you need for unspecified farm machinery?<br /><span class="mini-text">(You can insure unspecified items of farm machinery up to $5,000 for any one item.)</span></p></div>
+                    <div class="col-md-6">
+                        $@Html.TextBoxFor(p => p.FarmContentFMObj.Farmcontents, new { @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmContentFMObj.EiId, @id = "farmcontents", @style = "display:inline-block;width:95%", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.FarmContentFMObj.EiId)
+                        <label id="FarmContentFMObj.Farmcontents-error" class="error" for="FarmContentFMObj.Farmcontents"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12 ">
+                    <div class="col-md-6"><p><a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for unspecified machinery </p></div>
+                    <div class="col-md-3">
+                        @Html.DropDownListFor(Model => Model.ExcessUMObj.Excessum, listsExcessFM1, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessUMObj.EiId, @id = "excessum" })
+                        @Html.HiddenFor(p => p.ExcessUMObj.EiId)
+                        <label id="ExcessUMObj.Excessum-error" class="error" for="ExcessUMObj.Excessum"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-12">Please list your specified item/s of machinery below (valued over $5,000 per item)</p>
+                    <p class="col-md-12 mini-text">Please advise details such as the model number of a tractor, the type of caravan etc</p>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-12 table-8">
+                        <table class="table" style=" width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th class="space_left">Description</th>
+                                    <th class="space_left">Year</th>
+                                    <th class="space_left">Serial Number</th>
+                                    <th class="space_left">Excess</th>
+                                    <th class="space_left">Sum Insured</th>
+                                    <th class="space_right">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="tnameFM-tr-1">
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.DescriptionFmObj.Description, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = "0", @id = "description1", @data_regex = "AN" })
+                                        @Html.HiddenFor(p => p.DescriptionFmObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.YearFMObj.Year, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = "0", @id = "year1",@data_regex = "N" })
+                                        @Html.HiddenFor(p => p.YearFMObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = "0", @id = "serialnumber1", @data_regex = "NA" })
+                                        @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, @Model.ExcessesFpcObj.ExcessList, new { @class = "form-control vlidationInsure form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = "0", @id = "excess1" })
+                                        @Html.HiddenFor(p => p.ExcessesFMObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        $@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, new { @style = "display:inline-block;width: 93%", @class = "suminsuredfarmmachinary form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = "0", @id = "suminsured1", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.SuminsuredFMObj.EiId)
+                                    </td>
+                                    <td class="no-border" id="tnameFM-1"><a href="javascript:void(0)" onclick="tnameAddFM(1)" class="button-3d">+</a></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="no-border"><label id="DescriptionFmObj.Description-error" class="error" for="DescriptionFmObj.Description"></label></td>
+                                    <td class="no-border"><label id="YearFMObj.Year-error" class="error" for="YearFMObj.Year"></label></td>
+                                    <td class="no-border"><label id="SerialnumberObj.Serialnumber-error" class="error" for="SerialnumberObj.Serialnumber"></label></td>
+                                    <td class="no-border"><label id="ExcessesFMObj.Excess-error" class="error" for="ExcessesFMObj.Excess"></label></td>
+                                    <td class="no-border"><label id="SuminsuredFMObj.Suminsured-error" class="error" for="SuminsuredFMObj.Suminsured"></label></td>
+                                    <td class="no-border">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="no-border"><p class="form-border-bottom" style="margin-top:0px;padding-bottom: 10px;">Total for specified items</p></td>
+                                    <td colspan="3" class="no-border">$<input style="display:inline-block;width:95%;" type="text" readonly="readonly" name="totalspaceific" id="totalspaceific" class="form-control  vlidationInsure form-border-bottom" data-regex="N"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-md-6 pull-right text-right">
+                    <a href="javascript:void(0)" id="ptb12" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                    <img src="~/images/button-devider.png">
+                    <button type="button" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn2">Save & Continue</button>
+                </div>
+            </div>
+            <div id="ptab3">
+                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>LIVESTOCK</h2></div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-lg-12"><a href="#livestockModal3" role="button" data-target="#livestockModal3" data-toggle="modal"><strong>Click here to see the cover available for your livestock.</strong></a></p>
+                    <div class="col-md-12 table-8">
+                        <table class="table" style=" width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th class="space_left">Description</th>
+                                    <th class="space_left">Number of Animals</th>
+                                    <th class="space_left">Sum Insured per Animal</th>
+                                    <th class="space_left">Sum Insured</th>
+                                    <th class="space_right">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="tnameLS-tr-1">
+                                    <td class="no-border">
+                                        @Html.DropDownListFor(p => p.DescriptionLSObj.Description, Model.DescriptionLSObj.DescriptionList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = "0", @id = "description1" })
+                                        @Html.HiddenFor(p => p.DescriptionLSObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        @Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, new { @class = "form-control form-border-bottom vlidationInsure autoCalculateLS commondatatest", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = "0", @id = "numberanimal1", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.NumberanimalObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        $@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, new { @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = "0", @id = "suminsuredper1", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.SuminsuredperObj.EiId)
+                                    </td>
+                                    <td class="no-border">
+                                        $@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, new { @readonly = "readonly", @style = "display:inline-block;width:93%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = "0", @id = "suminsured1", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.SuminsuredLSObj.EiId)
+                                    </td>
+                                    <td class="no-border" id="tnameLS-1"><a href="javascript:void(0)" onclick="tnameAddLS(1)" class="button-3d">+</a></td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="no-border"><label id="DescriptionLSObj.Description-error" class="error" for="DescriptionLSObj.Description"></label></td>
+                                    <td class="no-border"><label id="NumberanimalObj.Numberanimal-error" class="error" for="NumberanimalObj.Numberanimal"></label></td>
+                                    <td class="no-border"><label id="SuminsuredperObj.Suminsuredper-error" class="error" for="SuminsuredperObj.Suminsuredper"></label></td>
+                                    <td class="no-border"><label id="SuminsuredLSObj.Suminsured-error" class="error" for="SuminsuredLSObj.Suminsured"></label></td>
+                                    <td class="no-border">&nbsp;</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3" class="no-border"><p class="form-border-bottom" style="margin-top:0px;padding-bottom: 10px;">Total for <a href="#livestockModal3" role="button" data-target="#livestockModal3" data-toggle="modal">livestock</a></p></td>
+                                    <td colspan="2" class="no-border">$<input name="totallivestock" id="totallivestock" readonly="readonly" class="form-control form-border-bottom" type="text" style="display:inline-block;width:94%" data-regex="N" /></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <div id="livestockModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="livestockModal3" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Livestock</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Your farm animals when they are at the Location. They are covered against accidental death that is caused during the period of cover by:</p>
+                                <ul style="list-style:none;">
+                                    <li>(1) Fire;</li>
+                                    <li>(2) Earthquake;</li>
+                                    <li>(3) Electrocution;</li>
+                                    <li>(4) Explosion;</li>
+                                    <li>(5) Impact by vehicles;</li>
+                                    <li>(6) Labour or public disturbance;</li>
+                                    <li>(7) Lightning;</li>
+                                    <li>(8) Malicious acts;</li>
+                                    <li>(9) Storm; or</li>
+                                    <li>(10) Volcanic eruption.</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-8 col-sm-8 col-xs-12">Do you wish to insure your livestock against dog attack?</p>
+                    <div class="col-md-4 col-sm-4 col-xs-12">
+                        <div class="policy-loc-row">
                             <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                                @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '1', new { @class = "buildingtype", @id = "buildingtype", @checked = "checked" })
+                                @Html.RadioButtonFor(m => m.DogattackObj.Dogattack, '1', new { @class = "dogattack vlidationInsure commondataradio", @data_eiid = @Model.DogattackObj.EiId, @id = "dogattack1" })
                                 <label for="radio1"><span><span></span></span>Yes</label>
                             </div>
                             <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                                @Html.RadioButtonFor(m => m.confirmfsObj.Confirm, '0', new { @class = "buildingtype", @id= "buildingtype1" })
+                                @Html.RadioButtonFor(m => m.DogattackObj.Dogattack, '0', new { @class = "dogattack vlidationInsure commondataradio", @data_eiid = @Model.DogattackObj.EiId, @id = "dogattack2", @checked = "checked" })
                                 <label for="radio1"><span><span></span></span>No</label>
+                            </div>
+                            @Html.HiddenFor(p => p.DogattackObj.EiId)
+                        </div>
+                        <label id="DogattackObj.Dogattack-error" class="error" for="DogattackObj.Dogattack"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12 ">
+                    <div class="col-md-4"><p>Please Select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(Model => Model.ExcessesLSObj.Excess, listsExcessFM2, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessesLSObj.EiId, @id = "excess" })
+                        @Html.HiddenFor(p => p.ExcessesLSObj.EiId)
+                        <label id="ExcessesLSObj.Excess-error" class="error" for="ExcessesLSObj.Excess"></label>
+                    </div>
+                </div>
+                <div class="col-md-6 pull-right text-right">
+                    <a href="javascript:void(0)" id="ptb23" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                    <img src="~/images/button-devider.png">
+                    <button type="button" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn3">Save & Continue</button>
+                </div>
+            </div>
+            <div id="ptab4">
+                <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2 style="font-size: 25px;margin-bottom: 0;">HARVESTED CROPS AND BEEHIVES</h2></div>
+                <h5><a href="#HarvestedCropModal3" role="button" data-target="#HarvestedCropModal3" data-toggle="modal">Harvested Crops</a></h5>
+                <div id="HarvestedCropModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="HarvestedCropModal3" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Harvested Crops</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Harvested crops that You have grown or bought that are at the Location. They are covered against accidental loss or damage.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
                             </div>
                         </div>
                     </div>
-                    <div class="mt-10 mb-10 col-md-12">
-                        <div class="col-md-6"><p>Please advise the cost per kilometre to replace your fencing</p></div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(p => p.FarmfencingObj.Farmfencing, new { @class = "form-control form-border-bottom", @id = "farmfencing" })
-                            @Html.HiddenFor(p => p.FarmfencingObj.EiId)
-                        </div>
-                    </div>
-                    <div class="mt-10 mb-10 col-md-12">
-                        <div class="col-md-6"><p>What is the total replacement cost of fencing cover you would like?</p></div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(p => p.FarmcencingTcObj.Totalcover, new { @class = "form-control form-border-bottom", @id = "totalcover" })
-                            @Html.HiddenFor(p => p.FarmcencingTcObj.EiId)
-                        </div>
-                    </div>
-                    <div class="mt-10 mb-10 col-md-12">
-                        <div class="col-md-6">
-                            <p>Please advise how much you would like the rest of your Farm Structures to be insured<br />
-                                <span class="mini-text">(* includes covered ways, exterior light fittings, irrigation systems, pens, sheep dips, stockyards, pipes, cables, power and telephone poles, silos, solar power units, tanks and windmills)</span>
-                            </p>
-                        </div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(p => p.FarmstructuresObj.Farmstructures, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
-                            @Html.HiddenFor(p => p.FarmstructuresObj.EiId)
-                        </div>
-                    </div>
-                    <div class="mt-10 mb-10 col-md-12">
-                        <div class="col-md-6"><p>How much cover do you need to replace your  Farm Contents</p></div>
-                        <div class="col-md-6">
-                            @Html.TextBoxFor(p => p.FarmContentFcObj.Farmcontents, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
-                            @Html.HiddenFor(p => p.FarmContentFcObj.EiId)
-                        </div>
-                    </div>
-                    <div class="mt-10 mb-10 col-md-12 ">
-                        <div class="col-md-6"><p>Please select the excess you wish to pay</p></div>
-                        <div class="col-md-3">
-                            @Html.DropDownListFor(Model => Model.ExcessesFpcObj.Excess, @Model.ExcessesFpcObj.ExcessList, "-- Select --", new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
-                            @Html.HiddenFor(p => p.ExcessesFpcObj.EiId)
-                        </div>
-                        <div class="col-md-3">
-                            <div class="policy-loc-row"><input type="checkbox" name="ImposedpetsObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6 pull-right text-right">
-                        <button class="button-3d nomargin tab-linker quot-next-btn">Next</button>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><span class="mini-text">We can insure your harvested crops (eg Hay) and grains stored at the location</span></p>
+                    <div class="col-md-4"><p>How much cover do you need for your harvested crops?</p></div>
+                    <div class="col-md-8">
+                        $@Html.TextBoxFor(p => p.SuminsureHCVdObj.Suminsured, new { @style = "display:inline-block;width:95%", @class = "form-control vlidationInsure form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsureHCVdObj.EiId, @id = "suminsuredHCB", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.SuminsureHCVdObj.EiId)
+                        <label id="SuminsureHCVdObj.Suminsured-error" class="error" for="SuminsureHCVdObj.Suminsured"></label>
                     </div>
                 </div>
-            }
+                <div class="mt-10 mb-10 col-md-12 ">
+                    <div class="col-md-4"><p>Please select<a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(p => p.ExcessesHCVObj.Excess, listsExcessFM2, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessesHCVObj.EiId, @id = "excessHCB" })
+                        @Html.HiddenFor(p => p.ExcessesHCVObj.EiId)
+                        <label id="ExcessesHCVObj.Excess-error" class="error" for="ExcessesHCVObj.Excess"></label>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <h5><a href="#BeehivesModal3" role="button" data-target="#BeehivesModal3" data-toggle="modal">Beehives</a></h5>
+                <div id="BeehivesModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="BeehivesModal3" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Beehives</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Your beehives. They are covered against accidental loss or damage that takes place at the Location during the period of cove.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-4"><p>Would you like to insure your beehives?</p></div>
+                    <div class="col-md-8 col-sm-8 col-xs-12">
+                        <div class="policy-loc-row">
+                            <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="beehivesWouldLike vlidationInsure" name="beehivesWouldLike" id="Farmliabilty1" value="0" checked="checked" /><label for="radio1"><span><span></span></span>No</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="beehivesWouldLike vlidationInsure" name="beehivesWouldLike" id="Farmliabilty2" value="1" /><label for="radio1"><span><span></span></span>Yes</label></div>
+                        </div>
+                        <label id="beehivesWouldLike-error" class="error" for="beehivesWouldLike"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12 cl-@Model.SuminsuredHbcObj.EiId" id="TAIRbeehives" style="display:none;">
+                    <div class="col-md-4"><p>What is the total amount of insurance you require for your beehives?</p></div>
+                    <div class="col-md-8">
+                        $@Html.TextBoxFor(p => p.SuminsuredHbcObj.Suminsured, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredHbcObj.EiId, @id = "suminsuredHCB1", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.SuminsuredHbcObj.EiId)
+                        <label id="SuminsuredHbcObj.Suminsured-error" class="error" for="SuminsuredHbcObj.Suminsured"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
+                    <div class="col-md-4"><p>How many hives do you have?</p></div>
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(p => p.NumberhiveObj.Numberhive, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.NumberhiveObj.EiId, @id = "numberhiveHBC", @data_regex = "N" })
+                        @Html.HiddenFor(p => p.NumberhiveObj.EiId)
+                        <label id="NumberhiveObj.Numberhive-error" class="error" for="NumberhiveObj.Numberhive"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12 ">
+                    <div class="col-md-4"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(p => p.ExcessBObj.Excess, listsExcessFM2, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessBObj.EiId, @id = "excessbHBC" })
+                        @Html.HiddenFor(p => p.ExcessBObj.EiId)
+                        <label id="ExcessBObj.Excess-error" class="error" for="ExcessBObj.Excess"></label>
+                    </div>
+                </div>
+                <div class="mt-10 mb-10 col-md-12 ">
+                    <label id="rlsFSFChome-error" class="error" for="rlsFSFChome"></label>
+                    <label id="rlsFMhome-error" class="error" for="rlsFMhome"></label>
+                    <label id="rlsLShome-error" class="error" for="rlsLShome"></label>
+                </div>
+                <div class="col-md-6 pull-right text-right mt-30">
+                    <input type="hidden" name="rlsFSFChome" id="rlsFSFChome" class="vlidationInsure" value="" />
+                    <input type="hidden" name="rlsFMhome" id="rlsFMhome" class="vlidationInsure" value="" />
+                    <input type="hidden" name="rlsLShome" id="rlsLShome" class="vlidationInsure" value="" />
+                    <a href="javascript:void(0)" id="ptb34" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                    <img src="~/images/button-devider.png">
+                    <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn4">Save & Continue</button>
+                </div>
+            </div>
+        }
+    </div>
+    <div id="ExcesshomeBuildingModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ExcesshomeBuildingModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Excess</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>When you make a claim, you pay the first part of the cost and we pay the rest. Your part is called the excess.  You can reduce the cost of your insurance by choosing a higher excess.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-            <script type="text/javascript">
-					$(document).ready(function() {
-						$('#location1').click(function () {
-						        $("#policy-ed-del-wrap1").fadeIn('slow');
-						        $("#policy-ed-del-wrap2").fadeOut('slow');
-						});
-					});
+        <h3 style="font-size: 11px;margin-bottom: 2px;">Edit or delete previous sections here</h3>
+        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+        {
+            for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+            {
+                <div class="policy-loc-row">
+                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                    <script type="text/javascript">
+                    $(document).ready(function () {
+                        $('.inclusions').click(function () {
+                            var name = $(this).attr('data-name');
+                            var nid = $(this).attr('data-nid');
+                            $('.policy-ed-del-wrapper').hide();
+                            $("#policy-ed-del-wrap-" + nid).show();
+
+                        });
+                    });
+                    </script>
+                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                    </div>
+                </div>
+            }
+            <script>
+        $(".policy-edit-wrap").click(function () {
+            var selectedname = $(this).data('name');
+            var selectedunid = $(this).data('unid');
+            var selectedprofileid = $(this).data('profileid');
+            var selectedcid = $(this).data('cid');
+            var selectedTrId = $(this).data('trid');
+            var PcId = $(this).data('pcid');
+            var policyStatus = $(this).data('policystatus');
+            // var prId = $(this).data('prId');
+            var prId = 1029;
+            $.ajax({
+                type: "POST",
+                url: "/Customer/EndorsePolicy",
+                data: {
+                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                },
+                success: function (responce) {
+                    window.location.href = responce;
+                }
+            });
+        });
+        $(".policy-delet-wrap").click(function () {
+            var r = confirm("Are you sure you want to delete this section?");
+            if (r == true) {
+                var PcId = $("#pcidd").val();
+                var selectedunid = $(this).data('unid');
+                var selectedcid = $(this).data('cid');
+                var PcId = $(this).data('pcid');
+                var selectedname = $(this).data('name');
+                var selectedprofileid = $(this).data('profileid');
+                var selectedTrId = $(this).data('trid');
+                var policyStatus = $(this).data('policystatus');
+                var currId = $(this).attr("id");
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/DeleteUnit",
+                    data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                    success: function (responce) {
+                        if (responce.Status == true) {
+                            var prentId = $('#' + currId).parent().parent().attr("id");
+                            $('#' + prentId).remove();
+                        }
+                    }
+                });
+            }
+        });
+        $("#bindcover").click(function () {
+            $.ajax({
+                type: "POST",
+                url: "/Customer/BindCover",
+                data: {},
+                success: function (responce) {
+                }
+            });
+        });
             </script>
-            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-            <script type="text/javascript">
-					$(document).ready(function() {
-						$('#location2').click(function () {
-						        $("#policy-ed-del-wrap2").fadeIn('slow');
-						        $("#policy-ed-del-wrap1").fadeOut('slow');
-						});
-					});
-            </script>
-            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('.inclusions').click(function () {
+                        var name = $(this).attr('data-name');
+                        var nid = $(this).attr('data-nid');
+                        $('.policy-ed-del-wrapper').hide();
+                        $("#policy-ed-del-wrap-" + nid).show();
+
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                    <script>
+            $(".policy-edit-wrap").click(function () {
+                var selectedname = $(this).data('name');
+                var selectedunid = $(this).data('unid');
+                var selectedprofileid = $(this).data('profileid');
+                var selectedcid = $(this).data('cid');
+                var selectedTrId = $(this).data('trid');
+                var PcId = $(this).data('pcid');
+                var policyStatus = $(this).data('policystatus');
+                // var prId = $(this).data('prId');
+                var prId = 1029;
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/EndorsePolicy",
+                    data: {
+                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
+                    },
+                    success: function (responce) {
+                        window.location.href = responce;
+                    }
+                });
+            });
+            $(".policy-delet-wrap").click(function () {
+                var r = confirm("Are you sure you want to delete this section?");
+                if (r == true) {
+                    var PcId = $("#pcidd").val();
+                    var selectedunid = $(this).data('unid');
+                    var selectedcid = $(this).data('cid');
+                    var PcId = $(this).data('pcid');
+                    var selectedname = $(this).data('name');
+                    var selectedprofileid = $(this).data('profileid');
+                    var selectedTrId = $(this).data('trid');
+                    var policyStatus = $(this).data('policystatus');
+                    var currId = $(this).attr("id");
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/DeleteUnit",
+                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                        success: function (responce) {
+                            if (responce.Status == true) {
+                                var prentId = $('#' + currId).parent().parent().attr("id");
+                                $('#' + prentId).remove();
+                            }
+                        }
+                    });
+                }
+            });
+                    </script>
+                }
+            }
+
+        }
         <div class="clearfix"></div>
-        <input type="submit" name="newcover" value="New Cover">
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
+            <ul class="dropdown-menu col-md-12 unit">
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Building</a></li>
+                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                <li><a href="javascript:void(0);" class="Liabilities">+  Liability </a></li>
+                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+            </ul>
+            <script type="text/javascript">
+                $(document).on('click', 'ul.unit > li', function () {
+                    var unitname = $(this).children("a").attr("class");
+                    var cid = $("#ciid").val();
+                    var pcid = $("#pcidd").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/AddUnit",
+                        data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                        success: function (responce) {
+
+                            window.location.href = responce;
+                        }
+                    });
+                });
+            </script>
+        </div>
     </div>
 </div>
-<script src="~/js/datepicker.min.js"></script>
 <script type="text/javascript">
-    $(function () {
-        $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+    var currentYear = new Date().getFullYear();
+    function pta1() {
+        $("#ptab1").show();
+        $("#ptab2").hide();
+        $("#ptab3").hide();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptab6").hide();
+        $("#ptb1").addClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").removeClass("active");
+        $("#ptb5").removeClass("active");
+        $("#ptb6").removeClass("active");
+    }
+    function pta2() {
+        $("#ptab1").hide();
+        $("#ptab2").show();
+        $("#ptab3").hide();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptab6").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb2").addClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").removeClass("active");
+        $("#ptb5").removeClass("active");
+        $("#ptb6").removeClass("active");
+    }
+    function pta3() {
+        $("#ptab1").hide();
+        $("#ptab2").hide();
+        $("#ptab3").show();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptab6").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb3").addClass("active");
+        $("#ptb4").removeClass("active");
+        $("#ptb5").removeClass("active");
+        $("#ptb6").removeClass("active");
+    }
+    function pta4() {
+        $("#ptab1").hide();
+        $("#ptab2").hide();
+        $("#ptab3").hide();
+        $("#ptab4").show();
+        $("#ptab5").hide();
+        $("#ptab6").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").addClass("active");
+        $("#ptb5").removeClass("active");
+        $("#ptb6").removeClass("active");
+    }
+    $(document).ready(function () {
+        $("#ptab1").show();
+        $("#ptb1").addClass("active");
+        $("#ptab2").hide();
+        $("#ptab3").hide();
+        $("#ptab4").hide();
     });
-</script>
-<script type="text/javascript">
-    function tnameAdd(id) {
+    $("#ptb12").click(function () {
+        pta1();
+        $("#ptb1").addClass("active");
+    });
+    $("#ptb23").click(function () {
+        pta2();
+        $("#ptb2").addClass("active");
+    });
+    $("#ptb34").click(function () {
+        pta3();
+        $("#ptb3").addClass("success");
+    });
+    $("#ptabbtn1").click(function (e) {
+        var valid = 1;
+        $("#ptab1 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            if (nameAttr =="DescriptionFCObj.Description"){
+                var regex = /^[a-zA-Z0-9 ]*$/;
+                if (!regex.test(newval)) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "YearObj.Year") {
+                var regex = /^[0-9]*$/;
+                if ($('#ptab1 #description' + lastChar).val() != '' && newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please select year").css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval) && newval != '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Only numeric are allowed").css({ "display": "block" });
+                    valid = 0;
+                } else if (newval != '' && newval.length != 4) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Year is not proper. Please check").css({ "display": "block" });
+                    valid = 0;
+                } else if (newval != '' && newval > currentYear) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("You can not provide future year").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[id='#" + nameAttr + "-error']").text("");
+                }
+            }
+            if (nameAttr == "MaterialsObj.Materials") {
+                if ($('#ptab1 #description' + lastChar).val() != '' && newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please select materials').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "SuminsuredObj.Suminsured") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if ($('#ptab1 #description' + lastChar).val() != '' && newValValuablesS == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please enter suminsured').css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab1 #description' + lastChar).val() != '' && !regex.test(newValValuablesS)) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('only numeric values are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "confirmfsObj.Confirm") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $('.buildingtype').css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please check yes or no').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('.buildingtype').css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "FarmcencingTcObj.Totalcover") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if (newValValuablesS == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please enter cover').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newValValuablesS)) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('only numeric values are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "FarmfencingObj.Farmfencing") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if (newValValuablesS == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please enter farm fencing').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newValValuablesS)) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Only numeric values are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "FarmstructuresObj.Farmstructures") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if (newValValuablesS == '') {
+                    $('#ptab1 ' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please enter farm structures').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newValValuablesS)) {
+                    $('#ptab1 ' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 ' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "FarmContentFcObj.Farmcontents") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if (newValValuablesS == '') {
+                    $('#ptab1 ' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please enter farm content').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newValValuablesS)) {
+                    $('#ptab1 ' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('only numeric values are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 ' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "ExcessesFpcObj.Excess") {
+                if (newval == '') {
+                    $('#ptab1 ' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Please select excess').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 ' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('');
+                }
+            }
+        });
+        if (valid == 1) {
+            pta2();
+            $("#ptb1").addClass("success");
+            $("#ptab4 #rlsFSFChome").val(1);
+        }
+    });
+    $("#ptabbtn2").click(function (e) {
+        var valid = 1;
+        $("#ptab2 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            if (nameAttr == "FarmContentFMObj.Farmcontents") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if (newValValuablesS == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Please enter farm content').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newValValuablesS)) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "ExcessesFpcObj.Excess") {
+                if (newval == '') {
+                    $('#ptab2  #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Please selcet excess').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "DescriptionFmObj.Description") {
+                var regex = /^[a-zA-Z0-9 ]*$/;
+                if (newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Please enter description').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval)) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "YearFMObj.Year") {
+                var regex = /^[0-9]*$/;
+                if (newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please select year").css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval) && newval != '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Only numeric are allowed").css({ "display": "block" });
+                    valid = 0;
+                } else if (newval != '' && newval.length != 4) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Year is not proper. Please check").css({ "display": "block" });
+                    valid = 0;
+                } else if (newval != '' && newval > currentYear) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("You can not provide future year").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[id='#" + nameAttr + "-error']").text("");
+                }
+            }
+            if (nameAttr == "SerialnumberObj.Serialnumber") {
+                var regex = /^[a-zA-z0-9]*$/;
+                if (newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Please enter serial number').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval)) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "ExcessesFMObj.Excess") {
+                if (newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Please select excess').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "SuminsuredFMObj.Suminsured") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if (newValValuablesS == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newValValuablesS)) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text('');
+                }
+            }
+        });
+        if (valid == 1) {
+            pta3();
+            $("#ptb2").addClass("success");
+            $("#ptab4 #rlsFMhome").val(1);
+        }
+    });
+    $("#ptabbtn3").click(function (e) {
+        var valid = 1;
+        $("#ptab3 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            //if (nameAttr == "DescriptionLSObj.Description") {
+            //    var regex = /^[0-9]*$/;
+            //    if (!regex.test(newval)) {
+            //        $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+            //        $("#ptab3 label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+            //        valid = 0;
+            //    } else {
+            //        $('#ptab3 #' + id).css({ "border": "" });
+            //        $("#ptab3 label[for='" + nameAttr + "']").text('');
+            //    }
+            //}
+            if (nameAttr == "NumberanimalObj.Numberanimal") {
+                var regex = /^[0-9]*$/;
+                if ($('#ptab3 #description' + lastChar).val() != '' && newval == '') {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Please enter number of animal').css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab3 #description' + lastChar).val() != '' && !regex.test(newval)) {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab3 #' + id).css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "SuminsuredperObj.Suminsuredper") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if ($('#ptab3 #description' + lastChar).val() != '' && newValValuablesS == '') {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Please enter sum per insured').css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab3 #description' + lastChar).val() != '' && !regex.test(newValValuablesS)) {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Only numeric allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab3 #' + id).css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "SuminsuredLSObj.Suminsured") {
+                var regex = /^[0-9]*$/;
+                var newValValuablesS = newval.replace(/,/g, '');
+                if ($('#ptab3 #description' + lastChar).val() != '' && newValValuablesS == '') {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab3 #description' + lastChar).val() != '' && !regex.test(newValValuablesS)) {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab3 #' + id).css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "DogattackObj.Dogattack"){
+                if ($("input[name='" + nameAttr + "']:checked").val() == '') {
+                    $('.dogattack').css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Please check dog attack').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('.dogattack').css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            if (nameAttr == "ExcessesLSObj.Excess") {
+                if (newval == '') {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('Please select excess').css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab3 #' + id).css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text('');
+                }
+            }
+            //if (nameAttr == "ImposedpetsObj.Imposed") {
+            //    if ($('#ptab3 #excess').val() && newval == '') {
+            //        $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+            //        $("#ptab3 label[for='" + nameAttr + "']").text('Please check imposed');
+            //        valid = 0;
+            //    } else {
+            //        $('#ptab3 #' + id).css({ "border": "" });
+            //        $("#ptab3 label[for='" + nameAttr + "']").text('');
+            //    }
+            //}
+        });
+        if (valid == 1) {
+            pta4();
+            $("#ptb3").addClass("success");
+            $("#ptab4 #rlsLShome").val(1);
+        }
+    });
+    $("#ptb1").click(function () {
+        pta1();
+    });
+    $("#ptb2").click(function () {
+        pta2();
+    });
+    $("#ptb3").click(function () {
+        pta3();
+    });
+    $("#ptb4").click(function () {
+        pta4();
+    });
+    $(document).on('focusout', ".commondatatest", function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        var ItIdN = $(this).data('itid');
+        var Nregex = $(this).data('regex');
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+        if (ItIdN == 'undefined' || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
+        var regex = "";
+        var text = "";
+        if (Nregex == 'N') {
+            regex = /^[0-9]*$/;
+            text = "Only numeric are allowed";
+        } else if (Nregex == 'A') {
+            regex = /^[a-zA-Z ]*$/;
+            text = "Special character & numeric are not allowed";
+        } else if (Nregex == 'AN') {
+            regex = /^[a-zA-Z0-9 ]*$/;
+            text = "Special character are not allowed";
+        } else if (Nregex == 'NA') {
+            regex = /^[a-zA-Z0-9]*$/;
+            text = "Special character are not allowed";
+        } else if (Nregex == 'AS') {
+            regex = /^[a-zA-Z/ ]*$/;
+            text = "Numeric are not allowed";
+        }
+        if (!regex.test(Value)) {
+            $('#' + id).css({ "border": "1px solid #ff0000" });
+            $("label[for='" + name + "']").text(text).css({ "display": "block" });
+        } else if (Value != "") {
+            $('#' + id).css({ "border": "" });
+            $("label[for='" + name + "']").text('').css({ "display": "none" });
+            elementAjaxCall(Value, EIId, ItId);
+        }
+    });
+    function elementAjaxCall(Value, EIId, ItId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                //$('#' + StateIdNewOne).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    //if (data.referrallist != null || data.referrallist != "") {
+                    //    $('#referralList-p').html('No Referral List');
+                    //} else {
+                    //    $('#referralList-p').html(data.referrallist);
+                    //}
+                    if (data.referrallists == "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallists);
+                    }
+                    if (data.usermessage == "") {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        $("label[for='" + labelid + "']").html('');
+                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                    } else {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        $("label[for='" + labelid + "']").html(data.usermessage);
+                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                    }
+                }
+            });
+        }
+    }
+    function tnameAddFC(id) {
         var countId = id + 1;
-        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.DropDownListFor(Model => Model.DescriptionFCObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom description", @id = "description" })@Html.HiddenFor(p => p.DescriptionFCObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom year", @id = "year", @readonly = "readonly" })@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.MaterialsObj.Materials, Enumerable.Empty<SelectListItem>(),new { @class = "form-control form-border-bottom", @id = "materials" })@Html.HiddenFor(p => p.MaterialsObj.EiId)</td><td class="no-border"><div class="policy-loc-row"><input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom"><label for="checkbox1"><span><span></span></span></label></div></td><td class="no-border">@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-border-bottom sumoftotalcover", @id = "suminsured" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
-        
+        $('#tnameFC-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveFC(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tnameFC-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFCObj.Description, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = "", @id = "description", @data_regex = "AN" })@Html.HiddenFor(p => p.DescriptionFCObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "vlidationInsure form-control form-border-bottom commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = "", @id = "year"})@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.MaterialsObj.Materials, Enumerable.Empty<SelectListItem>(),new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = "", @id = "materials" })@Html.HiddenFor(p => p.MaterialsObj.EiId)</td><td class="no-border"><div class="policy-loc-row"><input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom" class="vlidationInsure"><label for="checkbox1"><span><span></span></span></label></div></td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @style = "display:inline-block;width: 90%", @class = "vlidationInsure form-control form-border-bottom sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "", @id = "suminsured", @data_regex="N" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td><td class="no-border" id="tnameFC-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddFC(' + countId + ')" class="button-3d">+</a></td></tr>';
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
@@ -209,144 +1527,331 @@
                     $.each(response.con, function (i, v) {
                         html2 += '<option value="' + v.Value + '">' + v.Text + '</option>';
                     });
-                    $("#tname-" + id).html(replaceA);
-                    $("#tname-tr-" + id).after(html);
-                    $("#tname-tr-" + countId + ' #description').html(html1);
-                    $("#tname-tr-" + countId + ' #materials').html(html2);
-                    $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
-
-                    $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);
-                    $("#tname-tr-" + countId + ' #year').attr('id', "year" + countId);
-                    $("#tname-tr-" + countId + ' #materials').attr('id', "materials" + countId);
-                    $("#tname-tr-" + countId + ' #coolroom').attr('id', "coolroom" + countId);
-                    $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                    $("#tnameFC-" + id).html(replaceA);
+                    $("#tnameFC-tr-" + id).after(html);
+                    $("#tnameFC-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tnameFC-tr-" + countId + " .form-control").val('');
+                    $("#tnameFC-tr-" + countId + ' #materials').html(html2);
+                    $("#tnameFC-tr-" + countId + ' #description').attr('id', "description" + countId);
+                    $("#tnameFC-tr-" + countId + ' #year').attr('id', "year" + countId).val('');
+                    $("#tnameFC-tr-" + countId + ' #materials').attr('id', "materials" + countId);
+                    $("#tnameFC-tr-" + countId + ' #coolroom').attr('id', "coolroom" + countId);
+                    $("#tnameFC-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                } else {
+                    $('#tnameFC-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
                 }
             }
         });
     }
-    function tnameRemove(id) {
-        $("#tname-tr-" + id).remove();
+    function tnameRemoveFC(id) {
+        $("#tnameFC-tr-" + id).remove();
     }
-</script>
-<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
-@*<script type="text/javascript">
+    function tnameAddFM(id) {
+        var countId = id + 1;
+        $('#tnameFM-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveFM(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tnameFM-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFmObj.Description, new { @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = "", @id = "description", @data_regex = "AN" })@Html.HiddenFor(p => p.DescriptionFmObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearFMObj.Year, new { @class = "vlidationInsure form-control form-border-bottom commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = "", @id = "year",@data_regex = "N" })@Html.HiddenFor(p => p.YearFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = "", @id = "serialnumber", @data_regex = "NA" })@Html.HiddenFor(p => p.SerialnumberObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = "", @id = "excess" })@Html.HiddenFor(p => p.ExcessesFMObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, new { @style = "display:inline-block;width: 93%", @class = "vlidationInsure form-control suminsured form-border-bottom commondatatestComma commondatatestPrice suminsuredfarmmachinary", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = "", @id = "suminsured", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredFMObj.EiId)</td><td class="no-border" id="tnameFM-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddFM(' + countId + ')" class="button-3d">+</a></td></tr>';
+        $.ajax({
+            url: '/farm/farmajaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "farmMachinery" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tnameFM-" + id).html(replaceA);
+                    $("#tnameFM-tr-" + id).after(html);
+                    $("#tnameFM-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tnameFM-tr-" + countId + " .form-control").val('');
+                    $("#tnameFM-tr-" + countId + ' #excess').html(html1);
+                    $("#tnameFM-tr-" + countId + ' #description').attr('id', "description" + countId);
+                    $("#tnameFM-tr-" + countId + ' #year').attr('id', "year" + countId);
+                    $("#tnameFM-tr-" + countId + ' #serialnumber').attr('id', "serialnumber" + countId);
+                    $("#tnameFM-tr-" + countId + ' #excess').attr('id', "excess" + countId);
+                    $("#tnameFM-tr-" + countId + ' #imposed').attr('id', "imposed" + countId);
+                    $("#tnameFM-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                } else {
+                    $('#tnameFM-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
+                }
+            }
+        });
+    }
+    function tnameRemoveFM(id) {
+        $("#tnameFM-tr-" + id).remove();
+        var sum = 0;
+        $(".suminsuredfarmmachinary").each(function () {
+            var Value = $(this).val();
+            var rVal = Value.replace(/,/g, '');
+            if (rVal != '0') {
+                sum += +rVal;
+            }
+        });
+        var newval = commaReplace(sum);
+        $("#ptab2 #totalspaceific").val(newval);
+    }
+    $(document).on('focusout', '.suminsuredfarmmachinary', function () {
+        var sum = 0;
+        $(".suminsuredfarmmachinary").each(function () {
+            var Value = $(this).val();
+            var rVal = Value.replace(/,/g, '');
+            if (rVal != '0') {
+                sum += +rVal;
+            }
+        });
+        var newval = commaReplace(sum);
+        $("#ptab2 #totalspaceific").val(newval);
+    });
+
     $(document).ready(function () {
-        $.validator.addMethod("regex", function (value, element, regexp) {
-            if (regexp.constructor != RegExp)
-                regexp = new RegExp(regexp);
-            else if (regexp.global)
-                regexp.lastIndex = 0;
-            return this.optional(element) || regexp.test(value);
-        }, "Please check your input.");
-        $.validator.addMethod("notempty", function (value, element, param) {
-            var matchesFound = 0;
-            $(".description").each(function () {
-                if ($(this).val()!=''){
-                    matchesFound++;
+        var sum = 0;
+        $(".suminsuredfarmmachinary").each(function () {
+            var Value = $(this).val();
+            var rVal = Value.replace(/,/g, '');
+            if (rVal != '0') {
+                sum += +rVal;
+            }
+        });
+        var newval = commaReplace(sum);
+        $("#ptab2 #totalspaceific").val(newval);
+        var sumls = 0;
+        $(".suminsurefarmLivestock").each(function () {
+            var Value = $(this).val();
+            var rValLS = Value.replace(/,/g, '');
+            if (rValLS != '0') {
+                sumls += +rValLS;
+            }
+        });
+        var newvalLS = commaReplace(sumls);
+        $("#ptab3 #totallivestock").val(newvalLS);
+    });
+    function tnameAddLS(id) {
+        var countId = id + 1;
+        $('#tnameLS-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveLS(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tnameLS-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionLSObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = "", @id = "description" })@Html.HiddenFor(p => p.DescriptionLSObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, new { @class = "vlidationInsure form-control form-border-bottom autoCalculateLS commondatatestComma commondatatestPrice", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = "", @id = "numberanimal", @data_regex = "N" })@Html.HiddenFor(p => p.NumberanimalObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, new { @style = "display:inline-block;width:93%;", @class = "vlidationInsure form-control form-border-bottom autoCalculateLS commondatatest", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = "", @id = "suminsuredper", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredperObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, new { @style = "display:inline-block;width:93%;", @class = "vlidationInsure form-control form-border-bottom suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = "", @id = "suminsured", @data_regex = "N",@readonly="readonly" })@Html.HiddenFor(p => p.SuminsuredLSObj.EiId)</td><td class="no-border" id="tnameLS-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddLS('+countId+')" class="button-3d">+</a></td></tr>';
+        $.ajax({
+            url: '/farm/farmajaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "liveStock" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tnameLS-" + id).html(replaceA);
+                    $("#tnameLS-tr-" + id).after(html);
+                    $("#tnameLS-tr-" + countId + ' #description').html(html1);
+                    $("#tnameLS-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tnameLS-tr-" + countId + " .form-control").val('');
+                    $("#tnameLS-tr-" + countId + ' #description').attr('id', "description" + countId);
+                    $("#tnameLS-tr-" + countId + ' #numberanimal').attr('id', "numberanimal" + countId);
+                    $("#tnameLS-tr-" + countId + ' #suminsuredper').attr('id', "suminsuredper" + countId);
+                    $("#tnameLS-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                }
+            }
+        });
+    }
+    function tnameRemoveLS(id) {
+        $("#tnameLS-tr-" + id).remove();
+        var sum = 0;
+        $(".suminsurefarmLivestock").each(function () {
+            var Value = $(this).val();
+            var rValLS = Value.replace(/,/g, '');
+            if (rValLS != '0') {
+                sum += +rValLS;
+            }
+        });
+        var newvalLS = commaReplace(sum);
+        $("#ptab3 #totallivestock").val(newvalLS);
+    }
+    $(document).on('focusout', '.suminsurefarmLivestock', function () {
+        var sum = 0;
+        $(".suminsurefarmLivestock").each(function () {
+            var Value = $(this).val();
+            var rValLS = Value.replace(/,/g, '');
+            if (rValLS != '0') {
+                sum += +rValLS;
+            }
+        });
+        var newvalLS = commaReplace(sum);
+        $("#ptab3 #totallivestock").val(newvalLS);
+    });
+    $(document).on('focusout', '.autoCalculateLS ', function () {
+        var regex = /^[0-9]*$/;
+        var lsId = $(this).attr('id');
+        var lastChar = lsId.substr(lsId.length - 1);
+        var val1 = $('#ptab3 #numberanimal' + lastChar).val();
+        var val2 = $('#ptab3 #suminsuredper' + lastChar).val();
+        var val22 = val2.replace(/,/g, '');
+        if (val1 != '' && regex.test(val1) && val22 != '' && regex.test(val22)) {
+            var subSum = val1 * val22;
+            var newvalLSSUM = commaReplace(subSum);
+            $('#ptab3 #suminsured' + lastChar).val(newvalLSSUM);
+        }
+        var sum = 0;
+        $(".suminsurefarmLivestock").each(function () {
+            var Value = $(this).val();
+            var rValLS = Value.replace(/,/g, '');
+            if (rValLS != '' && regex.test(rValLS)) {
+               sum += +rValLS;
+            }
+        });
+        var newvalLS1 = commaReplace(sum);
+        $("#ptab3 #totallivestock").val(newvalLS1);
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ptabbtn4").click(function (e) {
+            e.preventDefault();
+            var valid = 1;
+            $("#ptab4 .vlidationInsure").each(function () {
+                var id = $(this).attr('id');
+                var nameAttr = $(this).attr('name');
+                var lastChar = id.substr(id.length - 1);
+                var newval = $(this).val();
+                if (nameAttr == "SuminsureHCVdObj.Suminsured") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newValValuablesS)) {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+
+                if (nameAttr == "ExcessesHCVObj.Excess") {
+                    if (newval == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please enter excess').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+
+                if (nameAttr == "beehivesWouldLike") {
+                    if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please select your beehives').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+
+                if (nameAttr == "SuminsuredHbcObj.Suminsured") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if ($("input[name='beehivesWouldLike']:checked").val() == '1' && newValValuablesS == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                        valid = 0;
+                    } else if ($("input[name='beehivesWouldLike']:checked").val() == '1' && !regex.test(newValValuablesS)) {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "NumberhiveObj.Numberhive") {
+                    var regex = /^[0-9]*$/;
+                    if (newval == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please enter hives').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "ExcessBObj.Excess") {
+                    if (newval == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please select excess').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+
+                if (nameAttr == "rlsFSFChome") {
+                    if (newval == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please fillup the farm structures and farm contents,').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "rlsFMhome") {
+                    if (newval == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please fillup the farm machinery,').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "rlsLShome") {
+                    if (newval == '') {
+                        $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please fillup the live stock,').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
                 }
             });
-            if (this.optional(element) || matchesFound < 1) {
-                return true;
-            } else {
-            }
-        }, "Please enter a diferent value.");
-
-
-        $("form[name='farmContents']").validate({
-            errorContainer: "#errorContainer",
-            errorLabelContainer: "#errorContainer",
-            errorElement: "li",
-            rules: {
-                "YearObj.Year": {
-                    required: function (el) {
-                        if ($(el).parent('tr').find('.description').val()!=''){
-                            return true;
-                        }
-                    },
-                },
-                "MaterialsObj.Materials": {
-                    required: function (el) {
-                        if ($(el).parent('tr').find('.description').val() != '') {
-                            return true;
-                        }
-                    },
-                },
-                //"CoolroomFcObj.Coolroom": {
-                //    required: function (el) {
-                //        if ($(el).parent('tr').find('.description').val() != '') {
-                //            return true;
-                //        }
-                //    },
-                //},
-                "SuminsuredObj.Suminsured": {
-                    required: function (el) {
-                        if ($(el).parent('tr').find('.description').val() != '') {
-                            return true;
-                        }
-                    },
-                    regex: /^[0-9]*$/,
-                },
-                "confirmfsObj.Confirm": "required",
-                "FarmcencingTcObj.Totalcover": {
-                    regex: /^[0-9]*$/,
-                },
-                "FarmfencingObj.Farmfencing": {
-                    required: function (element) {
-                        if ($("#farmfencing").val() != "") {
-                            return true;
-                        } else {
-                            return false;
-                        }
-                    },
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "FarmstructuresObj.Farmstructures": {
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "FarmContentFcObj.Farmcontents": {
-                    regex: /^[0-9]*$/,
-                },
-                //"ImposedpetsObj.Imposed": {
-                //    required: function (element) {
-                //        if ($("#excess").val() != "") {
-                //            return true;
-                //        } else {
-                //            return false;
-                //        }
-                //    },
-                //},
-            },
-            messages: {
-                "YearObj.Year": "Please enter year constructed",
-                "MaterialsObj.Materials": "Please select construction materials",
-                "CoolroomFcObj.Coolroom": "Please select coolroom",                
-                "SuminsuredObj.Suminsured": {
-                    required: "Please enter Sum Insured",
-                    regex: "Only numeric allowed"
-                },
-                "confirmfsObj.Confirm": "Please select confirm",
-                "FarmcencingTcObj.Totalcover": {
-                    regex: "Only numeric allowed"
-                },
-                "FarmfencingObj.Farmfencing": {
-                    required: "Please enter Sublimit per km for Farm Fencing",
-                    regex: "Special character not allowed"
-                },
-                "FarmstructuresObj.Farmstructures": {
-                    regex: "Special character not allowed"
-                },
-                "FarmContentFcObj.Farmcontents": {
-                    regex: "Only numeric allowed"
-                },
-                "ImposedpetsObj.Imposed": "Please select imposed",
-            },
-            onfocusout: function (element) {
-                this.element(element);
-            },
-            submitHandler: function (form) {
-                form.submit();
+            if (valid == 1) {
+                $("form[name='farmContents']").submit();
             }
         });
     });
-</script>*@
+    $(document).on('click','.savepolicyP',function () {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/SavePolicy",
+            data: { "PrId": 1029 },
+            success: function (res) {
+                if (res.status == true) {
+                    var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html(html);
+                } else {
+                    var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html('');
+                }
+            }
+        });
+    });
+    $(document).on('click', 'input[name="beehivesWouldLike"]', function () {
+        var isb = $("input[name='beehivesWouldLike']:checked").val();
+        if (isb == 1) {
+            $('#TAIRbeehives').css({ 'display': 'block' });
+        } else {
+            $('#TAIRbeehives').css({ 'display': 'none' });
+        }
+    });
+</script>

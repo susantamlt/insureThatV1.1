@@ -7,8 +7,71 @@
     <h4><span>RURAL LIFESTYLE POLICY</span> / TRAVEL</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
-    <div class="col-lg-8 col-md-8 col-sm-6 col-xs-12 policy-full-head">
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
         <h2>TRAVEL</h2>
+    </div>
+    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+        <div class="pull-right">
+            <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+            <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Referral List</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="referralList-p">No Referral List</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Premium Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style=" width: 100%; ">
+                        <thead>
+                            <tr>
+                                <th class="space_left">Section Name</th>
+                                <th class="space_left">Base</th>
+                                <th class="space_left">Fsl</th>
+                                <th class="space_left">Gst</th>
+                                <th class="space_left">Stamp Duty</th>
+                                <th class="space_right">Gross</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiumModel-p-b">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="premiumModel-p-f">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="clearfix"></div>
     <div id="errorContainer"></div>
@@ -19,7 +82,9 @@
     }, new { @id = "travelCover", @name = "travelCover" }))
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+
+        @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         <div class="row feild-table">
             <div class="col-md-12 table-8">
                 <table>
@@ -33,102 +98,210 @@
                     <tbody>
                         <tr id="tname-tr-1">
                             <td class="no-border">
-                                @Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, new { @class = "form-control form-border-bottom travelName", @id = "travellerscovered", @placeholder = "Name" })
+                                @Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, new { @class = "form-control form-border-bottom travelName commondatatest", @data_eiid = @Model.TravellerscoveredObj.EiId, @data_itid = "0", @id = "travellerscovered", @placeholder = "Name" })
                                 @Html.HiddenFor(p => p.TravellerscoveredObj.EiId)
                             </td>
                             <td class="no-border">
-                                @Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, new { @class = "form-control form-border-bottom format datePicker", @id = "dataofbirth", @placeholder = "DD-MM-YYYY",@readonly = "readonly" })
+                                @Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, new { @class = "form-control form-border-bottom format datePicker commondatatest", @data_eiid = @Model.DataofbirthObj.EiId, @data_itid = "0", @id = "dataofbirth", @placeholder = "DD-MM-YYYY", @readonly = "readonly" })
                                 @Html.HiddenFor(p => p.DataofbirthObj.EiId)
                             </td>
                             <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
                         </tr>
                     </tbody>
+                    <tfoot>
+                        <tr>
+                            <td><label id="TravellerscoveredObj.Travellerscovered-error" class="error" for="TravellerscoveredObj.Travellerscovered"></label></td>
+                            <td><label id="DataofbirthObj.Dataofbirth-error" class="error" for="DataofbirthObj.Dataofbirth"></label></td>
+                        </tr>
+                    </tfoot>
                 </table>
             </div>
         </div>
         <div class="mt-10 mb-10 clearfix">
             <div class="col-md-4"><p>Number of Travelers</p></div>
             <div class="col-md-8">
-                @Html.TextBoxFor(p => p.NumbertravelersObj.Numbertravelers, new { @class = "gray-bg-underline", @id = "travellerscovered" })
+                @Html.TextBoxFor(p => p.NumbertravelersObj.Numbertravelers, new { @class = "gray-bg-underline commondatatest", @data_eiid = @Model.NumbertravelersObj.EiId, @id = "travellerscovered" })
                 @Html.HiddenFor(p => p.NumbertravelersObj.EiId)
+                <label id="NumbertravelersObj.Numbertravelers-error" class="error" for="NumbertravelersObj.Numbertravelers"></label>
             </div>
         </div>
         <div class="mt-10 mb-10 clearfix">
             <p class="col-md-6 col-sm-6 col-xs-12">What is the maximum length of your trips </p>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.YourtripObj.Yourtrip, 30, new { @class = "yourtrip", @id= "radio1"})<label for="radio1"><span><span></span></span>30 Days</label></div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.YourtripObj.Yourtrip, 30, new { @class = "yourtrip", @id = "radio1" })<label for="radio1"><span><span></span></span>30 Days</label></div>
                 <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.YourtripObj.Yourtrip, 45, new { @class = "yourtrip", @id = "radio2" })<label for="radio2"><span><span></span></span>45 Days</label></div>
                 @Html.HiddenFor(p => p.YourtripObj.EiId)
+                <label id="YourtripObj.Yourtrip-error" class="error" for="YourtripObj.Yourtrip"></label>
             </div>
         </div>
         <div class="mt-10 mb-10 clearfix">
             <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to take the Ski and Winter Sports option?</p>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WintersportObj.Wintersport, '1', new { @class = "wintersport", @id = "radio3"})<label for="radio3"><span><span></span></span>Yes</label></div>
+                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WintersportObj.Wintersport, '1', new { @class = "wintersport", @id = "radio3" })<label for="radio3"><span><span></span></span>Yes</label></div>
                 <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WintersportObj.Wintersport, '0', new { @class = "wintersport", @id = "radio4" })<label for="radio4"><span><span></span></span>No</label></div>
                 @Html.HiddenFor(p => p.WintersportObj.EiId)
+                <label id="WintersportObj.Wintersport-error" class="error" for="WintersportObj.Wintersport"></label>
             </div>
         </div>
         <div class="mt-10 mb-10 col-md-12 clearfix">
             <div class="col-md-6"><p>Excess</p></div>
             <div class="col-md-3">
-                @Html.DropDownListFor(model => model.ExcessObj.Excess, @Model.ExcessObj.ExcessList, "-- Select --", new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
+                @Html.DropDownListFor(model => model.ExcessObj.Excess, @Model.ExcessObj.ExcessList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm", @id = "excess" })
                 @Html.HiddenFor(p => p.ExcessObj.EiId)
+                <label id="ExcessObj.Excess-error" class="error" for="ExcessObj.Excess"></label>
             </div>
             <div class="col-md-3">
-                <div class="policy-loc-row"><input type="checkbox" name="ImposedObj.Imposed" id="imposed" class="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                <div class="policy-loc-row">
+                    <input type="checkbox" name="ImposedObj.Imposed" id="imposed" class="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                    <label id="ImposedObj.Imposed-error" class="error" for="ImposedObj.Imposed"></label>
+                </div>
             </div>
         </div>
-        <div class="mt-40">
-            <div class="col-md-8"></div>
-            <div class="col-md-4">
-                <input type="submit" value="SUBMIT">
-            </div>
+        <div class="col-md-6 pull-right text-right">
+            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Submit</button>
         </div>
     }
 </div>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-            <script type="text/javascript">
-				$(document).ready(function() {
-					$('#location1').click(function () {
-						$("#policy-ed-del-wrap1").fadeIn('slow');
-						$("#policy-ed-del-wrap2").fadeOut('slow');
-					});
-				});
+        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+        {
+            for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+            {
+                <div class="policy-loc-row">
+                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('.inclusions').click(function () {
+                                var name = $(this).attr('data-name');
+                                var nid = $(this).attr('data-nid');
+                                $('.policy-ed-del-wrapper').hide();
+                                $("#policy-ed-del-wrap-" + nid).show();
+
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" href="javascript:void(0);">Delete</a>
+                    </div>
+                </div>
+            }
+            <script>
+                        $(".policy-edit-wrap").click(function () {
+                            var selectedname = $(this).data('name');
+                            var selectedunid = $(this).data('unid');
+                            var selectedprofileid = $(this).data('profileid');
+                            var selectedcid = $(this).data('cid');
+                            var selectedTrId = $(this).data('trid');
+                            var PcId = $(this).data('pcid');
+                            var policyStatus = $(this).data('policystatus');
+                            // var prId = $(this).data('prId');
+                            var prId = 1029;
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/EndorsePolicy",
+                                data: {
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                                },
+                                success: function (responce) {
+                                }
+                            });
+                        });
+                        $(".policy-delet-wrap").click(function () {
+                            var selectedunid = $(this).data('unid');
+                            var selectedcid = $(this).data('cid');
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/Deleteunit",
+                                data: { "cid": selectedcid, "unid": selectedunid },
+                                success: function (responce) {
+                                }
+                            });
+                        });
+                        $("#bindcover").click(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/BindCover",
+                                data: {},
+                                success: function (responce) {
+                                }
+                            });
+                        });
             </script>
-            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-            <script type="text/javascript">
-				$(document).ready(function() {
-					$('#location2').click(function () {
-						$("#policy-ed-del-wrap2").fadeIn('slow');
-						$("#policy-ed-del-wrap1").fadeOut('slow');
-					});
-				});
-            </script>
-            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @disabled = "disabled" })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i]</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
+
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                }
+            }
+
+        }
         <div class="clearfix"></div>
-        <input type="submit" name="newcover" value="New Cover">
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
+            <ul class="dropdown-menu col-md-12 unit">
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+            </ul>
+            <script type="text/javascript">
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                var cid = $("#ciid").val();
+                                var pcid = $("#pcidd").val();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                    success: function (responce) {
+
+                                        window.location.href = responce;
+                                    }
+                                });
+                            });
+            </script>
+        </div>
     </div>
 </div>
+
 <script type="text/javascript">
     function tnameAdd(id) {
         var countId = id + 1;
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border"><input class="form-control form-border-bottom travelName" id="travellerscovered' + countId + '" name="TravellerscoveredObj.Travellerscovered" placeholder="Name" value="" type="text"><input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="TravellerscoveredObj_EiId' + countId + '" name="TravellerscoveredObj.EiId" value="" type="hidden"></td><td class="no-border"><input class="form-control form-border-bottom format datePicker" readonly = "readonly" id="dataofbirth' + countId + '" name="DataofbirthObj.Dataofbirth" placeholder="DD-MM-YYYY" value="" type="text"><input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="DataofbirthObj_EiId' + countId + '" name="DataofbirthObj.EiId" value="" type="hidden"></td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, new { @class = "form-control form-border-bottom travelName commondatatest", @data_eiid = @Model.TravellerscoveredObj.EiId, @data_itid = "", @id = "travellerscovered", @placeholder = "Name" })@Html.HiddenFor(p => p.TravellerscoveredObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, new { @class = "form-control form-border-bottom format datePicker commondatatest", @data_eiid = @Model.DataofbirthObj.EiId, @data_itid = "", @id = "dataofbirth", @placeholder = "DD-MM-YYYY",@readonly = "readonly" })@Html.HiddenFor(p => p.DataofbirthObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
         $("#tname-" + id).html(replaceA);
         $("#tname-tr-" + id).after(html);
+        $("#tname-tr-" + countId + " .form-control").attr("data-itid", id);
         $("tr > td > .datePicker").datepicker({ format: 'dd-mm-yyyy' });
     }
     function tnameRemove(id) {
@@ -153,9 +326,6 @@
             return this.optional(element) || regexp.test(value);
         }, "Please check your input.");
         $("form[name='travelCover']").validate({
-            errorContainer: "#errorContainer",
-            errorLabelContainer: "#errorContainer",
-            errorElement: "li",
             rules: {
                 "TravellerscoveredObj.Travellerscovered": {
                     required: true,
@@ -168,7 +338,7 @@
                     required: true,
                     regex: /^[0-9]*$/,
                 },
-                "YourtripObj.Yourtrip": "required",                
+                "YourtripObj.Yourtrip": "required",
                 "WintersportObj.Wintersport": "required",
                 "ExcesstcObj.Excess": "required",
                 "ImposedObj.Imposed": {
@@ -184,7 +354,7 @@
             messages: {
                 "TravellerscoveredObj.Travellerscovered": {
                     required: "Please enter name",
-                    regex:"Special character not allowed in name"
+                    regex: "Special character not allowed in name"
                 },
                 "DataofbirthObj.Dataofbirth": {
                     required: "Please enter date",
@@ -196,7 +366,7 @@
                 "YourtripObj.Yourtrip": "Please select your trip",
                 "WintersportObj.Wintersport": "Please select winter sport",
                 "ExcesstcObj.Excess": "Please select excess",
-                "ImposedObj.Imposed":"Please select imposed",
+                "ImposedObj.Imposed": "Please select imposed",
             },
             onfocusout: function (element) {
                 this.element(element);
@@ -205,5 +375,137 @@
                 form.submit();
             }
         });
+        $(document).on('change', '.commondataselection', function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var ItId = "0";
+            elementAjaxCall(Value, EIId, ItId);
+        });
+        $(document).on('change', '.commondataradio', function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var ItId = "0";
+            elementAjaxCall(Value, EIId, ItId);
+        });
+        $(document).on('focusout', ".commondatatest", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var ItIdN = $(this).data('itid');
+            if (ItIdN == 'undefined' || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (Value != "") {
+                elementAjaxCall(Value, EIId, ItId);
+            }
+        });
+        $("#premium").click(function () {
+            $.ajax({
+                url: '/Customer/PremiumDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: {},
+                success: function (data) {
+                    if (data.Status == true) {
+                        var html1 = "";
+                        if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                            var html = "";
+                            $.each(data.Premium, function (index, value) {
+                                html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
+                            });
+                            if (html != '') {
+                                $('#premiumModel-p-b').html(html);
+                            }
+                        }
+                        if (data.UnderwriterFee != null) {
+                            html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
+                        }
+                        if (data.FeeGst != null) {
+                            html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
+                        }
+                        if (data.InvoiceTotal != null) {
+                            html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
+                        }
+                        if (html1 != '') {
+                            $('#premiumModel-p-f').html(html1);
+                        }
+                    }
+                }
+            });
+
+        });
     });
+    function elementAjaxCall(Value, EIId, ItId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                //$('#' + StateIdNewOne).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            }
+
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.referrallist != null || data.referrallist != "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallist);
+                    }
+                }
+            });
+        }
+    }
 </script>

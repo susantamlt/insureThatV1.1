@@ -23,6 +23,7 @@ namespace InsureThatAPI.Models
         public string Password { get; set; }
         public string EncryptedPassword { get; set; }
         public string apiKey { get; set; }
+        public List<string> Errors { get; set; }
     }
     public class LoginDetailsRef
     {

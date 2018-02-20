@@ -19,9 +19,14 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult VehicleDescription(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> VehicleDescription(int? cid, int? PcId)
         {
             MCVehicleDescription MCVehicleDescription = new MCVehicleDescription();
+            string ApiKey = null;
+            if(Session["ApiKey"]!=null)
+            {
+                ApiKey = Session["ApiKey"].ToString();
+            }
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -31,12 +36,57 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = MCVehicleDescription.CustomerId;
             }
+            var Policyincllist = new List<SessionModel>();
+            if (Session["Policyinclustions"] != null)
+            {
+                Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+                if (Policyincllist != null)
+                {
+                    if (Policyincllist != null)
+                    {
+                        if (Policyincllist.Exists(p => p.name == "Motor"))
+                        {
+                            if (Session["unId"] == null && Session["profileId"] == null)
+                            {
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Motor").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Motor").Select(p => p.ProfileId).First();
+                            }
+                        }
+                        else
+                        {
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                        }
+                    }
+                }
+            }
+            else
+            {
+                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 1021 });
+            }
             NewPolicyDetailsClass MCVehicleDescriptionmodel = new NewPolicyDetailsClass();
+            List<SelectListItem> DriversGendarList = new List<SelectListItem>();
+            DriversGendarList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            DriversGendarList.Add(new SelectListItem { Value = "1", Text = "Male" });
+            DriversGendarList.Add(new SelectListItem { Value = "2", Text = "Female" });
             List<SelectListItem> VehicleMakeList = new List<SelectListItem>();
             VehicleMakeList = MCVehicleDescriptionmodel.VehicleMake();
             List<SelectListItem> FamilyLists = new List<SelectListItem>();
             FamilyLists = MCVehicleDescriptionmodel.MotorCoverFamily();
+            List<SelectListItem> AddressList = new List<SelectListItem>();
+            AddressList = MCVehicleDescriptionmodel.MCADAddress();
+            List<SelectListItem> VNList = new List<SelectListItem>();
+            VNList = MCVehicleDescriptionmodel.MCADVinNumber();
+            List<SelectListItem> ENList = new List<SelectListItem>();
+            ENList = MCVehicleDescriptionmodel.MCADEngineNumber();
 
+            List<SelectListItem> descriptionList = new List<SelectListItem>();
+            descriptionList = MCVehicleDescriptionmodel.MCCDDescription();
+
+            List<SelectListItem> BasicExcessList = new List<SelectListItem>();
+            BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
+            BasicExcessList.Add(new SelectListItem { Value = "60955", Text = "Under 25 Excess" });
+            #region VehicleDescription
             MCVehicleDescription.LscategoryObj = new GLVCategory();
             MCVehicleDescription.LscategoryObj.EiId = 63807;
             MCVehicleDescription.McmakeObj = new GLVMake();
@@ -49,6 +99,8 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.MCfamilyObj.EiId = 63813;
             MCVehicleDescription.MCscdObj = new GLVSelectCorDetails();
             MCVehicleDescription.MCscdObj.EiId = 63815;
+            MCVehicleDescription.EstimatedValueObj = new EstimatedRetailValue();
+            MCVehicleDescription.EstimatedValueObj.EiId = 63817;
             MCVehicleDescription.FmmcmakeObj = new FMMCMake();
             MCVehicleDescription.FmmcmakeObj.EiId = 63823;
             MCVehicleDescription.FmmcyearObj = new FMMCYear();
@@ -58,61 +110,406 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.FmmctypeObj.EiId = 63835;
             MCVehicleDescription.FmmcscdObj = new FMMCSelectCorDetails();
             MCVehicleDescription.FmmcscdObj.EiId = 63837;
-            if (Session["completionTrackFMC"] != null)
+            #endregion
+            #region AdditionDetails
+            MCVehicleDescription.KeptnightObj = new MCADKeptAtNight();
+            MCVehicleDescription.KeptnightObj.EiId = 63851;
+            MCVehicleDescription.AdaddressObj = new MCADAddress();
+            MCVehicleDescription.AdaddressObj.AddressList = AddressList;
+            MCVehicleDescription.AdaddressObj.EiId = 0;
+            MCVehicleDescription.VregisterObj = new MCADVehicleRegistered();
+            MCVehicleDescription.VregisterObj.EiId = 63855;
+            MCVehicleDescription.RnumberObj = new MCADRegistrationNumber();
+            MCVehicleDescription.RnumberObj.EiId = 63857;
+            MCVehicleDescription.VnumberObj = new MCADVinNumber();
+            MCVehicleDescription.VnumberObj.VnumberList = VNList;
+            MCVehicleDescription.VnumberObj.EiId = 63859;
+            MCVehicleDescription.EnumberObj = new MCADEngineNumber();
+            MCVehicleDescription.EnumberObj.EnumberList = ENList;
+            MCVehicleDescription.EnumberObj.EiId = 63861;
+            MCVehicleDescription.VmodifiedObj = new MCADVehicleModified();
+            MCVehicleDescription.VmodifiedObj.EiId = 63863;
+            MCVehicleDescription.DmodifiedObj = new MCADdescribeModified();
+            MCVehicleDescription.DmodifiedObj.EiId = 63865;
+            MCVehicleDescription.SFinstalledObj = new MCADSecurityFeaturesInstalled();
+            MCVehicleDescription.SFinstalledObj.EiId = 63867;
+            MCVehicleDescription.VusedObj = new MCADVehicleUsed();
+            MCVehicleDescription.VusedObj.EiId = 63879;
+            MCVehicleDescription.CcapacityObj = new MCADCarryingCapacity();
+            MCVehicleDescription.CcapacityObj.EiId = 63887;
+            #endregion
+            #region Driver
+            MCVehicleDescription.DrivernameObj = new DriverName();
+            MCVehicleDescription.DrivernameObj.EiId = 63901;
+            MCVehicleDescription.DriverageObj = new DriverAge();
+            MCVehicleDescription.DriverageObj.EiId = 63901;
+            MCVehicleDescription.DrivergenderObj = new DriverGender();
+            MCVehicleDescription.DrivergenderObj.GenderList = DriversGendarList;
+            MCVehicleDescription.DrivergenderObj.EiId = 63901;
+            MCVehicleDescription.DriveramicObj = new DriverAmic();
+            MCVehicleDescription.DriveramicObj.EiId = 63901;
+            MCVehicleDescription.UsevehicleObj = new UseOfVehicle();
+            MCVehicleDescription.UsevehicleObj.EiId = 63903;
+            #endregion
+            #region Cover Details
+            MCVehicleDescription.CoveroptionObj = new CoverOptionCD();
+            MCVehicleDescription.CoveroptionObj.EiId = 63919;
+            MCVehicleDescription.CovertypeObj = new CoverTypeCD();
+            MCVehicleDescription.CovertypeObj.EiId = 63921;
+            MCVehicleDescription.MaxMarvalObj = new MaximumMarketValue();
+            MCVehicleDescription.MaxMarvalObj.EiId = 63925;
+            MCVehicleDescription.CaravanannexObj = new CaravanAnnex();
+            MCVehicleDescription.CaravanannexObj.EiId = 63931;
+            MCVehicleDescription.UnspecifieditemsObj = new UnspecifiedItems();
+            MCVehicleDescription.UnspecifieditemsObj.EiId = 63933;
+            MCVehicleDescription.AccessoriesObj = new NonStandardAccessories();
+            MCVehicleDescription.AccessoriesObj.EiId = 63937;
+            MCVehicleDescription.DescriptionObj = new AccessoryDescriptionCD();
+            MCVehicleDescription.DescriptionObj.DescriptionList = descriptionList;
+            MCVehicleDescription.DescriptionObj.EiId = 63951;
+            MCVehicleDescription.SumnsuredObj = new SumInsuredCD();
+            MCVehicleDescription.SumnsuredObj.EiId = 63953;
+            MCVehicleDescription.LimitindemnityObj = new LimitOfIndemnityDC();
+            MCVehicleDescription.LimitindemnityObj.EiId = 63965;
+            MCVehicleDescription.RatingObj = new RatingDC();
+            MCVehicleDescription.RatingObj.EiId = 63977;
+            MCVehicleDescription.NoclaimbonusObj = new NoClaimBonus();
+            MCVehicleDescription.NoclaimbonusObj.EiId = 63979;
+            #endregion
+            #region Optional Extra Excess
+            MCVehicleDescription.CaroptionObj = new HireCarOption();
+            MCVehicleDescription.CaroptionObj.EiId = 64003;
+            MCVehicleDescription.ExcessObj = new BasicExcess();
+            MCVehicleDescription.ExcessObj.ExcessList = BasicExcessList;
+            MCVehicleDescription.ExcessObj.EiId = 64009;
+            #endregion
+            #region Interested Parties
+            MCVehicleDescription.MCPartynameObj = new MCInterestedPartyName();
+            MCVehicleDescription.MCPartynameObj.EiId = 64025;
+            MCVehicleDescription.MCPartyLocationObj = new MCInterestedPartyLocation();
+            MCVehicleDescription.MCPartyLocationObj.EiId = 64027;
+            #endregion
+
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+            string policyid = null;
+            var db = new MasterDataEntities();
+            if (cid != null)
             {
-                Session["completionTrackFMC"] = Session["completionTrackFMC"];
-                MCVehicleDescription.completionTrackMC = Session["completionTrackFMC"].ToString();
+                ViewBag.cid = cid;
+                MCVehicleDescription.CustomerId = cid.Value;
             }
             else
             {
-                Session["completionTrackFMC"] = "0-0-0-0-0-0"; ;
-                MCVehicleDescription.completionTrackMC = Session["completionTrackFMC"].ToString();
+                ViewBag.cid = MCVehicleDescription.CustomerId;
             }
-            string policyid = null;
-            var db = new MasterDataEntities();
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            if (details != null && details.Any())
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = 0;
+            int profileid = 0;
+            int Fprofileid = 0;
+            if (Session["unId"] != null && Session["ProfileId"] != null)
             {
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.LscategoryObj.EiId))
+                unid = Convert.ToInt32(Session["unId"]);
+                profileid = Convert.ToInt32(Session["profileId"]);
+            }
+            if (Session["FProfileId"] != null)
+            {
+                Fprofileid = Convert.ToInt32(Session["FprofileId"]);
+            }
+            if (Session["Policyinclustions"] != null)
+            {
+                MCVehicleDescription.PolicyInclusions = Policyincllist;
+            }
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                MCVehicleDescription.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    MCVehicleDescription.LscategoryObj.Category = Convert.ToString(details.Where(q => q.QuestionId == MCVehicleDescription.LscategoryObj.EiId).FirstOrDefault().Answer);
+                    MCVehicleDescription.PolicyInclusion = policyinclusions;
                 }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.McmakeObj.EiId))
+                MCVehicleDescription.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
                 {
-                    var loc = details.Where(q => q.QuestionId == MCVehicleDescription.McmakeObj.EiId).FirstOrDefault();
-                    MCVehicleDescription.McmakeObj.Make = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    policyid = PcId.ToString();
+                    MCVehicleDescription.PolicyId = policyid;
                 }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.McyearObj.EiId))
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Motor");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-                    MCVehicleDescription.McyearObj.Year = Convert.ToString(details.Where(q => q.QuestionId == MCVehicleDescription.McyearObj.EiId).FirstOrDefault().Answer);
+
+                    int sectionId = policyinclusions.Where(p => p.Name == "Motor" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Motor" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
                 }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.MCfamilyObj.EiId))
+            }
+            else
+            {
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    var loc = details.Where(q => q.QuestionId == MCVehicleDescription.MCfamilyObj.EiId).FirstOrDefault();
-                    MCVehicleDescription.MCfamilyObj.Family = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Motor&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                          
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Motor"))
+                            {
+                                var policyhomelist = Policyincllist.FindAll(p => p.name == "Motor").ToList();
+                                if (policyhomelist != null && policyhomelist.Count() > 0)
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Motor").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Motor").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                                else
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Motor").First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Motor").First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                            }
+                        }
+                    }
                 }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.MCscdObj.EiId))
+                else
                 {
-                    var loc = details.Where(q => q.QuestionId == MCVehicleDescription.MCscdObj.EiId).FirstOrDefault();
-                    MCVehicleDescription.MCscdObj.Scd = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    if (PcId == null && Session["unId"] != null && (Session["profileId"] != null || (profileid != null && profileid < 0)))
+                    {                       
+                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                        var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponse != null)
+                        {
+                            unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                            if (unitdetails != null && unitdetails.SectionData != null)
+                            {
+                                Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            }
+                        }
+                    }
                 }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.FmmcmakeObj.EiId))
+            }
+            if (unitdetails != null)
+            {
+                if (unitdetails.ProfileData != null)
                 {
-                    MCVehicleDescription.FmmcmakeObj.FmMake = Convert.ToString(details.Where(q => q.QuestionId == MCVehicleDescription.FmmcmakeObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.FmmcyearObj.EiId))
-                {
-                    MCVehicleDescription.FmmcyearObj.FmYear = Convert.ToString(details.Where(q => q.QuestionId == MCVehicleDescription.FmmcyearObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.FmmctypeObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCVehicleDescription.FmmctypeObj.EiId).FirstOrDefault();
-                    MCVehicleDescription.FmmctypeObj.FmFamily = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCVehicleDescription.FmmcscdObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCVehicleDescription.FmmcscdObj.EiId).FirstOrDefault();
-                    MCVehicleDescription.FmmcscdObj.FmScd = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.AccessoriesObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.AccessoriesObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.AccessoriesObj.Accessories = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.AdaddressObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.AdaddressObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.AdaddressObj.Address = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.CaravanannexObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.CaravanannexObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.CaravanannexObj.Annex = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.CaroptionObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.CaroptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.CaroptionObj.Caroption = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.CcapacityObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.CcapacityObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.CcapacityObj.Ccapacity = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.CoveroptionObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.CoveroptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.CoveroptionObj.Coveroption = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.DescriptionObj.Description = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.DmodifiedObj.Dmodified = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.DriverageObj.Age = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DriveramicObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DriveramicObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.DriveramicObj.Amic = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DrivergenderObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DrivergenderObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.DrivergenderObj.Gender = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.DrivernameObj.Name = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.EnumberObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.EnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.EnumberObj.Enumber = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.EstimatedValueObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.EstimatedValueObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.EstimatedValueObj.EstimatedValue = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.ExcessObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.ExcessObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.ExcessObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.FmmcmakeObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.FmmcmakeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.FmmcmakeObj.FmMake = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.FmmcscdObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.FmmcscdObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.FmmcscdObj.FmScd = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.FmmctypeObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.FmmctypeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.FmmctypeObj.FmFamily = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.FmmcyearObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.FmmcyearObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.FmmcyearObj.FmYear = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.KeptnightObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.KeptnightObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.KeptnightObj.Keptnight = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.LimitindemnityObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.LimitindemnityObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.LimitindemnityObj.Indemnity = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.LscategoryObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.LscategoryObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.LscategoryObj.Category = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MaxMarvalObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MaxMarvalObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.MaxMarvalObj.Marketvalue = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCfamilyObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCfamilyObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.MCfamilyObj.Family = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.McmakeObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.McmakeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.McmakeObj.Make = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.MCPartyLocationObj.Location = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.MCPartynameObj.Name = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCscdObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCscdObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.MCscdObj.Scd = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.McyearObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.McyearObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.McyearObj.Year = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.NoclaimbonusObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.NoclaimbonusObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.NoclaimbonusObj.Bonus = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.OwnersmanualObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.OwnersmanualObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.OwnersmanualObj.Ownersmanual = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.RatingObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.RatingObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.RatingObj.Rating = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.RnumberObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.RnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.RnumberObj.Rnumber = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.SFinstalledObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SFinstalledObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.SFinstalledObj.Installed = Convert.ToBoolean(val);
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.SumnsuredObj.Suminsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.UnspecifieditemsObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.UnspecifieditemsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.UnspecifieditemsObj.Item = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.UsevehicleObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.UsevehicleObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.UsevehicleObj.Usevehicle = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.VmodifiedObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.VmodifiedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.VmodifiedObj.Vmodified = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.VnumberObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.VnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.VnumberObj.Vnumber = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.VregisterObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.VregisterObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.VregisterObj.Register = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.VusedObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.VusedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        MCVehicleDescription.VusedObj.Vused =Convert.ToBoolean(val);
+                    }
                 }
             }
             return View(MCVehicleDescription);
@@ -140,74 +537,9 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.FmmctypeObj.FmFamilyList = FamilyLists;
             string policyid = null;
             var db = new MasterDataEntities();
-            if (cid.HasValue && cid > 0)
-            {
-                if (MCVehicleDescription.LscategoryObj != null && MCVehicleDescription.LscategoryObj.EiId > 0 && MCVehicleDescription.LscategoryObj.Category != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.LscategoryObj.EiId, MCVehicleDescription.LscategoryObj.Category.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.McmakeObj != null && MCVehicleDescription.McmakeObj.EiId > 0 && MCVehicleDescription.McmakeObj.Make != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.McmakeObj.EiId, MCVehicleDescription.McmakeObj.Make.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.McyearObj != null && MCVehicleDescription.McyearObj.EiId > 0 && MCVehicleDescription.McyearObj.Year != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.McyearObj.EiId, MCVehicleDescription.McyearObj.Year.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.MCfamilyObj != null && MCVehicleDescription.MCfamilyObj.EiId > 0 && MCVehicleDescription.MCfamilyObj.Family != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.MCfamilyObj.EiId, MCVehicleDescription.MCfamilyObj.Family.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.MCscdObj != null && MCVehicleDescription.MCscdObj.EiId > 0 && MCVehicleDescription.MCscdObj.Scd != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.MCscdObj.EiId, MCVehicleDescription.MCscdObj.Scd.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.FmmcmakeObj != null && MCVehicleDescription.FmmcmakeObj.EiId > 0 && MCVehicleDescription.FmmcmakeObj.FmMake != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.FmmcmakeObj.EiId, MCVehicleDescription.FmmcmakeObj.FmMake.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.FmmcyearObj != null && MCVehicleDescription.FmmcyearObj.EiId > 0 && MCVehicleDescription.FmmcyearObj.FmYear != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.FmmcyearObj.EiId, MCVehicleDescription.FmmcyearObj.FmYear.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.FmmctypeObj != null && MCVehicleDescription.FmmctypeObj.EiId > 0 && MCVehicleDescription.FmmctypeObj.FmFamily != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.FmmctypeObj.EiId, MCVehicleDescription.FmmctypeObj.FmFamily.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCVehicleDescription.FmmcscdObj != null && MCVehicleDescription.FmmcscdObj.EiId > 0 && MCVehicleDescription.FmmcscdObj.FmScd != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCVehicleDescription.CustomerId, Convert.ToInt32(RLSSection.Motor), MCVehicleDescription.FmmcscdObj.EiId, MCVehicleDescription.FmmcscdObj.FmScd.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (Session["completionTrackFMC"] != null)
-                {
-                    Session["completionTrackFMC"] = Session["completionTrackFMC"];
-                    MCVehicleDescription.completionTrackMC = Session["completionTrackFMC"].ToString();
-                    if (MCVehicleDescription.completionTrackMC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MCVehicleDescription.completionTrackMC.ToCharArray();
-
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 0)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackFMC"] = Completionstring;
-                        MCVehicleDescription.completionTrackMC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackFMC"] = "1-0-0-0-0-0"; ;
-                    MCVehicleDescription.completionTrackMC = Session["completionTrackFMC"].ToString();
-                }
-                return RedirectToAction("AdditionalDetails", new { cid = MCVehicleDescription.CustomerId });
-            }
-            return View(MCVehicleDescription);
+            Session["unId"] = null;
+            Session["profileId"] = null;
+            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = MCVehicleDescription.PcId });
         }
         [HttpGet]
         public ActionResult AdditionalDetails(int? cid)
@@ -267,57 +599,7 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-                {
-                    MCAdditionalDetails.KeptnightObj.Keptnight = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId).FirstOrDefault();
-                    MCAdditionalDetails.KeptnightObj.Keptnight = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VregisterObj.EiId))
-                {
-                    MCAdditionalDetails.VregisterObj.Register = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.VregisterObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.RnumberObj.EiId))
-                {
-                    MCAdditionalDetails.RnumberObj.Rnumber = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.RnumberObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.VnumberObj.EiId).FirstOrDefault();
-                    MCAdditionalDetails.VnumberObj.Vnumber = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.EnumberObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.EnumberObj.EiId).FirstOrDefault();
-                    MCAdditionalDetails.EnumberObj.Enumber = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VmodifiedObj.EiId))
-                {
-                    MCAdditionalDetails.VmodifiedObj.Vmodified = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.VmodifiedObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.DmodifiedObj.EiId))
-                {
-                    MCAdditionalDetails.DmodifiedObj.Dmodified = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.DmodifiedObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.SFinstalledObj.EiId))
-                {
-                    MCAdditionalDetails.SFinstalledObj.Installed = Convert.ToBoolean(details.Where(q => q.QuestionId == MCAdditionalDetails.SFinstalledObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VusedObj.EiId))
-                {
-                    MCAdditionalDetails.VusedObj.Vused = Convert.ToBoolean(details.Where(q => q.QuestionId == MCAdditionalDetails.VusedObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.CcapacityObj.EiId))
-                {
-                    MCAdditionalDetails.CcapacityObj.Ccapacity = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.CcapacityObj.EiId).FirstOrDefault().Answer);
-                }
-            }
+           
             return View(MCAdditionalDetails);
         }
         [HttpPost]
@@ -346,81 +628,7 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (MCAdditionalDetails.KeptnightObj != null && MCAdditionalDetails.KeptnightObj.EiId > 0 && MCAdditionalDetails.KeptnightObj.Keptnight != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.KeptnightObj.EiId, MCAdditionalDetails.KeptnightObj.Keptnight.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.AdaddressObj != null && MCAdditionalDetails.AdaddressObj.EiId > 0 && MCAdditionalDetails.AdaddressObj.Address != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.AdaddressObj.EiId, MCAdditionalDetails.AdaddressObj.Address.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.VregisterObj != null && MCAdditionalDetails.VregisterObj.EiId > 0 && MCAdditionalDetails.VregisterObj.Register != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VregisterObj.EiId, MCAdditionalDetails.VregisterObj.Register.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.RnumberObj != null && MCAdditionalDetails.RnumberObj.EiId > 0 && MCAdditionalDetails.RnumberObj.Rnumber != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.RnumberObj.EiId, MCAdditionalDetails.RnumberObj.Rnumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.VnumberObj != null && MCAdditionalDetails.VnumberObj.EiId > 0 && MCAdditionalDetails.VnumberObj.Vnumber != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VnumberObj.EiId, MCAdditionalDetails.VnumberObj.Vnumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.EnumberObj != null && MCAdditionalDetails.EnumberObj.EiId > 0 && MCAdditionalDetails.EnumberObj.Enumber != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.EnumberObj.EiId, MCAdditionalDetails.EnumberObj.Enumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.VmodifiedObj != null && MCAdditionalDetails.VmodifiedObj.EiId > 0 && MCAdditionalDetails.VmodifiedObj.Vmodified != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VmodifiedObj.EiId, MCAdditionalDetails.VmodifiedObj.Vmodified.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.DmodifiedObj != null && MCAdditionalDetails.DmodifiedObj.EiId > 0 && MCAdditionalDetails.DmodifiedObj.Dmodified != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.DmodifiedObj.EiId, MCAdditionalDetails.DmodifiedObj.Dmodified.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.SFinstalledObj != null && MCAdditionalDetails.SFinstalledObj.EiId > 0 && MCAdditionalDetails.SFinstalledObj.Installed != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.SFinstalledObj.EiId, MCAdditionalDetails.SFinstalledObj.Installed.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.VusedObj != null && MCAdditionalDetails.VusedObj.EiId > 0 && MCAdditionalDetails.VusedObj.Vused != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VusedObj.EiId, MCAdditionalDetails.VusedObj.Vused.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCAdditionalDetails.CcapacityObj != null && MCAdditionalDetails.CcapacityObj.EiId > 0 && MCAdditionalDetails.CcapacityObj.Ccapacity != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.CcapacityObj.EiId, MCAdditionalDetails.CcapacityObj.Ccapacity.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (Session["completionTrackFMC"] != null)
-                {
-                    Session["completionTrackFMC"] = Session["completionTrackFMC"];
-                    MCAdditionalDetails.completionTrackMC = Session["completionTrackFMC"].ToString();
-                    if (MCAdditionalDetails.completionTrackMC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MCAdditionalDetails.completionTrackMC.ToCharArray();
-
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 2)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackFMC"] = Completionstring;
-                        MCAdditionalDetails.completionTrackMC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackFMC"] = "0-1-0-0-0-0"; ;
-                    MCAdditionalDetails.completionTrackMC = Session["completionTrackFMC"].ToString();
-                }
-                return RedirectToAction("Drivers", new { cid = MCAdditionalDetails.CustomerId });
-            }
+          
             return View(MCAdditionalDetails);
         }
         [HttpGet]
@@ -463,32 +671,7 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == MCDrivers.DrivernameObj.EiId))
-                {
-                    MCDrivers.DrivernameObj.Name = details.Where(q => q.QuestionId == MCDrivers.DrivernameObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == MCDrivers.DriverageObj.EiId))
-                {
-                    MCDrivers.DriverageObj.Age = details.Where(q => q.QuestionId == MCDrivers.DriverageObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == MCDrivers.DrivergenderObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCDrivers.DrivergenderObj.EiId).FirstOrDefault();
-                    MCDrivers.DrivergenderObj.Gender = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCDrivers.DriveramicObj.EiId))
-                {
-                    MCDrivers.DriveramicObj.Amic = details.Where(q => q.QuestionId == MCDrivers.DriveramicObj.EiId).FirstOrDefault().Answer;
-                }
-                if (details.Exists(q => q.QuestionId == MCDrivers.UsevehicleObj.EiId))
-                {
-                    MCDrivers.UsevehicleObj.Usevehicle = details.Where(q => q.QuestionId == MCDrivers.UsevehicleObj.EiId).FirstOrDefault().Answer;
-                }
-            }
-            return View(MCDrivers);
+           return View(MCDrivers);
         }
         [HttpPost]
         public ActionResult Drivers(int? cid, MCDrivers MCDrivers)
@@ -509,57 +692,7 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (MCDrivers.DrivernameObj != null && MCDrivers.DrivernameObj.EiId > 0 && MCDrivers.DrivernameObj.Name != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DrivernameObj.EiId, MCDrivers.DrivernameObj.Name.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCDrivers.DriverageObj != null && MCDrivers.DriverageObj.EiId > 0 && MCDrivers.DriverageObj.Age != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DriverageObj.EiId, MCDrivers.DriverageObj.Age.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCDrivers.DrivergenderObj != null && MCDrivers.DrivergenderObj.EiId > 0 && MCDrivers.DrivergenderObj.Gender != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DrivergenderObj.EiId, MCDrivers.DrivergenderObj.Gender.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCDrivers.DriveramicObj != null && MCDrivers.DriveramicObj.EiId > 0 && MCDrivers.DriveramicObj.Amic != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DriveramicObj.EiId, MCDrivers.DriveramicObj.Amic.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (MCDrivers.UsevehicleObj != null && MCDrivers.UsevehicleObj.EiId > 0 && MCDrivers.UsevehicleObj.Usevehicle != null)
-                {
-                    db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.UsevehicleObj.EiId, MCDrivers.UsevehicleObj.Usevehicle.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                }
-                if (Session["completionTrackFMC"] != null)
-                {
-                    Session["completionTrackFMC"] = Session["completionTrackFMC"];
-                    MCDrivers.completionTrackMC = Session["completionTrackFMC"].ToString();
-                    if (MCDrivers.completionTrackMC != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MCDrivers.completionTrackMC.ToCharArray();
-
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 4)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["completionTrackFMC"] = Completionstring;
-                        MCDrivers.completionTrackMC = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["completionTrackFMC"] = "0-0-1-0-0-0"; ;
-                    MCDrivers.completionTrackMC = Session["completionTrackFMC"].ToString();
-                }
-                return RedirectToAction("CoverDetails", new { cid = MCDrivers.CustomerId });
-            }
+          
             return View();
         }
         [HttpGet]
@@ -789,10 +922,14 @@ namespace InsureThatAPI.Controllers
         public ActionResult OptionalExtrasExcesses(int? cid, MCOptionalExtrasExcesses MCOptionalExtrasExcesses)
         {
             List<SelectListItem> BasicExcessList = new List<SelectListItem>();
-            BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
-            BasicExcessList.Add(new SelectListItem { Value = "60955", Text = "Under 25 Excess" });
-            MCOptionalExtrasExcesses.ExcessObj.ExcessList = BasicExcessList;
+            //if (MCOptionalExtrasExcesses!=null && MCOptionalExtrasExcesses.ExcessObj != null)
+            //{
+            //    MCOptionalExtrasExcesses.ExcessObj.ExcessList = new List<SelectListItem>();
+            //    BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            //    BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
+            //    BasicExcessList.Add(new SelectListItem { Value = "60955", Text = "Under 25 Excess" });
+            //    MCOptionalExtrasExcesses.ExcessObj.ExcessList = BasicExcessList;
+            //}
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -939,8 +1076,9 @@ namespace InsureThatAPI.Controllers
                 //    Session["completionTrackFMC"] = "0-0-0-0-0-1"; ;
                 //    MCInterestedParties.completionTrackMC = Session["completionTrackFMC"].ToString();
                 //}
-             //   return RedirectToAction("PetsCover", "Pets", new { cid = cid });
-                return RedirectToAction("VehicleDescription", new { cid = MCInterestedParties.CustomerId });
+                //   return RedirectToAction("PetsCover", "Pets", new { cid = cid });
+                return RedirectToAction("BindCover", "Customer", new { cid = cid });
+                // return RedirectToAction("VehicleDescription", new { cid = MCInterestedParties.CustomerId });
             }
             return View(MCInterestedParties);
         }

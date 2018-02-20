@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using InsureThatAPI.Models;
 using InsureThatAPI.CommonMethods;
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace InsureThatAPI.Controllers
 {
@@ -19,9 +22,19 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Electronics(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> Electronics(int? cid,int? PcId)
         {
+            string ApiKey = null;
+            if (Session["ApiKey"] != null)
+            {
+                ApiKey = Session["ApiKey"].ToString();
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             List<SelectListItem> ElectronicItemTypeofUnit = new List<SelectListItem>();
             ElectronicItemTypeofUnit = commonModel.ElectronicTypeOfUnit();
             List<SelectListItem> excessToPayElectronics = new List<SelectListItem>();
@@ -29,122 +42,24 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             string policyid = null;
             FPElectronics FPElectronics = new FPElectronics();
-            if (Session["Policyinclustions"] != null)
-            {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
-                if (Policyincllist != null)
-                {
-                    
-                        if (Policyincllist.Contains("Electronics"))
-                        {
 
-                        }
-                        else{
-                        if (Policyincllist.Contains("Money"))
-                        {
-                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Transit"))
-                        {
-                            return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("ValuablesFarm"))
-                        {
-                              return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("LiveStockFarm"))
-                        {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Machinery"))
-                        {
-                            //  return RedirectToAction("", "", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                            // return RedirectToAction("", "", new { cid = cid });
-                        }
-                    }
-                }
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                FPElectronics.CustomerId = cid.Value;
             }
             else
             {
-                var policyinclusionslist = db.IT_GetPolicyInclusions(cid, policyid, Convert.ToInt32(PolicyType.FarmPolicy)).FirstOrDefault();
-                if (policyinclusionslist!=null && policyinclusionslist.PolicyInclusions != null)
-                {
-                    if (policyinclusionslist.PolicyInclusions.Length > 1)
-                    {
-                        var policyinclusions = policyinclusionslist.PolicyInclusions.Split('-');
-                        if (policyinclusions != null && policyinclusions.Length > 0)
-                        {
-                            for (int i = 0; i < policyinclusions.Length; i++)
-                            {
-                                if (i == 5 && policyinclusions[i] == "1")
-                                {
-
-                                }
-                                else
-                                {
-                                    if (i == 6 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
-                                    }
-                                    else if (i == 8 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid });
-                                    }
-                                    else if (i == 9 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
-                                    }
-                                    else if (i == 10 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
-                                    }
-                                    else if (i == 11 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                                    }
-                                    else if (i == 12 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                                    }
-                                    else if (i == 13 && policyinclusions[i] == "1")
-                                    {
-                                        return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                                    }
-                                    else if (i == 14 && policyinclusions[i] == "1")
-                                    {
-                                        //  return RedirectToAction("", "", new { cid = cid });
-                                    }
-                                    else if (i == 15 && policyinclusions[i] == "1")
-                                    {
-                                        // return RedirectToAction("", "", new { cid = cid });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                //else
-                //{
-                //   return RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = Convert.ToInt32(PolicyType.FarmPolicy) });
-                //}
+                ViewBag.cid = FPElectronics.CustomerId;
             }
-            ViewBag.cid = cid;
+            var Policyincllist = new List<SessionModel>();
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = 0;
+            int profileid = 0;
+            int Fprofileid = 0;
             if (cid != null)
             {
                 FPElectronics.CustomerId = cid.Value;
@@ -183,68 +98,232 @@ namespace InsureThatAPI.Controllers
             FPElectronics.ExcessCoverLossOfDataFPObj.ExcessList = excessToPayElectronics;
             FPElectronics.ExcessCoverLossOfDataFPObj.EiId = 63191;
 
-      
-            var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(FarmPolicySection.Electronics),Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
+            if (Session["unId"] != null && Session["ProfileId"] != null)
             {
-                if (details.Exists(q => q.QuestionId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId))
-                {
-                    FPElectronics.ElectronicsLocationsCoveredFPObj.LocationsCovered = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.TypeOfUnitFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPElectronics.TypeOfUnitFPObj.EiId).FirstOrDefault();
-                    FPElectronics.TypeOfUnitFPObj.TypeofUnit = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.MakeAndModelFPObj.EiId))
-                {
-                    FPElectronics.MakeAndModelFPObj.MakeandModel = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.MakeAndModelFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.SerialNumberFPObj.EiId))
-                {
-                    FPElectronics.SerialNumberFPObj.SerialNumber = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.SerialNumberFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.NoOfUnitsFPObj.EiId))
-                {
-                    FPElectronics.NoOfUnitsFPObj.NoOfUnits = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.NoOfUnitsFPObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FPElectronics.OptPortableItemsFPObj.EiId))
-                {
-                    FPElectronics.OptPortableItemsFPObj.PortableItemsOption = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.OptPortableItemsFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.SumInsuredPerUnitFPObj.EiId))
-                {
-                    FPElectronics.SumInsuredPerUnitFPObj.SumInsuredPerUnit = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.SumInsuredPerUnitFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.TotalSumInsuredFPObj.EiId))
-                {
-                    FPElectronics.TotalSumInsuredFPObj.TotalSumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.TotalSumInsuredFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.ExcessElectronicsFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPElectronics.ExcessElectronicsFPObj.EiId).FirstOrDefault();
-                    FPElectronics.ExcessElectronicsFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.CoverLossOfDataFPObj.EiId))
-                {
-                    FPElectronics.CoverLossOfDataFPObj.CoverLossofData = Convert.ToString(details.Where(q => q.QuestionId == FPElectronics.CoverLossOfDataFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPElectronics.ExcessCoverLossOfDataFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPElectronics.ExcessCoverLossOfDataFPObj.EiId).FirstOrDefault();
-                    FPElectronics.ExcessCoverLossOfDataFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-               
+                unid = Convert.ToInt32(Session["unId"]);
+                profileid = Convert.ToInt32(Session["profileId"]);
             }
+            if (Session["FProfileId"] != null)
+            {
+                Fprofileid = Convert.ToInt32(Session["FprofileId"]);
+            }
+            if (Session["Policyinclustions"] != null)
+            {
+                FPElectronics.PolicyInclusions = Policyincllist;
+            }
+            if (Session["Policyinclustions"] != null)
+            {
+                Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+                if (Policyincllist != null)
+                {
+                    if (Policyincllist != null)
+                    {
+                        if (Policyincllist.Exists(p => p.name == "Electronics"))
+                            {
+                                
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Money"))
+                            {
+                                return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Transit"))
+                            {
+                                return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                            {
+                                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                            {
+                                return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                            {
+                                return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Building"))
+                            {
+                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Content"))
+                            {
+                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                            {
+                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Motor"))
+                            {
+                                return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
+                            }
+                            if (Policyincllist.Exists(p => p.name == "Electronics"))
+                            {
+                                if (Session["unId"] == null && Session["profileId"] == null)
+                                {
+                                    Session["unId"] = Policyincllist.Where(p => p.name == "Electronics").Select(p => p.UnitId).First();
+                                    Session["profileId"] = Policyincllist.Where(p => p.name == "Electronics").Select(p => p.ProfileId).First();
+                                }
+                            }
+                            else
+                            {
+                                return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                            }
+                        }
+                    }                
+            }
+            else
+            {
+                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 1021 });
+            }
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPElectronics.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
+                {
+                    FPElectronics.PolicyInclusion = policyinclusions;
+                }
+                FPElectronics.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    policyid = PcId.ToString();
+                    FPElectronics.PolicyId = policyid;
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Electronics");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+
+                    int sectionId = policyinclusions.Where(p => p.Name == "Electronics" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Electronics" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+            }
+            else
+            {
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                {
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Electronics&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Electronics"))
+                            {
+                                var policyhomelist = Policyincllist.FindAll(p => p.name == "Electronics").ToList();
+                                if (policyhomelist != null && policyhomelist.Count() > 0)
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Electronics").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Electronics").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                                else
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Electronics").First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Electronics").First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    if (PcId == null && Session["unId"] != null && (Session["profileId"] != null || (Fprofileid != null && Fprofileid < 0)))
+                    {
+                        if (profileid == null || profileid == 0)
+                        {
+                            profileid = Fprofileid;
+                        }
+                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                        var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponse != null)
+                        {
+                            unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                            if (unitdetails != null && unitdetails.SectionData != null)
+                            {
+                                Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            }
+                        }
+                    }
+                }
+            }
+            if (unitdetails != null)
+            {
+                if (unitdetails.ProfileData != null)
+                {
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.CoverLossOfDataFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.CoverLossOfDataFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.CoverLossOfDataFPObj.CoverLossofData = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.ElectronicsLocationsCoveredFPObj.LocationsCovered = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.ExcessCoverLossOfDataFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.ExcessCoverLossOfDataFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.ExcessCoverLossOfDataFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.ExcessElectronicsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.ExcessElectronicsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.ExcessElectronicsFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.MakeAndModelFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.MakeAndModelFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.MakeAndModelFPObj.MakeandModel = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.NoOfUnitsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.NoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.NoOfUnitsFPObj.NoOfUnits = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.OptPortableItemsFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.OptPortableItemsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.OptPortableItemsFPObj.PortableItemsOption = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.SerialNumberFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.SerialNumberFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.SerialNumberFPObj.SerialNumber = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.SumInsuredPerUnitFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.SumInsuredPerUnitFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.SumInsuredPerUnitFPObj.SumInsuredPerUnit = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.TotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.TotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.TotalSumInsuredFPObj.TotalSumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.TypeOfUnitFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.TypeOfUnitFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPElectronics.TypeOfUnitFPObj.TypeofUnit = val;
+                    }
+                }
+            }
+          
+
 
             return View(FPElectronics);
         }
@@ -270,64 +349,8 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (FPElectronics.ElectronicsLocationsCoveredFPObj!=null && FPElectronics.ElectronicsLocationsCoveredFPObj.EiId > 0 && FPElectronics.ElectronicsLocationsCoveredFPObj.LocationsCovered != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId,Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.ElectronicsLocationsCoveredFPObj.EiId, FPElectronics.ElectronicsLocationsCoveredFPObj.LocationsCovered.ToString(),Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.TypeOfUnitFPObj != null && FPElectronics.TypeOfUnitFPObj.EiId > 0 && FPElectronics.TypeOfUnitFPObj.TypeofUnit != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.TypeOfUnitFPObj.EiId, FPElectronics.TypeOfUnitFPObj.TypeofUnit.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.MakeAndModelFPObj != null && FPElectronics.MakeAndModelFPObj.EiId > 0 && FPElectronics.MakeAndModelFPObj.MakeandModel != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.MakeAndModelFPObj.EiId, FPElectronics.MakeAndModelFPObj.MakeandModel.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.SerialNumberFPObj != null && FPElectronics.SerialNumberFPObj.EiId > 0 && FPElectronics.SerialNumberFPObj.SerialNumber != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.SerialNumberFPObj.EiId, FPElectronics.SerialNumberFPObj.SerialNumber.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.NoOfUnitsFPObj != null && FPElectronics.NoOfUnitsFPObj.EiId > 0 && FPElectronics.NoOfUnitsFPObj.NoOfUnits != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.NoOfUnitsFPObj.EiId, FPElectronics.NoOfUnitsFPObj.NoOfUnits.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.OptPortableItemsFPObj != null && FPElectronics.OptPortableItemsFPObj.EiId > 0 && FPElectronics.OptPortableItemsFPObj.PortableItemsOption != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.OptPortableItemsFPObj.EiId, FPElectronics.OptPortableItemsFPObj.PortableItemsOption.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.SumInsuredPerUnitFPObj != null && FPElectronics.SumInsuredPerUnitFPObj.EiId > 0 && FPElectronics.SumInsuredPerUnitFPObj.SumInsuredPerUnit != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.SumInsuredPerUnitFPObj.EiId, FPElectronics.SumInsuredPerUnitFPObj.SumInsuredPerUnit.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.TotalSumInsuredFPObj != null && FPElectronics.TotalSumInsuredFPObj.EiId > 0 && FPElectronics.TotalSumInsuredFPObj.TotalSumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.TotalSumInsuredFPObj.EiId, FPElectronics.TotalSumInsuredFPObj.TotalSumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.ExcessElectronicsFPObj != null && FPElectronics.ExcessElectronicsFPObj.EiId > 0 && FPElectronics.ExcessElectronicsFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.ExcessElectronicsFPObj.EiId, FPElectronics.ExcessElectronicsFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.CoverLossOfDataFPObj != null && FPElectronics.CoverLossOfDataFPObj.EiId > 0 && FPElectronics.CoverLossOfDataFPObj.CoverLossofData != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.CoverLossOfDataFPObj.EiId, FPElectronics.CoverLossOfDataFPObj.CoverLossofData.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPElectronics.ExcessCoverLossOfDataFPObj != null && FPElectronics.ExcessCoverLossOfDataFPObj.EiId > 0 && FPElectronics.ExcessCoverLossOfDataFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPElectronics.CustomerId, Convert.ToInt32(FarmPolicySection.Electronics), FPElectronics.ExcessCoverLossOfDataFPObj.EiId, FPElectronics.ExcessCoverLossOfDataFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-            }
+            Session["unId"] = null;
+            Session["profileId"] = null;
             return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
         }
     }

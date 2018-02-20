@@ -11,25 +11,26 @@ namespace InsureThatAPI.Models
     }
     public class FPFarmliability
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         public GenLiabilityLimitOfIndemnityFP GenLiabilityLimitOfIndemnityFPObj { get; set; }
-
         public ProdLiabilityLimitOfIndemnityFP ProdLiabilityLimitOfIndemnityFPObj { get; set; }
-
         public ListOfProductsSoldFP ListOfProductsSoldFPObj { get; set; }
-
         public OptPayingGuestFP OptPayingGuestFP { get; set; }
-
         public TypeOfAccomGuestsStayingInFP TypeOfAccomGuestsStayingInFPObj { get; set; }
-
         public DescriptionOfAccommodationFP DescriptionOfAccommodationFPObj { get; set; }
-
         public OptAccomComplyRegulationFP OptAccomComplyRegulationFPObj { get; set; }
-
         public OptHolidayFarmsFP OptHolidayFarmsFPObj { get; set; }
-
-        public ExcessFPFarmLiability ExcessFPFarmLiabilityObj { get; set; }
-               
+        public ExcessFPFarmLiability ExcessFPFarmLiabilityObj { get; set; }               
     }
 
     public class GenLiabilityLimitOfIndemnityFP

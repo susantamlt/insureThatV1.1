@@ -390,57 +390,7 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.MotorFarm), Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-                {
-                    MCAdditionalDetails.KeptnightObj.Keptnight = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId).FirstOrDefault();
-                    MCAdditionalDetails.KeptnightObj.Keptnight = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VregisterObj.EiId))
-                {
-                    MCAdditionalDetails.VregisterObj.Register = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.VregisterObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.RnumberObj.EiId))
-                {
-                    MCAdditionalDetails.RnumberObj.Rnumber = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.RnumberObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.VnumberObj.EiId).FirstOrDefault();
-                    MCAdditionalDetails.VnumberObj.Vnumber = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.EnumberObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.EnumberObj.EiId).FirstOrDefault();
-                    MCAdditionalDetails.EnumberObj.Enumber = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VmodifiedObj.EiId))
-                {
-                    MCAdditionalDetails.VmodifiedObj.Vmodified = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.VmodifiedObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.DmodifiedObj.EiId))
-                {
-                    MCAdditionalDetails.DmodifiedObj.Dmodified = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.DmodifiedObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.SFinstalledObj.EiId))
-                {
-                    MCAdditionalDetails.SFinstalledObj.Installed = Convert.ToBoolean(details.Where(q => q.QuestionId == MCAdditionalDetails.SFinstalledObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VusedObj.EiId))
-                {
-                    MCAdditionalDetails.VusedObj.Vused = Convert.ToBoolean(details.Where(q => q.QuestionId == MCAdditionalDetails.VusedObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MCAdditionalDetails.CcapacityObj.EiId))
-                {
-                    MCAdditionalDetails.CcapacityObj.Ccapacity = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.CcapacityObj.EiId).FirstOrDefault().Answer);
-                }
-            }
+           
             return View(MCAdditionalDetails);
         }
         [HttpPost]

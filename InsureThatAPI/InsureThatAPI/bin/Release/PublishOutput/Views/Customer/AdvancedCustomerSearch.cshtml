@@ -101,12 +101,24 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-12"></div>
                 <div class="col-md-6 col-sm-6 col-xs-12 text-right">
-                    <a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>
-                    <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn">Search</button>
+
+                    @*<a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>*@
+                    <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn" disabled="disabled">Search</button>
                 </div>
             </div>
             <div id="show"></div>
         }
+        @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Get, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12"></div>
+                <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                    <button type="submit" class="form-control form-border-bottom btn newcut text-right" role="button" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:5px;line-height:22px;">
+                        New Insurer
+                    </button>
+                </div>
+            </div>}
     </div>
 </div>
 <style type="text/css">
@@ -126,8 +138,8 @@
         color: #FF0000;
     }
 </style>
-<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+            <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+            <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 @*<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>*@
 @*<script src="https://select2.org/data-sources/ajax"></script>*@
@@ -135,6 +147,16 @@
 <link href="~/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
+    //$(".newcut").click(function () {
+    //    $.ajax({
+    //        url: '/customer/NewPolicy',
+    //        type: 'GET',
+    //        data: {  },
+    //        success: function (response) {
+    //            window.location.href = responce;
+    //        }
+    //    });
+    //});
     $("#newcust").click(function () {
         var phonenu = $("#newphoneno").val();
         var name = $("#newname").val();
@@ -247,6 +269,7 @@
     });
     $(function () {
         $('.js-data-example-ajax').select2({
+
             ajax: {
                 url: '/customer/customersearch',
                 type: 'POST',
@@ -271,6 +294,7 @@
         $('#name').on('change', (function () {
             var id = $(this).val();
             var name = $(this).text();
+            $('.search-btn').attr("disabled", "disabled");
             $.ajax({
                 type: "POST",
                 url: "/customer/AdvCustomerSearch",
@@ -303,12 +327,16 @@
                         });
                         //var pNumber = pNumber1.replace(' ', '');
                         //$('#phonenu').val(pNumber.replace(' ', ''));
+
+                        $('.search-btn').prop("disabled", false);
                     }
                     $('#email').val(responce.results[0].EmailID);
+
                 }
             });
         }));
         $('.ajax-keypress').keyup(function (e) {
+            $('.search-btn').prop("disabled", false);
             var id = $(this).attr('id');
             var val = $(this).val();
             var len = val.length;
@@ -350,6 +378,7 @@
                             }
 
                             $('#email').val(responce.results[0].EmailID);
+                            $('.search-btn').prop("disabled", false);
                         }
                     }
                 });

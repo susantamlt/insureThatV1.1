@@ -17,7 +17,9 @@ namespace InsureThatAPI.Models
     public class GetInsuredDetailsRef
     {
         public List<InsuredDetails> Insureds { get; set; }
-
+        public InsuredDetails InsuredData { get; set; }
+        public List<AddressData> AddressData { get; set; }
+        public List<string> IdentifierUpdates { get; set; }
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
     }
@@ -30,6 +32,13 @@ namespace InsureThatAPI.Models
     }
     public class InsuredDetails
     {
+    
+        public int? PolicyType { get; set; }
+        public int? CustomerId { get; set; }
+        public string postcode { get; set; }
+        public string state { get; set; }
+        public string suburb { get; set; }
+        public string ApiKey { get; set; }
         public int InsuredID { get; set; }
         public int? ClientType { get; set; }
         public string Title { get; set; }
@@ -47,8 +56,44 @@ namespace InsureThatAPI.Models
         public DateTime DOB { get; set; }
         public string EmailID { get; set; }
         public List<string> PolicyNumbers { get; set; }
+        public AddressData AddressDatas { get; set; }
+        public List<AddressData> AddressData { get; set; }
+        public List<string> IdentifierUpdates { get; set; }
+        public string Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+    }
+     public class InsuredDetailsSerobj
+    {
+    
+        public int? PolicyType { get; set; }
+        public int? CustomerId { get; set; }
+        public string postcode { get; set; }
+        public string state { get; set; }
+        public string suburb { get; set; }
+        public string ApiKey { get; set; }
+        public int InsuredID { get; set; }
+        public int? ClientType { get; set; }
+        public string Title { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
+        public string CompanyBusinessName { get; set; }
+        public string TradingName { get; set; }
+        public string ABN { get; set; }
+        public string Address { get; set; }
+        public int? AddressID { get; set; }
+        public int? PostalAddressID { get; set; }
+        public string MobileNo { get; set; }
+        public string PhoneNo { get; set; }
 
-
+        [DataType(DataType.DateTime)]
+        public DateTime? DOB { get; set; }
+        public string EmailID { get; set; }
+        public List<string> PolicyNumbers { get; set; }
+       
+        public List<string> IdentifierUpdates { get; set; }
+        public string Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
     }
     #endregion
     public class CustomerSearch
@@ -64,6 +109,8 @@ namespace InsureThatAPI.Models
         public string phoneNo { get; set; }
         public int InsuredId { get; set; }
         public List<string> ErrorMessage { get; set; }
+
+        public string Actntype { get; set; }
 
     }
 }

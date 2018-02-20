@@ -1,0 +1,677 @@
+﻿@model InsureThatAPI.Models.InsuredDetailsSerobj
+@{
+    ViewBag.Title = "CustomerRegisration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    List<SelectListItem> ClientTypeItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem { Text = "Mr", Value = "Mr", Selected = true });
+    listItems.Add(new SelectListItem { Text = "Miss", Value = "Miss" });
+    listItems.Add(new SelectListItem { Text = "Mrs", Value = "Mrs" });
+    listItems.Add(new SelectListItem { Text = "Ms", Value = "Ms" });
+    listItems.Add(new SelectListItem { Text = "Dr", Value = "Dr" });
+    ClientTypeItems.Add(new SelectListItem { Text = "Business", Value = "2" });
+    ClientTypeItems.Add(new SelectListItem { Text = "Individual", Value = "1" });
+}
+@using (Html.BeginForm("CustomerRegistration", "Customer", FormMethod.Post, new { @id = "customerRegisration", @name = "customerRegisration" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p => p.CustomerId)
+    @Html.HiddenFor(p => p.PolicyType)
+    @Html.HiddenFor(p => p.AddressID)
+    @Html.HiddenFor(p => p.PostalAddressID)
+    <div class="row content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center login-head-1">
+            @if (Model.ClientType > 0)
+            {
+                <h2 style="text-align:left;">Confirm Details:</h2>
+            }
+            else
+            {
+                <h2 style="text-align:left;">Add Insured:</h2>
+            }
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Client Type <span>*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == null)
+                        {
+                            @Html.DropDownListFor(m => m.ClientType, ClientTypeItems, "-- Select --", new { @class = "form-control vlidationInsure select2hd", @id = "ClientType" })
+                        }
+                        else
+                        {
+                            if (Model.ClientType == 1)
+                            {
+                                <input type="text" value="Individual" class="form-control vlidationInsure" readonly />
+                            }
+                            else
+                            {
+                                <input type="text" value="Business" class="form-control vlidationInsure" readonly />
+                            }
+                            @Html.HiddenFor(p => p.ClientType)
+                        }
+                        <label id="ClientType-error" class="error" for="ClientType"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Title<span class="indidualClass">*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 2)
+                        {
+                            @Html.DropDownListFor(m => m.Title, listItems, "--Select--", new { @class = "form-control vlidationInsure select2hd", @id = "title", @disabled = "disabled" })
+                        }
+                        else
+                        {
+                            @Html.DropDownListFor(m => m.Title, listItems, "--Select--", new { @class = "form-control vlidationInsure select2hd", @id = "title" })
+                        }
+                        <label id="Title-error" class="error" for="Title"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">First Name<span class="indidualClass">*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 2)
+                        {
+                            @Html.TextBoxFor(p => p.FirstName, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "FirstName", @data_regex = "A" })
+                        }
+                        else
+                        { 
+                            @Html.TextBoxFor(p => p.FirstName, new { @class = "form-control vlidationInsure commondatatest", @id = "FirstName", @data_regex = "A" })
+                        }
+                        <label id="FirstName-error" class="error" for="FirstName"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Last Name<span class="indidualClass">*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 2)
+                        {
+                            @Html.TextBoxFor(p => p.LastName, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "LastName", @data_regex = "A" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(p => p.LastName, new { @class = "form-control vlidationInsure commondatatest", @id = "LastName", @data_regex = "A" })
+                        }
+                        <label id="LastName-error" class="error" for="LastName"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Middle Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 2)
+                        {
+                            @Html.TextBoxFor(p => p.MiddleName, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "MiddleName", @data_regex = "A" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(p => p.MiddleName, new { @class = "form-control vlidationInsure commondatatest", @id = "MiddleName", @data_regex = "A" })
+                        }
+                        <label id="MiddleName-error" class="error" for="MiddleName"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Email ID<span>*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.EmailID, new { @class = "form-control vlidationInsure commondatatest", @id = "EmailID", @data_regex = "E" })
+                        <label id="EmailID-error" class="error" for="EmailID"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Date of Birth<span>*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.DOB, new { @class = "form-control datePicker vlidationInsure commondataDDMMYYY", @id = "dob", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                        @Html.HiddenFor(p => p.DOB)
+                        <label id="DOB-error" class="error" for="DOB"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Mobile Number<span>*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.MobileNo, new { @class = "form-control vlidationInsure commondatatest", @length = "12", @id = "MobileNo", @data_regex = "N" })
+                        <label id="MobileNo-error" class="error" for="MobileNo"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Phone Number</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.PhoneNo, new { @class = "form-control vlidationInsure commondatatest", @length = "12", @id = "PhoneNo", @data_regex = "N" })
+                        <label id="PhoneNo-error" class="error" for="PhoneNo"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Trading Name<span class="businessClass"></span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 1)
+                        {
+                            @Html.TextBoxFor(p => p.TradingName, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "TradingName", @data_regex = "AN" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(p => p.TradingName, new { @class = "form-control vlidationInsure commondatatest", @id = "TradingName", @data_regex = "AN" })
+                        }
+                        <label id="TradingName-error" class="error" for="TradingName"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">ABN<span class="businessClass"></span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 1)
+                        {
+                            @Html.TextBoxFor(p => p.ABN, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "ABN", @data_regex = "AN" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(p => p.ABN, new { @class = "form-control vlidationInsure commondatatest", @id = "ABN", @data_regex = "AN" })
+                        }
+                        <label id="ABN-error" class="error" for="ABN"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Company Business Name<span class="businessClass">*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType == 1)
+                        {
+                            @Html.TextBoxFor(p => p.CompanyBusinessName, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "CompanyBusinessName", @data_regex = "AN" })
+                        }
+                        else
+                        {
+                            @Html.TextBoxFor(p => p.CompanyBusinessName, new { @class = "form-control vlidationInsure commondatatest", @id = "CompanyBusinessName", @data_regex = "AN" })
+                        }
+                        <label id="CompanyBusinessName-error" class="error" for="CompanyBusinessName"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Address<span>*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.Address, new { @class = "form-control vlidationInsure commondatatest", @id = "addresshome" })
+                        <label id="Address-error" class="error" for="Address"></label>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Suburb<span>*</span></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @if (Model.ClientType > 0)
+                        {
+                            @Html.TextBoxFor(p => p.suburb, new { @class = "form-control form-inline vlidationInsure", @readonly = "readonly", @placeholder = "Suburb", @name = "SubUrb", @id= "suburbT", @style = "width:100%" })
+                        }
+                        else
+                        {
+                            <div class="sddsjf">
+                                @Html.DropDownListFor(p => p.suburb, Enumerable.Empty<SelectListItem>(), "Suburb", new { @class = "form-control form-inline vlidationInsure select2hd", @placeholder = "Suburb", @id = "suburb", @name = "SubUrb", @style = "width:100%" })
+                            </div>
+                        }
+                        <label id="suburb-error" class="error" for="suburb"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12">
+                <button type="submit" class="btn-primary btn pull-right" id="ptabbtnFHC">Save & Continue</button>
+            </div>
+        </div>
+    </div>
+}
+<script src="~/js/jquery.inputmask.bundle.js"></script>
+<script src="~/js/inputmask.date.extensions.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+    });
+</script>
+<script src="~/js/datepicker.min.js"></script>
+<link href="~/css/select2.min.css" rel="stylesheet" />
+<script src="~/Scripts/select2.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#suburb').select2({
+            ajax: {
+                url: "/Customer/AddressData",
+                type: 'POST',
+                data: function (params) {
+                    var query = {
+                        Fragment: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    var NewState = $('#state').val();
+                    var ItemSuburbArray = [];
+                    var ItemPostCodeArray = [];
+                    var RemoveDuplicatSubbube = [];
+                    var RemoveDuplicatPostcodee = [];
+                    var RemoveDuplicatStatee = [];
+                    var res = $.parseJSON(data.result);
+                    if (res.LocalityData != null) {
+                        $('#suburb').empty();
+                        var html = '';
+                        var postcodelist = '';
+                        $.each(res.LocalityData, function (index, value) {
+                            if (RemoveDuplicatSubbube.indexOf(value.Suburb) == '-1') {
+                                ItemSuburbArray.push({ "id": value.Suburb + ', ' + value.State + ', ' + value.Postcode + ', AU', "text": value.Suburb + ', ' + value.State + ', ' + value.Postcode + ', AU' });
+                                RemoveDuplicatSubbube.push(value.Suburb);
+                            }
+                            if (RemoveDuplicatStatee.indexOf(value.State) == '-1') {
+                                html += '<option value="' + value.State + '">' + value.State + '</option>';
+                                RemoveDuplicatStatee.push(value.State);
+                            }
+                            if (RemoveDuplicatPostcodee.indexOf(value.Postcode) == '-1') {
+                                ItemPostCodeArray.push({ "Postcode": value.Postcode, "State": value.State });
+                                postcodelist += '<option value="' + value.Postcode + '">';
+                                RemoveDuplicatPostcodee.push(value.Postcode);
+                            }
+                        });
+                        $('#state').html(html);
+                        $('#postcodelist').html(postcodelist);
+                        allResPostCode = ItemPostCodeArray;
+                    }
+                    return {
+                        results: ItemSuburbArray
+                    };
+                }
+            }
+        });
+    });
+    $(document).on('change', '#ClientType', function () {
+        if ($(this).val() == '2') {
+            $('#title').attr('disabled', 'disabled');
+            $('#FirstName').attr('disabled', 'disabled');
+            $('#LastName').attr('disabled', 'disabled');
+            $('#MiddleName').attr('disabled', 'disabled');
+            $('#TradingName').removeAttr('disabled');
+            $('#ABN').removeAttr('disabled');
+            $('#CompanyBusinessName').removeAttr('disabled');
+            $('.businessClass').css({ 'display': 'inline-block' });
+            $('.indidualClass').css({ 'display': 'none' });
+        } else if ($(this).val() == '1') {
+            $('#TradingName').attr('disabled', 'disabled');
+            $('#ABN').attr('disabled', 'disabled');
+            $('#CompanyBusinessName').attr('disabled', 'disabled');
+            $('#title').removeAttr('disabled');
+            $('#FirstName').removeAttr('disabled');
+            $('#LastName').removeAttr('disabled');
+            $('#MiddleName').removeAttr('disabled');
+            $('.businessClass').css({ 'display': 'none' });
+            $('.indidualClass').css({ 'display': 'inline-block' });
+        } else {
+            $('#title').removeAttr('disabled');
+            $('#FirstName').removeAttr('disabled');
+            $('#LastName').removeAttr('disabled');
+            $('#MiddleName').removeAttr('disabled');
+            $('#TradingName').removeAttr('disabled');
+            $('#ABN').removeAttr('disabled');
+            $('#CompanyBusinessName').removeAttr('disabled');
+            $('.businessClass').css({ 'display': 'inline-block' });
+            $('.indidualClass').css({ 'display': 'inline-block' });
+        }
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#ptabbtnFHC").click(function (e) {
+            e.preventDefault();
+            var valid = 1;
+            $(".vlidationInsure").each(function () {
+                var id = $(this).attr('id');
+                var nameAttr = $(this).attr('name');
+                var newval = $(this).val();
+                if (nameAttr == "ClientType") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please select client type').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "FirstName") {
+                    var regex = /^[a-zA-Z ]*$/;
+                    if (($("#ClientType").val() == '1' || $("#ClientType").val() == 'Individual') && newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter first name').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 50) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 50 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "LastName") {
+                    var regex = /^[a-zA-Z ]*$/;
+                    if (($("#ClientType").val() == '1' || $("#ClientType").val() == 'Individual') && newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter last name').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 50) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 50 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "MiddleName") {
+                    var regex = /^[a-zA-Z ]*$/;
+                    if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 50) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 50 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "EmailID") {
+                    var regex= /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter e-mail id').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please provide valid e-mail id').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 100) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 100 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "DOB") {
+                    var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+                    var rVal = newval.split('/');
+                    var currentYearNew = new Date().getFullYear();
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter date of birth').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != '' && !regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        valid = 0;
+                    } else if (rVal[2] != '' && rVal[2].length != 4) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        valid = 0;
+                    } else if (rVal[2] != '' && rVal[2] > currentYearNew) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + name + "']").text('You can not provide future year').css({ "display": "block" });
+                        valid = 0;
+                    } else if (rVal != "") {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + name + "']").text('').css({ "display": "none" });
+                    }
+                }
+                if (nameAttr == "MobileNo") {
+                    var regex = /^[0-9 ]*$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter mobile number').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 13) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 13 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "PhoneNo") {
+                    var regex = /^[0-9 ]*$/;
+                    if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 13) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 12 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "CompanyBusinessName") {
+                    var regex = /^[a-zA-Z0-9 ]*$/;
+                    if (($("#ClientType").val() == '2' && $("#ClientType").val() == 'Business') && newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter company or business name').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 50) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 50 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "TradingName") {
+                    var regex = /^[a-zA-Z0-9 ]*$/;
+                    if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 50) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 50 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "ABN") {
+                    var regex = /^[a-zA-Z0-9 ]*$/;
+                    if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length > 50) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Max 50 characters allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "Address") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter address').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "suburb") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter suburb').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+            });
+            if (valid == 1) {
+                $("form[name='customerRegisration']").submit();
+            }
+        });
+    });
+    $(document).ready(function () {
+        var dobId = $('#dob').val();
+        var DObarr = new Array();
+        if (dobId != '') {
+            DObarr = dobId.split(' ');
+            $('#dob').val(DObarr[0]);
+        }
+    });
+    $(document).on('focusout', ".commondatatest", function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        var ItIdN = $(this).data('itid');
+        var Nregex = $(this).data('regex');
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+        if (ItIdN == 'undefined' || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
+        var regex = "";
+        var text = "";
+        if (Nregex == 'N') {
+            regex = /^[0-9]*$/;
+            text = "Only numeric are allowed";
+        } else if (Nregex == 'A') {
+            regex = /^[a-zA-Z ]*$/;
+            text = "Special character & numeric are not allowed";
+        } else if (Nregex == 'AN') {
+            regex = /^[a-zA-Z0-9 ]*$/;
+            text = "Special character are not allowed";
+        } else if (Nregex == 'AS') {
+            regex = /^[a-zA-Z/ ]*$/;
+            text = "Numericare not allowed";
+        } else if (Nregex == 'NS') {
+            regex = /^[0-9/ ]*$/;
+            text = "Numeric & '/' are allowed";
+        } else if (Nregex == 'E') {
+            regex: /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            text = "Please provide valid e-mail id";
+        }
+        if (!regex.test(Value)) {
+            $('#' + id).css({ "border": "1px solid #ff0000" });
+            $("label[for='" + name + "']").text(text).css({ "display": "block" });
+        } else if (Value != "") {
+            $('#' + id).css({ "border": "" });
+            $("label[for='" + name + "']").text('').css({ "display": "none" });
+            elementAjaxCall(Value, EIId, ItId);
+        }
+    });
+    function elementAjaxCall(Value, EIId, ItId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                //$('#' + StateIdNewOne).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            }
+
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.referrallist != null || data.referrallist != "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallist);
+                    }
+                }
+            });
+        }
+    }
+</script>

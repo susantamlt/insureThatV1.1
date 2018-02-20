@@ -8,9 +8,17 @@ namespace InsureThatAPI.Models
 {
     public class TravelCover
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public string PolicyStatus { get; set; }
         public int CustomerId { get; set; }
         public LocationTC LocationObj { get; set; }
         public UnspecificValuablesTC UnspecificvaluablesObj { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public NumberOfTravelers NumbertravelersObj { get; set; }
         public TravellersToBeCovered  TravellerscoveredObj  { get; set; }
         public DataOfBirthsTC DataofbirthObj { get; set; }

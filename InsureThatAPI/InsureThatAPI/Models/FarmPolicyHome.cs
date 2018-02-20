@@ -11,10 +11,32 @@ namespace InsureThatAPI.Models
     }
     public class MainDetails
     {
+        public string PolicyId { get; set; }
         public int CustomerId { get; set; }
         public string CompletionTrackFPHB { get; set; }
         public PhysicalAddress PhysicaladdresObj { get; set; }
         public UnclearedNaturalBushland UNBushlandObj { get; set; }
+        public ExternalWallsMade ExtwallmadeObj { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public DescribeExternalWalls DescribeextwallObj { get; set; }
+        public IsRoofMadeOf RoofmadeObj { get; set; }
+        public DescribeTheRoofs DescriberoofObj { get; set; }
+        public YearCDFP YearObj { get; set; }
+        public LastRewireds LastrewiredObj { get; set; }
+        public LastReplumbs LastreplumbedObj { get; set; }
+        public WatertightsMaintained WatertightObj { get; set; }
+        public HeritageLegislationsCouncil HeritagelegislationObj { get; set; }
+        public UnderConstructionsAlteration UnderconstructionObj { get; set; }
+        public FitnessDomesticDwellings DomesticdwellingObj { get; set; }
+        public WhoLivesHome WholivesObj { get; set; }
+        public IsTheBuildingFPHO IsbuildingObj { get; set; }
+        public ConsecutiveDaysFPHO ConsecutiveObj { get; set; }
+        public UsedForBusinessFPHO UsedbusinessObj { get; set; }
+        public DescribeBusinessFPHO DesbusinessObj { get; set; }
+        public InterestedPartyNameFPIP PartynameObj { get; set; }
+        public InterestedPartyLocationFPIP PartylocationObj { get; set; }
     }
     public class ConstructionDetails
     {

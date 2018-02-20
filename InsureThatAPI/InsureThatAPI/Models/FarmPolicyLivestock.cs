@@ -12,56 +12,41 @@ namespace InsureThatAPI.Models
 
     public class FPLivestock
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
-
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         public ClassOfAnimalFP ClassOfAnimalFPObj { get; set; }
-
         public TypeOfAnimalFP TypeOfAnimalFPObj { get; set; }
-
         public BreedOfAnimalFP BreedOfAnimalFPObj { get; set; }
-
         public AgeOfAnimalFP AgeOfAnimalFPObj { get; set; }
-
         public ColourOfAnimalFP ColourOfAnimalFPObj { get; set; }
-
         public UseOfAnimalFP UseOfAnimalFPObj { get; set; }
-
         public DescBrandOfAnimalFP DescBrandOfAnimalFPObj { get; set; }
-
         public DescMarksOfAnimalFP DescMarksOfAnimalFPObj { get; set; }
-
         public OptSoundHealthofAnimalFP OptSoundHealthofAnimalFPObj { get; set; }
-
         public DescSoundHealthofAnimalFP DescSoundHealthofAnimalFPObj { get; set; }
-
         public OptDiseaseOfAnimalFP OptDiseaseOfAnimalFPObj { get; set; }
-
         public DescDiseaseOfAnimalFP DescDiseaseOfAnimalFPObj { get; set; }
-
         public OptAnimalSyndicatedFP OptAnimalSyndicatedFPObj { get; set; }
-
         public DescAnimalSyndicatedFP DescAnimalSyndicatedFPObj { get; set; }
-
         public SumInsuredLivestockFP SumInsuredLivestockFPObj { get; set; }
-
         public OptInfertilityFP OptInfertilityFPObj { get; set; }
-
         public OptLossofUseLivestockFP OptLossofUseLivestockFPObj { get; set; }
-
         public OptTheftLivestockFP OptTheftLivestockFPObj { get; set; }
-
         public OptUnbornFoalFP OptUnbornFoalFPObj { get; set; }
-
         public ExcessLivestockFP ExcessLivestockFPObj { get; set; }
-
         public NoOfContainersFP NoOfContainersFPObj { get; set; }
-
         public MaxStrawsandAmpoulesFP MaxStrawsandAmpoulesFPObj { get; set; }
-
         public MaxValOneContainerFP MaxValOneContainerFPObj { get; set; }
-
         public AnnualStrawsandAmpoulesFP AnnualStrawsandAmpoulesFPObj { get; set; }
-
     }
 
     public class ClassOfAnimalFP

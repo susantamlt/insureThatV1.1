@@ -22,21 +22,90 @@ namespace InsureThatAPI.Controllers
         [HttpGet]
         public ActionResult MainDetails(int? cid)
         {
-            MainDetails MainDetails = new MainDetails();
-            MainDetails.PhysicaladdresObj = new PhysicalAddress();
-            MainDetails.PhysicaladdresObj.EiId = 0;
-            MainDetails.UNBushlandObj = new UnclearedNaturalBushland();
-            MainDetails.UNBushlandObj.EiId = 62067;
-            if (Session["CompletionTrackFPHB"] != null)
-            {
-                Session["CompletionTrackFPHB"] = Session["CompletionTrackFPHB"];
-                MainDetails.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
-            }
-            else
-            {
-                Session["CompletionTrackFPHB"] = "0-0-0-0-0"; ;
-                MainDetails.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
-            }
+            NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
+            List<SelectListItem> ExternalWallsMadeList = new List<SelectListItem>();
+            ExternalWallsMadeList = commonmethods.ExternalWallsMadeList();
+            List<SelectListItem> IsRoofMadeOfList = new List<SelectListItem>();
+            IsRoofMadeOfList = commonmethods.RoofMadesList();
+            HB2HomeDescription HB2HomeDescription = new HB2HomeDescription();
+            #region VehicleDescription
+            HB2HomeDescription.LocationObj = new Locations();
+            HB2HomeDescription.LocationObj.EiId = 60133;
+            HB2HomeDescription.LocationObj.Location = "";
+            HB2HomeDescription.IsbuildinglocatedObj = new IsBuildingLocateds();
+            HB2HomeDescription.IsbuildinglocatedObj.EiId = 62067;
+            HB2HomeDescription.DescribeaddressObj = new DescribeAddresses();
+            HB2HomeDescription.DescribeaddressObj.EiId = 0;
+            HB2HomeDescription.locatedfarmObj = new locatedOnAFarm();
+            HB2HomeDescription.locatedfarmObj.EiId = 62069;
+            HB2HomeDescription.TypeOfBuildingObj = new TypeOfBuilding();
+            HB2HomeDescription.TypeOfBuildingObj.EiId = 62081;
+            HB2HomeDescription.DescribeBuildingObj = new DescribeBuilding();
+            HB2HomeDescription.DescribeBuildingObj.EiId = 62083;
+            #endregion
+            #region Constrution Details         
+            HB2HomeDescription.ExtwallsmadeObj = new ExtWallsMades();
+            HB2HomeDescription.ExtwallsmadeObj.ExtwallsmadeList = ExternalWallsMadeList;
+            HB2HomeDescription.ExtwallsmadeObj.EiId = 62085;
+            HB2HomeDescription.DescribeexternalwallsObj = new Describeexternalwalls();
+            HB2HomeDescription.DescribeexternalwallsObj.EiId = 62087;
+            HB2HomeDescription.RoofmadeObj = new RoofMades();
+            HB2HomeDescription.RoofmadeObj.RoofmadeList = IsRoofMadeOfList;
+            HB2HomeDescription.RoofmadeObj.EiId = 62089;
+            HB2HomeDescription.DescribeRoofMadeOffObj = new DescribeRoofMadeof();
+            HB2HomeDescription.DescribeRoofMadeOffObj.EiId = 62091;
+            HB2HomeDescription.YearofBuiltObj = new YearOfBuilt();
+            HB2HomeDescription.YearofBuiltObj.EiId = 62093;
+            HB2HomeDescription.LastRewiredObj = new LastRewired();
+            HB2HomeDescription.LastRewiredObj.EiId = 62095;
+            HB2HomeDescription.LastReplumbedObj = new LastReplumbed();
+            HB2HomeDescription.LastReplumbedObj.EiId = 62097;
+            HB2HomeDescription.WatertightObj = new Watertights();
+            HB2HomeDescription.WatertightObj.EiId = 62099;
+            HB2HomeDescription.HeritagelegislationObj = new HeritageLegislations();
+            HB2HomeDescription.HeritagelegislationObj.EiId = 62109;
+            HB2HomeDescription.UnderconstructionObj = new UnderConstructions();
+            HB2HomeDescription.UnderconstructionObj.EiId = 62111;
+            HB2HomeDescription.DomesticdwellingObj = new DomesticDwellings();
+            HB2HomeDescription.DomesticdwellingObj.EiId = 62113;
+            HB2HomeDescription.UnrepaireddamageObj = new UnrepairedDamage();
+            HB2HomeDescription.UnrepaireddamageObj.EiId = 62115;
+            #endregion
+            #region Occupancy Details
+            HB2HomeDescription.WholivesObj = new WhoLives();
+            HB2HomeDescription.WholivesObj.EiId = 62127;
+            HB2HomeDescription.WholivesObj.Wholives = 0;
+            HB2HomeDescription.IsbuildingObj = new IsBuildings();
+            HB2HomeDescription.IsbuildingObj.EiId = 62129;
+            HB2HomeDescription.IsbuildingObj.Isbuilding = 0;
+            HB2HomeDescription.ConsecutivedayObj = new Consecutivedays();
+            HB2HomeDescription.ConsecutivedayObj.EiId = 62131;
+            HB2HomeDescription.ConsecutivedayObj.Consecutiveday = 0;
+            HB2HomeDescription.IsusedbusinessObj = new IsusedBusinesses();
+            HB2HomeDescription.IsusedbusinessObj.EiId = 62133;
+            HB2HomeDescription.DescribebusinessObj = new DescribeBusinesses();
+            HB2HomeDescription.DescribebusinessObj.EiId = 62135;
+            #endregion
+            #region Interested Parties
+            HB2HomeDescription.LocationObjs = new Locations();
+            HB2HomeDescription.LocationObjs.EiId = 62189;
+            HB2HomeDescription.NameInstitutionsObj = new NameOfInstitutionsRls();
+            HB2HomeDescription.NameInstitutionsObj.EiId = 62187;
+            #endregion
+            #region Home Building
+            HB2HomeDescription.CoverhomebuildingObj = new CoverHomeBuildings();
+            HB2HomeDescription.CoverhomebuildingObj.EiId = 63459;
+            HB2HomeDescription.CostforRebuildingObj = new CostForRebuilding();
+            HB2HomeDescription.CostforRebuildingObj.EiId = 63461;
+            HB2HomeDescription.ClaimfreeperiodObj = new ClaimFreePeriods();
+            HB2HomeDescription.ClaimfreeperiodObj.EiId = 63471;
+            HB2HomeDescription.ExcessObj = new Excesses();
+            HB2HomeDescription.ExcessObj.EiId = 63473;
+            HB2HomeDescription.WindowCoveringsObj = new WindowCoverings();
+            HB2HomeDescription.WindowCoveringsObj.EiId = 63465;
+            HB2HomeDescription.ProtectionCoverObj = new MortgageeProtectionCover();
+            HB2HomeDescription.ProtectionCoverObj.EiId = 63467;
+            #endregion
             if (Session["Policyinclustions"] != null)
             {
                 List<string> PolicyInclustions = new List<string>();
@@ -71,77 +140,77 @@ namespace InsureThatAPI.Controllers
             ViewBag.cid = cid;
             if (cid != null)
             {
-                MainDetails.CustomerId = cid.Value;
+                HB2HomeDescription.CustomerId = cid.Value;
             }
             var db = new MasterDataEntities();
             string policyid = null;
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.HomeBuildingFarm),Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
-            {
-                if (details.Exists(q => q.QuestionId == MainDetails.PhysicaladdresObj.EiId))
-                {
-                    MainDetails.PhysicaladdresObj.Physicaladdres = Convert.ToString(details.Where(q => q.QuestionId == MainDetails.PhysicaladdresObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == MainDetails.UNBushlandObj.EiId))
-                {
-                    MainDetails.UNBushlandObj.UNBushland = Convert.ToString(details.Where(q => q.QuestionId == MainDetails.UNBushlandObj.EiId).FirstOrDefault().Answer);
-                }
-            }
-            return View(MainDetails);
+            //if (details != null && details.Any())
+            //{
+            //    if (details.Exists(q => q.QuestionId == HB2HomeDescription.PhysicaladdresObj.EiId))
+            //    {
+            //        HB2HomeDescription.PhysicaladdresObj.Physicaladdres = Convert.ToString(details.Where(q => q.QuestionId == HB2HomeDescription.PhysicaladdresObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //    if (details.Exists(q => q.QuestionId == HB2HomeDescription.UNBushlandObj.EiId))
+            //    {
+            //        HB2HomeDescription.UNBushlandObj.UNBushland = Convert.ToString(details.Where(q => q.QuestionId == HB2HomeDescription.UNBushlandObj.EiId).FirstOrDefault().Answer);
+            //    }
+            //}
+            return View(HB2HomeDescription);
         }
         [HttpPost]
-        public ActionResult MainDetails(int? cid, MainDetails MainDetails)
+        public ActionResult MainDetails(int? cid, HB2HomeDescription HB2HomeDescription)
         {
             var db = new MasterDataEntities();
             if (cid != null)
             {
                 ViewBag.cid = cid;
-                MainDetails.CustomerId = cid.Value;
+                HB2HomeDescription.CustomerId = cid.Value;
             }
             else
             {
-                ViewBag.cid = MainDetails.CustomerId;
+                ViewBag.cid = HB2HomeDescription.CustomerId;
             }
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (MainDetails.PhysicaladdresObj != null && MainDetails.PhysicaladdresObj.EiId > 0 && MainDetails.PhysicaladdresObj.Physicaladdres != null)
-                {
-                    db.IT_InsertCustomerQnsData(MainDetails.CustomerId, Convert.ToInt32(FarmPolicySection.HomeBuildingFarm), MainDetails.PhysicaladdresObj.EiId, MainDetails.PhysicaladdresObj.Physicaladdres.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (MainDetails.UNBushlandObj != null && MainDetails.UNBushlandObj.EiId > 0 && MainDetails.UNBushlandObj.UNBushland != null)
-                {
-                    db.IT_InsertCustomerQnsData(MainDetails.CustomerId, Convert.ToInt32(FarmPolicySection.HomeBuildingFarm), MainDetails.UNBushlandObj.EiId, MainDetails.UNBushlandObj.UNBushland.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (Session["CompletionTrackFPHB"] != null)
-                {
-                    Session["CompletionTrackFPHB"] = Session["CompletionTrackFPHB"];
-                    MainDetails.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
-                    if (MainDetails.CompletionTrackFPHB != null)
-                    {
-                        string Completionstring = string.Empty;
-                        char[] arr = MainDetails.CompletionTrackFPHB.ToCharArray();
-                        for (int i = 0; i < arr.Length; i++)
-                        {
-                            char a = arr[i];
-                            if (i == 0)
-                            {
-                                a = '1';
-                            }
-                            Completionstring = Completionstring + a;
-                        }
-                        Session["CompletionTrackFPHB"] = Completionstring;
-                        MainDetails.CompletionTrackFPHB = Completionstring;
-                    }
-                }
-                else
-                {
-                    Session["CompletionTrackFPHB"] = "1-0-0-0-0"; ;
-                    MainDetails.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
-                }
-                return RedirectToAction("ConstructionDetails", new { cid = cid });
-            }
-            return View(MainDetails);
+            //if (cid.HasValue && cid > 0)
+            //{
+            //    if (HB2HomeDescription.PhysicaladdresObj != null && HB2HomeDescription.PhysicaladdresObj.EiId > 0 && HB2HomeDescription.PhysicaladdresObj.Physicaladdres != null)
+            //    {
+            //        db.IT_InsertCustomerQnsData(HB2HomeDescription.CustomerId, Convert.ToInt32(FarmPolicySection.HomeBuildingFarm), HB2HomeDescription.PhysicaladdresObj.EiId, HB2HomeDescription.PhysicaladdresObj.Physicaladdres.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
+            //    }
+            //    if (HB2HomeDescription.UNBushlandObj != null && HB2HomeDescription.UNBushlandObj.EiId > 0 && HB2HomeDescription.UNBushlandObj.UNBushland != null)
+            //    {
+            //        db.IT_InsertCustomerQnsData(HB2HomeDescription.CustomerId, Convert.ToInt32(FarmPolicySection.HomeBuildingFarm), HB2HomeDescription.UNBushlandObj.EiId, HB2HomeDescription.UNBushlandObj.UNBushland.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
+            //    }
+            //    if (Session["CompletionTrackFPHB"] != null)
+            //    {
+            //        Session["CompletionTrackFPHB"] = Session["CompletionTrackFPHB"];
+            //        HB2HomeDescription.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
+            //        if (HB2HomeDescription.CompletionTrackFPHB != null)
+            //        {
+            //            string Completionstring = string.Empty;
+            //            char[] arr = HB2HomeDescription.CompletionTrackFPHB.ToCharArray();
+            //            for (int i = 0; i < arr.Length; i++)
+            //            {
+            //                char a = arr[i];
+            //                if (i == 0)
+            //                {
+            //                    a = '1';
+            //                }
+            //                Completionstring = Completionstring + a;
+            //            }
+            //            Session["CompletionTrackFPHB"] = Completionstring;
+            //            HB2HomeDescription.CompletionTrackFPHB = Completionstring;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        Session["CompletionTrackFPHB"] = "1-0-0-0-0"; ;
+            //        HB2HomeDescription.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
+            //    }
+            //    return RedirectToAction("ConstructionDetails", new { cid = cid });
+            //}
+            return View(HB2HomeDescription);
         }
         [HttpGet]
         public ActionResult ConstructionDetails(int? cid)
@@ -643,7 +712,8 @@ namespace InsureThatAPI.Controllers
                     Session["CompletionTrackFPHB"] = "0-0-0-0-1"; ;
                     InterestedPartyFPIP.CompletionTrackFPHB = Session["CompletionTrackFPHB"].ToString();
                 }
-                return RedirectToAction("MainDetails", new { cid = cid });
+                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
+               // return RedirectToAction("HB2HomeDescription", new { cid = cid });
             }
             return View(InterestedPartyFPIP);
         }

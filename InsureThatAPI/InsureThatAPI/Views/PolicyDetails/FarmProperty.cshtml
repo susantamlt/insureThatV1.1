@@ -47,9 +47,12 @@
             </h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
-            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
-            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { CustomerId = 1 })">Add Policy</a>
+@if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+{
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+}
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         </div>
 
         <div class="mt-50 mb-50"></div>
@@ -73,7 +76,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
                                 Policy No: @Model.PolicyData.PolicyNumber
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured: @Model.PolicyData.InsuredName</div>
 
                         </div>
                     </div>
@@ -86,8 +89,61 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
-                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                    <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1">
+                        <div class="dropdown" style="list-style: none;">
+                            <a href="#" class=" btn-primary btn col-md-12 mb-5 vwdoc">View Documents </a>
+                            <ul class="dropdown-menu"></ul>
+                        </div>
+                    </div>
+                    @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+                    {
+                        @*<a href="#cancelpolicymodel" class="btn-primary btn col-md-12">Cancel Policy</a>*@
+                        <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12" data-toggle="modal">Cancel Policy</button>
+
+                    }
+                    else
+                    {
+                        <a href="#Bindcovermodel" class="btn-primary btn col-md-12">Bind Policy</a>
+                    }
+                </div>
+                <div id="cancelpolicymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="cancelpolicymodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Cancel Policy</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure cancelling this policy. Action can not be reversed.</p>
+                                <p>Select reson for cancelling</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                <button class="btn btn-default no-border" id="cancelpo" aria-hidden="true"> Confirm </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="Bindcovermodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="Bindcovermodel" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Bind Quotation</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>If all the inclustions are completed then you can continue and bind the cover and complete the policy.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" id="bindcover" aria-hidden="true"> Bind </button>
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -99,15 +155,13 @@
             <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                 @if (Model.SectionData != null)
                 {
-                    using (Ajax.BeginForm("Travels", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
-                    {
-                        HttpMethod = "GET"
-
-                    }))
+                    using (Html.BeginForm("ActionName", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
                     {
                         @Html.AntiForgeryToken()
                         <div class="well">
-                            @Html.HiddenFor(p => p.CustomerId)
+                            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+                            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+                            @Html.HiddenFor(p => p.PolicyData.TrId, new { @id = "tridd" })
                             <h3 class="col-md-9 col-sm-9 col-xs-12">FARM PROPERTY DETAILS</h3>
                             @if (Model.ReferralList != "")
                             {
@@ -152,11 +206,11 @@
                                 <p class="col-md-12 col-sm-12 col-xs-12"> What type of Farm Building do you need to cover? </p>
                             </div>
                             <div class="row">
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Description </p>
-                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"> Year </p>
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Construction </p>
-                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"> Coolroom </p>
-                                <p class="col-md-2 col-sm-2 col-xs-12 text-right"> Sum Insured </p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Description</strong></p>
+                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"><strong>Year</strong></p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Construction</strong></p>
+                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"><strong>Coolroom</strong></p>
+                                <p class="col-md-2 col-sm-2 col-xs-12 text-right"><strong>Sum Insured</strong></p>
                             </div>
                             <div class="row">
                                 <p class="col-md-3 col-sm-3 col-xs-12 text-left">
@@ -168,51 +222,51 @@
                                             {
                                                 if (Model.SectionData.ValueData[j].Value == "2")
                                                 {
-                                                    <span>Dairy</span><br /><br />
+                                                    <span>Dairy</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "3")
                                                 {
-                                                    <span>Garage</span><br /><br />
+                                                    <span>Garage</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "4")
                                                 {
-                                                    <span>General purpose shed</span><br /><br />
+                                                    <span>General purpose shed</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "5")
                                                 {
-                                                    <span>Hay shed</span><br /><br />
+                                                    <span>Hay shed</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "6")
                                                 {
-                                                    <span>Horse shelters</span><br /><br />
+                                                    <span>Horse shelters</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "7")
                                                 {
-                                                    <span>Machinery shed</span><br /><br />
+                                                    <span>Machinery shed</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "1")
                                                 {
-                                                    <span>Pump shed</span><br /><br />
+                                                    <span>Pump shed</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "8")
                                                 {
-                                                    <span>Shearing shed</span><br /><br />
+                                                    <span>Shearing shed</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "9")
                                                 {
-                                                    <span>Stables</span><br /><br />
+                                                    <span>Stables</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "10")
                                                 {
-                                                    <span>Tack Room</span>< br />< br />
+                                                    <span>Tack Room</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "11")
                                                 {
-                                                    <span>Workshop</span><br /><br />
+                                                    <span>Workshop</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "12")
                                                 {
-                                                    <span>Other</span><br /><br />
+                                                    <span>Other</span>
                                                 }
                                             }
                                         }
@@ -225,7 +279,7 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60468 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
@@ -239,35 +293,35 @@
                                             {
                                                 if (Model.SectionData.ValueData[j].Value == "2")
                                                 {
-                                                    <span>Metal walls on Timber frrame</span><br /><br />
+                                                    <span>Metal walls on Timber frrame</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "3")
                                                 {
-                                                    <span>Timber walls on Timber frame</span><br /><br />
+                                                    <span>Timber walls on Timber frame</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "4")
                                                 {
-                                                    <span>Timber walls on Iron frame</span><br /><br />
+                                                    <span>Timber walls on Iron frame</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "5")
                                                 {
-                                                    <span>Sandwich panel – EPS</span><br /><br />
+                                                    <span>Sandwich panel – EPS</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "6")
                                                 {
-                                                    <span>Open sides – metal frame</span><br /><br />
+                                                    <span>Open sides – metal frame</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "7")
                                                 {
-                                                    <span>Open sides – timber frame</span><br /><br />
+                                                    <span>Open sides – timber frame</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "1")
                                                 {
-                                                    <span>Metal walls on Metal frame</span><br /><br />
+                                                    <span>Metal walls on Metal frame</span>
                                                 }
                                                 else if (Model.SectionData.ValueData[j].Value == "8")
                                                 {
-                                                    <span>Brick</span><br /><br />
+                                                    <span>Brick</span>
                                                 }
                                             }
                                         }
@@ -280,19 +334,28 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60469 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                if (@Model.SectionData.ValueData[j].Value == "0")
+                                                {
+                                                    <span>No</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>Yes</span>
+                                                }
                                             }
                                         }
                                     }
                                 </p>
                                 <p class="col-md-2 col-sm-2 col-xs-12 text-left">
+                                    @{var SumInsuredFB = 0; }
                                     @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
                                     {
                                         for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60471 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span class="text-right">$@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span class="text-right">$@Model.SectionData.ValueData[j].Value</span>
+                                                SumInsuredFB = SumInsuredFB + Int32.Parse(Model.SectionData.ValueData[j].Value);
                                             }
                                         }
                                     }
@@ -335,6 +398,7 @@
                             <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10">Please advise how much you would like the rest of your Farm Structures to be insured</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60501) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60501).Value != null))
                                     {
                                         <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60501).Value</span>
@@ -342,7 +406,7 @@
                                 </p>
                             </div>
                             <div class="row">
-                                <p class="col-md-10 col-sm-10 col-xs-10">How much cover do you need to replace your Farm Contents</p>
+                                <p class="col-md-10 col-sm-10 col-xs-10">How much cover do you need to replace your Farm Contents?</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60507) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60507).Value != null))
                                     {
@@ -351,7 +415,7 @@
                                 </p>
                             </div>
                             <div class="row">
-                                <p class="col-md-10 col-sm-10 col-xs-10">Please select the excess you wish to pay</p>
+                                <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60509) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60509).Value != ""))
                                     {
@@ -381,14 +445,14 @@
                                 </p>
                             </div>
                             <div class="row">
-                                <p class="col-md-12 col-sm-12 col-xs-12"> Please list your specified item of machinery (valued over $5000 per item) below </p>
+                                <p class="col-md-12 col-sm-12 col-xs-12"> Please list your specified item/s of machinery below (valued over $5000 per item) </p>
                             </div>
                             <div class="row">
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Description </p>
-                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"> Year </p>
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Serial Number </p>
-                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"> Excess </p>
-                                <p class="col-md-2 col-sm-2 col-xs-12 text-right"> Sum Insured </p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Description</strong></p>
+                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"><strong>Year</strong></p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Serial Number</strong></p>
+                                <p class="col-md-2 col-sm-2 col-xs-12 text-left"><strong>Excess</strong></p>
+                                <p class="col-md-2 col-sm-2 col-xs-12 text-right"><strong>Sum Insured</strong></p>
                             </div>
                             <div class="row">
                                 <p class="col-md-3 col-sm-3 col-xs-12 text-left">
@@ -398,7 +462,7 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60529 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
@@ -410,7 +474,7 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60531 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
@@ -422,7 +486,7 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60533 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
@@ -434,19 +498,21 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60535 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>$@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>$@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
                                 </p>
                                 <p class="col-md-2 col-sm-2 col-xs-12 text-left">
+                                    @{var SumInsuredFM = 0; }
                                     @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
                                     {
                                         for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60537 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span class="text-right">$@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span class="text-right">$@Model.SectionData.ValueData[j].Value</span>
+                                                SumInsuredFM = SumInsuredFM + Int32.Parse(Model.SectionData.ValueData[j].Value);
                                             }
                                         }
                                     }
@@ -455,111 +521,23 @@
                             <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10"> Total for specified items </p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60525) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60525).Value != ""))
-                                    {
-                                        <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60525).Value</span>
-                                    }
+                                    <span>$@SumInsuredFM</span>
                                 </p>
                             </div>
                             <div class="row">
                                 <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Livestock</strong></p>
                             </div>
                             <div class="row">
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Description </p>
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Number of Animals </p>
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"> Sum Insured per Animal </p>
-                                <p class="col-md-3 col-sm-3 col-xs-12 text-right"> Sum Insured </p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Description</strong></p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Number of Animals</strong></p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-left"><strong>Sum Insured per Animal</strong></p>
+                                <p class="col-md-3 col-sm-3 col-xs-12 text-right"><strong>Sum Insured</strong></p>
                             </div>
                             <div class="row">
                                 <p class="col-md-3 col-sm-3 col-xs-12 text-left">
-                                    @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60525) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60525).Value != ""))
                                     {
-                                        for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
-                                        {
-                                            if (Model.SectionData.ValueData[j].Element.ElId == 60565 && Model.SectionData.ValueData[j].Value != "")
-                                            {
-                                                if (Model.SectionData.ValueData[j].Value == "1")
-                                                {
-                                                    <span>Alpacas</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "2")
-                                                {
-                                                    <span>Bulls</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "3")
-                                                {
-                                                    <span>Calves</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "4")
-                                                {
-                                                    <span>Cattle</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "5")
-                                                {
-                                                    <span>Deer</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "6")
-                                                {
-                                                    <span>Ewes</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "7")
-                                                {
-                                                    <span>Goats</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "8")
-                                                {
-                                                    <span>Heifers</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "9")
-                                                {
-                                                    <span>Hogs</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "10")
-                                                {
-                                                    <span>Horses</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "11")
-                                                {
-                                                    <span>Lambs</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "12")
-                                                {
-                                                    <span>Ostriches</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "13")
-                                                {
-                                                    <span>Pigs</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "14")
-                                                {
-                                                    <span>Poultry</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "15")
-                                                {
-                                                    <span>Rams</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "16")
-                                                {
-                                                    <span>Sheep</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "17")
-                                                {
-                                                    <span>Sows</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "18")
-                                                {
-                                                    <span>Steers</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "19")
-                                                {
-                                                    <span>Vealers</span><br /><br />
-                                                }
-                                                else if (Model.SectionData.ValueData[j].Value == "20")
-                                                {
-                                                    <span>Wethers</span><br /><br />
-                                                }
-                                            }
-                                        }
+                                        <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60525).Value</span>
                                     }
                                 </p>
                                 <p class="col-md-3 col-sm-3 col-xs-12 text-left">
@@ -569,7 +547,7 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60567 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
@@ -581,23 +559,29 @@
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60569 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span>$@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span>$@Model.SectionData.ValueData[j].Value</span>
                                             }
                                         }
                                     }
                                 </p>
                                 <p class="col-md-3 col-sm-3 col-xs-12 text-left">
+                                    @{var SumInsuredLS = 0; }
                                     @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
                                     {
                                         for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
                                         {
                                             if (Model.SectionData.ValueData[j].Element.ElId == 60571 && Model.SectionData.ValueData[j].Value != "")
                                             {
-                                                <span class="text-right">$@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                <span class="text-right">$@Model.SectionData.ValueData[j].Value</span>
+                                                SumInsuredLS = SumInsuredLS + Int32.Parse(Model.SectionData.ValueData[j].Value);
                                             }
                                         }
                                     }
                                 </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10"> Total for livestock </p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">$@SumInsuredLS</p>
                             </div>
                             <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10"> Do you wish to insure your livestock against dog attack? </p>
@@ -650,7 +634,7 @@
                                 <p class="col-md-12 col-sm-12 col-xs-12"><strong> Beehives </strong></p>
                             </div>
                             <div class="row">
-                                <p class="col-md-10 col-sm-10 col-xs-10">Would you like to insure your beehives?</p>
+                                <p class="col-md-10 col-sm-10 col-xs-10">How much cover do you need for your crops?</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60601) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60601).Value != ""))
                                     {
@@ -667,15 +651,15 @@
                                     }
                                 </p>
                             </div>
-                            <div class="row">
-                                <p class="col-md-10 col-sm-10 col-xs-10">Would you like to insure your beehives?</p>
-                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60187) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value != ""))
-                                    {
-                                        <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value</span>
-                                    }
-                                </p>
-                            </div>
+                            @*<div class="row">
+                                    <p class="col-md-10 col-sm-10 col-xs-10">Would you like to insure your beehives?</p>
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60187) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value != ""))
+                                        {
+                                            <span>$@Model.SectionData.ValueData.Find(p => p.Element.ElId == 60187).Value</span>
+                                        }
+                                    </p>
+                                </div>*@
                             <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
@@ -689,70 +673,193 @@
                                 <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
                             </div>
                         </div>
-                    }
-                }
-                else
-                {
-                    using (Ajax.BeginForm("Travels", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
-                    {
-                        HttpMethod = "GET"
+                                            }
+                                        }
+                                        else
+                                        {
+                                            using (Ajax.BeginForm("Travels", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+                                            {
+                                                HttpMethod = "GET"
 
-                    }))
-                    {
-                        <div class="well">
-                            @Html.HiddenFor(p => p.CustomerId)
-                            <h3>FARM PROPERTY DETAILS</h3>
-                            <div class="row">
-                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
-                            </div>
-                            <div class="row">
-                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
-                            </div>
-                        </div>
-                    }
-                }
+                                            }))
+                                            {
+                                                <div class="well">
+                                                    @Html.HiddenFor(p => p.CustomerId)
+                                                    <h3>FARM PROPERTY DETAILS</h3>
+                                                    <div class="row">
+                                                        <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                                                    </div>
+                                                    <div class="row">
+                                                        <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
             </div>
             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
                 <h3>Policy Sections</h3>
                 <div class="well">
-                    <div class="policy-loc-row">
-                        <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#location1').click(function () {
-                                    $("#policy-ed-del-wrap1").fadeIn('slow');
-                                    $("#policy-ed-del-wrap2").fadeOut('slow');
+                    @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                    {
+                        for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                        {
+                            <div class="policy-loc-row">
+                                @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('.inclusions').click(function () {
+                                            var name = $(this).attr('data-name');
+                                            var nid = $(this).attr('data-nid');
+                                            $('.policy-ed-del-wrapper').hide();
+                                            $("#policy-ed-del-wrap-" + nid).show();
+
+                                        });
+                                    });
+                                </script>
+                                <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                    <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                    <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+  </div>
+                            </div>
+                        }
+                        <script>
+                            $(".viewsectn").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var unitid = $(this).data('unitid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/ViewSection",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": policyStatus, "prId": prId, "unitid": unitid
+                                    },
+                                    success: function (responce) {
+                                        window.location.href = responce;
+                                    }
+                                });
+                            });
+                            $(".policy-edit-wrap").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, calltype:null
+                                    },
+                                    success: function (responce) {
+                                        window.location.href = responce;
+                                    }
+                                });
+                            });
+                            $(".policy-delet-wrap").click(function () {
+                                var PcId = $("#pcidd").val();
+                                var selectedunid = $(this).data('unid');
+                                var selectedcid = $(this).data('cid');
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/DeleteUnit",
+                                    data: { "unid": selectedunid, "cid": selectedcid, pcid: PcId },
+                                    success: function (responce) {
+                                    }
+                                });
+                            });
+                            $("#bindcover").click(function () {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/BindCover",
+                                    data: {},
+                                    success: function (responce) {
+                                    }
                                 });
                             });
                         </script>
-                        <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-                        </div>
-                    </div>
-                    <div class="policy-loc-row">
-                        <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('#location2').click(function () {
-                                    $("#policy-ed-del-wrap2").fadeIn('slow');
-                                    $("#policy-ed-del-wrap1").fadeOut('slow');
-                                });
-                            });
-                        </script>
-                        <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-                        </div>
-                    </div>
+                    }
                     <div class="clearfix"></div>
                     <div class="dropdown pc pc-in">
-                        <a class="new-cover-policy" href="#">New Cover</a>
-                        <ul class="dropdown-menu col-md-12">
-                            <li><a href="#">+  Valuables</a></li>
-                            <li><a href="#">+  Motor</a></li>
+                        <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
+                        <ul class="dropdown-menu col-md-12 unit">
+                            <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                            <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                            <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                            <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                            <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
+                            <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
+                            <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                            <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                            <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
                         </ul>
+                        <script type="text/javascript">
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                var cid = $("#ciid").val();
+                                var pcid = $("#pcidd").val();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname, cid: cid, PcId: pcid },
+                                    success: function (responce) {
+                                        window.location.href = responce;
+                                    }
+                                });
+                            });
+                        </script>
+                        <script>
+                            $("#cancelpo").click(function () {
+                                var reson = '';
+                                var PcId = $("#pcidd").val();
+                                var selectedcid = $("#ciid").val();
+                                var selectedTrId = $("#tridd").val();
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/CancelPolicy",
+                                    data: {
+                                        "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson
+                                    },
+                                    success: function (responce) {
+                                    }
+                                });
+
+                            });
+                            $(".vwdoc").mouseover(function () {
+                                $(".dropdown ul").html('');
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/ViewDocument",
+                                    data: {
+                                    }, success: function (data) {
+                                        if (!$.isEmptyObject(data.dt) && data.dt.length > 0) {
+                                            var valuedata = data.dt;
+                                            if (valuedata != '' && valuedata != null) {
+                                                $.each(valuedata, function (index, value) {
+                                                    $(".dropdown ul").append('<li><a href="#">' + value.Name + '</a></li>');
+                                                    ////$(".repalcedoc").html(replaceText);
+                                                });
+                                            }
+                                        }
+                                    }
+                                });
+                            });
+                        </script>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>

@@ -1,0 +1,356 @@
+﻿@model InsureThatAPI.Models.InsuredDetails
+@{
+    ViewBag.Title = "CustomerRegisration";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    List<SelectListItem> ClientTypeItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "Mr",
+        Value = "Mr"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Miss",
+        Value = "Miss",
+        Selected = true
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Mrs",
+        Value = "Mrs"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Ms",
+        Value = "Ms"
+    });
+
+    listItems.Add(new SelectListItem
+    {
+        Text = "Dr",
+        Value = "Dr"
+    });
+    ClientTypeItems.Add(new SelectListItem
+    {
+        Text = "Business",
+        Value = "2"
+    });
+    ClientTypeItems.Add(new SelectListItem
+    {
+        Text = "Individual",
+        Value = "1",
+    });
+
+}
+@using (Html.BeginForm("CustomerRegistration", "Customer", FormMethod.Post, new { @id = "customerRegisration", @name = "customerRegisration"}))
+    {
+    @Html.AntiForgeryToken()
+    @Html.HiddenFor(p=>p.CustomerId)
+@Html.HiddenFor(p=>p.PolicyType)
+    <div class="row content">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center login-head-1">
+            <h2 style="text-align:left;">Registration (Add Insurer)</h2>
+        </div>
+        <div class="clearfix"></div>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Client Type</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownListFor(m => m.ClientType, ClientTypeItems, "-- Select --", new { @class = "form-control select2hd commondataselection", @id = "ClientType" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Title</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.DropDownListFor(model => model.Title, listItems, "-- Title --", new { @class = "form-control select2hd commondataselection", @id = "title" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">First Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.FirstName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Last Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.LastName, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Middle Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.MiddleName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Email ID</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.EmailID, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Date of Birth</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.DOB, new { @class = "form-control year", @readonly = "readonly", @style = "background:none;" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Postal Address</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.PostalAddressID, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Mobile Number</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.MobileNo, new { @class = "form-control", @length = "12" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Phone Number</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.PhoneNo, new { @class = "form-control", @length = "12" })
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Trading Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.TradingName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">ABN</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.ABN, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="col-md-12 form-group regstn">
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Company Business Name</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.CompanyBusinessName, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Address</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.Address, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Suburb</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.suburb, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">State</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.state, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
+                    <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Postcode</label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                        @Html.TextBoxFor(p => p.postcode, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <button type="submit" class="btn-primary btn pull-right">Save</button>
+            </div>
+        </div>
+    </div>
+}
+<script src="~/js/datepicker.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".year").datepicker({
+            minViewMode: 2,
+            format: 'dd/mm/yyyy'
+        });
+    });
+    $(document).on('change', '#ClientType', function () {
+        if ($(this).val() == '2') {
+            $('#title').attr('disabled', 'disabled');
+            $('#FirstName').attr('disabled', 'disabled');
+            $('#LastName').attr('disabled', 'disabled');
+            $('#MiddleName').attr('disabled', 'disabled');
+            $('#TradingName').removeAttr('disabled');
+            $('#ABN').removeAttr('disabled');
+            $('#CompanyBusinessName').removeAttr('disabled');
+        } else if ($(this).val() == '1') {
+            $('#TradingName').attr('disabled', 'disabled');
+            $('#ABN').attr('disabled', 'disabled');
+            $('#CompanyBusinessName').attr('disabled', 'disabled');
+            $('#title').removeAttr('disabled');
+            $('#FirstName').removeAttr('disabled');
+            $('#LastName').removeAttr('disabled');
+            $('#MiddleName').removeAttr('disabled');
+        } else {
+            $('#title').removeAttr('disabled');
+            $('#FirstName').removeAttr('disabled');
+            $('#LastName').removeAttr('disabled');
+            $('#MiddleName').removeAttr('disabled');
+            $('#TradingName').removeAttr('disabled');
+            $('#ABN').removeAttr('disabled');
+            $('#CompanyBusinessName').removeAttr('disabled');
+        }
+    });
+</script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='customerRegisration']").validate({
+            rules: {
+                "FirstName": {
+                    required: {
+                        depends: function () {
+                            return ($("#ClientType").val() == '1');
+                        }
+                    },
+                    regex: /^[a-zA-Z ]*$/,
+                    maxlength: 50,
+                },
+                "LastName": {
+                    required: {
+                        depends: function () {
+                            return ($("#ClientType").val() == '1');
+                        }
+                    },
+                    regex: /^[a-zA-Z ]*$/,
+                    maxlength: 50,
+                },
+                "MiddleName": {
+                    regex: /^[a-zA-Z ]*$/,
+                    maxlength: 50,
+                },
+                "EmailID": {
+                    required: true,
+                    email: true,
+                    maxlength: 100,
+                },
+                "DOB": "required",
+                "MobileNo": {
+                    required: true,
+                    regex: /^[0-9 ]*$/,
+                    maxlength: 13,
+                },
+                "PhoneNo": {                  
+                    regex: /^[0-9 ]*$/,
+                    maxlength: 12,
+                },
+                "CompanyBusinessName": {
+                    required: {
+                        depends: function () {
+                            return ($("#ClientType").val() == '2');
+                        }
+                    },
+                    regex: /^[a-zA-Z ]*$/,
+                    maxlength: 50,
+                },
+                "TradingName": {
+                    regex: /^[a-zA-Z0-9]*$/,
+                    maxlength: 50,
+                },
+                "ABN": {
+                    regex: /^[a-zA-Z0-9]*$/,
+                    maxlength: 50,
+                },
+                "Address": "required",
+                "suburb": "required",
+                "state": "required",
+                "postcode": {
+                    required: true,
+                    regex: /^[0-9]*$/,
+                    maxlength: 5,
+                },
+            },
+            messages: {
+                "FirstName": {
+                    required: "Please enter first name",
+                    regex: "Special character & numeric not allowed",
+                    maxlength: "Max 50 character allowed",
+                },
+                "LastName": {
+                    required: "Please enter last name",
+                    regex: "Special character & numeric not allowed",
+                    maxlength: "Max 50 character allowed",
+                },
+                "MiddleName": {
+                    regex: "Special character & numeric not allowed",
+                    maxlength: "Max 50 character allowed",
+                },
+                "EmailID": {
+                    required: "Please enter e-mail",
+                    email: "Please enter valid email",
+                    maxlength: "Max 100 character allowed",
+                },
+                "DOB": "Please enter date of birth",
+                "MobileNo": {
+                    required: "Please enter mobile number",
+                    regex: "Only numeric are allowed",
+                    maxlength: "Max 13 character allowed",
+                },
+                "PhoneNo": {                  
+                    regex: "Only numeric are allowed",
+                    maxlength: "Max 12 character allowed",
+                },
+                "CompanyBusinessName": {
+                    required: "Please enter company business name",
+                    regex: "Special character & numeric not allowed",
+                    maxlength: "Max 50 character allowed",
+                },
+                "TradingName": {
+                    regex: "Special character not allowed",
+                    maxlength: "Max 50 character allowed",
+                },
+                "ABN": {
+                    regex: "Special character not allowed",
+                    maxlength: "Max 50 character allowed",
+                },
+                "Address": "Please enter address",
+                "suburb": "Please select suburb",
+                "state": "Please select state",
+                "postcode": {
+                    required: "Please enter post code",
+                    regex: "Only numeric are allowed",
+                    maxlength: "Max 5 character allowed",
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+</script>

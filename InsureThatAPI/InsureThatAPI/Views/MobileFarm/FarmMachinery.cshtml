@@ -78,7 +78,7 @@
                             </div>
                         </div>
                     </div>
-                    <p class="mini-text col-md-12">Note: farm machinery does not include any machine or implement that is required to be registered under any motor vehicle registration Act or legislation, whether or not such registration is in place. These can be covered under the motor section. </p>
+                    <p class="mini-text col-md-12">Note: Farm machinery does not include any machine or implement that is required to be registered under any motor vehicle registration Act or legislation, whether or not such registration is in place. These can be covered under the motor section. </p>
                     <div class="col-md-12">
                         <a href="#costumModal2" role="button" data-target="#costumModal2" data-toggle="modal"><span class="cover-options">Click here to see the cover available for farm machinery</span></a>
                         <div id="costumModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModal2" aria-hidden="false">
@@ -108,7 +108,7 @@
                 <div class="clearfix mb-md-30 mt-10 mb-10">
                     <p class="col-md-6 col-sm-6 col-xs-12">How much cover do you need for unspecified farm machinery?</p>
                     <div class="col-md-6 col-sm-6 col-xs-12">
-                        @Html.TextBoxFor(p => p.FPUnspecifiedMachineryFMObj.UnspecifiedMachinery, new { @class = "form-control form-border-bottom", @id = "farmstructures" })
+                      $  @Html.TextBoxFor(p => p.FPUnspecifiedMachineryFMObj.UnspecifiedMachinery, new { @style = "width:95%; display:inline-block;", @class = "form-control form-border-bottom", @id = "farmstructures" })
                         @Html.HiddenFor(p => p.FPUnspecifiedMachineryFMObj.EiId)
 
                     </div>
@@ -169,7 +169,7 @@
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <div class="col-md-4"><p>Total for specified items</p></div>
-                    <div class="col-md-8"><input type="text" name="totalspaceific" id="totalspaceific" class="form-control form-border-bottom"></div>
+                    <div class="col-md-8">$<input type="text" style="width:95%; display:inline-block;" name="totalspaceific" id="totalspaceific" class="form-control form-border-bottom"></div>
                 </div>
                 <div class="col-md-6 pull-right text-right">
                     <a href="@Url.Action("FarmContents", "MobileFarm", new { cid = @Model.CustomerId })" class="button-3d nomargin tab-linker quot-prev-btn">Prev</a>
@@ -494,16 +494,16 @@
 </div>
 <script src="~/js/datepicker.min.js"></script>
 <script type="text/javascript">
-                        $(function () {
-                            $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
-                        });
+    $(function () {
+        $(".year").datepicker({ minViewMode: 2, format: 'yyyy' });
+    });
 </script>
 <script type="text/javascript">
     function tnameAdd(id) {
         var countId = id + 1;
+        $('#tname-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
         var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.FPDescriptionsFMObj.DescriptionFM, new { @class = "form-control form-border-bottom", @id = "description" })@Html.HiddenFor(p => p.FPDescriptionsFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.FPYearFMObj.YearFM, new { @class = "form-control form-border-bottom year", @id = "year", @readonly = "readonly" })@Html.HiddenFor(p => p.FPYearFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.FPSerialNumberFMObj.SerialNumberFM, new { @class = "form-control form-border-bottom", @id = "serialnumber" })@Html.HiddenFor(p => p.FPSerialNumberFMObj.EiId)</td><td class="no-border"><div class="col-md-9 pt-10 pb-10">@Html.DropDownListFor(Model => Model.FPExcessFMObj.Excess, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom", @id = "excess" })@Html.HiddenFor(p => p.FPExcessFMObj.EiId)</div><td class="no-border">@Html.TextBoxFor(p => p.FPSumOfInsuredFMObj.SuminsuredFM, new { @class = "form-control form-border-bottom", @id = "suminsured" })@Html.HiddenFor(p => p.FPSumOfInsuredFMObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
-
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
@@ -525,6 +525,8 @@
                     $("#tname-tr-" + countId + ' #excess').attr('id', "excess" + countId);
 
                     $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                } else {
+                    $('#tname-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
                 }
             }
         });

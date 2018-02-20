@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using InsureThatAPI.Models;
 using InsureThatAPI.CommonMethods;
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace InsureThatAPI.Controllers
 {
@@ -18,7 +21,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult Livestock(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> Livestock(int? cid, int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> ClassofAnimalLivestock = new List<SelectListItem>();
@@ -31,55 +34,94 @@ namespace InsureThatAPI.Controllers
             AgeofAnimalLivestock = commonModel.AgeofAnimalLivestock();
 
             List<SelectListItem> UseofAnimalLivestock = new List<SelectListItem>();
-            UseofAnimalLivestock = commonModel.UseofAnimalLivestock();            
+            UseofAnimalLivestock = commonModel.UseofAnimalLivestock();
 
             List<SelectListItem> excessToPayLiveStock = new List<SelectListItem>();
             excessToPayLiveStock = commonModel.excessRate();
 
             FPLivestock FPLivestock = new FPLivestock();
-            if (Session["Policyinclustions"] != null)
+            var db = new MasterDataEntities();
+            if (cid != null)
             {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
-                if (Policyincllist != null)
-                {
-
-                   
-                        if (Policyincllist.Contains("LiveStockFarm"))
-                        {
-                           
-                        }
-                        else{ if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Machinery"))
-                        {
-                            //  return RedirectToAction("", "", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                            // return RedirectToAction("", "", new { cid = cid });
-                        }
-                    }
-                }
+                ViewBag.cid = cid;
+                FPLivestock.CustomerId = cid.Value;
             }
             else
             {
-                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 2 });
+                ViewBag.cid = FPLivestock.CustomerId;
             }
-            ViewBag.cid = cid;
-            if (cid != null)
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+            NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
+            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+            string apikey = null;
+            bool policyinclusion = policyinclusions.Exists(p => p.Name == "LiveStock");
+            if (Session["apiKey"] != null)
             {
-                FPLivestock.CustomerId = cid.Value;
+                apikey = Session["apiKey"].ToString();
+                FPLivestock.ApiKey = Session["apiKey"].ToString();
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
+            string policyid = null;
+            var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                FPLivestock.PolicyId = policyid;
+            }
+            else if (Session["Policyinclustions"] != null)
+            {
+                #region Policy Selected or not testing
+                List<SessionModel> PolicyInclustions = new List<SessionModel>();
+                FPLivestock.PolicyInclusions = new List<SessionModel>();
+                FPLivestock.PolicyInclusions = Policyincllist;
+
+                if (Policyincllist != null)
+                {
+                    if (Policyincllist != null)
+                    {
+                          if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        {
+                          
+
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        {
+                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Home Building"))
+                        {
+                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Home Content"))
+                        {
+                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                        {
+                            return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Motor"))
+                        {
+                            return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
+                        }
+                        if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        {
+                            if (Session["unId"] == null && Session["profileId"] == null)
+                            {
+                                Session["unId"] = Policyincllist.Where(p => p.name == "LiveStock").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "LiveStock").Select(p => p.ProfileId).First();
+                            }
+                        }
+                        else
+                        {
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                        }
+                    }
+                }
+                #endregion
             }
             FPLivestock.ClassOfAnimalFPObj = new ClassOfAnimalFP();
             FPLivestock.ClassOfAnimalFPObj.ClassOfAnimalList = ClassofAnimalLivestock;
@@ -93,7 +135,7 @@ namespace InsureThatAPI.Controllers
             FPLivestock.BreedOfAnimalFPObj.EiId = 63325;
 
             FPLivestock.AgeOfAnimalFPObj = new AgeOfAnimalFP();
-            FPLivestock.AgeOfAnimalFPObj.AgeOfAnimalList  = AgeofAnimalLivestock;
+            FPLivestock.AgeOfAnimalFPObj.AgeOfAnimalList = AgeofAnimalLivestock;
             FPLivestock.AgeOfAnimalFPObj.EiId = 63327;
 
             FPLivestock.ColourOfAnimalFPObj = new ColourOfAnimalFP();
@@ -113,7 +155,7 @@ namespace InsureThatAPI.Controllers
             FPLivestock.OptSoundHealthofAnimalFPObj.EiId = 63345;
 
             FPLivestock.DescSoundHealthofAnimalFPObj = new DescSoundHealthofAnimalFP();
-            FPLivestock.DescSoundHealthofAnimalFPObj.EiId = 63347;       
+            FPLivestock.DescSoundHealthofAnimalFPObj.EiId = 63347;
 
             FPLivestock.OptDiseaseOfAnimalFPObj = new OptDiseaseOfAnimalFP();
             FPLivestock.OptDiseaseOfAnimalFPObj.EiId = 63349;
@@ -142,7 +184,7 @@ namespace InsureThatAPI.Controllers
             FPLivestock.OptUnbornFoalFPObj = new OptUnbornFoalFP();
             FPLivestock.OptUnbornFoalFPObj.EiId = 63365;
 
-            FPLivestock.ExcessLivestockFPObj= new ExcessLivestockFP();
+            FPLivestock.ExcessLivestockFPObj = new ExcessLivestockFP();
             FPLivestock.ExcessLivestockFPObj.ExcessList = excessToPayLiveStock;
             FPLivestock.ExcessLivestockFPObj.EiId = 63375;
 
@@ -159,110 +201,179 @@ namespace InsureThatAPI.Controllers
             FPLivestock.AnnualStrawsandAmpoulesFPObj = new AnnualStrawsandAmpoulesFP();
             FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId = 63389;
 
-
-            var db = new MasterDataEntities();
-            string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(FarmPolicySection.LiveStockFarm) , Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
-            if (details != null && details.Any())
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = Convert.ToInt32(Session["unId"]);
+            int profileid = Convert.ToInt32(Session["profileId"]);
+            if (policyinclusion == true && PcId != null && PcId.HasValue)
             {
-                if (details.Exists(q => q.QuestionId == FPLivestock.ClassOfAnimalFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPLivestock.ClassOfAnimalFPObj.EiId).FirstOrDefault();
-                    FPLivestock.ClassOfAnimalFPObj.ClassofAnimal = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == FPLivestock.TypeOfAnimalFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPLivestock.TypeOfAnimalFPObj.EiId).FirstOrDefault();
-                    FPLivestock.TypeOfAnimalFPObj.TypeofAnimal = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
+                FPLivestock.ExistingPolicyInclustions = policyinclusions;
 
-                if (details.Exists(q => q.QuestionId == FPLivestock.BreedOfAnimalFPObj.EiId))
+                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                if (EmpResponse != null)
                 {
-                    FPLivestock.BreedOfAnimalFPObj.BreedofAnimal = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.BreedOfAnimalFPObj.EiId).FirstOrDefault().Answer);
+                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                 }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.AgeOfAnimalFPObj.EiId))
+            }
+            else
+            {
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    var loc = details.Where(q => q.QuestionId == FPLivestock.AgeOfAnimalFPObj.EiId).FirstOrDefault();
-                    FPLivestock.AgeOfAnimalFPObj.AgeofAnimal = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=LiveStockFarm&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                        }
+                    }
                 }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.ColourOfAnimalFPObj.EiId))
+                else if (PcId == null && Session["unId"] != null && Session["profileId"] != null)
                 {
-                    FPLivestock.ColourOfAnimalFPObj.ColourofAnimal = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.ColourOfAnimalFPObj.EiId).FirstOrDefault().Answer);
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                        }
+                    }
                 }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.UseOfAnimalFPObj.EiId))
+            }
+            if (unitdetails != null)
+            {
+                if (unitdetails.ProfileData != null)
                 {
-                    var loc = details.Where(q => q.QuestionId == FPLivestock.UseOfAnimalFPObj.EiId).FirstOrDefault();
-                    FPLivestock.UseOfAnimalFPObj.UseofAnimal = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ClassOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.ClassOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.ClassOfAnimalFPObj.ClassofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.TypeOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.TypeOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.TypeOfAnimalFPObj.TypeofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.BreedOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.BreedOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.BreedOfAnimalFPObj.BreedofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.AgeOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.AgeOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.AgeOfAnimalFPObj.AgeofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ColourOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.ColourOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.ColourOfAnimalFPObj.ColourofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.UseOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.UseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.UseOfAnimalFPObj.UseofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescBrandOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescBrandOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.DescBrandOfAnimalFPObj.BrandofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescMarksOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescMarksOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.DescMarksOfAnimalFPObj.MarkingsofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptSoundHealthofAnimalFPObj.HealthofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.DescSoundHealthofAnimalFPObj.Description = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptDiseaseOfAnimalFPObj.DiseaseofAnimal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.DescDiseaseOfAnimalFPObj.Description = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptAnimalSyndicatedFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptAnimalSyndicatedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptAnimalSyndicatedFPObj.AnimalSyndicated = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescAnimalSyndicatedFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescAnimalSyndicatedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.DescAnimalSyndicatedFPObj.Description = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.SumInsuredLivestockFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.SumInsuredLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.SumInsuredLivestockFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptInfertilityFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptInfertilityFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptInfertilityFPObj.Infertility = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptLossofUseLivestockFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptLossofUseLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptLossofUseLivestockFPObj.LossofUse = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptTheftLivestockFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptTheftLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptTheftLivestockFPObj.TheftOption = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptUnbornFoalFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptUnbornFoalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.OptUnbornFoalFPObj.UnbornFoal = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ExcessLivestockFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.ExcessLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.ExcessLivestockFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.NoOfContainersFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.NoOfContainersFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.NoOfContainersFPObj.NumberOfContainers = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.MaxStrawsandAmpoulesFPObj.StrawAndAmpoules = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.MaxValOneContainerFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.MaxValOneContainerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.MaxValOneContainerFPObj.MaxValoneContainer = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.AnnualStrawsandAmpoulesFPObj.AnnualStrawandAmpoules = val;
+                    }
                 }
-                if (details.Exists(q => q.QuestionId == FPLivestock.DescBrandOfAnimalFPObj.EiId))
-                {
-                    FPLivestock.DescBrandOfAnimalFPObj.BrandofAnimal = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.DescBrandOfAnimalFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.DescMarksOfAnimalFPObj.EiId))
-                {
-                    FPLivestock.DescMarksOfAnimalFPObj.MarkingsofAnimal = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.DescMarksOfAnimalFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId))
-                {
-                    FPLivestock.OptSoundHealthofAnimalFPObj.HealthofAnimal = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                
-                if (details.Exists(q => q.QuestionId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId))
-                {
-                    FPLivestock.DescSoundHealthofAnimalFPObj.Description = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId))
-                {
-                    FPLivestock.OptDiseaseOfAnimalFPObj.DiseaseofAnimal = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId))
-                {
-                    FPLivestock.DescDiseaseOfAnimalFPObj.Description = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.OptAnimalSyndicatedFPObj.EiId))
-                {
-                    FPLivestock.OptAnimalSyndicatedFPObj.AnimalSyndicated = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.OptAnimalSyndicatedFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.SumInsuredLivestockFPObj.EiId))
-                {
-                    FPLivestock.SumInsuredLivestockFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.SumInsuredLivestockFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.ExcessLivestockFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPLivestock.ExcessLivestockFPObj.EiId).FirstOrDefault();
-                    FPLivestock.ExcessLivestockFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.NoOfContainersFPObj.EiId))
-                {
-                    FPLivestock.NoOfContainersFPObj.NumberOfContainers = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.NoOfContainersFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId))
-                {
-                    FPLivestock.MaxStrawsandAmpoulesFPObj.StrawAndAmpoules = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPLivestock.MaxValOneContainerFPObj.EiId))
-                {
-                    FPLivestock.MaxValOneContainerFPObj.MaxValoneContainer = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.MaxValOneContainerFPObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId))
-                {
-                    FPLivestock.AnnualStrawsandAmpoulesFPObj.AnnualStrawandAmpoules = Convert.ToString(details.Where(q => q.QuestionId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId).FirstOrDefault().Answer);
-                }
-
             }
 
             return View(FPLivestock);
@@ -302,127 +413,8 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FPLivestock.CustomerId;
             }
             string policyid = null;
-            var db = new MasterDataEntities();
-            if (cid.HasValue && cid > 0)
-            {
-                if (FPLivestock.ClassOfAnimalFPObj != null && FPLivestock.ClassOfAnimalFPObj.EiId > 0 && FPLivestock.ClassOfAnimalFPObj.ClassofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.ClassOfAnimalFPObj.EiId, FPLivestock.ClassOfAnimalFPObj.ClassofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.TypeOfAnimalFPObj != null && FPLivestock.TypeOfAnimalFPObj.EiId > 0 && FPLivestock.TypeOfAnimalFPObj.TypeofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.TypeOfAnimalFPObj.EiId, FPLivestock.TypeOfAnimalFPObj.TypeofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.BreedOfAnimalFPObj != null && FPLivestock.BreedOfAnimalFPObj.EiId > 0 && FPLivestock.BreedOfAnimalFPObj.BreedofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.BreedOfAnimalFPObj.EiId, FPLivestock.BreedOfAnimalFPObj.BreedofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.AgeOfAnimalFPObj != null && FPLivestock.AgeOfAnimalFPObj.EiId > 0 && FPLivestock.AgeOfAnimalFPObj.AgeofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.AgeOfAnimalFPObj.EiId, FPLivestock.AgeOfAnimalFPObj.AgeofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.ColourOfAnimalFPObj != null && FPLivestock.ColourOfAnimalFPObj.EiId > 0 && FPLivestock.ColourOfAnimalFPObj.ColourofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.ColourOfAnimalFPObj.EiId, FPLivestock.ColourOfAnimalFPObj.ColourofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.UseOfAnimalFPObj != null && FPLivestock.UseOfAnimalFPObj.EiId > 0 && FPLivestock.UseOfAnimalFPObj.UseofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.UseOfAnimalFPObj.EiId, FPLivestock.UseOfAnimalFPObj.UseofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.DescBrandOfAnimalFPObj != null && FPLivestock.DescBrandOfAnimalFPObj.EiId > 0 && FPLivestock.DescBrandOfAnimalFPObj.EiId > 0 && FPLivestock.DescBrandOfAnimalFPObj.BrandofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.DescBrandOfAnimalFPObj.EiId, FPLivestock.DescBrandOfAnimalFPObj.BrandofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.DescMarksOfAnimalFPObj != null && FPLivestock.DescMarksOfAnimalFPObj.EiId > 0 && FPLivestock.DescMarksOfAnimalFPObj.MarkingsofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.DescMarksOfAnimalFPObj.EiId, FPLivestock.DescMarksOfAnimalFPObj.MarkingsofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.OptSoundHealthofAnimalFPObj != null && FPLivestock.OptSoundHealthofAnimalFPObj.EiId > 0 && FPLivestock.OptSoundHealthofAnimalFPObj.HealthofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptSoundHealthofAnimalFPObj.EiId, FPLivestock.OptSoundHealthofAnimalFPObj.HealthofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.DescSoundHealthofAnimalFPObj != null && FPLivestock.DescSoundHealthofAnimalFPObj.EiId > 0 && FPLivestock.DescSoundHealthofAnimalFPObj.Description != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.DescSoundHealthofAnimalFPObj.EiId, FPLivestock.DescSoundHealthofAnimalFPObj.Description.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.OptDiseaseOfAnimalFPObj != null && FPLivestock.OptDiseaseOfAnimalFPObj.EiId > 0 && FPLivestock.OptDiseaseOfAnimalFPObj.DiseaseofAnimal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptDiseaseOfAnimalFPObj.EiId, FPLivestock.OptDiseaseOfAnimalFPObj.DiseaseofAnimal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.DescDiseaseOfAnimalFPObj != null && FPLivestock.DescDiseaseOfAnimalFPObj.EiId > 0 && FPLivestock.DescDiseaseOfAnimalFPObj.Description != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.DescDiseaseOfAnimalFPObj.EiId, FPLivestock.DescDiseaseOfAnimalFPObj.Description.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.OptAnimalSyndicatedFPObj != null && FPLivestock.OptAnimalSyndicatedFPObj.EiId > 0 && FPLivestock.OptAnimalSyndicatedFPObj.AnimalSyndicated != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptAnimalSyndicatedFPObj.EiId, FPLivestock.OptAnimalSyndicatedFPObj.AnimalSyndicated.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.DescAnimalSyndicatedFPObj != null && FPLivestock.DescAnimalSyndicatedFPObj.EiId > 0 && FPLivestock.DescAnimalSyndicatedFPObj.Description != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.DescAnimalSyndicatedFPObj.EiId, FPLivestock.DescAnimalSyndicatedFPObj.Description.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.SumInsuredLivestockFPObj != null && FPLivestock.SumInsuredLivestockFPObj.EiId > 0 && FPLivestock.SumInsuredLivestockFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.SumInsuredLivestockFPObj.EiId, FPLivestock.SumInsuredLivestockFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPLivestock.OptInfertilityFPObj != null && FPLivestock.OptInfertilityFPObj.EiId > 0 && FPLivestock.OptInfertilityFPObj.Infertility != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptInfertilityFPObj.EiId, FPLivestock.OptInfertilityFPObj.Infertility.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.OptLossofUseLivestockFPObj != null && FPLivestock.OptLossofUseLivestockFPObj.EiId > 0 && FPLivestock.OptLossofUseLivestockFPObj.LossofUse != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptLossofUseLivestockFPObj.EiId, FPLivestock.OptLossofUseLivestockFPObj.LossofUse.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.OptTheftLivestockFPObj != null && FPLivestock.OptTheftLivestockFPObj.EiId > 0 && FPLivestock.OptTheftLivestockFPObj.TheftOption != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptTheftLivestockFPObj.EiId, FPLivestock.OptTheftLivestockFPObj.TheftOption.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.OptUnbornFoalFPObj != null && FPLivestock.OptUnbornFoalFPObj.EiId > 0 && FPLivestock.OptUnbornFoalFPObj.UnbornFoal != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.OptUnbornFoalFPObj.EiId, FPLivestock.OptUnbornFoalFPObj.UnbornFoal.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.ExcessLivestockFPObj != null && FPLivestock.ExcessLivestockFPObj.EiId > 0 && FPLivestock.ExcessLivestockFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.ExcessLivestockFPObj.EiId, FPLivestock.ExcessLivestockFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPLivestock.NoOfContainersFPObj != null && FPLivestock.NoOfContainersFPObj.EiId > 0 && FPLivestock.NoOfContainersFPObj.NumberOfContainers != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.NoOfContainersFPObj.EiId, FPLivestock.NoOfContainersFPObj.NumberOfContainers.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.MaxStrawsandAmpoulesFPObj != null && FPLivestock.MaxStrawsandAmpoulesFPObj.EiId > 0 && FPLivestock.MaxStrawsandAmpoulesFPObj.StrawAndAmpoules != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.MaxStrawsandAmpoulesFPObj.EiId, FPLivestock.MaxStrawsandAmpoulesFPObj.StrawAndAmpoules.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.MaxValOneContainerFPObj != null && FPLivestock.MaxValOneContainerFPObj.EiId > 0 && FPLivestock.MaxValOneContainerFPObj.MaxValoneContainer != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.MaxValOneContainerFPObj.EiId, FPLivestock.MaxValOneContainerFPObj.MaxValoneContainer.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPLivestock.AnnualStrawsandAmpoulesFPObj != null && FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId > 0 && FPLivestock.AnnualStrawsandAmpoulesFPObj.AnnualStrawandAmpoules != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPLivestock.CustomerId, Convert.ToInt32(FarmPolicySection.LiveStockFarm), FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId, FPLivestock.AnnualStrawsandAmpoulesFPObj.AnnualStrawandAmpoules.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-            }
+            Session["unId"] = null;
+            Session["profileId"] = null;
             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
         }
     }

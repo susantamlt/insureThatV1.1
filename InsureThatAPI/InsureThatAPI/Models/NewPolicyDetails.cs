@@ -6,7 +6,30 @@ using System.Web;
 
 namespace InsureThatAPI.Models
 {
-
+    public class SessionObject
+    {
+        public List<SessionModel> PolicyIncList { get; set; }
+    }
+    public class SessionModel
+    {
+        public int? UnitId { get; set; }
+        public int? ProfileId { get; set; }
+        public string name { get; set; }
+    }
+    public class PrintDataList
+    {
+        public string Name { get; set; }
+        public int PrintId { get; set; }
+    }
+    public class PrintDocument
+    {
+        public string ApiKey { get; set; }
+        public int? PcId { get; set; }
+        public int TrId { get; set; }
+        public List<PrintDataList> PrintData { get; set; }
+        public string Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+    }
     public class PolicyTypes
     {
         public int InsureId { get; set; }
@@ -97,7 +120,7 @@ namespace InsureThatAPI.Models
         public DateTime ExpiryDate { get; set; }
         public DateTime EffectiveDate { get; set; }
         public int? PrId { get; set; }
-        public int TrId { get; set; }
+        public int? TrId { get; set; }
         public int? IyId { get; set; }
         public string InsuredName { get; set; }
         public bool IsFloodCoverRequired { get; set; }
@@ -116,6 +139,7 @@ namespace InsureThatAPI.Models
         //public List<string> ErrorMessage { get; set; }
         //public List<string> ReferralList { get; set; }
         public string Reason { get; set; }
+        public int? InsuredId { get; set; }
     }
     public class NewPolicyDetailsRef
     {
@@ -174,7 +198,7 @@ namespace InsureThatAPI.Models
     public class StateData
     {
         public Elements Element { get; set; }
-        public int State { get; set; }
+        public string State { get; set; }
         public string Value { get; set; }
     }
     public class PremiumDetail
@@ -188,18 +212,39 @@ namespace InsureThatAPI.Models
         public float UnderwriterFee { get; set; }
         public float FeeGst { get; set; }
         public float InvoiceTotal { get; set; }
-        public bool Status { get; set; }
+        public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
 
     }
-    public class ViewEditPolicyDetails
+    public class Floodarea
     {
+        public int? FldDefault { get; set; }
+        public int? CustomerId { get; set; }
+        public int? policyType { get; set; }
+        public int FloodArea { get; set; }
+        public int? insureId { get; set; }
+    }
+    public class HomeProfile
+    {
+        public string ApiKey { get; set; }
+        public int UnId { get; set; }
+        public int AddressID { get; set; }
+        public string AddressLine { get; set; }
+        public string Suburb { get; set; }
+        public string State { get; set; }
+        public int Postcode { get; set; }
 
+
+    }
+        public class ViewEditPolicyDetails
+    {
+        public string PolicyStatus { get; set; }
         public int? AddressID { get; set; }
         public int CustomerId { get; set; }
         public string PcId { get; set; }
         public string ApiKey { get; set; }
         public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<SessionModel> PolicyInc { get; set; }
         public List<IT_GetPolicyInclusions_Result> PolicyInclusionssess { get; set; }
         public string PolicyInclusions { get; set; }
         public PolicyDetails PolicyData { get; set; }
@@ -214,13 +259,16 @@ namespace InsureThatAPI.Models
         public bool SelectedInclusion { get; set; }
         public List<string> ErrorMessage { get; set; }
         public string ReferralList { get; set; }
-
+        public float? UnderWritterFee { get; set; }
+        public float? GSTonFee { get; set; }
+        public float? InvoiceAmount { get; set; }
         public List<string> ReferralFullList { get; set; }
         public string Reason { get; set; }
         public List<string> IdentifierUpdates { get; set; }
         public List<ValueData> ValueData { get; set; }
         public List<StateData> StateData { get; set; }
         public ElementDetails ElementData { get; set; }
+      
         public string UserMessage { get; set; }
 
 
@@ -228,11 +276,11 @@ namespace InsureThatAPI.Models
     }
     public class AddressData
     {
-        public int AddressID { get; set; }
+        public int? AddressID { get; set; }
         public string AddressLine1 { get; set; }
         public string Suburb { get; set; }
         public string State { get; set; }
-        public int Postcode { get; set; }
+        public string Postcode { get; set; }
 
 
     }

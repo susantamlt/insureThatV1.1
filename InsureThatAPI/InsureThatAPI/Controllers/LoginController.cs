@@ -20,14 +20,30 @@ namespace InsureThatAPI.Controllers
         [HttpGet]
         public ActionResult AgentLogin()
         {
+            LogInDetails loginmodel = new LogInDetails();
+            loginmodel.Errors = new List<string>();
             try
             {
+                Session["UnId"] = null;
+                Session["ProfileId"] = null;
+                Session["Email"] = null;
+                Session["ApiKey"] = null;
+                Session["HprofileId"] = null;
+                Session["profileId"] = null;      
+                Session["Policyinclustions"] = null;
+                Session["EmailId"] = null;
+                Session["InsuredId"] = null;
+                Session["CustomerType"] = null;
+                Session["Actn"] = null;
+                Session["Policyinclustions"] = null;
+                Session["UnitId"] = null;
+
             }
             catch (Exception ex)
             {
 
             }
-            return View();
+            return View(loginmodel);
         }
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> AgentLogin(string UserName, string Password)
@@ -38,6 +54,7 @@ namespace InsureThatAPI.Controllers
                 LogInDetails loginmodel = new LogInDetails();
                 List<string> Errors = new List<string>();
                 loginref.ErrorMessage = new List<string>();
+                loginmodel.Errors = new List<string>();
                 var regexSpace = new Regex(@"\s");
                 if (UserName == null || UserName == string.Empty || string.IsNullOrWhiteSpace(UserName.Trim()) || Password == null || Password == string.Empty || string.IsNullOrWhiteSpace(Password.Trim()))
                 {
@@ -88,6 +105,20 @@ namespace InsureThatAPI.Controllers
                 }
                 else
                 {
+                    //#region Remove
+                    //LogInDetailsClass ld = new LogInDetailsClass();
+
+                    //LoginDetailsRef LoginDetailsRef = new LoginDetailsRef();
+                    //LoginDetailsRef.ErrorMessage = new List<string>();
+                    //LoginDetailsRef = await ld.GetLogInDetailsPage(UserName, Password);
+                    //{
+                    //    if(LoginDetailsRef.ErrorMessage!=null && LoginDetailsRef.ErrorMessage.Count()>0)
+                    //    {
+                    //        loginmodel.Errors = LoginDetailsRef.ErrorMessage;
+                    //        return View(loginmodel);
+                    //    }
+                    //}
+                    //#endregion
                     if (await CommonUseFunctionClass.CheckUser(UserName, Password))
                     {
                         string str = CommonUseFunctionClass.GenerateToken(UserName, 20);
@@ -133,11 +164,11 @@ namespace InsureThatAPI.Controllers
             {
                 MasterDataEntities db = new MasterDataEntities();
                 int? result = db.IT_GetForgetPasswordStatus(guid).FirstOrDefault();
-                if(result==0)
+                if (result == 0)
                 {
                     ViewBag.ErrorMessage = "Already used, URL is not valid.";
                 }
-                else if(result==1)
+                else if (result == 1)
                 {
 
                 }
@@ -159,7 +190,7 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult> ResetPassword(string guid,string Email, string Password)
+        public async System.Threading.Tasks.Task<ActionResult> ResetPassword(string guid, string Email, string Password)
         {
             MasterDataEntities db = new MasterDataEntities();
             ForgotPasswordDetailsRef FGDetailsRef = new ForgotPasswordDetailsRef();
@@ -173,7 +204,7 @@ namespace InsureThatAPI.Controllers
                 {
                     return RedirectToAction("ForgetPassword", "Login");
                 }
-           
+
                 string strEncrypt = string.Empty;
                 strEncrypt = LogInDetailsClass.Encrypt(Password, "TimsFirstEncryptionKey");
                 ForgotPasswordDetails fgModel = new ForgotPasswordDetails();
@@ -243,7 +274,7 @@ namespace InsureThatAPI.Controllers
             {
                 MasterDataEntities db = new MasterDataEntities();
                 Guid guid = Guid.NewGuid();
-            
+
                 string confirmationLink = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPassword", "Account", new { key = guid });
                 ForgotPasswordClass fpd = new ForgotPasswordClass();
                 fpd.SendEmail(frwd.Email, confirmationLink);

@@ -7,12 +7,15 @@ namespace InsureThatAPI.Models
 {
     public class UserDetails
     {
+        public int? InsuredId { get; set; }
+        public string ApiKey { get; set; }
         public int UserID { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int AddressID { get; set; }
         public int PostalAddressID { get; set; }
         public string MobileNo { get; set; }
+        public string MiddleName { get; set; }
         public string PhoneNo { get; set; }
         public DateTime DOB { get; set; }
         public string EmailID { get; set; }

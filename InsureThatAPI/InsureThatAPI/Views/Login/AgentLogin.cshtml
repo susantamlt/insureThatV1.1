@@ -1,17 +1,13 @@
 ﻿@model InsureThatAPI.Models.LogInDetails
 @{
     Layout = "";
-
 }
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 <head>
-
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="SemiColonWeb" />
-
-    <!-- Stylesheets
-    ============================================= -->
+    <!-- Stylesheets -->
     <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Raleway:300,400,500,600,700" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="~/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" href="~/css/layout.css" type="text/css" />
@@ -28,38 +24,32 @@
     <!--[if lt IE 9]>
         <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
     <![endif]-->
-    <!-- Document Title
-    ============================================= -->
+    <!-- Document Title -->
     <title>Insure that</title>
 </head>
 <body class="stretched">
-    <!-- Document Wrapper
-    ============================================= -->
+    <!-- Document Wrapper -->
     <div id="wrapper" class="clearfix">
-        <!-- Header
-        ============================================= -->
+        <!-- Header -->
         <header id="header" class="full-header transparent-header">
             <div id="header-wrap">
                 <div class="container clearfix">
                     <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
-                    <!-- Logo
-                    ============================================= -->
+                    <!-- Logo -->
                     <div id="logo">
                         <a href="#" class="standard-logo" data-dark-logo="~/images/logo-dark.png"><img src="~/images/logo.png" alt="Canvas Logo"></a>
                         <a href="#" class="retina-logo" data-dark-logo="~/images/logo-dark@2x.png"><img src="~/images/logo@2x.png" alt="Canvas Logo"></a>
                     </div><!-- #logo end -->
-                    <!-- Primary Navigation
-                    ============================================= -->
+                    <!-- Primary Navigation -->
                     <nav id="primary-menu">
-                        <ul>
+                        @*<ul>
                             <li class="current"><a href="#"><div>Menu 1</div></a> </li>
                             <li><a href="#"><div>Menu 2</div></a> </li>
                             <li><a href="#"><div>Menu 3</div></a> </li>
-                        </ul>
+                        </ul>*@
 
-                        <!-- Top Cart
-                        ============================================= -->
-                        <div id="top-cart">
+                        <!-- Top Cart -->
+                        @*<div id="top-cart">
                             <a href="#" id="top-cart-trigger"><i class="icon-th-large"></i></a>
                             <div class="top-cart-content">
                                 <div class="top-cart-title">
@@ -92,21 +82,21 @@
                                     <button class="button button-3d button-small nomargin fright">Proceed Quote</button>
                                 </div>
                             </div>
-                        </div><!-- #top-cart end -->
-                        <!-- Top Search
-                        ============================================= -->
-                        <div id="top-search">
+                        </div>*@
+                        <!-- #top-cart end -->
+                        <!-- Top Search -->
+                        @*<div id="top-search">
                             <a href="#" id="top-search-trigger"><i class="icon-search3"></i><i class="icon-line-cross"></i></a>
                             <form action="#" method="get">
                                 <input type="text" name="q" class="form-control" value="" placeholder="Type &amp; Hit Enter..">
                             </form>
-                        </div><!-- #top-search end -->
+                        </div>*@<!-- #top-search end -->
                     </nav><!-- #primary-menu end -->
                 </div>
             </div>
-        </header><!-- #header end -->
-        <!-- Content
-        ============================================= -->
+        </header>
+        <!-- #header end -->
+        <!-- Content -->
         <section id="content">
             <div class="content-wrap">
                 <div class="container clearfix">
@@ -123,21 +113,22 @@
                             {
                                 @Html.AntiForgeryToken()
                                 <div class="col-md-12 form-group">
-                                    @*<div id="successmessages">
-                                            @if (TempData["Success"] != null && TempData["Success"] != "")
-                                            {
-                                                <li style="color:green;">@TempData["Success"]</li>
-                                            }
-                                        </div>*@
                                     <div id="errormessages">
-                                        @if (ViewBag.ErrorMessage != null && ViewBag.ErrorMessage != "")
+                                        @*@if (Model.Errors != null && Model.Errors.Count()>0)
+                                            {
+                                                for (int i = 0; i < Model.Errors.Count(); i++)
+                                                {
+                                                <li style="color:red;">@Model.Errors[i]</li>
+                                                }
+                                            }*@
+                                        @if (ViewBag.ErrorMessage != null)
                                         {
                                             <li style="color:red;">@ViewBag.ErrorMessage</li>
                                         }
                                     </div>
                                 </div>
                                 <div class="col-md-12 form-group">
-                                    <label class="col-lg-3 col-md-3 col-sm-4 col-xs-12">USER NAME</label>
+                                    <label class="col-lg-3 col-md-3 col-sm-4 col-xs-12">Log-in</label>
                                     <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
                                         @Html.TextBoxFor(model => model.UserName, new { @class = "form-control form-border-bottom", @id = "username" })
                                         @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "text-danger" })
@@ -145,7 +136,7 @@
                                 </div>
                                 <div class="clearfix"></div>
                                 <div class="col-md-12 form-group">
-                                    <label class="col-lg-3 col-md-3 col-sm-4 col-xs-12">PASSWORD</label>
+                                    <label class="col-lg-3 col-md-3 col-sm-4 col-xs-12">Password</label>
                                     <div class="col-lg-9 col-md-9 col-sm-8 col-xs-12">
                                         @Html.PasswordFor(model => model.Password, new { @class = "form-control form-border-bottom", @id = "password" })
                                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
@@ -154,7 +145,7 @@
                                 <div class="clearfix">&nbsp;</div>
                                 <div class="col-md-12" style="margin-left: 15px;">
                                     @*<a href="~/Login/ForgetPassword">Forgot Password?</a>*@
-                                    <a href="#">Forgot Password?</a>
+                                    <a href="#">Forgotten Password</a>
                                     <button type="submit" class="btn-primary btn pull-right" id="submituserdetails">Login</button>
                                 </div>
                             }
@@ -162,12 +153,11 @@
                     </div>
                 </div>
             </div>
-        </section><!-- #content end -->
-        <!-- Footer
-        ============================================= -->
+        </section>
+        <!-- #content end -->
+        <!-- Footer -->
         <footer id="footer">
-            <!-- Copyrights
-            ============================================= -->
+            <!-- Copyrights -->
             <div id="copyrights">
                 <div class="container-fluid clearfix">
                     <div class="col_half">
@@ -190,12 +180,13 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- #copyrights end -->
-        </footer><!-- #footer end -->
-
-    </div><!-- #wrapper end -->
-    <!-- Go To Top
-    ============================================= -->
+            </div>
+            <!-- #copyrights end -->
+        </footer>
+        <!-- #footer end -->
+    </div>
+    <!-- #wrapper end -->
+    <!-- Go To Top -->
     <div id="gotoTop" class="icon-angle-up"></div>
     <script type="text/javascript" src="~/js/jquery.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
@@ -218,7 +209,7 @@
                     "Password": "required",
                 },
                 messages: {
-                    "UserName": "Please enter User Name",
+                    "UserName": "Please enter Username",
                     "Password": "Please enter Password",
                 },
                 onfocusout: function (element) {

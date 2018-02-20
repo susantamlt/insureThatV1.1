@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using InsureThatAPI.Models;//append model
 using InsureThatAPI.CommonMethods;//append Common Methods
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Net.Http;
+using Newtonsoft.Json;
+using System.Net.Http.Headers;
 
 namespace InsureThatAPI.Controllers
 {
@@ -18,85 +21,110 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult FarmInterruption(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> FarmInterruption(int? cid, int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> ExcessToPay = new List<SelectListItem>();
             ExcessToPay = commonModel.excessRate();
 
             FPFarmInterruption FPFarmInterruption = new FPFarmInterruption();
-
+            string ApiKey = null;
+            if (Session["ApiKey"] != null)
+            {
+                ApiKey = Session["ApiKey"].ToString();
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
+            var Policyincllist = new List<SessionModel>();
             if (Session["Policyinclustions"] != null)
             {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
+                Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
                 if (Policyincllist != null)
                 {
-                    if (Policyincllist.Contains("FarmInteruption"))
+                    if (Policyincllist != null)
                     {
+                        if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
+                        {
 
-                    }
-                    else
-                    {
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
+                        {
+                            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Burglary"))
+                        {
+                            return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                        {
+                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Money"))
+                        {
+                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Transit"))
+                        {
+                            return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                        {
+                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        {
+                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
-                         if (Policyincllist.Contains("FarmLiability"))
-                        {
-                            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
                         }
-                        else if (Policyincllist.Contains("Burglary"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
                         {
-                            return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid });
+                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Contains("Electronics"))
+                        else if (Policyincllist.Exists(p => p.name == "Home Building"))
                         {
-                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
+                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Contains("Money"))
+                        else if (Policyincllist.Exists(p => p.name == "Home Content"))
                         {
-                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid });
+                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Contains("Transit"))
+                        else if (Policyincllist.Exists(p => p.name == "Machinery"))
                         {
-                            return RedirectToAction("FarmPolicyTransit", "Transit", new { cid = cid });
+                            return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Contains("ValuablesFarm"))
+                        else if (Policyincllist.Exists(p => p.name == "Motor"))
                         {
-                              return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid });
+                            return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Contains("LiveStockFarm"))
+                        if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
                         {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
+                            if (Session["unId"] == null && Session["profileId"] == null)
+                            {
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Farm Interuption").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Farm Interuption").Select(p => p.ProfileId).First();
+                            }
                         }
-                        else if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
+                        else
                         {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Machinery"))
-                        {
-                            //  return RedirectToAction("", "", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                            // return RedirectToAction("", "", new { cid = cid });
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
                         }
                     }
+
                 }
             }
             else
             {
-                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 2 });
+                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 1021 });
             }
-            ViewBag.cid = cid;
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+            NewPolicyDetailsClass FarmDetailsmodel = new NewPolicyDetailsClass();
+
+
             if (cid != null)
             {
+                ViewBag.cid = cid;
                 FPFarmInterruption.CustomerId = cid.Value;
             }
             FPFarmInterruption.ExpFarmIncomeNextYearFPObj = new ExpFarmIncomeNextYearFP();
@@ -144,80 +172,189 @@ namespace InsureThatAPI.Controllers
 
             var db = new MasterDataEntities();
             string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(FarmPolicySection.FarmInteruption), Convert.ToInt32(PolicyType.FarmPolicy),policyid).ToList();
-            if (details != null && details.Any())
+            if (cid != null)
             {
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.ExpFarmIncomeNextYearFPObj.EiId))
+                ViewBag.cid = cid;
+                FPFarmInterruption.CustomerId = cid.Value;
+            }
+            else
+            {
+                ViewBag.cid = FPFarmInterruption.CustomerId;
+            }
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = 0;
+            int profileid = 0;
+            int Fprofileid = 0;
+            if (Session["unId"] != null && Session["ProfileId"] != null)
+            {
+                unid = Convert.ToInt32(Session["unId"]);
+                profileid = Convert.ToInt32(Session["profileId"]);
+            }
+            if (Session["FProfileId"] != null)
+            {
+                Fprofileid = Convert.ToInt32(Session["FprofileId"]);
+            }
+            if (Session["Policyinclustions"] != null)
+            {
+                FPFarmInterruption.PolicyInclusions = Policyincllist;
+            }
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPFarmInterruption.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    FPFarmInterruption.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.ExpFarmIncomeNextYearFPObj.EiId).FirstOrDefault().Answer);
+                    FPFarmInterruption.PolicyInclusion = policyinclusions;
                 }
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.SumInsuredFarmIncomeFPObj.EiId))
+                FPFarmInterruption.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
                 {
-                    FPFarmInterruption.SumInsuredFarmIncomeFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.SumInsuredFarmIncomeFPObj.EiId).FirstOrDefault().Answer);
+                    policyid = PcId.ToString();
+                    FPFarmInterruption.PolicyId = policyid;
                 }
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId))
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Farm Interuption");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-                    FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId).FirstOrDefault().Answer);
+
+                    int sectionId = policyinclusions.Where(p => p.Name == "Farm Interuption" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Farm Interuption" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
                 }
-
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.ExcessFarmIncomeFPObj.EiId))
+            }
+            else
+            {
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    var loc = details.Where(q => q.QuestionId == FPFarmInterruption.ExcessFarmIncomeFPObj.EiId).FirstOrDefault();
-                    FPFarmInterruption.ExcessFarmIncomeFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Interuption&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                            if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Farm Interuption"))
+                            {
+                                var policyhomelist = Policyincllist.FindAll(p => p.name == "Farm Interuption").ToList();
+                                if (policyhomelist != null && policyhomelist.Count() > 0)
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Farm Interuption").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Farm Interuption").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                                else
+                                {
+                                    Policyincllist.FindAll(p => p.name == "Farm Interuption").First().UnitId = unitdetails.SectionData.UnId;
+
+                                    Policyincllist.FindAll(p => p.name == "Farm Interuption").First().ProfileId = unitdetails.SectionData.ProfileUnId;
+                                }
+                            }
+                        }
+                    }
                 }
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.ExpAgistIncomeNextYearFPObj.EiId))
+                else
                 {
-                    FPFarmInterruption.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.ExpAgistIncomeNextYearFPObj.EiId).FirstOrDefault().Answer);
+                    if (PcId == null && Session["unId"] != null && (Session["profileId"] != null || (Fprofileid != null && Fprofileid < 0)))
+                    {
+                        if (profileid == null || profileid == 0)
+                        {
+                            profileid = Fprofileid;
+                        }
+                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                        var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponse != null)
+                        {
+                            unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                            if (unitdetails != null && unitdetails.SectionData != null)
+                            {
+                                Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            }
+                        }
+                    }
                 }
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId))
+            }
+            if (unitdetails != null)
+            {
+                if (unitdetails.ProfileData != null)
                 {
-                    FPFarmInterruption.SumInsuredAgistIncomeFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId).FirstOrDefault().Answer);
-                }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.ExcessAgistIncomeFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.ExcessAgistIncomeFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.ExcessAgistIncomeFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.ExcessExtraCostFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.ExcessExtraCostFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.ExcessExtraCostFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.ExcessFarmIncomeFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.ExcessFarmIncomeFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.ExcessFarmIncomeFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.ExcessShearingDelayFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.ExcessShearingDelayFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.ExcessShearingDelayFPObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.ExpAgistIncomeNextYearFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.ExpAgistIncomeNextYearFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.ExpFarmIncomeNextYearFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.ExpFarmIncomeNextYearFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.SumInsuredAgistIncomeFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.SumInsuredExtraCostFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.SumInsuredExtraCostFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.SumInsuredExtraCostFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.SumInsuredFarmIncomeFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.SumInsuredFarmIncomeFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.SumInsuredFarmIncomeFPObj.SumInsured = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPFarmInterruption.SumInsuredShearingDelayFPObj.SumInsured = val;
+                    }
 
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId))
-                {
-                    FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId).FirstOrDefault().Answer);
-                }
 
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.ExcessAgistIncomeFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPFarmInterruption.ExcessAgistIncomeFPObj.EiId).FirstOrDefault();
-                    FPFarmInterruption.ExcessAgistIncomeFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.SumInsuredExtraCostFPObj.EiId))
-                {
-                    FPFarmInterruption.SumInsuredExtraCostFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.SumInsuredExtraCostFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId))
-                {
-                    FPFarmInterruption.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.ExcessExtraCostFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPFarmInterruption.ExcessExtraCostFPObj.EiId).FirstOrDefault();
-                    FPFarmInterruption.ExcessExtraCostFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId))
-                {
-                    FPFarmInterruption.SumInsuredShearingDelayFPObj.SumInsured = Convert.ToString(details.Where(q => q.QuestionId == FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId).FirstOrDefault().Answer);
-                }
-
-
-                if (details.Exists(q => q.QuestionId == FPFarmInterruption.ExcessShearingDelayFPObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == FPFarmInterruption.ExcessShearingDelayFPObj.EiId).FirstOrDefault();
-                    FPFarmInterruption.ExcessShearingDelayFPObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
                 }
             }
 
@@ -247,73 +384,8 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-
-                if (FPFarmInterruption.ExpFarmIncomeNextYearFPObj != null && FPFarmInterruption.ExpFarmIncomeNextYearFPObj.EiId > 0 && FPFarmInterruption.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.ExpFarmIncomeNextYearFPObj.EiId, FPFarmInterruption.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear.ToString(), Convert.ToInt32(PolicyType.FarmPolicy),policyid);
-                }
-
-                if (FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj != null && FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId > 0 && FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId, FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.SumInsuredFarmIncomeFPObj != null && FPFarmInterruption.SumInsuredFarmIncomeFPObj.EiId > 0 && FPFarmInterruption.SumInsuredFarmIncomeFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.SumInsuredFarmIncomeFPObj.EiId, FPFarmInterruption.SumInsuredFarmIncomeFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.ExcessFarmIncomeFPObj != null && FPFarmInterruption.ExcessFarmIncomeFPObj.EiId > 0 && FPFarmInterruption.ExcessFarmIncomeFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.ExcessFarmIncomeFPObj.EiId, FPFarmInterruption.ExcessFarmIncomeFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.ExpAgistIncomeNextYearFPObj != null && FPFarmInterruption.ExpAgistIncomeNextYearFPObj.EiId > 0 && FPFarmInterruption.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.ExpAgistIncomeNextYearFPObj.EiId, FPFarmInterruption.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj != null && FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId > 0 && FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId, FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.SumInsuredAgistIncomeFPObj != null && FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId > 0 && FPFarmInterruption.SumInsuredAgistIncomeFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId, FPFarmInterruption.SumInsuredAgistIncomeFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.ExcessAgistIncomeFPObj != null && FPFarmInterruption.ExcessAgistIncomeFPObj.EiId > 0 && FPFarmInterruption.ExcessAgistIncomeFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.ExcessAgistIncomeFPObj.EiId, FPFarmInterruption.ExcessAgistIncomeFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (FPFarmInterruption.OptExtraCostIndemnityPerFPObj != null && FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId > 0 && FPFarmInterruption.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId, FPFarmInterruption.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.SumInsuredExtraCostFPObj != null && FPFarmInterruption.SumInsuredExtraCostFPObj.EiId > 0 && FPFarmInterruption.SumInsuredExtraCostFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.SumInsuredExtraCostFPObj.EiId, FPFarmInterruption.SumInsuredExtraCostFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.ExcessExtraCostFPObj != null && FPFarmInterruption.ExcessExtraCostFPObj.EiId > 0 && FPFarmInterruption.ExcessExtraCostFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.ExcessExtraCostFPObj.EiId, FPFarmInterruption.ExcessExtraCostFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.SumInsuredShearingDelayFPObj != null && FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId > 0 && FPFarmInterruption.SumInsuredShearingDelayFPObj.SumInsured != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId, FPFarmInterruption.SumInsuredShearingDelayFPObj.SumInsured.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPFarmInterruption.ExcessShearingDelayFPObj != null && FPFarmInterruption.ExcessShearingDelayFPObj.EiId > 0 && FPFarmInterruption.ExcessShearingDelayFPObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPFarmInterruption.CustomerId, Convert.ToInt32(FarmPolicySection.FarmInteruption), FPFarmInterruption.ExcessShearingDelayFPObj.EiId, FPFarmInterruption.ExcessShearingDelayFPObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-            }
+            Session["unId"] = null;
+            Session["profileId"] = null;
             return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid });
         }
     }
