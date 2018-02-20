@@ -51,6 +51,7 @@ namespace InsureThatAPI.Models
         public DescribeBusinesses DescribebusinessObj { get; set; }
         public Premiums PremiumObj { get; set; }
         public Locations LocationObjs { get; set; }
+        public List<ValueDatas> LocationObjsList { get; set; }
         public CoverHomeBuildings CoverhomebuildingObj { get; set; }
         public Locations LocationObjss { get; set; }
         public CostForRebuilding CostforRebuildingObj { get; set; }
@@ -62,6 +63,7 @@ namespace InsureThatAPI.Models
         public AgeDiscounts AgediscountObj { get; set; }
         public Premiums PremiumObjs { get; set; }
         public NameOfInstitutionsRls NameInstitutionsObj { get; set; }
+        public List<ValueDatas> NameInstitutionsObjList { get; set; }
         public LastRewired LastRewiredObj { get; set; }
         public LastReplumbed LastReplumbedObj { get; set; }
         public locatedOnAFarm locatedfarmObj { get; set; }

@@ -234,7 +234,7 @@
                             <div class="col-md-6"><p>Please advise details such as the model number of a tractor, the type of caravan etc</p></div>
                             <div class="col-md-6">
                                 @*@Html.DropDownListFor(p => p.FmmcscdObj.FmScd, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control form-border-bottom vlidationInsure vehicle commondataselection", @id = "details2", @data_eiid = @Model.FmmcscdObj.EiId })
-                                @Html.HiddenFor(p => p.FmmcscdObj.EiId)*@
+                                    @Html.HiddenFor(p => p.FmmcscdObj.EiId)*@
                                 @Html.TextBoxFor(p => p.FmmcscdObj.FmScd, new { @class = "form-control form-border-bottom vehicle vlidationInsure commondatatest", @id = "FmScd", @data_eiid = @Model.FmmcscdObj.EiId })
                                 @Html.HiddenFor(p => p.FmmcscdObj.EiId)
                                 <label id="FmmcscdObj.FmScd-error" class="error" for="FmmcscdObj.FmScd"></label>
@@ -274,9 +274,27 @@
                     <div class="mt-10 mb-10 col-md-12">
                         <div class="col-md-4"><p>Address</p></div>
                         <div class="col-md-8">
-                            @Html.DropDownListFor(p => p.AdaddressObj.Address, @Model.AdaddressObj.AddressList, new { @class = "commondataselection vlidationInsure form-control form-border-bottom", @id = "Address", @data_eiid = @Model.AdaddressObj.EiId })
-                            @Html.HiddenFor(p => p.AdaddressObj.EiId)
-                            <label id="AdaddressObj.Address-error" class="error" for="AdaddressObj.Address"></label>
+                            <div class="col-md-11" style="padding-left:0px;padding-right:0px;">
+                                @Html.TextBoxFor(p => p.AdaddressObj.Address, new {@style="width:100%", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.AdaddressObj.EiId, @data_itid = "0", data_regex = "AN", @id = "Address", @readonly = "readonly" })
+                                @Html.HiddenFor(p => p.AdaddressObj.EiId)                            
+                                <label id="AdaddressObj.Address-error" class="error" for="AdaddressObj.Address"></label>
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" id="openNewAddressSet" class="form-control"></button>
+                            </div>
+                        </div> 
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12" id="newAddressSet" style="display:none;">
+                        <div class="col-md-4"><p></p></div>
+                        <div class="col-md-8">
+                            <div class="col-md-6">
+                                <input type="text" value="" class="form-control form-border-bottom" placeholder="street address" id="addresshome" name="addresshome" />
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control vlidationInsure select2hd " id="CoverDetailsSuburb" name="CoverDetailsSuburb" placeholder="Suburb" style="width:100%">
+                                    <option value="">Suburb</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div class="mt-10 mb-10 col-md-12">
@@ -520,7 +538,14 @@
                                 <tbody>
                                     <tr id="tnameCD-tr-1">
                                         <td class="no-border">
-                                            @Html.DropDownListFor(p => p.DescriptionObj.Description, @Model.DescriptionObj.DescriptionList, new { @class = "form-control vlidationInsure form-border-bottom commondataselection", @id = "description1", @data_eiid = @Model.DescriptionObj.EiId })
+                                            @if (@Model.CoveroptionObj.Coveroption != "1")
+                                            {
+                                                @Html.DropDownListFor(p => p.DescriptionObj.Description, @Model.DescriptionObj.DescriptionList, new { @class = "form-control newVisibleVCD vlidationInsure form-border-bottom commondataselection", @id = "description1", @data_eiid = @Model.DescriptionObj.EiId })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-border-bottom newVisibleVCD vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @data_itid = "0", data_regex = "AN", @id = "description1" })
+                                            }
                                             @Html.HiddenFor(p => p.DescriptionObj.EiId)
                                         </td>
                                         <td class="no-border">
@@ -1563,9 +1588,14 @@
                 }
             }
             if (nameAttr == "DescriptionObj.Description") {
+                var regex = /^[a-zA-Z0-9 ]*$/;
                 if ($('#ptab4 input[name="AccessoriesObj.Accessories"]:checked').val() == '1' && newval == '') {
                     $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab4 label[for='" + nameAttr + "']").text("Please select description").css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval)) {
+                    $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab4 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
                     valid = 0;
                 } else {
                     $('#ptab4 #' + id).css({ "border": "" });
@@ -1710,7 +1740,7 @@
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
         }
-        if (ItIdN == 'undefined' || ItIdN == "") {
+        if (ItIdN == undefined || ItIdN == "") {
             var ItId = "0";
         } else {
             var ItId = ItIdN;
@@ -1836,11 +1866,12 @@
         $("#tname-tr-" + countId + " .form-control").attr("data-itid", id);
         var newOptionForDRP = '<option value="">--Select--</option><option value="1">Male</option><option value="2">Female</option>';
         $("#tname-tr-" + countId + ' #gender').html(newOptionForDRP);
-        $("#tname-tr-" + countId + ' #drivername').attr('id', 'drivername' + countId).val('');
-        $("#tname-tr-" + countId + ' #age').attr('id', 'age' + countId).val('');
-        $("#tname-tr-" + countId + ' #gender').attr('id', 'gender' + countId).val('');
-        $("#tname-tr-" + countId + ' #convictions').attr('id', 'convictions' + countId).val('');
-        $("#tname-tr-" + countId + ' #percentage').attr('id', 'percentage' + countId).val('');
+        $("#tname-tr-" + countId + " .form-control").val('');
+        $("#tname-tr-" + countId + ' #drivername').attr('id', 'drivername' + countId);
+        $("#tname-tr-" + countId + ' #age').attr('id', 'age' + countId);
+        $("#tname-tr-" + countId + ' #gender').attr('id', 'gender' + countId);
+        $("#tname-tr-" + countId + ' #convictions').attr('id', 'convictions' + countId);
+        $("#tname-tr-" + countId + ' #percentage').attr('id', 'percentage' + countId);
         $("tr > td > .datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
     }
     function tnameRemove(id) {
@@ -1870,31 +1901,82 @@
         var newvalLS = commaReplace(sum);
         $("#totalcoverCD").val(newvalLS);
     });
+    $(document).on('click', '.commondataradioNewCoveroptionObj', function () {
+        var cncoverValue = $("#ptab4 input[name='CoveroptionObj.Coveroption']:checked").val();
+        if (cncoverValue == 1) {
+            $(".newVisibleVCD:visible").each(function () {
+                var idCD = $(this).attr('id');
+                var idCDITID = $(this).data('itid');
+                var htmlCdnew = '@Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class= "form-control form-border-bottom newVisibleVCD vlidationInsure commondatatest", @data_eiid= @Model.DescriptionObj.EiId, @data_itid="", data_regex="AN",@id= "description" })@Html.HiddenFor(p => p.DescriptionObj.EiId)';
+                $('#' + idCD).parent().html(htmlCdnew);
+                $('#ptab4 #description').attr("data-itid", idCDITID);
+                $('#ptab4 #description').val('');
+                $('#ptab4 #description').attr('id', idCD);
+            });
+        } else {
+            $(".newVisibleVCD:visible").each(function () {
+                var idCD = $(this).attr('id');
+                var idCDITID = $(this).data('itid');
+                var htmlCdnew = '@Html.DropDownListFor(p => p.DescriptionObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom newVisibleVCD vlidationInsure commondataselection", @id = "description", @data_eiid = @Model.DescriptionObj.EiId, @data_itid = "" })@Html.HiddenFor(p => p.DescriptionObj.EiId)';
+                $.ajax({
+                    url: '/motorcover/motorajaxcontent',
+                    type: 'POST',
+                    data: { "id": 1, "content": "coverDetails" },
+                    success: function (response) {
+                        var html1 = '';
+                        if (response.status == true) {
+                            $.each(response.des, function (i, v) {
+                                html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                            });
+                            $('#' + idCD).parent().html(htmlCdnew);
+                            $('#ptab4 #description').html(html1);
+                            $('#ptab4 #description').attr("data-itid", idCDITID);
+                            $('#ptab4 #description').val('');
+                            $('#ptab4 #description').attr('id', idCD);
+                        }
+                    }
+                });
+            });
+        }
+    });
     function tnameAddCD(id) {
         var countId = id + 1;
+        var cdNewComprehensiveCover = $("#ptab4 input[name='CoveroptionObj.Coveroption']:checked").val();
         $('#tnameCD-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveCD(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tnameCD-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom vlidationInsure commondataselection", @id = "description", @data_eiid = @Model.DescriptionObj.EiId })@Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SumnsuredObj.Suminsured, new {@style="display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice suminsuredCoverDetails", @id = "suminsured", @data_eiid = @Model.SumnsuredObj.EiId, @data_regex = "N" })@Html.HiddenFor(p => p.SumnsuredObj.EiId)</td><td class="no-border" id="tnameCD-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddCD('+countId+')" class="button-3d">+</a></td></tr>';
-        $.ajax({
-            url: '/motorcover/motorajaxcontent',
-            type: 'POST',
-            data: {"id":countId,"content":"coverDetails" },
-            success: function (response) {
-                if (response.status == true) {
-                    var html1 = '';
-                    $.each(response.des, function (i, v) {
-                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
-                    });
-                    $("#tnameCD-" + id).html(replaceA);
-                    $("#tnameCD-tr-" + id).after(html);
-                    $("#tnameCD-tr-" + countId + ' #description').html(html1);
-                    $("#tnameCD-tr-" + countId + ' #description').attr('id', 'description' + countId).val('');
-                    $("#tnameCD-tr-" + countId + ' #suminsured').attr('id', 'suminsured' + countId).val('');
-                } else {
-                    $('#tnameCD-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
+        if (cdNewComprehensiveCover == 1) {
+            var html = '<tr id="tnameCD-tr-' + countId +'"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class= "form-control form-border-bottom newVisibleVCD vlidationInsure commondatatest", @data_eiid= @Model.DescriptionObj.EiId, @data_itid="", data_regex="AN",@id= "description" })@Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SumnsuredObj.Suminsured, new {@style="display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice suminsuredCoverDetails", @id = "suminsured", @data_eiid = @Model.SumnsuredObj.EiId, @data_regex = "N", @data_itid = "" })@Html.HiddenFor(p => p.SumnsuredObj.EiId)</td><td class="no-border" id="tnameCD-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddCD('+countId+')" class="button-3d">+</a></td></tr>';
+            $("#tnameCD-" + id).html(replaceA);
+            $("#tnameCD-tr-" + id).after(html);
+            $("#tnameCD-tr-" + countId + " .form-control").attr("data-itid", id);
+            $("#tnameCD-tr-" + countId + " .form-control").val('');
+            $("#tnameCD-tr-" + countId + ' #description').attr('id', 'description' + countId);
+            $("#tnameCD-tr-" + countId + ' #suminsured').attr('id', 'suminsured' + countId);
+        } else {
+            var html = '<tr id="tnameCD-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom newVisibleVCD vlidationInsure commondataselection", @data_itid="", @id = "description", @data_eiid = @Model.DescriptionObj.EiId })@Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SumnsuredObj.Suminsured, new {@style="display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice suminsuredCoverDetails", @id = "suminsured", @data_eiid = @Model.SumnsuredObj.EiId, @data_regex = "N", @data_itid = "" })@Html.HiddenFor(p => p.SumnsuredObj.EiId)</td><td class="no-border" id="tnameCD-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddCD('+countId+')" class="button-3d">+</a></td></tr>';
+            $.ajax({
+                url: '/motorcover/motorajaxcontent',
+                type: 'POST',
+                data: {"id":countId,"content":"coverDetails" },
+                success: function (response) {
+                    if (response.status == true) {
+                        var html1 = '';
+                        $.each(response.des, function (i, v) {
+                            html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                        });
+                        $("#tnameCD-" + id).html(replaceA);
+                        $("#tnameCD-tr-" + id).after(html);
+                        $("#tnameCD-tr-" + countId + ' #description').html(html1);
+                        $("#tnameCD-tr-" + countId + " .form-control").attr("data-itid", id);
+                        $("#tnameCD-tr-" + countId + " .form-control").val('');
+                        $("#tnameCD-tr-" + countId + ' #description').attr('id', 'description' + countId);
+                        $("#tnameCD-tr-" + countId + ' #suminsured').attr('id', 'suminsured' + countId);
+                    } else {
+                        $('#tnameCD-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
     function tnameRemoveCD(id) {
         $("#tnameCD-tr-" + id).remove();
@@ -1917,10 +1999,10 @@
         $("#tnameHDIP-" + id).html(replaceA);
         $("#tnameHDIP-tr-" + id).after(html);
         $("#tnameHDIP-tr-" + countId + " .form-control").attr("data-itid", id);
-        $("#tnameHDIP-tr-" + countId + ' #NameInstitutions').attr('id', 'NameInstitutions' + countId).val('');
-        $("#tnameHDIP-tr-" + countId + ' #locationIP').attr('id', 'locationIP' + countId).val('');
+        $("#tnameHDIP-tr-" + countId + " .form-control").val('');
+        $("#tnameHDIP-tr-" + countId + ' #NameInstitutions').attr('id', 'NameInstitutions' + countId);
+        $("#tnameHDIP-tr-" + countId + ' #locationIP').attr('id', 'locationIP' + countId);
     }
-
     function tnameRemoveHDIP(id) {
         $("#tnameHDIP-tr-" + id).remove();
     }
@@ -2088,5 +2170,91 @@
             dis = '';
         }
         $('#dispountFreeperiodew').text(dis);
+    });
+</script>
+<link href="~/css/select2.min.css" rel="stylesheet" />
+<script src="~/Scripts/select2.js"></script>
+<script type="text/javascript">
+    $(document).on('change', '#CoverDetailsSuburb', function () {
+        var suburb = $(this).val();
+        var add = $('#addresshome').val();
+        if ((add != null || add != '') && (suburb != '' || suburb != null)) {
+            var state = suburb.split(',');
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": state[0], "state": state[1], "postcode": state[2] },
+                success: function (res) {
+                    if (res.Status) {
+                        if (suburb != '') {
+                            var locationhb = '' + add + ', ' + suburb;
+                            $('#ptab2 #Address').val(locationhb);
+                            $('#newAddressSet').css({ 'display': 'none' });
+                        }
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('focusout', "#addresshome", function () {
+        var suburb = $('#CoverDetailsSuburb').val();
+        var add = $(this).val();
+        if ((add != null || add != '') && (suburb != '' || suburb != null)) {
+            var state = suburb.split(',');
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": state[0], "state": state[1], "postcode": state[2] },
+                success: function (res) {
+                    if (res.Status) {
+                        if (suburb != '') {
+                            var locationhb = '' + add + ', ' + suburb;
+                            $('#ptab2 #Address').val(locationhb);
+                            $('#newAddressSet').css({ 'display': 'none' });
+                        }
+                    }
+                }
+            });
+        }
+    });
+    $(function () {
+        $('#CoverDetailsSuburb').select2({
+            ajax: {
+                url: "/Customer/AddressData",
+                type: 'POST',
+                data: function (params) {
+                    var query = {
+                        Fragment: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    var ItemSuburbArray = [];
+                    var ItemPostCodeArray = [];
+                    var RemoveDuplicatSubbube = [];
+                    var RemoveDuplicatPostcodee = [];
+                    var RemoveDuplicatStatee = [];
+                    var res = $.parseJSON(data.result);
+                    if (res.LocalityData != null) {
+                        $('#CoverDetailsSuburb').empty();
+                        var html = '';
+                        var postcodelist = '';
+                        $.each(res.LocalityData, function (index, value) {
+                            if (RemoveDuplicatSubbube.indexOf(value.Suburb) == '-1') {
+                                ItemSuburbArray.push({ "id": value.Suburb + ', ' + value.State + ', ' + value.Postcode, "text": value.Suburb + ', ' + value.State + ', ' + value.Postcode });
+                                RemoveDuplicatSubbube.push(value.Suburb);
+                            }
+                        });
+                    }
+                    return {
+                        results: ItemSuburbArray
+                    };
+                }
+            }
+        });
+    });
+    $(document).on('click','#openNewAddressSet',function(){
+        $('#newAddressSet').fadeToggle();
     });
 </script>

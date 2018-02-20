@@ -79,7 +79,7 @@
                             @Html.TextBoxFor(p => p.FirstName, new { @class = "form-control vlidationInsure commondatatest", @disabled = "disabled", @id = "FirstName", @data_regex = "A" })
                         }
                         else
-                        { 
+                        {
                             @Html.TextBoxFor(p => p.FirstName, new { @class = "form-control vlidationInsure commondatatest", @id = "FirstName", @data_regex = "A" })
                         }
                         <label id="FirstName-error" class="error" for="FirstName"></label>
@@ -204,24 +204,28 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
                     <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Address<span>*</span></label>
                     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                        @Html.TextBoxFor(p => p.Address, new { @class = "form-control vlidationInsure commondatatest", @id = "addresshome" })
+                        @Html.TextBoxFor(p => p.Address, new { @class = "form-control vlidationInsure", @id = "addresshome" })
                         <label id="Address-error" class="error" for="Address"></label>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-center">
                     <label class="col-lg-4 col-md-4 col-sm-4 col-xs-12">Suburb<span>*</span></label>
-                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
-                        @if (Model.ClientType > 0)
-                        {
-                            @Html.TextBoxFor(p => p.suburb, new { @class = "form-control form-inline vlidationInsure", @readonly = "readonly", @placeholder = "Suburb", @name = "SubUrb", @id= "suburbT", @style = "width:100%" })
-                        }
-                        else
-                        {
-                            <div class="sddsjf">
-                                @Html.DropDownListFor(p => p.suburb, Enumerable.Empty<SelectListItem>(), "Suburb", new { @class = "form-control form-inline vlidationInsure select2hd", @placeholder = "Suburb", @id = "suburb", @name = "SubUrb", @style = "width:100%" })
-                            </div>
-                        }
-                        <label id="suburb-error" class="error" for="suburb"></label>
+                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12" style="padding-left:0px;padding-right:0px;">
+                        <div class="col-md-11" style="padding-right:0px;width:90%">
+                            @Html.TextBoxFor(p => p.suburb, new { @class = "form-control commondatatest vlidationInsure", @readonly = "readonly", @placeholder = "Suburb", @name = "SubUrb", @id = "suburbT", @style = "width:100%" })
+                            <label id="suburb-error" class="error" for="suburb"></label>
+                        </div>
+                        <div class="col-md-1" style="padding-left:0px;padding-right:0px;">
+                            <button type="button" id="openNewAddressSet" class="form-control" style="margin-top: 9px;"></button>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12" id="newAddressSet" style="display:none;">
+                        <div class="col-md-4"><p></p></div>
+                        <div class="col-md-8">
+                            <select class="form-control vlidationInsure select2hd " id="CoverDetailsSuburb" name="CoverDetailsSuburb" placeholder="Suburb" style="width:100%">
+                                <option value="">Suburb</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -239,12 +243,32 @@
         $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
     });
 </script>
-<script src="~/js/datepicker.min.js"></script>
 <link href="~/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
+    $(document).on('change', '#CoverDetailsSuburb', function () {
+        var suburb = $(this).val();
+        var add = $('#addresshome').val();
+        if ((add != null || add != '') && (suburb != '' || suburb != null)) {
+            var state = suburb.split(',');
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": state[0], "state": state[1], "postcode": state[2] },
+                success: function (res) {
+                    if (res.Status) {
+                        if (suburb != '') {
+                            var locationhb = '' + add + ', ' + suburb;
+                            $('#suburbT').val(locationhb);
+                            $('#newAddressSet').css({ 'display': 'none' });
+                        }
+                    }
+                }
+            });
+        }
+    });
     $(function () {
-        $('#suburb').select2({
+        $('#CoverDetailsSuburb').select2({
             ajax: {
                 url: "/Customer/AddressData",
                 type: 'POST',
@@ -256,7 +280,6 @@
                     return query;
                 },
                 processResults: function (data) {
-                    var NewState = $('#state').val();
                     var ItemSuburbArray = [];
                     var ItemPostCodeArray = [];
                     var RemoveDuplicatSubbube = [];
@@ -264,27 +287,15 @@
                     var RemoveDuplicatStatee = [];
                     var res = $.parseJSON(data.result);
                     if (res.LocalityData != null) {
-                        $('#suburb').empty();
+                        $('#CoverDetailsSuburb').empty();
                         var html = '';
                         var postcodelist = '';
                         $.each(res.LocalityData, function (index, value) {
                             if (RemoveDuplicatSubbube.indexOf(value.Suburb) == '-1') {
-                                ItemSuburbArray.push({ "id": value.Suburb + ', ' + value.State + ', ' + value.Postcode + ', AU', "text": value.Suburb + ', ' + value.State + ', ' + value.Postcode + ', AU' });
+                                ItemSuburbArray.push({ "id": value.Suburb + ', ' + value.State + ', ' + value.Postcode, "text": value.Suburb + ', ' + value.State + ', ' + value.Postcode });
                                 RemoveDuplicatSubbube.push(value.Suburb);
                             }
-                            if (RemoveDuplicatStatee.indexOf(value.State) == '-1') {
-                                html += '<option value="' + value.State + '">' + value.State + '</option>';
-                                RemoveDuplicatStatee.push(value.State);
-                            }
-                            if (RemoveDuplicatPostcodee.indexOf(value.Postcode) == '-1') {
-                                ItemPostCodeArray.push({ "Postcode": value.Postcode, "State": value.State });
-                                postcodelist += '<option value="' + value.Postcode + '">';
-                                RemoveDuplicatPostcodee.push(value.Postcode);
-                            }
                         });
-                        $('#state').html(html);
-                        $('#postcodelist').html(postcodelist);
-                        allResPostCode = ItemPostCodeArray;
                     }
                     return {
                         results: ItemSuburbArray
@@ -293,6 +304,11 @@
             }
         });
     });
+    $(document).on('click', '#openNewAddressSet', function () {
+        $('#newAddressSet').fadeToggle();
+    });
+</script>
+<script type="text/javascript">
     $(document).on('change', '#ClientType', function () {
         if ($(this).val() == '2') {
             $('#title').attr('disabled', 'disabled');
@@ -400,7 +416,7 @@
                     }
                 }
                 if (nameAttr == "EmailID") {
-                    var regex= /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+                    var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
                     if (newval == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Please enter e-mail id').css({ "display": "block" });
@@ -593,7 +609,7 @@
             regex: /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
             text = "Please provide valid e-mail id";
         }
-        if (!regex.test(Value)) {
+        if (regex!='' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {

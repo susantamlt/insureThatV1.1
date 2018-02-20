@@ -110,7 +110,7 @@ namespace InsureThatAPI.Controllers
             homebuilding.LastRewiredObj.EiId = 60039;
 
             homebuilding.LastReplumbedObj = new LastReplumbed();
-            homebuilding.LastReplumbedObj.EiId = 60041;
+            homebuilding.LastReplumbedObj.EiId = 60034;
 
             homebuilding.HeritagelegislationObj = new HeritageLegislations();
             homebuilding.HeritagelegislationObj.EiId = 60045;
@@ -148,9 +148,10 @@ namespace InsureThatAPI.Controllers
             #region Interested Parties
             homebuilding.LocationObjs = new Locations();
             homebuilding.LocationObjs.EiId = 60133;
+            homebuilding.LocationObjsList = new List<ValueDatas>();
             homebuilding.NameInstitutionsObj = new NameOfInstitutionsRls();
             homebuilding.NameInstitutionsObj.EiId = 60131;
-
+            homebuilding.NameInstitutionsObjList = new List<ValueDatas>();
             #endregion
             #region Home Building
             homebuilding.CoverhomebuildingObj = new CoverHomeBuildings();
@@ -309,268 +310,302 @@ namespace InsureThatAPI.Controllers
                 }
                 if (unitdetails.ProfileData != null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId))
+                    if (unitdetails.ProfileData.ValueData != null)
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        homebuilding.ExtwallsmadeObj.Extwallsmade = val;
-                    }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.AddressObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.AddressObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    homebuilding.AddressObj.Address = val;
-                    //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.AreapropertyObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.AreapropertyObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId))
                         {
-                            homebuilding.AreapropertyObj.Areaproperty = Convert.ToInt32(val);
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.IsbuildinglocatedObj.Isbuildinglocated = Convert.ToInt32(val);
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.NameInstitutionsObj.Name = val;
-                        }
-                        List<SelectListItem> InstituteValue = new List<SelectListItem>();
-                        if (unitdetails.ProfileData.ValueData.Select(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId).Count() > 1)
-                        {
-                            //InstituteValue = unitdetails.ProfileData.ValueData.Select(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId).Any;
-
-                        }
-                    }
-
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.AgediscountObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.AgediscountObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        homebuilding.AgediscountObj.Agediscount = val;
-                    //    }
-                    //}
-
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ConsecutivedayObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ConsecutivedayObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.ConsecutivedayObj.Consecutiveday = Convert.ToInt32(val);
-                        }
-                    }
-
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribeaddressObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribeaddressObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.DescribeaddressObj.Describeaddress = Convert.ToInt32(val);
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribebusinessObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribebusinessObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.DescribebusinessObj.Describebusiness = val;
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribeexternalwallsObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribeexternalwallsObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.DescribeexternalwallsObj.Describeexternalwall = val;
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribeRoofMadeOffObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribeRoofMadeOffObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.DescribeRoofMadeOffObj.DescribeRoofMade = val;
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.RoofmadeObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.RoofmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.RoofmadeObj.Roofmade = val;
-                        }
-                    }
-
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DomesticdwellingObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DomesticdwellingObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            if (val == "1")
-                            {
-                                homebuilding.DomesticdwellingObj.Domesticdwelling = 1;
-                            }
-                            else if (val == "0")
-                            {
-                                homebuilding.DomesticdwellingObj.Domesticdwelling = 0;
-                            }
-                            else
-                            {
-                                homebuilding.DomesticdwellingObj.Domesticdwelling = -1;
-                            }
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.LastRewiredObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LastRewiredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.LastRewiredObj.Rewired = val;
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.LastReplumbedObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LastReplumbedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            homebuilding.LastReplumbedObj.Replumbed = val;
-                        }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
                             homebuilding.ExtwallsmadeObj.Extwallsmade = val;
                         }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.HeritagelegislationObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.HeritagelegislationObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.AddressObj.EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.AddressObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    homebuilding.AddressObj.Address = val;
+                        //}
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.AreapropertyObj.EiId))
                         {
-                            if (val == "0")
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.AreapropertyObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
                             {
-                                homebuilding.HeritagelegislationObj.Heritagelegislation = 0;
-                            }
-                            else if (val == "1")
-                            {
-                                homebuilding.HeritagelegislationObj.Heritagelegislation = 1;
-                            }
-                            else
-                            {
-                                homebuilding.HeritagelegislationObj.Heritagelegislation = -1;
+                                homebuilding.AreapropertyObj.Areaproperty = Convert.ToInt32(val);
                             }
                         }
-                    }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.IsbuildinglocatedObj.Isbuildinglocated = Convert.ToInt32(val);
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.NameInstitutionsObj.Name = val;
+                            }                         
+                            if (unitdetails.ProfileData.ValueData.Select(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId).Count() > 1)
+                            {
+                                List<ValueDatas> elmnts = new List<ValueDatas>();                                
+                                var institutelist = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId).Select(p => p.Element.ItId).ToList();                              
+                                for (int i=0; i<institutelist.Count();i++)
+                                {
+                                    ValueDatas vds = new ValueDatas();
+                                    vds.Element = new Elements();
+                                    vds.Element.ElId = 60131;
+                                    vds.Element.ItId = institutelist[i];
+                                    vds.Value =  unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.NameInstitutionsObj.EiId && p.Element.ItId==institutelist[i]).Select(p=>p.Value).FirstOrDefault();
+                                    elmnts.Add(vds);
+                                }
+                                homebuilding.NameInstitutionsObjList = elmnts;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.LocationObjs.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LocationObjs.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.LocationObjs.Location = val;
+                            }
+                            if (unitdetails.ProfileData.ValueData.Select(p => p.Element.ElId == homebuilding.LocationObjs.EiId).Count() > 1)
+                            {
+                                List<ValueDatas> elmntsts = new List<ValueDatas>();
+                                var institutelst = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LocationObjs.EiId).Select(p => p.Element.ItId).ToList();
+                                for (int i = 0; i < institutelst.Count(); i++)
+                                {
+                                    ValueDatas vds = new ValueDatas();
+                                    vds.Element = new Elements();
+                                    vds.Element.ElId = 60131;
+                                    vds.Element.ItId = institutelst[i];
+                                    vds.Value = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LocationObjs.EiId && p.Element.ItId == institutelst[i]).Select(p => p.Value).FirstOrDefault();
+                                    elmntsts.Add(vds);
+                                }
+                                homebuilding.LocationObjsList = elmntsts;
+                            }
+                        }
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.AgediscountObj.EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.AgediscountObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //    {
+                        //        homebuilding.AgediscountObj.Agediscount = val;
+                        //    }
+                        //}
+
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ConsecutivedayObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ConsecutivedayObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.ConsecutivedayObj.Consecutiveday = Convert.ToInt32(val);
+                            }
+                        }
+
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribeaddressObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribeaddressObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.DescribeaddressObj.Describeaddress = Convert.ToInt32(val);
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribebusinessObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribebusinessObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.DescribebusinessObj.Describebusiness = val;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribeexternalwallsObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribeexternalwallsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.DescribeexternalwallsObj.Describeexternalwall = val;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DescribeRoofMadeOffObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DescribeRoofMadeOffObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.DescribeRoofMadeOffObj.DescribeRoofMade = val;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.RoofmadeObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.RoofmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.RoofmadeObj.Roofmade = val;
+                            }
+                        }
+
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.DomesticdwellingObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.DomesticdwellingObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                if (val == "1")
+                                {
+                                    homebuilding.DomesticdwellingObj.Domesticdwelling = 1;
+                                }
+                                else if (val == "0")
+                                {
+                                    homebuilding.DomesticdwellingObj.Domesticdwelling = 0;
+                                }
+                                else
+                                {
+                                    homebuilding.DomesticdwellingObj.Domesticdwelling = -1;
+                                }
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.LastRewiredObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LastRewiredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.LastRewiredObj.Rewired = val;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.LastReplumbedObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.LastReplumbedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.LastReplumbedObj.Replumbed = val;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.ExtwallsmadeObj.Extwallsmade = val;
+                            }
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.HeritagelegislationObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.HeritagelegislationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                if (val == "0")
+                                {
+                                    homebuilding.HeritagelegislationObj.Heritagelegislation = 0;
+                                }
+                                else if (val == "1")
+                                {
+                                    homebuilding.HeritagelegislationObj.Heritagelegislation = 1;
+                                }
+                                else
+                                {
+                                    homebuilding.HeritagelegislationObj.Heritagelegislation = -1;
+                                }
+                            }
+                        }
 
 
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ImposedObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ImposedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        homebuilding.ImposedObj.Imposed = val;
-                    //    }
-                    //}
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {                            
-                    //            homebuilding.IsbuildinglocatedObj.Isbuildinglocated = Convert.ToInt32(val);                          
-                    //    }
-                    //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.IsusedbusinessObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.IsusedbusinessObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ImposedObj.EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ImposedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //    {
+                        //        homebuilding.ImposedObj.Imposed = val;
+                        //    }
+                        //}
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.IsbuildinglocatedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //    {                            
+                        //            homebuilding.IsbuildinglocatedObj.Isbuildinglocated = Convert.ToInt32(val);                          
+                        //    }
+                        //}
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.IsusedbusinessObj.EiId))
                         {
-                            homebuilding.IsusedbusinessObj.Isusedbusiness = Convert.ToInt32(val);
-                        }
-                    }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.NoclaimdiscountObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.NoclaimdiscountObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        homebuilding.NoclaimdiscountObj.Noclaimdiscount = val;
-                    //    }
-                    //}
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.PropertytypeObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.PropertytypeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        homebuilding.PropertytypeObj.Propertytype = val;
-                    //    }
-                    //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.UnderconstructionObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.UnderconstructionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                        {
-                            if (val == "0")
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.IsusedbusinessObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
                             {
-                                homebuilding.UnderconstructionObj.Underconstruction = 0;
+                                homebuilding.IsusedbusinessObj.Isusedbusiness = Convert.ToInt32(val);
                             }
-                            else if (val == "1")
-                            {
-                                homebuilding.UnderconstructionObj.Underconstruction = 1;
-                            }
-                            else
-                                homebuilding.UnderconstructionObj.Underconstruction = -1;
                         }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.WatertightObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.WatertightObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.NoclaimdiscountObj.EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.NoclaimdiscountObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //    {
+                        //        homebuilding.NoclaimdiscountObj.Noclaimdiscount = val;
+                        //    }
+                        //}
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.PropertytypeObj.EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.PropertytypeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //    {
+                        //        homebuilding.PropertytypeObj.Propertytype = val;
+                        //    }
+                        //}
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.UnderconstructionObj.EiId))
                         {
-                            if (val == "0")
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.UnderconstructionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
                             {
-                                homebuilding.WatertightObj.Watertight = 0;
+                                if (val == "0")
+                                {
+                                    homebuilding.UnderconstructionObj.Underconstruction = 0;
+                                }
+                                else if (val == "1")
+                                {
+                                    homebuilding.UnderconstructionObj.Underconstruction = 1;
+                                }
+                                else
+                                    homebuilding.UnderconstructionObj.Underconstruction = -1;
                             }
-                            else if (val == "1")
+                        }
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.WatertightObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.WatertightObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
                             {
-                                homebuilding.WatertightObj.Watertight = 1;
+                                if (val == "0")
+                                {
+                                    homebuilding.WatertightObj.Watertight = 0;
+                                }
+                                else if (val == "1")
+                                {
+                                    homebuilding.WatertightObj.Watertight = 1;
+                                }
+                                else
+                                    homebuilding.WatertightObj.Watertight = -1;
                             }
-                            else
-                                homebuilding.WatertightObj.Watertight = -1;
                         }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.WholivesObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.WholivesObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "2" && !string.IsNullOrEmpty(val))
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.WholivesObj.EiId))
                         {
-                            homebuilding.WholivesObj.Wholives = Convert.ToInt32(val);
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.WholivesObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "2" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.WholivesObj.Wholives = Convert.ToInt32(val);
+                            }
                         }
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.YearofBuiltObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.YearofBuiltObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.YearofBuiltObj.EiId))
                         {
-                            homebuilding.YearofBuiltObj.YearBuilt = val;
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.YearofBuiltObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.YearofBuiltObj.YearBuilt = val;
+                            }
                         }
+                        //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding..EiId))
+                        //{
+                        //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.YearofBuiltObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
+                        //    {
+                        //        homebuilding.YearofBuiltObj.YearBuilt = val;
+                        //    }
+                        //}
                     }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding..EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.YearofBuiltObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        homebuilding.YearofBuiltObj.YearBuilt = val;
-                    //    }
-                    //}
                 }
                 if (unitdetails.SectionData != null)
                 {
@@ -613,123 +648,23 @@ namespace InsureThatAPI.Controllers
                         }
                     }
                 }
-            }
-            if (unitdetails.ReferralList != null)
-            {
-                homebuilding.ReferralList = unitdetails.ReferralList;
-                homebuilding.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
-                homebuilding.Referels = new List<string>();
-                string[] delim = { "<br/>" };
-
-                string[] spltd = homebuilding.ReferralList.Split(delim, StringSplitOptions.None);
-                if (spltd != null && spltd.Count() > 0)
+                if (unitdetails.ReferralList != null)
                 {
-                    for (int i = 0; i < spltd.Count(); i++)
+                    homebuilding.ReferralList = unitdetails.ReferralList;
+                    homebuilding.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
+                    homebuilding.Referels = new List<string>();
+                    string[] delim = { "<br/>" };
+
+                    string[] spltd = homebuilding.ReferralList.Split(delim, StringSplitOptions.None);
+                    if (spltd != null && spltd.Count() > 0)
                     {
-                        homebuilding.Referels.Add(spltd[i]);
+                        for (int i = 0; i < spltd.Count(); i++)
+                        {
+                            homebuilding.Referels.Add(spltd[i]);
+                        }
                     }
                 }
-
-            }
-            #region Policy Inclusion
-            //if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
-            //{
-            //    homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
-            //}
-
-            //else
-            //{
-            //    if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
-            //    {
-            //        if (policyinclusion.PolicyInclusions.Length > 1)
-            //        {
-            //            var policyinclusions = policyinclusion.PolicyInclusions.Split('-');
-            //            if (policyinclusions != null && policyinclusions.Length > 0)
-            //            {
-
-            //                if (policyinclusions[0] == "1")
-            //                {
-
-            //                }
-            //                else
-            //                {
-            //                    if (policyinclusions[1] == "1")
-            //                    {
-            //                        return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid });
-            //                    }
-            //                    if (policyinclusions[2] == "1")
-            //                    {
-            //                        return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid });
-            //                    }
-            //                    if (policyinclusions[3] == "1")
-            //                    {
-            //                        return RedirectToAction("FarmContents", "Farm", new { cid = cid });
-            //                    }
-            //                    if (policyinclusions[4] == "1")
-            //                    {
-            //                        return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
-            //                    }
-            //                    if (policyinclusions[5] == "1")
-            //                    {
-            //                        return RedirectToAction("TravelCover", "Travel", new { cid = cid });
-            //                    }
-            //                    if (policyinclusions[6] == "1")
-            //                    {
-            //                        return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
-            //                    }
-
-            //                    if (policyinclusions[7] == "1")
-            //                    {
-            //                        return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
-            //                    }
-            //                    else if (policyinclusions[8] == "1")
-            //                    {
-            //                        return RedirectToAction("PetsCover", "Pets", new { cid = cid });
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
-            //    else
-            //    {
-            //        return RedirectToAction("PolicyInclustions", "Customer", new { cid = cid, type = Convert.ToInt32(PolicyType.RLS) });
-            //    }
-            //}
-            #endregion
-
-            #region waste
-
-            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeBuilding), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-
-            //    if (details.Exists(q => q.QuestionId == homebuilding.LocationObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == homebuilding.LocationObj.EiId).FirstOrDefault();
-            //        homebuilding.LocationObj.Location = loc.Answer;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == homebuilding.AreapropertyObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == homebuilding.AreapropertyObj.EiId).FirstOrDefault();
-            //        homebuilding.AreapropertyObj.Areaproperty = !string.IsNullOrEmpty(loc.Answer) ? (int?)Convert.ToInt32(loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == homebuilding.IsbuildinglocatedObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == homebuilding.IsbuildinglocatedObj.EiId).FirstOrDefault();
-            //        homebuilding.IsbuildinglocatedObj.Isbuildinglocated = !string.IsNullOrEmpty(loc.Answer) ? (int?)Convert.ToInt32(loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == homebuilding.DescribeaddressObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == homebuilding.DescribeaddressObj.EiId).FirstOrDefault();
-            //        homebuilding.DescribeaddressObj.Describeaddress = !string.IsNullOrEmpty(loc.Answer) ? (int?)Convert.ToInt32(loc.Answer) : null;
-            //    }
-
-            //  }
-
-            //var suburblist = db.IT_Master_GetSuburbList().ToList();
-
-            //homebuilding.SubUrb = suburblist.Where(s => !string.IsNullOrEmpty(s)).Select(s => new SelectListItem() { Text = s, Value = s }).ToList();
-            #endregion
+            }         
             return View(homebuilding);
         }
         [HttpPost]
@@ -755,26 +690,8 @@ namespace InsureThatAPI.Controllers
             if (policyinclusion != null && policyinclusion.PolicyInclusions != null)
             {
                 //  homebuilding.PolicyInclusions = policyinclusion.PolicyInclusions;
-            }
-            if (cid.HasValue && cid > 0)
-            {
-                //if (homebuilding.AreapropertyObj.Areaproperty != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.AreapropertyObj.EiId, homebuilding.AreapropertyObj.Areaproperty.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (homebuilding.LocationObj.Location != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.LocationObj.EiId, homebuilding.LocationObj.Location, Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (homebuilding.IsbuildinglocatedObj.Isbuildinglocated != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.IsbuildinglocatedObj.EiId, homebuilding.IsbuildinglocatedObj.Isbuildinglocated.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (homebuilding.DescribeaddressObj.Describeaddress != null)
-                //{
-
-                //    db.IT_InsertCustomerQnsData(homebuilding.CustomerId, Convert.ToInt32(RLSSection.HomeBuilding), homebuilding.DescribeaddressObj.EiId, homebuilding.DescribeaddressObj.Describeaddress.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);//need to change
-                //}
+            }          
+        
                 if (homebuilding.CostforRebuildingObj.CostforRebuilding != null)
                 {
                     Session["CoverAmount"] = homebuilding.CostforRebuildingObj.CostforRebuilding;
@@ -784,9 +701,9 @@ namespace InsureThatAPI.Controllers
                 Session["UnId"] = null;
                 string actionname = null;
                 string controllername = null;
-                if (Session["Actn"] != null)
+                if (Session["Actname"] != null)
                 {
-                    actionname = Session["Actn"].ToString();
+                    actionname = Session["Actname"].ToString();
                 }
                 if (Session["controller"] != null)
                 {
@@ -797,7 +714,7 @@ namespace InsureThatAPI.Controllers
                     return RedirectToAction(actionname, controllername, new { cid = homebuilding.CustomerId, PcId = homebuilding.PcId });
                 }
                 return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = homebuilding.CustomerId, PcId = PcId });
-            }
+            
             return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = homebuilding.CustomerId, PcId = PcId });
         }
         #region AJAX call to get the state and pincode list on suburb selection
