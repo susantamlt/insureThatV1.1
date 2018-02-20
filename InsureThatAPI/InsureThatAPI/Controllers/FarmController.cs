@@ -67,8 +67,7 @@ namespace InsureThatAPI.Controllers
             {
                 #region Policy Selected or not testing
                 List<SessionModel> PolicyInclustions = new List<SessionModel>();
-                FarmContents.PolicyInclusions = new List<SessionModel>();
-              
+                FarmContents.PolicyInclusions = new List<SessionModel>();              
                 FarmContents.PolicyInclusions = Policyincllist;
                 if (Policyincllist != null)
                 {
@@ -76,13 +75,12 @@ namespace InsureThatAPI.Controllers
                     if (Policyincllist.Exists(p => p.name == "Farm Property"))
                     {
                        
-                    }
-                  
+                    }                  
                     else if (Policyincllist.Exists(p => p.name == "Liability"))
                     {
                         return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Motor"))
+                    else if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors"))
                     {
                         return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                     }
@@ -91,7 +89,7 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                     }
 
-                    else if (Policyincllist.Exists(p => p.name == "Pet"))
+                    else if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
                     {
                         return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                     }
@@ -290,7 +288,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.confirmfsObj.EiId))
                     {
@@ -444,7 +442,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            if (unitdetails.ReferralList != null)
+            if (unitdetails!=null && unitdetails.ReferralList != null)
             {
                 FarmContents.ReferralList = unitdetails.ReferralList;
                 FarmContents.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -487,516 +485,28 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FarmContents.CustomerId;
             }
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                //if (FarmContents.DescriptionFCObj!=null && FarmContents.DescriptionFCObj.EiId > 0 && FarmContents.DescriptionFCObj.Description != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.DescriptionFCObj.EiId, FarmContents.DescriptionFCObj.Description.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.YearObj!=null && FarmContents.YearObj.EiId > 0 && FarmContents.YearObj.Year != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.YearObj.EiId, FarmContents.YearObj.Year.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.MaterialsObj!=null && FarmContents.MaterialsObj.EiId > 0 && FarmContents.MaterialsObj.Materials != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.MaterialsObj.EiId, FarmContents.MaterialsObj.Materials.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.CoolroomFcObj!=null && FarmContents.CoolroomFcObj.EiId > 0 && FarmContents.CoolroomFcObj.Coolroom != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.CoolroomFcObj.EiId, FarmContents.CoolroomFcObj.Coolroom.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.SuminsuredObj!=null && FarmContents.SuminsuredObj.EiId > 0 && FarmContents.SuminsuredObj.Suminsured != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.SuminsuredObj.EiId, FarmContents.SuminsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.confirmfsObj!=null && FarmContents.confirmfsObj.EiId > 0 && FarmContents.confirmfsObj.Confirm != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.confirmfsObj.EiId, FarmContents.confirmfsObj.Confirm.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.FarmfencingObj!=null && FarmContents.FarmfencingObj.EiId > 0 && FarmContents.FarmfencingObj.Farmfencing != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.FarmfencingObj.EiId, FarmContents.FarmfencingObj.Farmfencing.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.FarmcencingTcObj!=null && FarmContents.FarmcencingTcObj.EiId > 0 && FarmContents.FarmcencingTcObj.Totalcover != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.FarmcencingTcObj.EiId, FarmContents.FarmcencingTcObj.Totalcover.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.FarmstructuresObj!=null && FarmContents.FarmstructuresObj.EiId > 0 && FarmContents.FarmstructuresObj.Farmstructures != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.FarmstructuresObj.EiId, FarmContents.FarmstructuresObj.Farmstructures.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.FarmContentFcObj!=null && FarmContents.FarmContentFcObj.EiId > 0 && FarmContents.FarmContentFcObj.Farmcontents != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.FarmContentFcObj.EiId, FarmContents.FarmContentFcObj.Farmcontents.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (FarmContents.ExcessesFpcObj!=null && FarmContents.ExcessesFpcObj.EiId > 0 && FarmContents.ExcessesFpcObj.Excess != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(FarmContents.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmContents.ExcessesFpcObj.EiId, FarmContents.ExcessesFpcObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
+     
                 Session["profileId"] = null;
                 Session["UnId"] = null;
-                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId });
+                string actionname = null;
+                string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
             }
-
+            if (Session["controller"] != null)
+                {
+                    controllername = Session["controller"].ToString();
+                }
+                if (actionname != null && controllername != null)
+                {
+                    return RedirectToAction(actionname, controllername, new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
+                }
+                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId });
+          
             return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId });
         }
-        //[HttpGet]
-        //public ActionResult FarmMachinery(int? cid)
-        //{
-        //    NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-
-        //    List<SelectListItem> excessforUMPay = new List<SelectListItem>();
-        //    excessforUMPay = commonModel.excessRate();
-        //    FarmMachinery FarmMachinery = new FarmMachinery();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        FarmMachinery.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = FarmMachinery.CustomerId;
-        //    }
-        //    FarmMachinery.FarmContentFcObj = new FarmContentsFC();
-        //    FarmMachinery.FarmContentFcObj.EiId = 60523;
-        //    FarmMachinery.ExcessUMObj = new ExcessforUM();
-        //    FarmMachinery.ExcessUMObj.ExcessumList = excessforUMPay;
-        //    FarmMachinery.ExcessUMObj.EiId = 60525;
-        //    FarmMachinery.DescriptionFmObj = new DescriptionsFM();
-        //    FarmMachinery.DescriptionFmObj.EiId = 60529;
-        //    FarmMachinery.YearObj = new YearFPC();
-        //    FarmMachinery.YearObj.EiId = 60531;
-        //    FarmMachinery.SerialnumberObj = new SerialNumbers();
-        //    FarmMachinery.SerialnumberObj.EiId = 60533;
-        //    FarmMachinery.ExcessesFpcObj = new ExcessesFPC();
-        //    FarmMachinery.ExcessesFpcObj.ExcessList = excessforUMPay;
-        //    FarmMachinery.ExcessesFpcObj.EiId = 60535;
-        //    FarmMachinery.SuminsuredObj = new SumOfInsured();
-        //    FarmMachinery.SuminsuredObj.EiId = 60537;
-        //    if (Session["CompletionTrackFPC"] != null)
-        //    {
-        //        Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-        //        FarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["CompletionTrackFPC"] = "0-0-0-0"; ;
-        //        FarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //    }
-        //    string policyid = null;
-        //    var db = new MasterDataEntities();
-        //    var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.FarmProperty), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.FarmContentFcObj.EiId))
-        //        {
-        //            FarmMachinery.FarmContentFcObj.Farmcontents = Convert.ToString(details.Where(q => q.QuestionId == FarmMachinery.FarmContentFcObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.ExcessUMObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == FarmMachinery.ExcessUMObj.EiId).FirstOrDefault();
-        //            FarmMachinery.ExcessUMObj.Excessum = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.DescriptionFmObj.EiId))
-        //        {
-        //            FarmMachinery.DescriptionFmObj.Description = Convert.ToString(details.Where(q => q.QuestionId == FarmMachinery.YearObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.YearObj.EiId))
-        //        {
-        //            FarmMachinery.YearObj.Year = Convert.ToString(details.Where(q => q.QuestionId == FarmMachinery.YearObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.SerialnumberObj.EiId))
-        //        {
-        //            FarmMachinery.SerialnumberObj.Serialnumber = Convert.ToString(details.Where(q => q.QuestionId == FarmMachinery.SerialnumberObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.ExcessesFpcObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == FarmMachinery.ExcessesFpcObj.EiId).FirstOrDefault();
-        //            FarmMachinery.ExcessesFpcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == FarmMachinery.SuminsuredObj.EiId))
-        //        {
-        //            FarmMachinery.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == FarmMachinery.SuminsuredObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //    }
-        //    return View(FarmMachinery);
-        //}
-        //[HttpPost]
-        //public ActionResult FarmMachinery(FarmMachinery FarmMachinery, int? cid)
-        //{
-        //    NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> excessforUMPay = new List<SelectListItem>();
-        //    excessforUMPay = commonModel.excessRate();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        FarmMachinery.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = FarmMachinery.CustomerId;
-        //    }
-        //    FarmMachinery.ExcessUMObj.ExcessumList = excessforUMPay;
-        //    FarmMachinery.ExcessesFpcObj.ExcessList = excessforUMPay;
-        //    string policyid = null;
-        //    var db = new MasterDataEntities();
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (FarmMachinery.FarmContentFcObj!=null && FarmMachinery.FarmContentFcObj.EiId > 0 && FarmMachinery.FarmContentFcObj.Farmcontents != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.FarmContentFcObj.EiId, FarmMachinery.FarmContentFcObj.Farmcontents.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (FarmMachinery.ExcessUMObj!=null && FarmMachinery.ExcessUMObj.EiId > 0 && FarmMachinery.ExcessUMObj.Excessum != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.ExcessUMObj.EiId, FarmMachinery.ExcessUMObj.Excessum.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (FarmMachinery.DescriptionFmObj!=null && FarmMachinery.DescriptionFmObj.EiId > 0 && FarmMachinery.DescriptionFmObj.Description != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.DescriptionFmObj.EiId, FarmMachinery.DescriptionFmObj.Description.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (FarmMachinery.YearObj!=null && FarmMachinery.YearObj.EiId > 0 && FarmMachinery.YearObj.Year != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.YearObj.EiId, FarmMachinery.YearObj.Year.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (FarmMachinery.SerialnumberObj!=null && FarmMachinery.SerialnumberObj.EiId > 0 && FarmMachinery.SerialnumberObj.Serialnumber != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.SerialnumberObj.EiId, FarmMachinery.SerialnumberObj.Serialnumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (FarmMachinery.ExcessesFpcObj!=null && FarmMachinery.ExcessesFpcObj.EiId > 0 && FarmMachinery.ExcessesFpcObj.Excess != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.ExcessesFpcObj.EiId, FarmMachinery.ExcessesFpcObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (FarmMachinery.SuminsuredObj!=null && FarmMachinery.SuminsuredObj.EiId > 0 && FarmMachinery.SuminsuredObj.Suminsured != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(FarmMachinery.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), FarmMachinery.SuminsuredObj.EiId, FarmMachinery.SuminsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["CompletionTrackFPC"] != null)
-        //        {
-        //            Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-        //            FarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //            if (FarmMachinery.CompletionTrackFPC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = FarmMachinery.CompletionTrackFPC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 2)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["CompletionTrackFPC"] = Completionstring;
-        //                FarmMachinery.CompletionTrackFPC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["CompletionTrackFPC"] = "0-1-0-0"; ;
-        //            FarmMachinery.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //        }
-        //        return RedirectToAction("Livestock", new { cid = FarmMachinery.CustomerId });
-        //    }
-        //    return View(FarmMachinery);
-        //}
-        //[HttpGet]
-        //public ActionResult Livestock(int? cid)
-        //{
-        //    NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> desList = new List<SelectListItem>();
-        //    desList = commonModel.descriptionLS();
-
-        //    List<SelectListItem> excessforUMPay = new List<SelectListItem>();
-        //    excessforUMPay = commonModel.excessRate();
-        //    Livestock Livestock = new Livestock();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        Livestock.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = Livestock.CustomerId;
-        //    }
-        //    Livestock.DescriptionFCObj = new DescriptionsFC();
-        //    Livestock.DescriptionFCObj.DescriptionList = desList;
-        //    Livestock.DescriptionFCObj.EiId = 60565;
-        //    Livestock.NumberanimalObj = new NumberOfAnimals();
-        //    Livestock.NumberanimalObj.EiId = 60567;
-        //    Livestock.SuminsuredperObj = new SumInsuredPerAnimals();
-        //    Livestock.SuminsuredperObj.EiId = 60569;
-        //    Livestock.SuminsuredObj = new SumOfInsured();
-        //    Livestock.SuminsuredObj.EiId = 60571;
-        //    Livestock.DogattackObj = new DogAttackOption();
-        //    Livestock.DogattackObj.EiId = 60575;
-        //    Livestock.ExcessesFpcObj = new ExcessesFPC();
-        //    Livestock.ExcessesFpcObj.ExcessList = excessforUMPay;
-        //    Livestock.ExcessesFpcObj.EiId = 60577;
-        //    if (Session["CompletionTrackFPC"] != null)
-        //    {
-        //        Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-        //        Livestock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["CompletionTrackFPC"] = "0-0-0-0"; ;
-        //        Livestock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(RLSSection.FarmProperty), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == Livestock.DescriptionFCObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == Livestock.DescriptionFCObj.EiId).FirstOrDefault();
-        //            Livestock.DescriptionFCObj.Description = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == Livestock.NumberanimalObj.EiId))
-        //        {
-        //            Livestock.NumberanimalObj.Numberanimal = Convert.ToString(details.Where(q => q.QuestionId == Livestock.NumberanimalObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == Livestock.SuminsuredperObj.EiId))
-        //        {
-        //            Livestock.SuminsuredperObj.Suminsuredper = Convert.ToString(details.Where(q => q.QuestionId == Livestock.SuminsuredperObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == Livestock.SuminsuredObj.EiId))
-        //        {
-        //            Livestock.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == Livestock.SuminsuredObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == Livestock.DogattackObj.EiId))
-        //        {
-        //            Livestock.DogattackObj.Dogattack = Convert.ToString(details.Where(q => q.QuestionId == Livestock.DogattackObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == Livestock.ExcessesFpcObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == Livestock.ExcessesFpcObj.EiId).FirstOrDefault();
-        //            Livestock.ExcessesFpcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //    }
-        //    return View(Livestock);
-        //}
-        //[HttpPost]
-        //public ActionResult Livestock(Livestock Livestock, int? cid)
-        //{
-        //    NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> desList = new List<SelectListItem>();
-        //    desList = commonModel.descriptionLS();
-        //    List<SelectListItem> excessforUMPay = new List<SelectListItem>();
-        //    excessforUMPay = commonModel.excessRate();
-        //    Livestock.DescriptionFCObj.DescriptionList = desList;
-        //    Livestock.ExcessesFpcObj.ExcessList = excessforUMPay;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        Livestock.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = Livestock.CustomerId;
-        //    }
-        //    string policyid = null;
-        //    var db = new MasterDataEntities();
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (Livestock.DescriptionFCObj!=null && Livestock.DescriptionFCObj.EiId > 0 && Livestock.DescriptionFCObj.Description != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(Livestock.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), Livestock.DescriptionFCObj.EiId, Livestock.DescriptionFCObj.Description.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Livestock.NumberanimalObj!=null && Livestock.NumberanimalObj.EiId > 0 && Livestock.NumberanimalObj.Numberanimal != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(Livestock.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), Livestock.NumberanimalObj.EiId, Livestock.NumberanimalObj.Numberanimal.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Livestock.SuminsuredperObj!=null && Livestock.SuminsuredperObj.EiId > 0 && Livestock.SuminsuredperObj.Suminsuredper != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(Livestock.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), Livestock.SuminsuredperObj.EiId, Livestock.SuminsuredperObj.Suminsuredper.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Livestock.SuminsuredObj!=null && Livestock.SuminsuredObj.EiId > 0 && Livestock.SuminsuredObj.Suminsured != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(Livestock.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), Livestock.SuminsuredObj.EiId, Livestock.SuminsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Livestock.DogattackObj!=null && Livestock.DogattackObj.EiId > 0 && Livestock.DogattackObj.Dogattack != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(Livestock.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), Livestock.DogattackObj.EiId, Livestock.DogattackObj.Dogattack.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Livestock.ExcessesFpcObj != null && Livestock.ExcessesFpcObj.EiId > 0 && Livestock.ExcessesFpcObj.Excess != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(Livestock.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), Livestock.ExcessesFpcObj.EiId, Livestock.ExcessesFpcObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["CompletionTrackFPC"] != null)
-        //        {
-        //            Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-        //            Livestock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //            if (Livestock.CompletionTrackFPC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = Livestock.CompletionTrackFPC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 4)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["CompletionTrackFPC"] = Completionstring;
-        //                Livestock.CompletionTrackFPC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["CompletionTrackFPC"] = "0-0-1-0"; ;
-        //            Livestock.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //        }
-        //        return RedirectToAction("HarvestedCropsBeehives", new { cid = Livestock.CustomerId });
-        //    }
-        //    return View(Livestock);
-        //}
-        //[HttpGet]
-        //public ActionResult HarvestedCropsBeehives(int? cid)
-        //{
-        //    NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> excessforUMPay = new List<SelectListItem>();
-        //    excessforUMPay = commonModel.excessRate();
-        //    HarvestedCropsBeehives HarvestedCropsBeehives = new HarvestedCropsBeehives();
-        //    HarvestedCropsBeehives.SuminsuredObj = new SumOfInsured();
-        //    HarvestedCropsBeehives.SuminsuredObj.EiId = 60593;
-        //    HarvestedCropsBeehives.ExcessesFpcObj = new ExcessesFPC();
-        //    HarvestedCropsBeehives.ExcessesFpcObj.ExcessList = excessforUMPay;
-        //    HarvestedCropsBeehives.ExcessesFpcObj.EiId = 60595;
-        //    HarvestedCropsBeehives.SuminsuredHbcObj = new SumOfInsuredHCB();
-        //    HarvestedCropsBeehives.SuminsuredHbcObj.EiId = 60601;
-        //    HarvestedCropsBeehives.NumberhiveObj = new NumberOfHives();
-        //    HarvestedCropsBeehives.NumberhiveObj.EiId = 60603;
-        //    HarvestedCropsBeehives.ExcessBObj = new ExcessesBeehives();
-        //    HarvestedCropsBeehives.ExcessBObj.ExcessBList = excessforUMPay;
-        //    HarvestedCropsBeehives.ExcessBObj.EiId = 60595;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        HarvestedCropsBeehives.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = HarvestedCropsBeehives.CustomerId;
-        //    }
-        //    if (Session["CompletionTrackFPC"] != null)
-        //    {
-        //        Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-        //        HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["CompletionTrackFPC"] = "0-0-0-0"; ;
-        //        HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(RLSSection.FarmProperty),Convert.ToInt32(PolicyType.RLS) ,policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == HarvestedCropsBeehives.SuminsuredObj.EiId))
-        //        {
-        //            HarvestedCropsBeehives.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == HarvestedCropsBeehives.SuminsuredObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == HarvestedCropsBeehives.ExcessesFpcObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == HarvestedCropsBeehives.ExcessesFpcObj.EiId).FirstOrDefault();
-        //            HarvestedCropsBeehives.ExcessesFpcObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == HarvestedCropsBeehives.SuminsuredHbcObj.EiId))
-        //        {
-        //            HarvestedCropsBeehives.SuminsuredHbcObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == HarvestedCropsBeehives.SuminsuredHbcObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == HarvestedCropsBeehives.NumberhiveObj.EiId))
-        //        {
-        //            HarvestedCropsBeehives.NumberhiveObj.Numberhive = Convert.ToString(details.Where(q => q.QuestionId == HarvestedCropsBeehives.NumberhiveObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == HarvestedCropsBeehives.ExcessBObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == HarvestedCropsBeehives.ExcessBObj.EiId).FirstOrDefault();
-        //            HarvestedCropsBeehives.ExcessBObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //    }
-        //    return View(HarvestedCropsBeehives);
-        //}
-        //[HttpPost]
-        //public ActionResult HarvestedCropsBeehives(HarvestedCropsBeehives HarvestedCropsBeehives, int? cid)
-        //{
-        //    NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> excessforUMPay = new List<SelectListItem>();
-        //    excessforUMPay = commonModel.excessRate();
-        //    HarvestedCropsBeehives.ExcessesFpcObj.ExcessList = excessforUMPay;
-        //    HarvestedCropsBeehives.ExcessBObj.ExcessBList = excessforUMPay;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        HarvestedCropsBeehives.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = HarvestedCropsBeehives.CustomerId;
-        //    }
-        //    string policyid = null;
-        //    var db = new MasterDataEntities();
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (HarvestedCropsBeehives.SuminsuredObj!=null && HarvestedCropsBeehives.SuminsuredObj.EiId > 0 && HarvestedCropsBeehives.SuminsuredObj.Suminsured != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(HarvestedCropsBeehives.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), HarvestedCropsBeehives.SuminsuredObj.EiId, HarvestedCropsBeehives.SuminsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS),policyid);
-        //        }
-        //        if (HarvestedCropsBeehives.ExcessesFpcObj!=null && HarvestedCropsBeehives.ExcessesFpcObj.EiId > 0 && HarvestedCropsBeehives.ExcessesFpcObj.Excess != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(HarvestedCropsBeehives.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), HarvestedCropsBeehives.ExcessesFpcObj.EiId, HarvestedCropsBeehives.ExcessesFpcObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (HarvestedCropsBeehives.SuminsuredHbcObj != null && HarvestedCropsBeehives.SuminsuredHbcObj.EiId > 0 && HarvestedCropsBeehives.SuminsuredHbcObj.Suminsured != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(HarvestedCropsBeehives.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), HarvestedCropsBeehives.SuminsuredHbcObj.EiId, HarvestedCropsBeehives.SuminsuredHbcObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (HarvestedCropsBeehives.NumberhiveObj != null && HarvestedCropsBeehives.NumberhiveObj.EiId > 0 && HarvestedCropsBeehives.NumberhiveObj.Numberhive != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(HarvestedCropsBeehives.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), HarvestedCropsBeehives.NumberhiveObj.EiId, HarvestedCropsBeehives.NumberhiveObj.Numberhive.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (HarvestedCropsBeehives.ExcessBObj!=null && HarvestedCropsBeehives.ExcessBObj.EiId > 0 && HarvestedCropsBeehives.ExcessBObj.Excess != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(HarvestedCropsBeehives.CustomerId, Convert.ToInt32(RLSSection.FarmProperty), HarvestedCropsBeehives.ExcessBObj.EiId, HarvestedCropsBeehives.ExcessBObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        //if (Session["CompletionTrackFPC"] != null)
-        //        //{
-        //        //    Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-        //        //    HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //        //    if (HarvestedCropsBeehives.CompletionTrackFPC != null)
-        //        //    {
-        //        //        string Completionstring = string.Empty;
-        //        //        char[] arr = HarvestedCropsBeehives.CompletionTrackFPC.ToCharArray();
-
-        //        //        for (int i = 0; i < arr.Length; i++)
-        //        //        {
-        //        //            char a = arr[i];
-        //        //            if (i == 6)
-        //        //            {
-        //        //                a = '1';
-        //        //            }
-        //        //            Completionstring = Completionstring + a;
-        //        //        }
-        //        //        Session["CompletionTrackFPC"] = Completionstring;
-        //        //        HarvestedCropsBeehives.CompletionTrackFPC = Completionstring;
-        //        //    }
-        //        //}
-        //        //else
-        //        //{
-        //        //    Session["CompletionTrackFPC"] = "0-0-0-1"; ;
-        //        //    HarvestedCropsBeehives.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-        //        //}
-        //        return RedirectToAction("VehicleDescription", "MotorCover", new { cid = HarvestedCropsBeehives.CustomerId });
-        //        return RedirectToAction("PetsCover","Pets", new { cid = HarvestedCropsBeehives.CustomerId });
-        //    }
-        //    return View(HarvestedCropsBeehives);
-        //}
+        
         [HttpPost]
         public ActionResult FarmAjaxcontent(int id, string content)
         {

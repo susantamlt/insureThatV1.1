@@ -180,7 +180,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.ProfileData != null && unitdetails.ProfileData.ValueData!=null)
                 {
                     if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId))
                     {
@@ -236,35 +236,8 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Travels), Convert.ToInt32(PolicyType.RLS),policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-            //    if (details.Exists(q => q.QuestionId == TravelCover.TravellerscoveredObj.EiId))
-            //    {
-            //        TravelCover.TravellerscoveredObj.Travellerscovered = Convert.ToString(details.Where(q => q.QuestionId == TravelCover.TravellerscoveredObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == TravelCover.DataofbirthObj.EiId))
-            //    {
-            //        TravelCover.DataofbirthObj.Dataofbirth = Convert.ToString(details.Where(q => q.QuestionId == TravelCover.DataofbirthObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == TravelCover.NumbertravelersObj.EiId))
-            //    {
-            //        TravelCover.NumbertravelersObj.Numbertravelers = Convert.ToString(details.Where(q => q.QuestionId == TravelCover.NumbertravelersObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == TravelCover.YourtripObj.EiId))
-            //    {
-            //        TravelCover.YourtripObj.Yourtrip = Convert.ToString(details.Where(q => q.QuestionId == TravelCover.YourtripObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == TravelCover.WintersportObj.EiId))
-            //    {
-            //        TravelCover.WintersportObj.Wintersport = Convert.ToString(details.Where(q => q.QuestionId == TravelCover.WintersportObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == TravelCover.ExcessObj.EiId))
-            //    {
-            //        TravelCover.ExcessObj.Excess = Convert.ToString(details.Where(q => q.QuestionId == TravelCover.ExcessObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //}
-            if (unitdetails.ReferralList != null)
+          
+            if (unitdetails!=null && unitdetails.ReferralList != null)
             {
                 TravelCover.ReferralList = unitdetails.ReferralList;
                 TravelCover.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -294,32 +267,24 @@ namespace InsureThatAPI.Controllers
             string policyid = null;
             if (cid.HasValue && cid > 0)
             {
-                //if (TravelCover.TravellerscoveredObj != null && TravelCover.TravellerscoveredObj.EiId > 0 && TravelCover.TravellerscoveredObj.Travellerscovered != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(TravelCover.CustomerId, Convert.ToInt32(RLSSection.Travels), TravelCover.TravellerscoveredObj.EiId, TravelCover.TravellerscoveredObj.Travellerscovered.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (TravelCover.DataofbirthObj != null && TravelCover.DataofbirthObj.EiId > 0 && TravelCover.DataofbirthObj.Dataofbirth != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(TravelCover.CustomerId, Convert.ToInt32(RLSSection.Travels), TravelCover.DataofbirthObj.EiId, TravelCover.DataofbirthObj.Dataofbirth.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (TravelCover.NumbertravelersObj != null && TravelCover.NumbertravelersObj.EiId > 0 && TravelCover.NumbertravelersObj.Numbertravelers != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(TravelCover.CustomerId, Convert.ToInt32(RLSSection.Travels), TravelCover.NumbertravelersObj.EiId, TravelCover.NumbertravelersObj.Numbertravelers.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (TravelCover.YourtripObj != null && TravelCover.YourtripObj.EiId > 0 && TravelCover.YourtripObj.Yourtrip != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(TravelCover.CustomerId, Convert.ToInt32(RLSSection.Travels), TravelCover.YourtripObj.EiId, TravelCover.YourtripObj.Yourtrip.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (TravelCover.WintersportObj != null && TravelCover.WintersportObj.EiId > 0 && TravelCover.WintersportObj.Wintersport != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(TravelCover.CustomerId, Convert.ToInt32(RLSSection.Travels), TravelCover.WintersportObj.EiId, TravelCover.WintersportObj.Wintersport.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (TravelCover.ExcessObj != null && TravelCover.ExcessObj.EiId > 0 && TravelCover.ExcessObj.Excess != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(TravelCover.CustomerId, Convert.ToInt32(RLSSection.Travels), TravelCover.ExcessObj.EiId, TravelCover.ExcessObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //  }
-                Session["unId"] = null;
-                Session["profileId"] = null;
+             
+              
+            }
+            Session["unId"] = null;
+            Session["profileId"] = null;
+            string actionname = null;
+            string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
+            }
+            if (Session["controller"] != null)
+            {
+                controllername = Session["controller"].ToString();
+            }
+            if (actionname != null && controllername != null)
+            {
+                return RedirectToAction(actionname, controllername, new { cid = TravelCover.CustomerId, PcId = TravelCover.PcId });
             }
             return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = TravelCover.CustomerId });
             //return View(TravelCover);

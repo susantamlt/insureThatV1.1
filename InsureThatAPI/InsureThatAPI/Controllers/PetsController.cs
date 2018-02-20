@@ -43,12 +43,12 @@ namespace InsureThatAPI.Controllers
                 Pets.PolicyInclusions = Policyincllist;
                 if (Policyincllist != null)
                 {
-                    if (Policyincllist.Exists(p => p.name == "Pet"))
+                    if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                     {
                         if (Session["unId"] == null && Session["profileId"] == null)
                         {
-                            Session["unId"] = Policyincllist.Where(p => p.name == "Pet").Select(p => p.UnitId).First();
-                            Session["profileId"] = Policyincllist.Where(p => p.name == "Pet").Select(p => p.ProfileId).First();
+                            Session["unId"] = Policyincllist.Where(p => p.name == "Pets" ).Select(p => p.UnitId).First();
+                            Session["profileId"] = Policyincllist.Where(p => p.name == "Pets").Select(p => p.ProfileId).First();
                         }
                     }
                     else
@@ -199,7 +199,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.ProfileData != null && unitdetails.ProfileData.ValueData!=null)
                 {
                     if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.AnnualcoverlimitObj.EiId))
                     {
@@ -288,74 +288,8 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            //var details = db.IT_GetCustomerQnsDetails(cid,Convert.ToInt32(RLSSection.Pet),Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-            //    if (details.Exists(q => q.QuestionId == Pets.SpeciesObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == Pets.SpeciesObj.EiId).FirstOrDefault();
-            //        Pets.SpeciesObj.Species = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.BreedObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == Pets.BreedObj.EiId).FirstOrDefault();
-            //        Pets.BreedObj.Breed = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.OtherbreedObj.EiId))
-            //    {
-            //        Pets.OtherbreedObj.Otherbreed = Convert.ToString(details.Where(q => q.QuestionId == Pets.OtherbreedObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.NameObj.EiId))
-            //    {
-            //        Pets.NameObj.Name = Convert.ToString(details.Where(q => q.QuestionId == Pets.NameObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.DatebirthObj.EiId))
-            //    {
-            //        Pets.DatebirthObj.Datebirth = Convert.ToString(details.Where(q => q.QuestionId == Pets.DatebirthObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.PreexistingObj.EiId))
-            //    {
-            //        Pets.PreexistingObj.Preexisting = Convert.ToString(details.Where(q => q.QuestionId == Pets.PreexistingObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.SpeciesObj.EiId))
-            //    {
-            //        Pets.DescriptionillnessObj.Descriptionillness = Convert.ToString(details.Where(q => q.QuestionId == Pets.DescriptionillnessObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.AnnualcoverlimitObj.EiId))
-            //    {
-            //        Pets.AnnualcoverlimitObj.Annualcoverlimit = Convert.ToString(details.Where(q => q.QuestionId == Pets.AnnualcoverlimitObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.ExcessPetObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == Pets.ExcessPetObj.EiId).FirstOrDefault();
-            //        Pets.ExcessPetObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.BoardingfeeObj.EiId))
-            //    {
-            //        Pets.BoardingfeeObj.Boardingfee = Convert.ToString(details.Where(q => q.QuestionId == Pets.BoardingfeeObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.AnnuallimitbfObj.EiId))
-            //    {
-            //        Pets.AnnuallimitbfObj.Annuallimitbf = Convert.ToString(details.Where(q => q.QuestionId == Pets.AnnuallimitbfObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.DeathillnessObj.EiId))
-            //    {
-            //        Pets.DeathillnessObj.Deathillness = Convert.ToString(details.Where(q => q.QuestionId == Pets.DeathillnessObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.AnnuallimitdtObj.EiId))
-            //    {
-            //        Pets.AnnuallimitdtObj.Annuallimit = Convert.ToString(details.Where(q => q.QuestionId == Pets.AnnuallimitdtObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.DeathinjuryObj.EiId))
-            //    {
-            //        Pets.DeathinjuryObj.Deathinjury = Convert.ToString(details.Where(q => q.QuestionId == Pets.DeathinjuryObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == Pets.AnnuallimitijObj.EiId))
-            //    {
-            //        Pets.AnnuallimitijObj.Annuallimitij = Convert.ToString(details.Where(q => q.QuestionId == Pets.AnnuallimitijObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //}
-            if (unitdetails.ReferralList != null)
+          
+            if (unitdetails!=null && unitdetails.ReferralList != null)
             {
                 Pets.ReferralList = unitdetails.ReferralList;
                 Pets.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -398,71 +332,7 @@ namespace InsureThatAPI.Controllers
 
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                ////if (Pets.SpeciesObj != null && Pets.SpeciesObj.EiId > 0 && Pets.SpeciesObj.Species != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.SpeciesObj.EiId, Pets.SpeciesObj.Species.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.BreedObj != null && Pets.BreedObj.EiId > 0 && Pets.BreedObj.Breed != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.BreedObj.EiId, Pets.BreedObj.Breed, Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.OtherbreedObj != null && Pets.OtherbreedObj.EiId > 0 && Pets.OtherbreedObj.Otherbreed != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.OtherbreedObj.EiId, Pets.OtherbreedObj.Otherbreed.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.NameObj != null && Pets.NameObj.EiId > 0 && Pets.NameObj.Name != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.NameObj.EiId, Pets.NameObj.Name.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.DatebirthObj != null && Pets.DatebirthObj.EiId > 0 && Pets.DatebirthObj.Datebirth != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.DatebirthObj.EiId, Pets.DatebirthObj.Datebirth.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.PreexistingObj != null && Pets.PreexistingObj.EiId > 0 && Pets.SpeciesObj != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.PreexistingObj.EiId, Pets.PreexistingObj.Preexisting.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.DescriptionillnessObj != null && Pets.DescriptionillnessObj.EiId > 0 && Pets.DescriptionillnessObj.Descriptionillness != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.DescriptionillnessObj.EiId, Pets.DescriptionillnessObj.Descriptionillness.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.AnnualcoverlimitObj != null && Pets.AnnualcoverlimitObj.EiId > 0 && Pets.AnnualcoverlimitObj.Annualcoverlimit != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.AnnualcoverlimitObj.EiId, Pets.AnnualcoverlimitObj.Annualcoverlimit.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.ExcessPetObj != null && Pets.ExcessPetObj.EiId > 0 && Pets.ExcessPetObj.Excess != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.ExcessPetObj.EiId, Pets.ExcessPetObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.BoardingfeeObj != null && Pets.BoardingfeeObj.EiId > 0 && Pets.BoardingfeeObj.Boardingfee != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.BoardingfeeObj.EiId, Pets.BoardingfeeObj.Boardingfee.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.AnnuallimitbfObj != null && Pets.AnnuallimitbfObj.EiId > 0 && Pets.AnnuallimitbfObj.Annuallimitbf != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.AnnuallimitbfObj.EiId, Pets.AnnuallimitbfObj.Annuallimitbf.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.DeathillnessObj != null && Pets.DeathillnessObj.EiId > 0 && Pets.DeathillnessObj.Deathillness != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.DeathillnessObj.EiId, Pets.DeathillnessObj.Deathillness.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.AnnuallimitdtObj != null && Pets.AnnuallimitdtObj.EiId > 0 && Pets.AnnuallimitdtObj.Annuallimit != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.AnnuallimitdtObj.EiId, Pets.AnnuallimitdtObj.Annuallimit.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.DeathinjuryObj != null && Pets.DeathinjuryObj.EiId > 0 && Pets.DeathinjuryObj.Deathinjury != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.DeathinjuryObj.EiId, Pets.DeathinjuryObj.Deathinjury.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                ////if (Pets.AnnuallimitijObj != null && Pets.AnnuallimitijObj.EiId > 0 && Pets.AnnuallimitijObj.Annuallimitij != null)
-                ////{
-                ////    db.IT_InsertCustomerQnsData(Pets.CustomerId, Convert.ToInt32(RLSSection.Pet), Pets.AnnuallimitijObj.EiId, Pets.AnnuallimitijObj.Annuallimitij.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                ////}
-                Session["unId"] = null;
-                Session["profileId"] = null;
-            }
+         
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -471,6 +341,20 @@ namespace InsureThatAPI.Controllers
             else
             {
                 ViewBag.cid = Pets.CustomerId;
+            }
+            string actionname = null;
+            string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
+            }
+            if (Session["controller"] != null)
+            {
+                controllername = Session["controller"].ToString();
+            }
+            if (actionname != null && controllername != null)
+            {
+                return RedirectToAction(actionname, controllername, new { cid = Pets.CustomerId, PcId = Pets.PcId });
             }
             return RedirectToAction("TravelCover", "Travel", new { cid = Pets.CustomerId });
         }

@@ -1,0 +1,489 @@
+﻿@model InsureThatAPI.Models.ViewEditPolicyDetails
+@{
+    ViewBag.Title = "Livestock";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (Model.PolicyData != null)
+{
+    <div class="row content">
+        <div class="col-lg-6 col-md-6 col-sm-4 col-xs-12 policy-full-head">
+            <h2>
+                POLICY DETAILS<span>
+                    @if (Model.PolicyData.InsuredName != null)
+                    {
+                        <span>@Model.PolicyData.InsuredName/</span>
+                    }
+                    @if (Model.PolicyData.PolicyNumber != null)
+                    {
+                        @Model.PolicyData.PolicyNumber
+                    }
+                    @if (Model.PolicyData.PolicyStatus != null)
+                    {
+                        if (Model.PolicyData.PolicyStatus == "AP")
+                        { <span>/ Endorsed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "AQ")
+                        { <span>/ Endorsement Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "CQ")
+                        { <span>/ Cancellation Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "DQ")
+                        { <span>/ Discarded Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NP")
+                        { <span>/ New Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "NQ")
+                        { <span>/ Quotation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RP")
+                        { <span>/ Renewed Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "RQ")
+                        { <span>/ Renewal Invitation</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XP")
+                        { <span>/ Cancelled Policy</span> }
+                        else if (Model.PolicyData.PolicyStatus == "XQ")
+                        { <span>/ Cancellation Quotation</span> }
+                    }
+                </span>
+
+            </h2>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+            <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
+            <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
+            <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
+        </div>
+
+        <div class="mt-50 mb-50"></div>
+        <div class="p-10 col-md-12 border-bottom-1 mb-15">
+            <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
+                <img src="~/images/farm-icon.png" class="policy-list-img">
+            </div>
+            <div class="col-lg-11 col-md-11 col-sm-10 col-xs-12">
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
+                                {
+                                <lable>RuralLifestyle</lable>
+                                }
+                                else
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
+                                Policy No: @Model.PolicyData.PolicyNumber
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yy")</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                    <a href="#" class="btn-primary btn col-md-12 mb-5">View Documents</a><br />
+                    <a href="#" class="btn-primary btn col-md-12">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="row content">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+        <div class="row content policy-full-view">
+            <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                @if (Model.SectionData != null)
+                {
+                    using (Ajax.BeginForm("FarmMotors", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <div class="row content policy-full-view">
+                            <div class="col-xs-12">
+                                <div class="well">
+                                    @Html.HiddenFor(p => p.CustomerId)
+                                    <h3 class="col-md-9 col-sm-9 col-xs-12">LIVESTOCK DETAILS</h3>
+                                    @if (Model.ReferralList != "")
+                                    {
+                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                            <div class="pull-right">
+                                                <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+                                            </div>
+                                        </div>
+                                        <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="pull-left">Referral List</h3>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                            <img src="~/images/close-icon.png" />
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <p>@Html.Raw(HttpUtility.HtmlDecode(Model.ReferralList));</p>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Part A – Death</strong></p>
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Please provide the details for each animal to be covered:</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                            @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                            {
+                                                <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-8 col-sm-8 col-xs-12">Class of animal</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63321) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value != null))
+                                            {
+                                                if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value == "1")
+                                                {
+                                                    <span>CATTLE</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value == "2")
+                                                {
+                                                    <span>DEER</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value == "3")
+                                                {
+                                                    <span>GOAT</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value == "4")
+                                                {
+                                                    <span>HORSE</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value == "5")
+                                                {
+                                                    <span>PIG</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63321).Value == "6")
+                                                {
+                                                    <span>SHEEP</span>
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-8 col-sm-8 col-xs-12">Type</p>
+                                        <p class="col-md-4 col-sm-4 col-xs-12 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63323) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value != null))
+                                            {
+                                                if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value == "1")
+                                                {
+                                                    <span>BUCK</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value == "2")
+                                                {
+                                                    <span>DOE</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value == "3")
+                                                {
+                                                    <span>GOAT</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value == "4")
+                                                {
+                                                    <span>HORSE</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value == "5")
+                                                {
+                                                    <span>PIG</span>
+                                                }
+                                                else if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63323).Value == "6")
+                                                {
+                                                    <span>SHEEP</span>
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What breed is your animal?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63325) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63325).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63325).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What is the age of the animal?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63327) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63327).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63327).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What colour are they?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63329) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63329).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63329).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What is your animal used for?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63331) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63331).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63331).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Describe their brand</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63333) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63333).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63333).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Describe their markings</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63335) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63335).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63335).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Is the animal in sound health?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63345) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63345).Value != null))
+                                            {
+                                                if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63345).Value == "1")
+                                                {
+                                                    <span>Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>No</span>
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">If no, please provide details</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63347) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63347).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63347).Value</span>
+                                            }
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63349) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63349).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63349).Value</span>
+                                            }
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63351) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63351).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63351).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Is the animal syndicated?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63353) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63353).Value != null))
+                                            {
+                                                if (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63353).Value == "1")
+                                                {
+                                                    <span>Yes</span>
+                                                }
+                                                else
+                                                {
+                                                    <span>No</span>
+                                                }
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">For how much do you wish to insure your animal?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63355) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63355).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63355).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">You can choose the following option extras. Click on each option to obtain further details</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63359) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63359).Value == "1"))
+                                            {
+                                                <span>Infertility</span>
+                                            }
+                                            else if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63361) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63361).Value == "1"))
+                                            {
+                                                <span>Loss of Use</span>
+                                            }
+                                            else if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63363) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63363).Value == "1"))
+                                            {
+                                                <span>Theft</span>
+                                            }
+                                            else if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63365) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63365).Value == "1"))
+                                            {
+                                                <span>Unborn Foal</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63375) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63375).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63375).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Part B</strong></p>
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Semen and Embryos</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">How many containers do you need to insure?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63383) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63383).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63383).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What is the maximum number of straws and ampoules in a container?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63385) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63385).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63385).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What is the maximum value of any one container and its contents?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63387) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63387).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63387).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <p class="col-md-10 col-sm-10 col-xs-10">What is your annual turnover of straws and ampoules?</p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.ProfileData.ValueData.Exists(p => p.Element.ElId == 63389) && (Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63389).Value != ""))
+                                            {
+                                                <span>@Model.ProfileData.ValueData.Find(p => p.Element.ElId == 63389).Value</span>
+                                            }
+                                        </p>
+                                    </div>
+                                    <div class="row">
+                                        <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    using (Ajax.BeginForm("FarmMotors", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+                    {
+                        HttpMethod = "GET"
+
+                    }))
+                    {
+                        <div class="well">
+                            @Html.HiddenFor(p => p.CustomerId)
+                            <h3>LIVESTOCK DETAILS</h3>
+                            <div class="row">
+                                <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
+                            </div>
+                            <div class="row">
+                                <button type="submit" class="btn-primary btn pull-right" style="margin-top:5% !important;">NEXT</button>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+                <h3>Policy Sections</h3>
+                <div class="well">
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location1').click(function () {
+                        $("#policy-ed-del-wrap1").fadeIn('slow');
+                        $("#policy-ed-del-wrap2").fadeOut('slow');
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="policy-loc-row">
+                        <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
+                        <script type="text/javascript">
+                $(document).ready(function () {
+                    $('#location2').click(function () {
+                        $("#policy-ed-del-wrap2").fadeIn('slow');
+                        $("#policy-ed-del-wrap1").fadeOut('slow');
+                    });
+                });
+                        </script>
+                        <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="dropdown pc pc-in">
+                        <a class="new-cover-policy" href="#">New Cover</a>
+                        <ul class="dropdown-menu col-md-12">
+                            <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
+                            <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
+                            <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
+
+                            <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
+
+                            <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
+                            <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
+                            <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                            <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
+                            <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
+                            <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
+                            <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
+
+                            <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
+                            <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
+
+                            <li><a href="#">+  Valuables</a></li>
+                            <li><a href="#">+  Transit</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,123 @@
+﻿@model InsureThatAPI.Models.PolicyHistory
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; ;
+}
+
+
+<div class="content">
+
+    <div class="col_half policy-full-head"><h2>Policy History<span>@Model.PolicyData.Select(p => p.InsuredName).FirstOrDefault().ToString() / @Model.PolicyData.Select(p => p.PolicyNumber).FirstOrDefault()</span></h2></div>
+
+    <div class="col_half col_last pull-right">
+        <div class="fright">
+            <a class="btn color-bk-btn"  href="@Url.Action("NewPolicy", "Customer",new { cid=@ViewBag.cid})">Add Policy</a>
+            <a class="btn color-bk-btn" href="@Url.Action("InsuredList", "Customer",new {cid = @ViewBag.cid, PolicyNumber=Model.PolicyData.Select(p=>p.PolicyNumber).First()})">View Insured</a>
+
+        </div>
+    </div>
+    <div class="clearfix"></div>
+
+    <div class="pc-list">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2 col-xs-12">
+                    <img src="~/images/farm-icon.png" class="policy-list-img">
+                </div>
+                <div class="col-md-8 col-sm-7 col-xs-12 col-sm-offset-0 col-xs-offset-1">
+                    <div class="col_full">
+                        <div class="row">
+                            <div class="col-sm-4 col-xs-6 p-5">
+                                Policy Type: <lable>Rural Lifestyle</lable>
+                                @if (Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1029)
+                                {
+                                    <lable>Rural Life Style</lable>
+                                }
+                                else if(Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1021)
+                                { <label>Farm</label>
+                                }
+                            </div>
+                            <div class="col-sm-4 col-xs-6 p-5">Policy No: @Model.PolicyData.Select(p => p.PolicyNumber).FirstOrDefault()</div>
+                            <div class="col-sm-4 col-xs-6 p-5">Insured:@Model.PolicyData.Select(p => p.InsuredName).FirstOrDefault().ToString() </div>
+                            <div class="col-sm-4 col-xs-6 p-5" style="margin-top:10px;">Start Date:@Model.PolicyData.Select(p => p.InceptionDate).FirstOrDefault().ToString("dd/MM/yyyy")</div>
+                            <div class="col-sm-4 col-xs-6 p-5" style="margin-top:10px;">End Date: @Model.PolicyData.Select(p => p.ExpiryDate).FirstOrDefault().ToString("dd/MM/yyyy")</div>
+                            <div class="col-sm-4 col-xs-6 p-5" style="margin-top:10px;">Duration: 12 Months</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1 col-md-2 col-sm-3 col-xs-12">
+                    <li class="dropdown" style="list-style: none;">
+                        <a href="#" class=" btn-primary btn col-md-12 mb-5 ">View Documents </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Invoice</a></li>
+                            <li><a href="#">Certification</a></li>
+                            <li><a href="#">Application</a></li>
+                            <li><a href="#">Rural Lifestyle Protection Policy PDS </a></li>
+                            <li><a href="#">Statement of Advice</a></li>
+                            <li><a href="#">Travel Protection Policy PDS </a></li>
+                            <li><a href="#">Premium Breakdown</a></li>
+                            <li><a href="#">Certificate of Currency</a></li>
+                            <li><a href="#">Key Factsheet Home Building</a></li>
+                            <li><a href="#">Key Factsheet Contents</a></li>
+                            <li><a href="#">Financial Service Guide</a></li>
+                        </ul>
+                    </li>
+                    <a href="#" class="btn-primary btn col-sm-12 col-xs-5">Cancel Policy</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row content policy-full-view">
+    <div class="col_full">
+        <table class="table">
+            <tr class="black-head-table">
+
+                <th class="space_left">Status</th>
+                @*<th class="space_left">Action</th>*@
+                <th class="space_right">Effective Date</th>
+                <th class="space_right">Expiry Date</th>
+            </tr>
+
+         
+    @if (Model.PolicyData != null && Model.PolicyData.Count() > 0)
+    {
+        for (int i = 0; i < Model.PolicyData.Count(); i++)
+        {
+            <tr>
+                <td>
+                    @if (Model.PolicyData[i].PolicyStatus == "AP")
+                    { <span>/ Endorsed Policy</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "AQ")
+                    { <span> Endorsement Quotation</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "CP")
+                    { <span> Cancelled Policy</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "CQ")
+                    { <span> Cancellation Quotation</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "DQ")
+                    { <span> Discarded Quotation</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "NP")
+                    { <span> New Policy</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "NQ")
+                    { <span> Quotation</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "RP")
+                    { <span> Renewed Policy</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "RQ")
+                    { <span> Renewal Invitation</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "XP")
+                    { <span> Cancelled Policy</span> }
+                    else if (Model.PolicyData[i].PolicyStatus == "XQ")
+                    { <span> Cancellation Quotation</span> }
+                </td>
+                @*<td></td>*@
+                <td>@Model.PolicyData[i].EffectiveDate.ToString("dd/MM/yyyy")</td>
+                <td>@Model.PolicyData[i].EffectiveDate.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+    }
+                @*<td>
+                        <input type="button" name="submit" value="Edit" class="btn-primary btn">&nbsp;<input type="button" name="submit" value="Delete" class="btn-primary btn">
+                    </td>*@
+           
+        </table>
+    </div>
+</div>

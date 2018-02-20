@@ -92,7 +92,7 @@ namespace InsureThatAPI.Controllers
                         {
 
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Pet"))
+                        else if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                         {
                             return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                         }
@@ -296,7 +296,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.BoatnameObj.EiId))
                     {
@@ -460,7 +460,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            if (unitdetails.ReferralList != null)
+            if (unitdetails!=null && unitdetails.ReferralList != null)
             {
                 BoatDetails.ReferralList = unitdetails.ReferralList;
                 BoatDetails.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -505,65 +505,26 @@ namespace InsureThatAPI.Controllers
             Addresslist.Add(new SelectListItem { Text = "XYZ", Value = "2" });
             BoatDetails.AddressObj.AddressList = Addresslist;
             var db = new MasterDataEntities();
-            if (cid.HasValue && cid > 0)
-            {
-                //if (BoatDetails.BoatnameObj != null && BoatDetails.BoatnameObj.EiId > 0 && BoatDetails.BoatnameObj.Name != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.BoatnameObj.EiId, BoatDetails.BoatnameObj.Name.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.RegistrationdetailObj != null && BoatDetails.RegistrationdetailObj.EiId > 0 && BoatDetails.RegistrationdetailObj.Registration != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.RegistrationdetailObj.EiId, BoatDetails.RegistrationdetailObj.Registration.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.MakeObj != null && BoatDetails.MakeObj.EiId > 0 && BoatDetails.MakeObj.Make != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.MakeObj.EiId, BoatDetails.MakeObj.Make.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.ModelbObj != null && BoatDetails.ModelbObj.EiId > 0 && BoatDetails.ModelbObj.Modelb != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.ModelbObj.EiId, BoatDetails.ModelbObj.Modelb.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.YearmanufactureObj != null && BoatDetails.YearmanufactureObj.EiId > 0 && BoatDetails.YearmanufactureObj.Year != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.YearmanufactureObj.EiId, BoatDetails.YearmanufactureObj.Year.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.LengthmetreObj != null && BoatDetails.LengthmetreObj.EiId > 0 && BoatDetails.LengthmetreObj.Metres != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.LengthmetreObj.EiId, BoatDetails.LengthmetreObj.Metres.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.TypeboatObj != null && BoatDetails.TypeboatObj.EiId > 0 && BoatDetails.TypeboatObj.Type != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.TypeboatObj.EiId, BoatDetails.TypeboatObj.Type.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.HullmeterialObj != null && BoatDetails.HullmeterialObj.EiId > 0 && BoatDetails.HullmeterialObj.Meterials != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.HullmeterialObj.EiId, BoatDetails.HullmeterialObj.Meterials.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.SpeedObj != null && BoatDetails.SpeedObj.EiId > 0 && BoatDetails.SpeedObj.Speed != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.SpeedObj.EiId, BoatDetails.SpeedObj.Speed.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.DetectorObj != null && BoatDetails.DetectorObj.EiId > 0 && BoatDetails.DetectorObj.Detector != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.DetectorObj.EiId, BoatDetails.DetectorObj.Detector.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.MooringstorageObj != null && BoatDetails.MooringstorageObj.EiId > 0 && BoatDetails.MooringstorageObj.Mooringorstorage != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.MooringstorageObj.EiId, BoatDetails.MooringstorageObj.Mooringorstorage.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.otherpleasedetailObj != null && BoatDetails.otherpleasedetailObj.EiId > 0 && BoatDetails.otherpleasedetailObj.Other != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.otherpleasedetailObj.EiId, BoatDetails.otherpleasedetailObj.Other.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (BoatDetails.AddressObj != null && BoatDetails.AddressObj.EiId > 0 && BoatDetails.AddressObj.Address != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(BoatDetails.CustomerId, Convert.ToInt32(RLSSection.Boat), BoatDetails.AddressObj.EiId, BoatDetails.AddressObj.Address.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
+ 
                 Session["unId"] = null;
                 Session["profileId"] = null;
+                string actionname = null;
+                string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
+            }
+            if (Session["controller"] != null)
+                {
+                    controllername = Session["controller"].ToString();
+                }
+                if (actionname != null && controllername != null)
+                {
+                    return RedirectToAction(actionname, controllername, new { cid = BoatDetails.CustomerId, PcId = BoatDetails.PcId });
+                }
                 return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
                // return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
-            }
+            
             return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
         }
         //[HttpGet]

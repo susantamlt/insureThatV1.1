@@ -127,6 +127,8 @@ namespace InsureThatAPI.Controllers
             Session["InsuredId"] = null;
             Session["UnitId"] = null;
             Session["Actn"] = null;
+            Session["controller"] = null;
+            Session["Actname"] = null;
             if (Session["apiKey"] != null)
             {
                 if (actions != null && !string.IsNullOrEmpty(actions))
@@ -699,6 +701,8 @@ namespace InsureThatAPI.Controllers
                 Session["Actn"] = null;
                 Session["UnitId"] = null;
                 Session["Policyinclustions"] = null;
+                Session["controller"] = null;
+                Session["Actn"] = null;
                 PolicyTypes model = new PolicyTypes();
                 if (insureId.HasValue)
                 {
@@ -1585,7 +1589,6 @@ namespace InsureThatAPI.Controllers
                         if (EmpResponse != null)
                         {
                             unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
-
                             if (unitdetails.Status == "Success")
                             {
                                 Session["ApiKey"] = unitdetails.ApiKey;

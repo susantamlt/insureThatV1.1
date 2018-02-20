@@ -34,6 +34,10 @@ namespace InsureThatAPI.Controllers
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                if (Session["cid"] != null)
+                {
+                    cid = Convert.ToInt32(Session["cid"]);
+                }
                 if (policyinclu != null && policyinclu.Count() > 0)
                 {
                     if (Session["UnitId"] != null)
@@ -42,6 +46,7 @@ namespace InsureThatAPI.Controllers
                         int unitid = 0;
                         string unitname = null;
                         int matched = 0;
+                        
                         for (int i = 0; i < policyinclu.Count(); i++)
                         {
                             if (unitid != null && unitid > 0 && unitname != null)
@@ -131,6 +136,7 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
+         
             return RedirectToAction("PremiumDetails", "Customer", new { cid = cid, PcId = PcId });
         }
         [HttpGet]
@@ -141,8 +147,12 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "HomeBilding";
+                Session["Actname"] = "HomeBilding";
                 Session["controller"] = "PolicyDetails";
+                if (cid.HasValue)
+                {
+                    Session["cid"] = cid.Value;
+                }
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -306,7 +316,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "HomeContents";
+                Session["Actname"] = "HomeContents";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -337,7 +347,7 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Contents&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -491,7 +501,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "Valuables";
+                Session["Actname"] = "Valuables";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -675,7 +685,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "FarmProperty";
+                Session["Actname"] = "FarmProperty";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -859,7 +869,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "Travels";
+                Session["Actname"] = "Travels";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -1042,7 +1052,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "Liability";
+                Session["Actname"] = "Liability";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -1208,7 +1218,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "Boat";
+                Session["Actname"] = "Boat";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -1390,7 +1400,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "Motors";
+                Session["Actname"] = "Motors";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
@@ -1572,7 +1582,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
-                Session["Actn"] = "Pets";
+                Session["Actname"] = "Pets";
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();

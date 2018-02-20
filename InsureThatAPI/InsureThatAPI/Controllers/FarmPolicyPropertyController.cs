@@ -469,7 +469,7 @@ namespace InsureThatAPI.Controllers
             Session["unId"] = null;
             Session["profileId"] = null;
 
-            return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid, PcId = FarmDetails.PolicyId });
+            return RedirectToAction("FarmContents", "MobileFarm", new { cid = FarmDetails.CustomerId, PcId = FarmDetails.PolicyId });
 
             return View(FarmDetails);
         }

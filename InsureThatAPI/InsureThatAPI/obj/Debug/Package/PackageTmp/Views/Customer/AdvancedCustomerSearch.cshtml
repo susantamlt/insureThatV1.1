@@ -1,0 +1,395 @@
+﻿@model InsureThatAPI.Models.CustomerSearch
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml"; ;
+}
+<div style="margin-top:40px;"></div>
+<div class="col-md-9  mt-120 mb-120">
+    <div class="col-md-9 col-sm-6 col-xs-12">
+        <h3 class="header-title">ADVANCED SEARCH</h3>
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-md-9 col-sm-9 col-xs-12"></div>
+    <div style="margin-top:40px;"></div>
+    <div id="addnewcust" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Add New Customer</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="newerror"></div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12 mt-10">Email</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.TextBoxFor(model => model.emailId, new { @class = "form-control form-border-bottom", @placeholder = "Email", @id = "newemail" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12 mt-10">Name</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.TextBoxFor(model => model.insuredName, new { @class = "form-control form-border-bottom", @placeholder = "Name", @id = "newname" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-12 mt-10">PHONE NO</div>
+                        <div class="col-md-4 col-sm-4 col-xs-12">
+                            @Html.TextBoxFor(model => model.phoneNo, new { @class = "form-control form-border-bottom", @placeholder = "Phone Number", @id = "newphoneno" })
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    <button class="btn btn-default no-border" id="newcust" aria-hidden="true"> Save </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    @if (TempData["ErrorMsg"] != null)
+    {
+        <div class="col-md-9 col-sm-6 col-xs-12 error">@TempData["ErrorMsg"]</div>
+    }
+    <div class="col-md-12 mb-50">
+        @using (Html.BeginForm("AdvCustomerSearch", "Customer", FormMethod.Post, new { CustomerId = 1, enctype = "multipart/form-data", id = "advancedSearch", name = "advancedSearch" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(o=>o.Actntype)
+            <div class="row">
+                <div class="col-md-2 col-sm-2 col-xs-12 mt-10">INSURED NAME</div>
+                <div class="col-md-4 col-sm-4 col-xs-12" id="insuredName-div">
+                    @*@Html.TextBoxFor(model => model.insuredName, new { @class = "form-control form-border-bottom js-data-example-ajax", @placeholder = "Name or Company Name", @id = "name", @name = "insuredName" })*@
+                    @*@Html.DropDownListFor(m=>m.insuredName,new SelectList,new { @class = "form-control form-border-bottom js-data-example-ajax", @placeholder = "Name or Company Name", @id = "name", @name = "insuredName" })*@
+                    <select class="js-data-example-ajax" style="width:250px;" placeholder="Name or Company Name" id="name" name="insuredName">
+                        <option value="">
+                            Name or Company Name
+                        </option>
+                    </select>
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 mt-10">POLICY NO</div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    <select class="js-data-policyno" style="width:250px;" placeholder="Policy Number" id="policyno" name="PolicyNumbers">
+                        <option value="">Policy Number</option>
+                    </select>
+                    @*@if (Model.PolicyNumbers != null && Model.PolicyNumbers.Count() > 0)
+                        {*@
+                    @*@Html.DropDownListFor(model => model.PolicyNumbers.First(),new SelectListItem, Model.PolicyNumbers, "-- Select --", new { @class = "form-control form-border-bottom", @id = "policynum", @name = "policynumbers" })
+                        @Html.DropDownListFor(m=>m.PolicyNumbers,new SelectList,new { @class = "form-control form-border-bottom js-data-example-ajax", @placeholder = "Name or Company Name", @id = "name", @name = "insuredName" })*@
+                    @*}
+                        else
+                        {
+                            @Html.TextBoxFor(model => model.policyNo, new { @class = "form-control form-border-bottom ajax-keypress", @placeholder = "Policy Number", @id = "policynumber" })
+                        }*@
+
+                    @Html.HiddenFor(model => model.InsuredId, new { @class = "form-control form-border-bottom", @id = "insuredid" })
+
+                    @Html.HiddenFor(model => model.Actntype)
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-2 col-sm-2 col-xs-12 mt-10">PHONE NO</div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(model => model.phoneNo, new { @class = "form-control form-border-bottom ajax-keypress", @placeholder = "Phone Number", @id = "phonenu" })
+                </div>
+                <div class="col-md-2 col-sm-2 col-xs-12 mt-10">EMAIL</div>
+                <div class="col-md-4 col-sm-4 col-xs-12">
+                    @Html.TextBoxFor(model => model.emailId, new { @class = "form-control form-border-bottom ajax-keypress", @placeholder = "E-mail Address", @id = "email" })
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6 col-sm-6 col-xs-12"></div>
+                <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                    @if (Model.Actntype != null && Model.Actntype == "Attach")
+                    {
+                        <button type="button" name="submit-search" class="form-control form-border-bottom btn search-btn attachpolicy">Attach</button>
+                    }
+                    else
+                    {
+                        @*<a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>*@
+                        <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn" disabled="disabled">Continue</button>
+                    }
+                </div>
+            </div>
+            <div id="show"></div>
+        }
+        @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Get, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            if (Model.Actntype== null || Model.Actntype != "Attach")
+            {
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12"></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                        <button type="submit" class="form-control form-border-bottom btn newcut text-right" role="button" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:5px;line-height:22px;">
+                            New Customer
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+<style type="text/css">
+    .device-lg #slider .emphasis-title h1 {font-size: 52px;}
+    .device-md #slider .emphasis-title h1 {font-size: 44px;}
+    #wrapper {background: url(../images/yellow-overlay.png) no-repeat right top;}
+    .error {color: #FF0000;}
+</style>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<link href="~/css/select2.min.css" rel="stylesheet" />
+<script src="~/Scripts/select2.js"></script>
+<script type="text/javascript">
+    //$(".newcut").click(function () {
+    //    $.ajax({
+    //        url: '/customer/NewPolicy',
+    //        type: 'GET',
+    //        data: {  },
+    //        success: function (response) {
+    //            window.location.href = responce;
+    //        }
+    //    });
+    //});
+    $(".attachpolicy").click(function () {
+        $.ajax({
+            url: '/customer/Attach',
+            type: 'Post',
+            data: {},
+            success: function (responce) {
+                window.location.href = responce;
+            }
+        });
+    });
+    
+    $("#newcust").click(function () {
+        var phonenu = $("#newphoneno").val();
+        var name = $("#newname").val();
+        var email = $("#newemail").val();
+        if (email == '' && phonenu == '' && name == '') {
+            return false;
+        }
+        else if ((email == '' && phonenu == '') || (email == '' && name == '')) {
+            return false;
+        }
+        $.ajax({
+            url: '/customer/newcustomer',
+            type: 'POST',
+            data: { "name": name, "email": email, "phonenumber": phonenu },
+            success: function (response) {
+                if (response.status == true) {
+                }
+            }
+        });
+    });
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        jQuery("form[name='advancedSearch']").validate({
+            rules: {
+                insuredName: {
+                    required: function (element) {
+                        if ($("#policynumber").val() != "" || $("#email").val() != "" || $("#phonenu").val() != "") {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    },
+                    regex: /^[a-zA-Z0-9 ]*$/,
+                },
+                emailId: {
+                    required: function (element) {
+                        if ($("#name").val() != "" || $("#policynumber").val() != "" || $("#phonenu").val() != "") {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    },
+                    email: true,
+                },
+                policyNo: {
+                    required: function (element) {
+                        if ($("#name").val() != "" || $("#email").val() != "" || $("#phonenu").val() != "") {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    },
+                    regex: /^[a-zA-Z0-9]*$/,
+                },
+                phoneNo: {
+                    required: function (element) {
+                        if ($("#name").val() != "" || $("#email").val() != "" || $("#policynumber").val() != "") {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    },
+                    number: true,
+                },
+
+            },
+            messages: {
+                insuredName: {
+                    required: "Please enter insured name",
+                    regex: "Special character not allowed"
+                },
+                emailId: {
+                    required: "Please enter a email address.",
+                    email: "Please enter a valid email address."
+                },
+                policyNo: {
+                    required: "Please enter a policy number.",
+                    regex: "Special character not allowed"
+                },
+                phoneNo: {
+                    required: "Please enter a phone number.",
+                    number: "Please enter a valid phone number."
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            }
+            //,
+            //submitHandler: function (form) {
+            //    $.ajax({
+            //        url: form.action,
+            //        type: form.method,
+            //        data: $(form).serialize(),
+            //        success: function (responce) {
+
+            //        }
+            //    });
+            //}
+        });
+    });
+    $(function () {
+        $('.js-data-policyno').select2({
+        });
+    });
+    $(function () {
+        $('.js-data-example-ajax').select2({
+
+            ajax: {
+                url: '/customer/customersearch',
+                type: 'POST',
+                data: function (params) {
+                    var query = {
+                        term: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                }
+                ,
+                processResults: function (data) {
+                    $('#name').empty();
+                    return {
+                        results: data.results
+                    };
+                }
+            }
+        });
+    });
+    $(document).ready(function () {
+        $('#name').on('change', (function () {
+            var id = $(this).val();
+            var name = $(this).text();
+            $('.search-btn').attr("disabled", "disabled");
+            $.ajax({
+                type: "POST",
+                url: "/customer/AdvCustomerSearch",
+                data: { "InsuredName": name },
+                success: function (responce) {
+                    if (responce.results[0].MobileNo != null && responce.results[0].MobileNo != '') {
+                        var mNumber1 = responce.results[0].MobileNo;
+                        var mNumber = mNumber1.replace(' ', '');
+                        $('#phonenu').val(mNumber.replace(' ', ''));
+                    } else if (responce.results[0].PhoneNo != '') {
+                        var pNumber1 = responce.results[0].PhoneNo;
+                        var pNumber = pNumber1.replace(' ', '');
+                        $('#phonenu').val(pNumber.replace(' ', ''));
+                    }
+                    else if (responce.results[0].InsuredID != '') {
+                        var insuredid1 = responce.results[0].InsuredID;
+                        $('#insuredid').val(insuredid1);
+                        //if (insuredid1 != '' && insuredid1 != null && insuredid1.contains(' ')) {
+                        //    var insuredid = insuredid11.replace(' ', '');
+                        //    $('#insuredid').val(insuredid.replace(' ', ''));
+                        //}
+                    }
+                    else {
+                        $('#phonenu').val('');
+                        $('#insuredid').val('');
+                    }
+                    if (responce.results[0].PolicyNumbers != '') {
+                        $.each(responce.results[0].PolicyNumbers, function (key, value) {
+                            $('#policyno').empty().append($('<option></option>').val(key).html(value));
+                        });
+                        //var pNumber = pNumber1.replace(' ', '');
+                        //$('#phonenu').val(pNumber.replace(' ', ''));
+
+                        $('.search-btn').prop("disabled", false);
+                    }
+                    $('#email').val(responce.results[0].EmailID);
+
+                }
+            });
+        }));
+        $('.ajax-keypress').keyup(function (e) {
+            $('.search-btn').prop("disabled", false);
+            var id = $(this).attr('id');
+            var val = $(this).val();
+            var len = val.length;
+            var data = '';
+            if (id == 'policynumber' && len > '5') {
+                data = { 'policyNo': val, 'phoneNo': '', 'emailId': '' };
+            } else if (id == 'phonenu' && len > '5') {
+                data = { 'policyNo': '', 'phoneNo': val, 'emailId': '' };
+            } else if (id == 'email') {
+                data = { 'policyNo': '', 'phoneNo': '', 'emailId': val };
+            } else {
+            }
+            if (data != '') {
+                $.ajax({
+                    type: "POST",
+                    url: "/customer/AdvCustomerSearch",
+                    data: data,
+                    success: function (responce) {
+                        if (!$.isEmptyObject(responce.results)) {
+                            $('#name').html('<option value="' + responce.results[0].InsuredID + '">' + responce.results[0].FirstName + ' ' + responce.results[0].LastName + '</option>');
+                            //$('#policynumber').val(responce.results[0].InsuredID);
+                            if (responce.results[0].MobileNo != '') {
+                                var mNumber1 = responce.results[0].MobileNo;
+                                var mNumber = mNumber1.replace(' ', '');
+                                $('#phonenu').val(mNumber.replace(' ', ''));
+                            } else if (responce.results[0].PhoneNo != '') {
+                                var pNumber1 = responce.results[0].PhoneNo;
+                                var pNumber = pNumber1.replace(' ', '');
+                                $('#phonenu').val(pNumber.replace(' ', ''));
+                            } else if (responce.results[0].InsuredID != '') {
+                                var insuredid1 = responce.results[0].InsuredID;
+                                var insuredid = insuredid11.replace(' ', '');
+                                $('#insuredid').val(insuredid.replace(' ', ''));
+                            }
+                            else {
+                                $('#phonenu').val('');
+                                $('#insuredid').val('');
+
+                            }
+
+                            $('#email').val(responce.results[0].EmailID);
+                            $('.search-btn').prop("disabled", false);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>

@@ -87,7 +87,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Motor"))
+                    else if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors"))
                     {
                         return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                     }
@@ -96,7 +96,7 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                     }
 
-                    else if (Policyincllist.Exists(p => p.name == "Pet"))
+                    else if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
                     {
                         return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                     }
@@ -104,7 +104,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("TravelCover", "Travel", new { cid = cid });
                     }
-                 
+
                     if (Policyincllist.Exists(p => p.name == "Home Content" || p.name == "Home Contents"))
                     {
                         if (Session["unId"] == null && Session["profileId"] == null)
@@ -112,7 +112,7 @@ namespace InsureThatAPI.Controllers
                             Session["unId"] = Policyincllist.Where(p => p.name == "Home Content" || p.name == "Home Contents").Select(p => p.UnitId).First();
                             Session["profileId"] = Policyincllist.Where(p => p.name == "Home Content" || p.name == "Home Contents").Select(p => p.ProfileId).First();
                         }
-                     
+
                     }
                     else
                     {
@@ -221,7 +221,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
                     //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == HomeContent.LocationObj.EiId))
                     //{
@@ -254,24 +254,23 @@ namespace InsureThatAPI.Controllers
                         HomeContent.ExcesspayObj.Excess = val;
                     }
                 }
-            }
-            if (unitdetails != null && unitdetails.SectionData.AddressData != null)
-            {
-                if (unitdetails.SectionData.AddressData != null )
+                if(unitdetails.SectionData!=null && unitdetails.SectionData.AddressData != null)
                 {
-                    HomeContent.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1+", "+ unitdetails.SectionData.AddressData.Suburb + " ,"+unitdetails.SectionData.AddressData.State +", "+ unitdetails.SectionData.AddressData.Postcode;
-                    HomeContent.Pincode = unitdetails.SectionData.AddressData.Postcode;
-                    HomeContent.Sub = unitdetails.SectionData.AddressData.Suburb;
-                    HomeContent.state = unitdetails.SectionData.AddressData.State;
+                    if (unitdetails.SectionData.AddressData != null)
+                    {
+                        HomeContent.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
+                        HomeContent.Pincode = unitdetails.SectionData.AddressData.Postcode;
+                        HomeContent.Sub = unitdetails.SectionData.AddressData.Suburb;
+                        HomeContent.state = unitdetails.SectionData.AddressData.State;
+                    }
                 }
-            }
-            if (unitdetails.ReferralList != null)
+            }           
+            if (unitdetails!=null && unitdetails.ReferralList != null)
             {
                 HomeContent.ReferralList = unitdetails.ReferralList;
                 HomeContent.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
                 HomeContent.Referels = new List<string>();
                 string[] delim = { "<br/>" };
-
                 string[] spltd = HomeContent.ReferralList.Split(delim, StringSplitOptions.None);
                 if (spltd != null && spltd.Count() > 0)
                 {
@@ -280,38 +279,8 @@ namespace InsureThatAPI.Controllers
                         HomeContent.Referels.Add(spltd[i].Replace("&nbsp;&nbsp;&nbsp;&nbsp", " "));
                     }
                 }
-
             }
-
-            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.HomeContents),Convert.ToInt32(PolicyType.RLS),policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-            //    if (details.Exists(q => q.QuestionId == HomeContent.CosttoreplaceObj.EiId))
-            //    {
-            //        HomeContent.CosttoreplaceObj.Costtoreplaces = Convert.ToString(details.Where(q => q.QuestionId == HomeContent.CosttoreplaceObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == HomeContent.TotalcoverObj.EiId))
-            //    {
-            //        HomeContent.TotalcoverObj.Totalcover = Convert.ToString(details.Where(q => q.QuestionId == HomeContent.TotalcoverObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == HomeContent.YearclaimObj.EiId))
-            //    {
-            //        HomeContent.YearclaimObj.Yearclaim = Convert.ToString(details.Where(q => q.QuestionId == HomeContent.YearclaimObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == HomeContent.ExcesspayObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == HomeContent.ExcesspayObj.EiId).FirstOrDefault();
-            //        HomeContent.ExcesspayObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == HomeContent.DescriptionObj.EiId))
-            //    {
-            //        HomeContent.DescriptionObj.Description = Convert.ToString(details.Where(q => q.QuestionId == HomeContent.DescriptionObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == HomeContent.SuminsuredObj.EiId))
-            //    {
-            //        HomeContent.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == HomeContent.SuminsuredObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //}
+     
             ViewBag.cid = cid;
             return View(HomeContent);
         }
@@ -333,36 +302,23 @@ namespace InsureThatAPI.Controllers
             }
             HomeContent.ExcesspayObj.ExcessList = HCList;
             var db = new MasterDataEntities();
-            string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                //if (HomeContent.LocationObj != null && HomeContent.LocationObj.EiId > 0 && HomeContent.LocationObj.Location != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(HomeContent.CustomerId, Convert.ToInt32(RLSSection.HomeContents), HomeContent.LocationObj.EiId, HomeContent.LocationObj.Location.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (HomeContent.CosttoreplaceObj != null && HomeContent.CosttoreplaceObj.EiId > 0 && HomeContent.CosttoreplaceObj.Costtoreplaces != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(HomeContent.CustomerId, Convert.ToInt32(RLSSection.HomeContents), HomeContent.CosttoreplaceObj.EiId, HomeContent.CosttoreplaceObj.Costtoreplaces.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (HomeContent.DescriptionObj != null && HomeContent.DescriptionObj.EiId > 0 && HomeContent.DescriptionObj.Description != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(HomeContent.CustomerId, Convert.ToInt32(RLSSection.HomeContents), HomeContent.DescriptionObj.EiId, HomeContent.DescriptionObj.Description.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (HomeContent.SuminsuredObj != null && HomeContent.SuminsuredObj.EiId > 0 && HomeContent.SuminsuredObj.Suminsured != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(HomeContent.CustomerId, Convert.ToInt32(RLSSection.HomeContents), HomeContent.SuminsuredObj.EiId, HomeContent.SuminsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (HomeContent.YearclaimObj != null && HomeContent.YearclaimObj.EiId > 0 && HomeContent.YearclaimObj.Yearclaim != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(HomeContent.CustomerId, Convert.ToInt32(RLSSection.HomeContents), HomeContent.YearclaimObj.EiId, HomeContent.YearclaimObj.Yearclaim.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (HomeContent.ExcesspayObj != null && HomeContent.ExcesspayObj.EiId > 0 && HomeContent.ExcesspayObj.Excess != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(HomeContent.CustomerId, Convert.ToInt32(RLSSection.HomeContents), HomeContent.ExcesspayObj.EiId, HomeContent.ExcesspayObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-            }
+            string policyid = null;    
             Session["profileId"] = null;
             Session["UnId"] = null;
+            string actionname = null;
+            string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
+            }
+            if (Session["controller"] != null)
+            {
+                controllername = Session["controller"].ToString();
+            }
+            if (actionname != null && controllername != null)
+            {
+                return RedirectToAction(actionname, controllername, new { cid = HomeContent.CustomerId, PcId = HomeContent.PcId });
+            }
             return RedirectToAction("Valuables", new { cid = HomeContent.CustomerId });
         }
         [HttpGet]
@@ -405,7 +361,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Motor"))
+                        else if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors" ))
                         {
                             return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                         }
@@ -414,7 +370,7 @@ namespace InsureThatAPI.Controllers
                             return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                         }
 
-                        else if (Policyincllist.Exists(p => p.name == "Pet"))
+                        else if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
                         {
                             return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                         }
@@ -560,22 +516,23 @@ namespace InsureThatAPI.Controllers
                     {
                         Session["unId"] = unitdetails.SectionData.UnId;
                         Session["profileId"] = unitdetails.SectionData.ProfileUnId;
-                       
+
                     }
                 }
             }
             if (unitdetails != null)
             {
-                if (unitdetails != null && unitdetails.SectionData.AddressData != null)
-                {
-                    if (unitdetails.SectionData.AddressData != null)
-                    {
-                        ValuablesHC.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
-                       
-                    }
-                }
                 if (unitdetails.SectionData != null)
                 {
+                    if (unitdetails != null && unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
+                    {
+                        if (unitdetails.SectionData.AddressData != null)
+                        {
+                            ValuablesHC.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
+
+                        }
+                    }
+
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.LocationObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.LocationObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -608,31 +565,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Valuables), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-            //    if (details.Exists(q => q.QuestionId == ValuablesHC.UnspecificObj.EiId))
-            //    {
-            //        ValuablesHC.UnspecificObj.Unspecific = Convert.ToString(details.Where(q => q.QuestionId == ValuablesHC.UnspecificObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == ValuablesHC.TotalcoverObj.EiId))
-            //    {
-            //        ValuablesHC.TotalcoverObj.Totalcover = Convert.ToString(details.Where(q => q.QuestionId == ValuablesHC.TotalcoverObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == ValuablesHC.ExcesspayObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == ValuablesHC.ExcesspayObj.EiId).FirstOrDefault();
-            //        ValuablesHC.ExcesspayObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //    if (details.Exists(q => q.QuestionId == ValuablesHC.DescriptionObj.EiId))
-            //    {
-            //        ValuablesHC.DescriptionObj.Description = Convert.ToString(details.Where(q => q.QuestionId == ValuablesHC.DescriptionObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == ValuablesHC.SuminsuredObj.EiId))
-            //    {
-            //        ValuablesHC.SuminsuredObj.Suminsured = Convert.ToString(details.Where(q => q.QuestionId == ValuablesHC.SuminsuredObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //}
+        
             if (unitdetails.ReferralList != null)
             {
                 ValuablesHC.ReferralList = unitdetails.ReferralList;
@@ -670,31 +603,23 @@ namespace InsureThatAPI.Controllers
             ValuablesHC.ExcesspayObj.ExcessList = HCList;
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                //if (ValuablesHC.LocationObj != null && ValuablesHC.LocationObj.EiId > 0 && ValuablesHC.LocationObj.Location != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(ValuablesHC.CustomerId, Convert.ToInt32(RLSSection.Valuables), ValuablesHC.LocationObj.EiId, ValuablesHC.LocationObj.Location.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (ValuablesHC.UnspecificObj != null && ValuablesHC.UnspecificObj.EiId > 0 && ValuablesHC.UnspecificObj.Unspecific != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(ValuablesHC.CustomerId, Convert.ToInt32(RLSSection.Valuables), ValuablesHC.UnspecificObj.EiId, ValuablesHC.UnspecificObj.Unspecific.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (ValuablesHC.DescriptionObj != null && ValuablesHC.DescriptionObj.EiId > 0 && ValuablesHC.DescriptionObj.Description != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(ValuablesHC.CustomerId, Convert.ToInt32(RLSSection.Valuables), ValuablesHC.DescriptionObj.EiId, ValuablesHC.DescriptionObj.Description.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (ValuablesHC.SuminsuredObj != null && ValuablesHC.SuminsuredObj.EiId > 0 && ValuablesHC.SuminsuredObj.Suminsured != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(ValuablesHC.CustomerId, Convert.ToInt32(RLSSection.Valuables), ValuablesHC.SuminsuredObj.EiId, ValuablesHC.SuminsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (ValuablesHC.ExcesspayObj != null && ValuablesHC.ExcesspayObj.EiId > 0 && ValuablesHC.ExcesspayObj.Excess != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(ValuablesHC.CustomerId, Convert.ToInt32(RLSSection.Valuables), ValuablesHC.ExcesspayObj.EiId, ValuablesHC.ExcesspayObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-            }
+       
             Session["profileId"] = null;
             Session["UnId"] = null;
+            string actionname = null;
+            string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
+            }
+            if (Session["controller"] != null)
+            {
+                controllername = Session["controller"].ToString();
+            }
+            if (actionname != null && controllername != null)
+            {
+                return RedirectToAction(actionname, controllername, new { cid = ValuablesHC.CustomerId, PcId = ValuablesHC.PcId });
+            }
             return RedirectToAction("FarmContents", "Farm", new { cid = ValuablesHC.CustomerId });
         }
     }

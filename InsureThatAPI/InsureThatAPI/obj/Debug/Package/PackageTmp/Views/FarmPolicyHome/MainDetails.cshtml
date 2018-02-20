@@ -1,0 +1,1810 @@
+﻿@model InsureThatAPI.Models.HB2HomeDescription
+@{
+    ViewBag.Title = "Home Building Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SelectListItem> listItems = new List<SelectListItem>();
+    listItems.Add(new SelectListItem
+    {
+        Text = "Main House",
+        Value = "1"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Managers House",
+        Value = "2"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Gate House",
+        Value = "3"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Guest House",
+        Value = "4"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Pool House",
+        Value = "5"
+    });
+    listItems.Add(new SelectListItem
+    {
+        Text = "Summer House",
+        Value = "6"
+    });
+    List<SelectListItem> listsStates = new List<SelectListItem>();
+    listsStates.Add(new SelectListItem
+    {
+        Text = "NSW",
+        Value = "NSW"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "QLD",
+        Value = "QLD",
+        Selected = true
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "SA",
+        Value = "SA"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "TAS",
+        Value = "TAS"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "VIC",
+        Value = "VIC"
+    });
+    listsStates.Add(new SelectListItem
+    {
+        Text = "WA",
+        Value = "WA"
+    });
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
+    <h4><span>FARM PROTECTION POLICY</span> / HOME BUILDING</h4>
+</div>
+<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+    <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
+        <div class="pull-right">
+            <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
+            <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
+            <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="pull-left">Referral List</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @if (Model.Referels != null && Model.Referels.Count() > 0)
+                    {
+                        for (int j = 0; j < Model.Referels.Count(); j++)
+                        {
+                            @Model.Referels[j]<br />
+                        }
+                    }
+                    else
+                    {
+                        <p>No Referral List</p>
+                    }
+                    <p id="referralList-p"></p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Save Policy</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you wish to save your policy till now and continue later.</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    <button class="btn btn-default no-border savepolicyP" data-dismiss="modal" aria-hidden="true"> Save </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Premium Details</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table" style=" width: 100%; ">
+                        <thead>
+                            <tr>
+                                <th class="space_left">Section Name</th>
+                                <th class="space_left">Base</th>
+                                <th class="space_left">Fsl</th>
+                                <th class="space_left">Gst</th>
+                                <th class="space_left">Stamp Duty</th>
+                                <th class="space_right">Gross</th>
+                            </tr>
+                        </thead>
+                        <tbody id="premiumModel-p-b">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tbody>
+                        <tfoot id="premiumModel-p-f">
+                            <tr>
+                                <td colspan="6">No Premium Details</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mt-40 mb-40 row"></div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div id="processTabs">
+        <ul class="process-steps clearfix col-sm-12">
+            <li>
+                <a href="javascript:void(0)" id="ptb1">Home Description</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="ptb2">Construction Details</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="ptb3">Occupancy Details</a>
+            </li>
+
+            <li>
+                <a href="javascript:void(0)" id="ptb4">Interested Parties</a>
+            </li>
+            <li>
+                <a href="javascript:void(0)" id="ptb5">Home Building</a>
+            </li>
+        </ul>
+        @using (Ajax.BeginForm("MainDetails", "FarmPolicyHome", new { cid = @ViewBag.cid }, new AjaxOptions()
+        {
+            HttpMethod = "POST"
+
+        }, new { @id = "homeDescription", @name = "homeDescription" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(p => p.CustomerId)
+            @Html.HiddenFor(p => p.CompletionTrack, new { @id = "completiontrack" })
+            @Html.HiddenFor(p => p.ApiKey, new { @id = "apisecret" })
+            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+            <div id="homeBuildContain">
+                <div id="ptab1">
+                    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>
+                    <div class="fill-form-wrap col-md-12">
+                        <p>
+                            I own a
+                            <span style="display: inline-block;width: auto;">
+                                <select name="property" id="property" class="form-control form-inline vlidationInsure select2hd" data_eiid="@Model.LocationObj.EiId">
+                                    <option value="1">Building</option>
+                                    <option value="2">Farm</option>
+                                </select>
+                            </span>
+                            located at
+                            <span style="display: inline-block;width: auto;">
+                                @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "form-control form-inline field-length-xs vlidationInsure", @placeholder = "Address", @id = "addresshome" })
+                                <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
+                            </span>
+                            <span style="display: inline-block;width: auto;">
+                                <select class="suburb" style="width:150px;" placeholder="Suburb" id="suburb" name="SubUrb">
+                                    <option value="">
+                                        Suburb
+                                    </option>
+                                </select>
+                                <label id="SubUrb-error" class="error" for="SubUrb"></label>
+                            </span>
+                            <span style="display: inline-block;width: auto;">
+                                @Html.DropDownListFor(p => p.LocationObj.Location, listsStates, new { @class = "form-control form-inline vlidationInsure select2hd", @data_eiid = @Model.LocationObj.EiId, @id = "state", @name = "state" }),
+                                <label id="state-error" class="error" for="state"></label>
+                            </span>
+                            Postcode
+                            <span style="display: inline-block;width: auto;">
+                                <input type="text" placeholder="Postcode" name="postcode" id="postCode" list="postcodelist" class="form-control form-inline vlidationInsure field-length-xs" data_eiid="0" />.
+                                <datalist id="postcodelist"></datalist>
+                                <label id="postcode-error" class="error" for="postcode"></label>
+                            </span>
+                        </p>
+                        <p>
+                            Is your Home Building more than 100 metres from Uncleared Natural Bushland, a State or National Forest or a commercial plantation of pine trees?
+                            <span class="isbuilding-located">
+                                <span class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsbuildinglocatedObj.EiId })
+                                    <label for="radio1"><span><span></span></span>No</label>
+                                </span>
+                                <span class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.IsbuildinglocatedObj.Isbuildinglocated, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsbuildinglocatedObj.EiId })
+                                    <label for="radio1"><span><span></span></span>Yes</label>
+                                </span>
+                            </span>
+                            @Html.HiddenFor(p => p.IsbuildinglocatedObj.EiId)
+                            <label id="IsbuildinglocatedPtab1-error" class="error" for="IsbuildinglocatedPtab1"></label>
+                        </p>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <button type="button" class="button-3d nomargin tab-linker quot-next-btn homedescrtn" id="ptabbtn1">Next</button>
+                    </div>
+
+                </div>
+                <div id="ptab2">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>CONSTRUCTION DETAILS</h2></div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-6 col-sm-6 col-xs-12 mt-5">What is external walls made of</p>
+                        <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            @Html.DropDownListFor(p => p.ExtwallsmadeObj.Extwallsmade, @Model.ExtwallsmadeObj.ExtwallsmadeList, new { @class = "form-control vlidationInsure form-border-bottom select2cd commondataselection", @data_eiid = @Model.ExtwallsmadeObj.EiId, @id = "extwallsmade" })
+                            @Html.HiddenFor(p => p.ExtwallsmadeObj.EiId)
+                            <label id="ExtwallsmadeObj.Extwallsmade-error" class="error" for="ExtwallsmadeObj.Extwallsmade"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 cl-60031" id="other-external-wall" style="display: none;">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">Describe external walls </p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.DescribeexternalwallsObj.Describeexternalwall, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescribeexternalwallsObj.EiId, @id = "describeexternalwall", @data_regex = "A" })
+                            @Html.HiddenFor(p => p.DescribeexternalwallsObj.EiId)
+                            <label id="DescribeexternalwallsObj.Describeexternalwall-error" class="error" for="DescribeexternalwallsObj.Describeexternalwall"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-6 col-sm-6 col-xs-12 mt-5">What is roof made of</p>
+                        <p class="col-md-6 col-sm-6 col-xs-12 text-right">
+                            @Html.DropDownListFor(p => p.RoofmadeObj.Roofmade, @Model.RoofmadeObj.RoofmadeList, new { @class = "form-control form-border-bottom select2cd vlidationInsure commondataselection", @data_eiid = @Model.RoofmadeObj.EiId, @id = "roofmade" })
+                            @Html.HiddenFor(p => p.RoofmadeObj.EiId)
+                            <label id="RoofmadeObj.Roofmade-error" class="error" for="RoofmadeObj.Roofmade"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 cl-60035" id="other-roof" style="display: none;">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">Describe the roof </p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.DescribeRoofMadeOffObj.DescribeRoofMade, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescribeRoofMadeOffObj.EiId, @id = "describeRoofMade", @data_regex = "A" })
+                            @Html.HiddenFor(p => p.DescribeRoofMadeOffObj.EiId)
+                            <label id="DescribeRoofMadeOffObj.DescribeRoofMade-error" class="error" for="DescribeRoofMadeOffObj.DescribeRoofMade"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12" id="other-roof">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">In what year was the home built?</p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.YearofBuiltObj.YearBuilt, new { @class = "form-control form-border-bottom vlidationInsure commondatatest year", @data_eiid = @Model.YearofBuiltObj.EiId, @id = "yearbuilt", @readonly = "readonly", @data_regex = "N" })
+                            @Html.HiddenFor(p => p.YearofBuiltObj.EiId)
+                            <label id="YearofBuiltObj.YearBuilt-error" class="error" for="YearofBuiltObj.YearBuilt"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12" id="other-roof">
+                        <p class="col-md-12 col-sm-12 col-xs-12 mt-5">If the home was built before 1970:</p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">In what year was the building last rewired ?</p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.LastRewiredObj.Rewired, new { @class = "form-control form-border-bottom vlidationInsure commondatatest year", @data_eiid = @Model.LastRewiredObj.EiId, @id = "LastRewiredObj", @readonly = "readonly", @data_regex = "N" })
+                            @Html.HiddenFor(p => p.LastRewiredObj.EiId)
+                            <label id="LastRewiredObj.Rewired-error" class="error" for="LastRewiredObj.Rewired"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12" id="other-roof">
+                        <p class="col-md-6 col-sm-6 col-xs-6 mt-5">In what year was the building last replumbed ?</p>
+                        <p class="col-md-6 col-sm-6 col-xs-6 text-right">
+                            @Html.TextBoxFor(p => p.LastReplumbedObj.Replumbed, new { @class = "form-control form-border-bottom vlidationInsure commondatatest year", @data_eiid = @Model.LastReplumbedObj.EiId, @id = "LastReplumbedObj", @readonly = "readonly", @data_regex = "N" })
+                            @Html.HiddenFor(p => p.LastReplumbedObj.EiId)
+                            <label id="LastReplumbedObj.Replumbed-error" class="error" for="LastReplumbedObj.Replumbed"></label>
+                        </p>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Is the Home Building watertight, well maintained, structurally sound and secure?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="watertight">
+                                @if (@Model.WatertightObj.Watertight == 0)
+                                {
+                                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.WatertightObj.Watertight, '0', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.WatertightObj.EiId })<label for="watertight1"><span><span></span></span>No</label></span>
+                                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.WatertightObj.Watertight, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.WatertightObj.EiId })<label for="watertight1"><span><span></span></span>Yes</label></span>
+                                }
+                                else if (@Model.WatertightObj.Watertight == 1)
+                                {
+                                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.WatertightObj.Watertight, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.WatertightObj.EiId })<label for="watertight1"><span><span></span></span>No</label></span>
+                                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.WatertightObj.Watertight, '1', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.WatertightObj.EiId })<label for="watertight1"><span><span></span></span>Yes</label></span>
+                                }
+                                else
+                                {
+                                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.WatertightObj.Watertight, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.WatertightObj.EiId })<label for="watertight1"><span><span></span></span>No</label></span>
+                                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.WatertightObj.Watertight, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.WatertightObj.EiId })<label for="watertight1"><span><span></span></span>Yes</label></span>
+                                }
+                            </span>
+                            @Html.HiddenFor(p => p.WatertightObj.EiId)
+                            <label id="WatertightObj.Watertight-error" class="error" for="WatertightObj.Watertight"></label>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Is the Home Building protected under heritage legislation other than a local council listing?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="heritage-legislation">
+                                @if (@Model.HeritagelegislationObj.Heritagelegislation == 0)
+                {
+                    <span class="policy-loc-row">@Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '0', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.HeritagelegislationObj.EiId })<label for="Heritagelegislation1"><span><span></span></span>No</label></span>
+                    <span class="policy-loc-row">@Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.HeritagelegislationObj.EiId })<label for="Heritagelegislation1"><span><span></span></span>Yes</label></span>
+}
+else if (@Model.HeritagelegislationObj.Heritagelegislation == 1)
+{
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.HeritagelegislationObj.EiId })<label for="Heritagelegislation1"><span><span></span></span>No</label></span>
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '1', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.HeritagelegislationObj.EiId })<label for="Heritagelegislation1"><span><span></span></span>Yes</label></span>
+}
+else
+{
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.HeritagelegislationObj.EiId })<label for="Heritagelegislation1"><span><span></span></span>No</label></span>
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.HeritagelegislationObj.Heritagelegislation, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.HeritagelegislationObj.EiId })<label for="Heritagelegislation1"><span><span></span></span>Yes</label></span>
+}
+                            </span>
+                            @Html.HiddenFor(p => p.HeritagelegislationObj.EiId)
+                            <label id="HeritagelegislationObj.Heritagelegislation-error" class="error" for="HeritagelegislationObj.Heritagelegislation"></label>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Is the Home Building under construction or undergoing renovation, alteration or extension?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="under-construction">
+                                @if (@Model.UnderconstructionObj.Underconstruction == 0)
+                {
+                    <span class="policy-loc-row">@Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '0', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.UnderconstructionObj.EiId })<label for="underconstruction1"><span><span></span></span>No</label></span>
+                    <span class="policy-loc-row">@Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.UnderconstructionObj.EiId })<label for="underconstruction1"><span><span></span></span>Yes</label></span>
+}
+else if (@Model.UnderconstructionObj.Underconstruction == 1)
+{
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.UnderconstructionObj.EiId })<label for="underconstruction1"><span><span></span></span>No</label></span>
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '1', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.UnderconstructionObj.EiId })<label for="underconstruction1"><span><span></span></span>Yes</label></span>
+}
+else
+{
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.UnderconstructionObj.EiId })<label for="underconstruction1"><span><span></span></span>No</label></span>
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.UnderconstructionObj.Underconstruction, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.UnderconstructionObj.EiId })<label for="underconstruction1"><span><span></span></span>Yes</label></span>
+}
+                            </span>
+                            @Html.HiddenFor(p => p.UnderconstructionObj.EiId)
+                            <label id="UnderconstructionObj.Underconstruction-error" class="error" for="UnderconstructionObj.Underconstruction"></label>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-9 col-sm-9 col-xs-12">Does your Home Building comply with the local council regulations regarding its fitness for occupancy as a domestic dwelling and as a Bread and Breakfast business?</p>
+                        <div class="col-md-3 col-sm-3 col-xs-12">
+                            <span class="domestic-dwelling">
+                                @if (@Model.DomesticdwellingObj.Domesticdwelling == 0)
+                {
+                    <span class="policy-loc-row">@Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '0', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.DomesticdwellingObj.EiId })<label for="Domesticdwelling1"><span><span></span></span>No</label></span>
+                    <span class="policy-loc-row">@Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.DomesticdwellingObj.EiId })<label for="Domesticdwelling1"><span><span></span></span>Yes</label></span>
+}
+else if (@Model.DomesticdwellingObj.Domesticdwelling == 1)
+{
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.DomesticdwellingObj.EiId })<label for="Domesticdwelling1"><span><span></span></span>No</label></span>
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '1', new { @class = "commondataradio vlidationInsure", @checked = "checked", @data_eiid = @Model.DomesticdwellingObj.EiId })<label for="Domesticdwelling1"><span><span></span></span>Yes</label></span>
+}
+else
+{
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.DomesticdwellingObj.EiId })<label for="Domesticdwelling1"><span><span></span></span>No</label></span>
+                <span class="policy-loc-row">@Html.RadioButtonFor(m => m.DomesticdwellingObj.Domesticdwelling, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.DomesticdwellingObj.EiId })<label for="Domesticdwelling1"><span><span></span></span>Yes</label></span>
+}
+                            </span>
+                            @Html.HiddenFor(p => p.DomesticdwellingObj.EiId)
+                            <label id="DomesticdwellingObj.Domesticdwelling-error" class="error" for="DomesticdwellingObj.Domesticdwelling"></label>
+                        </div>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <a href="javascript:void(0)" id="ptb12" class="button-3d nomargin tab-linker quot-prev-btn" rel="1">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button type="button" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn2">Next</button>
+                    </div>
+
+                </div>
+                <div id="ptab3">
+                    <div id="homeBuildContain">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>OCCUPANCY DETAILS</h2></div>
+                        <div id="ptab3">
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Who lives there normally?</p>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.WholivesObj.Wholives, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.WholivesObj.EiId })<label for="radio1"><span><span></span></span>You</label>
+                                    </div>
+                                    <div class="col-md-8 col-sm-6 col-xs-12 policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.WholivesObj.Wholives, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.WholivesObj.EiId })<label for="radio1"><span><span></span></span>Tenant</label>
+                                    </div>
+                                    @Html.HiddenFor(p => p.WholivesObj.EiId)
+                                    <label id="WholivesObj.Wholives-error" class="error" for="WholivesObj.Wholives"></label>
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12 ">
+                                <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">Is the Building?</p>
+                                <div class="col-md-8 col-sm-8 col-xs-12">
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsbuildingObj.EiId })<label for="radio1"><span><span></span></span>Occupied</label></div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsbuildingObj.EiId })<label for="radio1"><span><span></span></span>Unoccupied</label></div>
+                                    <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.IsbuildingObj.Isbuilding, '2', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsbuildingObj.EiId })<label for="radio1"><span><span></span></span>Holiday Home</label></div>
+                                    @Html.HiddenFor(p => p.IsbuildingObj.EiId)
+                                    <label id="IsbuildingObj.Isbuilding-error" class="error" for="IsbuildingObj.Isbuilding"></label>
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-9 col-sm-9 col-xs-12">
+                                    In the next 12 months, will the home be unoccupied for 90
+                                    consecutive days or more?
+                                </p>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <span class="consecutive-day">
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.ConsecutivedayObj.Consecutiveday, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.ConsecutivedayObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>No</label>
+                                        </span>
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.ConsecutivedayObj.Consecutiveday, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.ConsecutivedayObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>Yes</label>
+                                        </span>
+                                    </span>
+                                    @Html.HiddenFor(p => p.ConsecutivedayObj.EiId)
+                                    <label id="ConsecutivedayObj.Consecutiveday-error" class="error" for="ConsecutivedayObj.Consecutiveday"></label>
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-9 col-sm-9 col-xs-12">Is the building used for business?</p>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <span class="is-used-business">
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.IsusedbusinessObj.Isusedbusiness, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsusedbusinessObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>No</label>
+                                        </span>
+                                        <span class="policy-loc-row">
+                                            @Html.RadioButtonFor(m => m.IsusedbusinessObj.Isusedbusiness, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.IsusedbusinessObj.EiId })
+                                            <label for="domesticdwelling1"><span><span></span></span>Yes</label>
+                                        </span>
+                                    </span>
+                                    @Html.HiddenFor(p => p.IsusedbusinessObj.EiId)
+                                    <label id="IsusedbusinessObj.Isusedbusiness-error" class="error" for="IsusedbusinessObj.Isusedbusiness"></label>
+                                </div>
+                            </div>
+                            <div class="mt-10 mb-10 col-md-12">
+                                <p class="col-md-9 col-sm-9 col-xs-12">Describe the business</p>
+                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    @Html.TextBoxFor(p => p.DescribebusinessObj.Describebusiness, new { @class = "form-control form-inline field-length-xs vlidationInsure commondatatest", @data_eiid = @Model.DescribebusinessObj.EiId, @id = "describe", @placeholder = "Describe Business", @data_regex = "A" })
+                                    @Html.HiddenFor(p => p.DescribebusinessObj.EiId)
+                                    <label id="DescribebusinessObj.Describebusiness-error" class="error" for="DescribebusinessObj.Describebusiness"></label>
+                                </div>
+                            </div>
+                            <div class="col-md-6 pull-right text-right mt-30">
+                                <a href="javascript:void(0)" id="ptb23" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                                <img src="~/images/button-devider.png">
+                                <button type="button" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn3">Next</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="ptab4">
+                    <div id="homeBuildContain">
+                        <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>INTERESTED PARTIES</h2></div>
+                        <div class="mt-10 mb-10 col-md-12">
+                            <p class="col-md-4 col-sm-4 col-xs-12"> Name of Institutions <a href="#costumModal1NI" role="button" data-target="#costumModal1NI" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                            <div id="costumModal1NI" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModal1NI" aria-hidden="false">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3 class="pull-left">Name of Institutions</h3>
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                <img src="~/images/close-icon.png" />
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p>The name of the bank/financial institution who is an interested party on this policy.  It is advisable to check with your financial institution to ensure the exact name they require to be listed to be able to supply a certificate of currency (proof that you have insured the property for which they have a financial interest) </p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.TextBoxFor(p => p.NameInstitutionsObj.Name, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.NameInstitutionsObj.EiId, @id = "NameInstitutions", @data_regex = "AN" })
+                                @Html.HiddenFor(p => p.NameInstitutionsObj.EiId)
+                                <label id="NameInstitutionsObj.Name-error" class="error" for="NameInstitutionsObj.Name"></label>
+                            </div>
+                        </div>
+                        <div class="mt-10 mb-10 col-md-12">
+                            <p class="col-md-4 col-sm-4 col-xs-12">Location of Institution <a href="#costumModal1LI" role="button" data-target="#costumModal1LI" data-toggle="modal"><img src="~/images/help-icon.png" /></a></p>
+                            <div class="col-md-8 col-sm-8 col-xs-12">
+                                @Html.TextBoxFor(p => p.LocationObjs.Location, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.LocationObjs.EiId, @id = "locationIP", @data_regex = "AN" })
+                                @Html.HiddenFor(p => p.LocationObjs.EiId)
+                                <label id="LocationObjs.Location-error" class="error" for="LocationObjs.Location"></label>
+                            </div>
+                        </div>
+                        <div id="costumModal1LI" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModal1LI" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h3 class="pull-left">Location of Institution</h3>
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <img src="~/images/close-icon.png" />
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>This may be the town or head office location of the financial institution.  </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 pull-right text-right mt-30">
+                            <a href="javascript:void(0)" id="ptb34" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                            <img src="~/images/button-devider.png">
+                            <button type="button" class="button-3d nomargin tab-linker quot-next-btn intersdparties" id="ptabbtn4">Next</button>
+                        </div>
+                    </div>
+                </div>
+                <div id="ptab5">
+                    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head"><h2>HOME BUILDING DETAILS</h2></div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <p class="col-md-6 col-sm-6 col-xs-12">Location</p>
+                        <div class="col-md-6 col-sm-6 col-xs-12"><input class="form-control form-border-bottom" name="locationhb" id="locationhb" /></div>
+                        <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModal1" aria-hidden="false">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                            <img src="~/images/close-icon.png" />
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                        </p>
+                                        <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @*<div class="col-md-9 col-sm-9 col-xs-12">
+                            @Html.TextBoxFor(p => p.LocationObjss.Location, new { @class = "form-control form-border-bottom commondatatest", @data_eiid = @Model.LocationObjss.EiId, @id = "locationhb1" })
+                            @Html.HiddenFor(p => p.LocationObjss.EiId)
+                            <label id="LocationObj.Location-error" class="error" for="LocationObj.Location"></label>
+                        </div>*@
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6"><p>Do you require cover for <span class="cover-options"><a href="#accidentalDamageModal2" role="button" data-target="#accidentalDamageModal2" data-toggle="modal">accidental damage</a></span> or <span class="cover-options"><a href="#definedEventsModal2" role="button" data-target="#definedEventsModal2" data-toggle="modal">defined events?</a></span></p></div>
+                        <div class="col-md-6">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.CoverhomebuildingObj.Coverhomebuilding, '1', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.CoverhomebuildingObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.CoverhomebuildingObj.Coverhomebuilding, '0', new { @class = "commondataradio vlidationInsure", @data_eiid = @Model.CoverhomebuildingObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                                </div>
+                                @Html.HiddenFor(p => p.CoverhomebuildingObj.EiId)
+                                <label id="CoverhomebuildingObj.Coverhomebuilding-error" class="error" for="CoverhomebuildingObj.Coverhomebuilding"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="accidentalDamageModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="accidentalDamageModal2" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Accidental Damage</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="definedEventsModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="definedEventsModal2" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Defined Events</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12">
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <p>How much would it cost to replace your Home Building?</p>
+                            <p><a href="#ShearingDelaysModal2" role="button" data-target="#ShearingDelaysModal2" data-toggle="modal">Click here for the definition of your home building.</a></p>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            $@Html.TextBoxFor(p => p.CostforRebuildingObj.CostforRebuilding, new { @style = "width:93%; display:inline-block;", @class = "form-control form-border-bottom CostforRebuilding commondatatest", @data_eiid = @Model.CostforRebuildingObj.EiId, @id = "costforRebuilding", @data_regex = "N" })
+                            @Html.HiddenFor(p => p.CostforRebuildingObj.EiId)
+                            <label id="CostforRebuildingObj.CostforRebuilding-error" class="error" for="CostforRebuildingObj.CostforRebuilding"></label>
+                            <p class="mini-text">The minimum is $5,00,000</p>
+                        </div>
+                    </div>
+                    <div id="ShearingDelaysModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ShearingDelaysModal2" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Home Building</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                                    </p>
+                                    <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <p class="col-md-4 col-sm-4 col-xs-12 policy-loc-row">How many years is it since you last made an insurance claim on your Home Buildings?</p>                        
+                        <div class="col-md-8 col-sm-8 col-xs-12">
+                            <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '0', new { @class = "commondataradio dispountFreeperiod", @data_eiid = @Model.ClaimfreeperiodObj.EiId })<label for="radio1"><span><span></span></span>0 year</label></div>
+                            <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '1', new { @class = "commondataradio dispountFreeperiod", @data_eiid = @Model.ClaimfreeperiodObj.EiId })<label for="radio1"><span><span></span></span>1 year</label></div>
+                            <div class="col-md-5 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.ClaimfreeperiodObj.Claimfreeperiod, '3', new { @class = "commondataradio dispountFreeperiod", @data_eiid = @Model.ClaimfreeperiodObj.EiId })<label for="radio1"><span><span></span></span>2 or more years</label></div>
+                            <label id="ClaimfreeperiodObj.Claimfreeperiod-error" class="error" for="ClaimfreeperiodObj.Claimfreeperiod"></label>
+                        </div>
+                        @Html.HiddenFor(p => p.ClaimfreeperiodObj.EiId)
+                        <div class="col-md-12"><p>Your no claim discount is <i id="dispountFreeperiod">0%</i></p></div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <div class="col-md-6"><p>Please select the excess you wish to pay</p></div>
+                        <div class="col-md-3">
+                            <select class="gray-bg-underline form-control form-border-bottom field-length-sm commondataselection" data-eiid="@Model.ExcessObj.EiId" name="ExcessObj.Excess" id="excess">
+                                <option value="500">$500</option>
+                                <option value="600">$600</option>
+                                <option value="700">$700</option>
+                                <option value="850">$850</option>
+                                <option value="1200">$1200</option>
+                                <option value="2200">$2200</option>
+                                <option value="5500">$5500</option>
+                            </select>
+                            @Html.HiddenFor(p => p.ExcessObj.EiId)
+                            <label id="ExcessObj.Excess-error" class="error" for="ExcessObj.Excess"></label>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="policy-loc-row">
+                                <input type="checkbox" name="ImposedObj.Imposed" id="imposed" value="false" />
+                                <label for="checkbox1"><span><span></span></span>Imposed</label>
+                            </div>
+                            @Html.HiddenFor(p => p.ImposedObj.EiId)
+                            <label id="ImposedObj.Imposed-error" class="error" for="ImposedObj.Imposed"></label>
+                        </div>
+                    </div>
+                    <div class="mt-10 mb-10 col-md-12 ">
+                        <label id="rlshbhome-error" class="error" for="rlshbhome"></label>
+                        <label id="rlscdhome-error" class="error" for="rlscdhome"></label>
+                        <label id="rlsodhome-error" class="error" for="rlsodhome"></label>
+                        <label id="rlsiphome-error" class="error" for="rlsiphome"></label>
+                    </div>
+                    <div class="col-md-6 pull-right text-right mt-30">
+                        <input type="hidden" name="rlshbhome" id="rlshbhome" value="" />
+                        <input type="hidden" name="rlscdhome" id="rlscdhome" value="" />
+                        <input type="hidden" name="rlsodhome" id="rlsodhome" value="" />
+                        <input type="hidden" name="rlsiphome" id="rlsiphome" value="" />
+                        <a href="javascript:void(0)" id="ptb45" class="button-3d nomargin tab-linker quot-prev-btn" rel="2">Prev</a>
+                        <img src="~/images/button-devider.png">
+                        <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtn5">Submit</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
+    <h3>Policy Sections</h3>
+    <div class="well">
+        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+        {
+            for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+            {
+                <div class="policy-loc-row">
+                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+                            $('.inclusions').click(function () {
+                                var name = $(this).attr('data-name');
+                                var nid = $(this).attr('data-nid');
+                                $('.policy-ed-del-wrapper').hide();
+                                $("#policy-ed-del-wrap-" + nid).show();
+
+                            });
+                        });
+                    </script>
+                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                    </div>
+                </div>
+            }
+            <script type="text/javascript">
+                $(".policy-edit-wrap").click(function () {
+                    var selectedname = $(this).data('name');
+                    var selectedunid = $(this).data('unid');
+                    var selectedprofileid = $(this).data('profileid');
+                    var selectedcid = $(this).data('cid');
+                    var selectedTrId = $(this).data('trid');
+                    var PcId = $(this).data('pcid');
+                    var policyStatus = $(this).data('policystatus');
+                    // var prId = $(this).data('prId');
+                    var prId = 1029;
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/EndorsePolicy",
+                        data: {
+                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                        },
+                        success: function (responce) {
+                            window.location.href = responce;
+                        }
+                    });
+                });
+                $(".policy-delet-wrap").click(function () {
+                    var r = confirm("Are you sure you want to delete this section?");
+                    if (r == true) {
+                        var PcId = $("#pcidd").val();
+                        var selectedunid = $(this).data('unid');
+                        var selectedcid = $(this).data('cid');
+                        var PcId = $(this).data('pcid');
+                        var selectedname = $(this).data('name');
+                        var selectedprofileid = $(this).data('profileid');
+                        var selectedTrId = $(this).data('trid');
+                        var policyStatus = $(this).data('policystatus');
+                        var currId = $(this).attr("id");
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/DeleteUnit",
+                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                            success: function (responce) {
+                                if (responce.Status == true) {
+                                    var prentId = $('#' + currId).parent().parent().attr("id");
+                                    $('#' + prentId).remove();
+                                }
+                            }
+                        });
+                    }
+                });
+                $("#bindcover").click(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/BindCover",
+                        data: {},
+                        success: function (responce) {
+                        }
+                    });
+                });
+            </script>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
+
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                    <script type="text/javascript">
+                        $(".policy-edit-wrap").click(function () {
+                            var selectedname = $(this).data('name');
+                            var selectedunid = $(this).data('unid');
+                            var selectedprofileid = $(this).data('profileid');
+                            var selectedcid = $(this).data('cid');
+                            var selectedTrId = $(this).data('trid');
+                            var PcId = $(this).data('pcid');
+                            var policyStatus = $(this).data('policystatus');
+                            // var prId = $(this).data('prId');
+                            var prId = 1021;
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/EndorsePolicy",
+                                data: {
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
+                                },
+                                success: function (responce) {
+                                    window.location.href = responce;
+                                }
+                            });
+                        });
+                        $(".policy-delet-wrap").click(function () {
+                            var r = confirm("Are you sure you want to delete this section?");
+                            if (r == true) {
+                                var PcId = $("#pcidd").val();
+                                var selectedunid = $(this).data('unid');
+                                var selectedcid = $(this).data('cid');
+                                var PcId = $(this).data('pcid');
+                                var selectedname = $(this).data('name');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedTrId = $(this).data('trid');
+                                var policyStatus = $(this).data('policystatus');
+                                var currId = $(this).attr("id");
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/DeleteUnit",
+                                    data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                    success: function (responce) {
+                                        if (responce.Status == true) {
+                                            var prentId = $('#' + currId).parent().parent().attr("id");
+                                            $('#' + prentId).remove();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    </script>
+                }
+            }
+        }
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="#">New Cover</a>
+            <ul class="dropdown-menu col-md-12">
+                <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
+                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
+                <li><a href="javascript:void(0);" class="Farm Liability">+  Farm Liability</a></li>
+                <li><a href="javascript:void(0);" class="Burglary">+  Burglary</a></li>
+                <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
+                <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
+                <li><a href="javascript:void(0);" class="Liability">+  Liability</a></li>
+                <li><a href="javascript:void(0);" class="Home Building">+  Home Building</a></li>
+                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
+                <li><a href="javascript:void(0);" class="Motors">+  Motors</a></li>
+            </ul>
+            <script type="text/javascript">
+                $(document).on('click', 'ul.unit > li', function () {
+                    var unitname = $(this).children("a").attr("class");
+                    var cid = $("#ciid").val();
+                    var pcid = $("#pcidd").val();
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/AddUnit",
+                        data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                        success: function (responce) {
+                            window.location.href = responce;
+                        }
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $(document).on('change', '.dispountFreeperiod', function () {
+        var Value = $(this).val();
+        var dis = "";
+        if (Value == 0) {
+            dis = '0%';
+        } else if (Value == 1) {
+            dis = '10%';
+        } else if (Value > 1) {
+            dis = '15%';
+        } else {
+            dis = '0%';
+        }
+        $('#dispountFreeperiod').text(dis);
+    });
+</script>
+<link href="~/css/select2.min.css" rel="stylesheet" />
+<script src="~/Scripts/select2.js"></script>
+<script src="~/js/datepicker.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $(".year").datepicker({
+            minViewMode: 2,
+            format: 'yyyy'
+        }).on('change', function (e) {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            if (Value != "") {
+                elementAjaxCall(Value, EIId);
+            }
+        });
+    });
+</script>
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script type="text/javascript">
+    var allResData = '';
+    var allResPostCode = '';
+    function pta1() {
+        $("#ptab2").hide();
+        $("#ptab1").show();
+        $("#ptb1").addClass("active");
+        $("#ptab3").hide();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptb2").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").removeClass("active");
+        $("#ptb5").removeClass("active");
+    }
+    function pta2() {
+        $("#ptab1").hide();
+        $("#ptab2").show();
+        $("#ptb2").addClass("active");
+        $("#ptab3").hide();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").removeClass("active");
+        $("#ptb5").removeClass("active");
+    }
+    function pta3() {
+        $("#ptab1").hide();
+        $("#ptab2").hide();
+        $("#ptb3").addClass("active");
+        $("#ptab3").show();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb4").removeClass("active");
+        $("#ptb5").removeClass("active");
+    }
+    function pta4() {
+        $("#ptab1").hide();
+        $("#ptab2").hide();
+        $("#ptb4").addClass("active");
+        $("#ptab3").hide();
+        $("#ptab4").show();
+        $("#ptab5").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb5").removeClass("active");
+    }
+    function pta5() {
+        $("#ptab1").hide();
+        $("#ptab2").hide();
+        $("#ptb5").addClass("active");
+        $("#ptab3").hide();
+        $("#ptab5").show();
+        $("#ptab4").hide();
+        $("#ptb1").removeClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").removeClass("active");
+    }
+    $(document).ready(function () {
+        $("#ptab1").show();
+        $("#ptb1").addClass("active");
+        $("#ptab2").hide();
+        $("#ptab3").hide();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+    });
+    $("#ptb45").click(function () {
+        pta4();
+        $("#ptb4").addClass("active");
+    });
+    $("#ptb23").click(function () {
+        pta2();
+        $("#ptb2").addClass("active");
+    });
+    $("#ptb12").click(function () {
+        pta1();
+        $("#ptb1").addClass("active");
+    });
+    $("#ptb45").click(function () {
+        pta4();
+        $("#ptb4").addClass("active");
+    });
+    $("#ptb34").click(function () {
+        pta3();
+        $("#ptb3").addClass("success");
+    });
+    $("#ptabbtn1").click(function () {
+        var valid = 1;
+        $("#ptab1 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            if (nameAttr == "AddressObj.Address") {
+                var regex = /^[a-zA-Z0-9/, ]*$/;
+                if (newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter address").css({ "display": "block" });
+                    valid = 0;
+                    //} else if (!regex.test(newval)) {
+                    //    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#ptab1 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("").css({ "display": "none" });
+                }
+            }
+            if (nameAttr == "SubUrb") {
+                if (newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter suburb").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("").css({ "display": "none" });
+                }
+            }
+            if (nameAttr == "state") {
+                if (newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter suburb").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("").css({ "display": "none" });
+                }
+            }
+            if (nameAttr == "postcode") {
+                var regex = /^[0-9]*$/;
+                if (newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter postcode").css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval)) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("only numeric are allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "AreapropertyObj.Areaproperty") {
+                var regex = /^[0-9.]*$/;
+                if (newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter area property").css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval)) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Only numeric are allowed").css({ "display": "block" });
+                    valid = 0;
+                } else if (parseInt(newval) > 32767) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Max allowed 32767").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "DescribeaddressObj.Describeaddress") {
+                if (newval == '') {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please select describe address").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "IsbuildinglocatedObj.Isbuildinglocated") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='IsbuildinglocatedPtab1']").text("Please select building located").css({ "display": "block" });
+                    valid = 0;
+                } else if ($("input[name='" + nameAttr + "']:checked").val() == "1") {
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='IsbuildinglocatedPtab1']").text("This risk has been declined by the underwriter.").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab1 #' + id).css({ "border": "" });
+                    $("#ptab1 label[for='IsbuildinglocatedPtab1']").text("");
+                }
+            }
+        });
+        if (valid == 1) {
+            pta2();
+            $("#ptb1").addClass("success");
+            $("#ptab5 #rlshbhome").val(1);
+        }
+    });
+    $("#ptabbtn2").click(function () {
+        var valid = 1;
+        $("#ptab2 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            if (nameAttr == "ExtwallsmadeObj.Extwallsmade") {
+                if (newval == "") {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please select external walls made").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "DescribeexternalwallsObj.Describeexternalwall") {
+                var regex = /^[a-zA-Z ]*$/;
+                if ($('#ptab2 #extwallsmade').val() == '11' && newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please enter describe external walls made").css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab2 #extwallsmade').val() == '11' && !regex.test(newval)) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Special character & numeric are not allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "RoofmadeObj.Roofmade") {
+                if (newval == "") {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please select roof made").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "DescribeRoofMadeOffObj.DescribeRoofMade") {
+                var regex = /^[a-zA-Z ]*$/;
+                if ($('#ptab2 #roofmade').val() == '7' && newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please enter describe roof made").css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab2 #roofmade').val() == '7' && !regex.test(newval)) {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Special character & numeric are not allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "YearofBuiltObj.YearBuilt") {
+                var regex = /^[0-9]*$/;
+                if (newval == '') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[id='#" + nameAttr + "-error']").text("Please select year built").css({ "display": "block" });
+                    valid = 0;
+                } else if (!regex.test(newval) && newval != '0') {
+                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Only numeric are allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab2 #' + id).css({ "border": "" });
+                    $("#ptab2 label[id='#" + nameAttr + "-error']").text("");
+                }
+            }
+            if (nameAttr == "WatertightObj.Watertight") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please check watertight").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "HeritagelegislationObj.Heritagelegislation") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please check heritage legislation").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "UnderconstructionObj.Underconstruction") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please check under construction").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "DomesticdwellingObj_Domesticdwelling") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please check domestic dwelling").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab2 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("");
+                }
+            }
+        });
+        if (valid == 1) {
+            pta3();
+            $("#ptb2").addClass("success");
+            $("#ptab5 #rlscdhome").val(1);
+        }
+    });
+    $("#ptabbtn3").click(function () {
+        var valid = 1;
+        $("#ptab3 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            if (nameAttr == "WholivesObj.Wholives") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("Please check who lives").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "IsbuildingObj.Isbuilding") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("Please check Is the Building?").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "ConsecutivedayObj.Consecutiveday") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("Please check consecutive days").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "IsusedbusinessObj.Isusedbusiness") {
+                if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("Please check Is the building used for business?").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $("#ptab3 input[name='" + nameAttr + "']").css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "DescribebusinessObj.Describebusiness") {
+                var regex = /^[a-zA-Z ]*$/;
+                if ($("input[name='IsusedbusinessObj.Isusedbusiness']:checked").val() == '1' && newval == '') {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("Please enter describe business").css({ "display": "block" });
+                    valid = 0;
+                } else if ($("input[name='IsusedbusinessObj.Isusedbusiness']:checked").val() == '1' && !regex.test(newval)) {
+                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("Special character & numeric are not allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab3 #' + id).css({ "border": "" });
+                    $("#ptab3 label[for='" + nameAttr + "']").text("");
+                }
+            }
+        });
+        if (valid == 1) {
+            pta4();
+            $("#ptb3").addClass("success");
+            $("#ptab5 #rlsodhome").val(1);
+        }
+    });
+    $("#ptabbtn4").click(function () {
+        var valid = 1;
+        $("#ptab4 .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var nameAttr = $(this).attr('name');
+            var lastChar = id.substr(id.length - 1);
+            var newval = $(this).val();
+            if (nameAttr == "NameInstitutionsObj.Name") {
+                var regex = /^[a-zA-Z0-9 ]*$/;
+                if (!regex.test(newval)) {
+                    $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab4 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab4 #' + id).css({ "border": "" });
+                    $("#ptab4 label[for='" + nameAttr + "']").text("");
+                }
+            }
+            if (nameAttr == "LocationObjs.Location") {
+                var regex = /^[a-zA-Z0-9 ]*$/;
+                if ($('#ptab4 #NameInstitutions').val() != '' && newval == '') {
+                    $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab4 label[for='" + nameAttr + "']").text("Please enter location").css({ "display": "block" });
+                    valid = 0;
+                } else if ($('#ptab4 #NameInstitutions').val() != '' && !regex.test(newval)) {
+                    $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab4 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    valid = 0;
+                } else {
+                    $('#ptab4 #' + id).css({ "border": "" });
+                    $("#ptab4 label[for='" + nameAttr + "']").text("");
+                }
+            }
+        });
+        if (valid == 1) {
+            pta5();
+            $("#ptb4").addClass("success");
+            $("#ptab5 #rlsiphome").val(1);
+        }
+    });
+    $("#ptb2").click(function () {
+        pta2();
+    });
+    $("#ptb3").click(function () {
+        pta3();
+    });
+    $("#ptb4").click(function () {
+        pta4();
+    });
+    $("#ptb5").click(function () {
+        pta5();
+    });
+    $("#ptb1").click(function () {
+        $("#ptab1").show();
+        $("#ptb1").addClass("active");
+        $("#ptab2").hide();
+        $("#ptab3").hide();
+        $("#ptab4").hide();
+        $("#ptab5").hide();
+        $("#ptb5").removeClass("active");
+        $("#ptb2").removeClass("active");
+        $("#ptb3").removeClass("active");
+        $("#ptb4").removeClass("active");
+    });
+    function convert(degree) {
+        var x;
+        if (degree == "ACR") {
+            x = document.getElementById("acres").value * 0.40468564224;
+            document.getElementById("hectar").value = x.toPrecision(6);
+        }
+    }
+    function elementAjaxCall(Value, EIId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1021", "ElId": EIId, "Value": Value, "ItId": "0" },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                $('#' + value.Element.ElId).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            }
+                                        });
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    //if (data.referrallist != null || data.referrallist != "") {
+                    //    $('#referralList-p').html('No Referral List');
+                    //} else {
+                    //    $('#referralList-p').html(data.referrallist);
+                    //}
+                    if (data.referrallists == "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallists);
+                    }
+                    if (data.usermessage == "") {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        $("label[for='" + labelid + "']").html('');
+                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                    } else {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        $("label[for='" + labelid + "']").html(data.usermessage);
+                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                    }
+                }
+            });
+        }
+    }
+    $(document).ready(function () {
+        $(document).on('change', '.commondataselection', function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            if (Value != '') {
+                elementAjaxCall(Value, EIId);
+            }
+        });
+        $(document).on('change', '.commondataradio', function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            if (Value != '') {
+                elementAjaxCall(Value, EIId);
+            }
+        });
+        $(document).on('focusout', ".commondatatest", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var id = $(this).attr('id');
+            var regex = "";
+            var text = "";
+            if (Nregex == 'N') {
+                regex = /^[0-9]*$/;
+                text = "Only numeric are allowed";
+            } else if (Nregex == 'A') {
+                regex = /^[a-zA-Z ]*$/;
+                text = "Special character & numeric are not allowed";
+            } else if (Nregex == 'AN') {
+                regex = /^[a-zA-Z0-9 ]*$/;
+                text = "Special character are not allowed";
+            } else if (Nregex == 'AS') {
+                regex = /^[a-zA-Z/ ]*$/;
+                text = "Numeric are not allowed";
+            }
+            if (!regex.test(Value)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text(text).css({ "display": "block" });
+            } else if (Value != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+                elementAjaxCall(Value, EIId);
+            }
+        });
+        $("#roofmades").change(function () {
+            var value = this.value;
+            if (value == "6") {
+                $("#other-roof").show();
+            } else {
+                $("#other-roof").hide();
+            }
+        });
+    });
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        var validator = $("form[name='homeDescription']").validate({
+            rules: {
+                "LocationObjss.Location": {
+                    regex: /^[a-zA-Z, ]*$/,
+                },
+                "CostforRebuildingObj.CostforRebuilding": {
+                    regex: /^[0-9]*$/,
+                    min: 500000,
+                    max: 2147483647,
+                },
+                "CoverhomebuildingObjs.Coverhomebuilding": {
+                    regex: /^[0-9]*$/,
+                },
+                "ClaimfreeperiodObj.Claimfreeperiod": "required",
+                "ExcessObj.Excess": {
+                    required: function (el) {
+                        if ($("#coverhomebuilding").val() != '') {
+                            return true;
+                        }
+                    },
+                },
+                "ImposedObj.Imposed": {
+                    required: function (el) {
+                        if ($("#excess").val() != '') {
+                            return true;
+                        }
+                    },
+                },
+                "rlshbhome": "required",
+                "rlscdhome": "required",
+                "rlsodhome": "required",
+                "rlsiphome": "required",
+            },
+            messages: {
+                "LocationObjss.Location": "Special character and Number not allowed in location ",
+                "CostforRebuildingObj.CostforRebuilding": {
+                    regex: "Special character not allowed home building",
+                    min: "Please enter a value greater than or equal to $5,00,000.",
+                    max: "Maximum value allowed $2,147,483,647"
+                },
+                "CoverhomebuildingObjs.Coverhomebuilding": "Special character not allowed cover building",
+                "ClaimfreeperiodObj.Claimfreeperiod": "Please select claim free Period",
+                "ExcessObj.Excess": "Please select excess",
+                "ImposedObj.Imposed": "Please checked imposed",
+                "rlshbhome": "Please fillup the home description,",
+                "rlscdhome": "Please fillup the construction details,",
+                "rlsodhome": "Please fillup the occupancy details,",
+                "rlsiphome": "Please fillup the interested parties,",
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            ignore: [],
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+    });
+    $(document).on('click', '#premium', function () {
+        $.ajax({
+            url: '/Customer/PremiumDetails',
+            type: "POST",
+            crossOrigin: true,
+            data: {},
+            success: function (data) {
+                if (data.Status == true) {
+                    var html1 = "";
+                    if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                        var html = "";
+                        $.each(data.Premium, function (index, value) {
+                            html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
+                        });
+                        if (html != '') {
+                            $('#premiumModel-p-b').html(html);
+                        }
+                    }
+                    if (data.UnderwriterFee != null) {
+                        html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
+                    }
+                    if (data.FeeGst != null) {
+                        html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
+                    }
+                    if (data.InvoiceTotal != null) {
+                        html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
+                    }
+                    if (html1 != '') {
+                        $('#premiumModel-p-f').html(html1);
+                    }
+                }
+            }
+        });
+    });
+    $(document).on('change', '#suburb', function () {
+        var suburb = $(this).val();
+        var state = $('#state').val();
+        var postcode = $('#postCode').val();
+        var add = $('#addresshome').val();
+        if ((add != null || add != '') && (suburb != '' || sub != null) && state != '' && postcode != '') {
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": suburb, "state": state, "postcode": postcode },
+                success: function (res) {
+                    if (res.Status) {
+                        var locationhb = '' + add + ', ' + suburb + ',' + state + ',' + postcode + ',AU';
+                        $('#ptab5 #locationhb').val(locationhb);
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('change', '#state', function () {
+        var suburb = $('#suburb').val();
+        var state = $(this).val();
+        var postcodelist = '';
+        $.each(allResPostCode, function (index, value) {
+            if (state == value.State) {
+                postcodelist += '<option value="' + value.Postcode + '">';
+            }
+        });
+        $('#postcodelist').html(postcodelist);
+        var pincode = $('#postCode').val();
+        var add = $('#addresshome').val();
+        if ((add != null || add != '') && (suburb != '' || sub != null) && state != '' && pincode != '') {
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": suburb, "state": state, "postcode": pincode },
+                success: function (res) {
+                    if (res.Status) {
+                        var locationhb = '' + add + ', ' + suburb + ',' + state + ',' + pincode + ',AU';
+                        $('#ptab5 #locationhb').val(locationhb);
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('focusout', "#postCode", function () {
+        var suburb = $('#suburb').val();
+        var state = $('#state').val();
+        var pincode = $(this).val();
+        var add = $('#addresshome').val();
+        if ((add != null || add != '') && (suburb != '' || sub != null) && state != '' && pincode != '') {
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": suburb, "state": state, "postcode": pincode },
+                success: function (res) {
+                    if (res.Status) {
+                        var locationhb = '' + add + ', ' + suburb + ',' + state + ',' + pincode + ',AU';
+                        $('#ptab5 #locationhb').val(locationhb);
+                    }
+                }
+            });
+        }
+    });
+    $(".savepolicyP").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/SavePolicy",
+            data: { "PrId": 1021 },
+            success: function (res) {
+                if (res.status == true) {
+                    var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html(html);
+                } else {
+                    var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html('');
+                }
+            }
+        });
+    });
+    $(function () {
+        $('#suburb').select2({
+            ajax: {
+                url: "/Customer/AddressData",
+                type: 'POST',
+                data: function (params) {
+                    var query = {
+                        Fragment: params.term,
+                        type: 'public'
+                    }
+                    return query;
+                },
+                processResults: function (data) {
+                    var NewState = $('#state').val();
+                    var ItemSuburbArray = [];
+                    var ItemPostCodeArray = [];
+                    var RemoveDuplicatSubbube = [];
+                    var RemoveDuplicatPostcodee = [];
+                    var RemoveDuplicatStatee = [];
+                    var res = $.parseJSON(data.result);
+                    if (res.LocalityData != null) {
+                        $('#suburb').empty();
+                        var html = '';
+                        var postcodelist = '';
+                        $.each(res.LocalityData, function (index, value) {
+                            if (RemoveDuplicatSubbube.indexOf(value.Suburb) == '-1') {
+                                ItemSuburbArray.push({ "id": value.Suburb, "text": value.Suburb });
+                                RemoveDuplicatSubbube.push(value.Suburb);
+                            }
+                            if (RemoveDuplicatStatee.indexOf(value.State) == '-1') {
+                                html += '<option value="' + value.State + '">' + value.State + '</option>';
+                                RemoveDuplicatStatee.push(value.State);
+                            }
+                            if (RemoveDuplicatPostcodee.indexOf(value.Postcode) == '-1') {
+                                ItemPostCodeArray.push({ "Postcode": value.Postcode, "State": value.State });
+                                postcodelist += '<option value="' + value.Postcode + '">';
+                                RemoveDuplicatPostcodee.push(value.Postcode);
+                            }
+                        });
+                        $('#state').html(html);
+                        $('#postcodelist').html(postcodelist);
+                        allResPostCode = ItemPostCodeArray;
+                    }
+                    return {
+                        results: ItemSuburbArray
+                    };
+                }
+            }
+        });
+    });
+</script>

@@ -355,7 +355,7 @@ namespace InsureThatAPI.Models
     }
     public class ClaimFreePeriods
     {
-        public int Claimfreeperiod { get; set; }
+        public int? Claimfreeperiod { get; set; }
         public int EiId { get; set; }
     }
     public class CoverHomeBuildings

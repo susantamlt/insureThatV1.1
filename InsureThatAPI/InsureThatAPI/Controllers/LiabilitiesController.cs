@@ -58,7 +58,7 @@ namespace InsureThatAPI.Controllers
                         }
                         else
                         {
-                        if (Policyincllist.Exists(p => p.name == "Motor"))
+                        if (Policyincllist.Exists(p => p.name == "Motor" || p.name == "Motors"))
                             {
                                 return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                             }
@@ -67,7 +67,7 @@ namespace InsureThatAPI.Controllers
                                 return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                             }
 
-                            else if (Policyincllist.Exists(p => p.name == "Pet"))
+                            else if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                             {
                                 return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                             }
@@ -199,7 +199,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.ProfileData != null && unitdetails.ProfileData.ValueData!=null)
                 {
                     if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.ExcessLCObj.EiId))
                     {
@@ -225,24 +225,8 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Liability), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-            //    if (details.Exists(q => q.QuestionId == LiabilityCover.FarmliabiltyObj.EiId))
-            //    {
-            //        LiabilityCover.FarmliabiltyObj.Farmliabilty = Convert.ToString(details.Where(q => q.QuestionId == LiabilityCover.FarmliabiltyObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == LiabilityCover.LimitindemnityObj.EiId))
-            //    {
-            //        LiabilityCover.LimitindemnityObj.Limitindemnity = Convert.ToString(details.Where(q => q.QuestionId == LiabilityCover.LimitindemnityObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == LiabilityCover.ExcessLCObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == LiabilityCover.ExcessLCObj.EiId).FirstOrDefault();
-            //        LiabilityCover.ExcessLCObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //}
-            if (unitdetails.ReferralList != null)
+       
+            if (unitdetails!=null &&  unitdetails.ReferralList != null)
             {
                 LiabilityCover.ReferralList = unitdetails.ReferralList;
                 LiabilityCover.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -269,23 +253,23 @@ namespace InsureThatAPI.Controllers
 
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                //if (LiabilityCover.FarmliabiltyObj != null && LiabilityCover.FarmliabiltyObj.EiId > 0 && LiabilityCover.FarmliabiltyObj.Farmliabilty != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(LiabilityCover.CustomerId, Convert.ToInt32(RLSSection.Liability), LiabilityCover.FarmliabiltyObj.EiId, LiabilityCover.FarmliabiltyObj.Farmliabilty.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (LiabilityCover.LimitindemnityObj != null && LiabilityCover.LimitindemnityObj.EiId > 0 && LiabilityCover.LimitindemnityObj.Limitindemnity != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(LiabilityCover.CustomerId, Convert.ToInt32(RLSSection.Liability), LiabilityCover.LimitindemnityObj.EiId, LiabilityCover.LimitindemnityObj.Limitindemnity.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-                //if (LiabilityCover.ExcessLCObj != null && LiabilityCover.ExcessLCObj.EiId > 0 && LiabilityCover.ExcessLCObj.Excess != null)
-                //{
-                //    db.IT_InsertCustomerQnsData(LiabilityCover.CustomerId, Convert.ToInt32(RLSSection.Liability), LiabilityCover.ExcessLCObj.EiId, LiabilityCover.ExcessLCObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-                //}
-            }
+          
             Session["profileId"] = null;
             Session["UnId"] = null;
+            string actionname = null;
+            string controllername = null;
+            if (Session["Actname"] != null)
+            {
+                actionname = Session["Actname"].ToString();
+            }
+            if (Session["controller"] != null)
+            {
+                controllername = Session["controller"].ToString();
+            }
+            if (actionname != null && controllername != null)
+            {
+                return RedirectToAction(actionname, controllername, new { cid = LiabilityCover.CustomerId, PcId = LiabilityCover.PcId });
+            }
             return RedirectToAction("VehicleDescription", "MotorCover", new { cid = LiabilityCover.CustomerId });
         }
     }
