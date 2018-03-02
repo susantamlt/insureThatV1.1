@@ -210,6 +210,8 @@ namespace InsureThatAPI.Controllers
             //    }
             //    return RedirectToAction("ConstructionDetails", new { cid = cid });
             //}
+            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
+            
             return View(HB2HomeDescription);
         }
         [HttpGet]

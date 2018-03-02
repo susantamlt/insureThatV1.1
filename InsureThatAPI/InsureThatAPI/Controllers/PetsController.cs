@@ -47,8 +47,8 @@ namespace InsureThatAPI.Controllers
                     {
                         if (Session["unId"] == null && Session["profileId"] == null)
                         {
-                            Session["unId"] = Policyincllist.Where(p => p.name == "Pets" ).Select(p => p.UnitId).First();
-                            Session["profileId"] = Policyincllist.Where(p => p.name == "Pets").Select(p => p.ProfileId).First();
+                            Session["unId"] = Policyincllist.Where(p => p.name == "Pet" || p.name == "Pets" ).Select(p => p.UnitId).First();
+                            Session["profileId"] = Policyincllist.Where(p => p.name == "Pet" || p.name == "Pets").Select(p => p.ProfileId).First();
                         }
                     }
                     else
@@ -127,7 +127,7 @@ namespace InsureThatAPI.Controllers
                 unid = Convert.ToInt32(Session["unId"]);
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if ( PcId != null && PcId.HasValue)
             {
                 Pets.PolicyInclusion = policyinclusions;
                 Pets.ExistingPolicyInclustions = policyinclusions;
@@ -199,61 +199,61 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null && unitdetails.ProfileData.ValueData!=null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.AnnualcoverlimitObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.AnnualcoverlimitObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.AnnualcoverlimitObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.AnnualcoverlimitObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.AnnualcoverlimitObj.Annualcoverlimit = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.AnnuallimitbfObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.AnnuallimitbfObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.AnnuallimitbfObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.AnnuallimitbfObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.AnnuallimitbfObj.Annuallimitbf = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.AnnuallimitdtObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.AnnuallimitdtObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.AnnuallimitdtObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.AnnuallimitdtObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.AnnuallimitdtObj.Annuallimit = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.AnnuallimitijObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.AnnuallimitijObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.AnnuallimitijObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.AnnuallimitijObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.AnnuallimitijObj.Annuallimitij = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.BoardingfeeObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.BoardingfeeObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.BoardingfeeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.BoardingfeeObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.BoardingfeeObj.Boardingfee = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.BreedObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.BreedObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.BreedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.BreedObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.BreedObj.Breed = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.DatebirthObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.DatebirthObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.DatebirthObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.DatebirthObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.DatebirthObj.Datebirth = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.DeathillnessObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.DeathillnessObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.DeathillnessObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.DeathillnessObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.DeathillnessObj.Deathillness = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.DeathinjuryObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.DeathinjuryObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.DeathinjuryObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.DeathinjuryObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.DeathinjuryObj.Deathinjury = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.DescriptionillnessObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.DescriptionillnessObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.DescriptionillnessObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.DescriptionillnessObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.DescriptionillnessObj.Descriptionillness = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.ExcessPetObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.ExcessPetObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.ExcessPetObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.ExcessPetObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.ExcessPetObj.Excess = val;
                     }
                     //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.ImposedpetsObj.EiId))
@@ -261,29 +261,29 @@ namespace InsureThatAPI.Controllers
                     //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.ImposedpetsObj.EiId).Select(p => p.Value).FirstOrDefault();
                     //    Pets.ImposedpetsObj.Imposed = val;
                     //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.NameObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.NameObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.NameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.NameObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.NameObj.Name = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.OtherbreedObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.OtherbreedObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.OtherbreedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.OtherbreedObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.OtherbreedObj.Otherbreed = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.PreexistingObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.PreexistingObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.PreexistingObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.PreexistingObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.PreexistingObj.Preexisting = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.PremiumptsObj.EiId))
+                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.PremiumptsObj.EiId))
+                    //{
+                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.PremiumptsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    //    Pets.PremiumptsObj.Premium = val;
+                    //}
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.SpeciesObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.PremiumptsObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        Pets.PremiumptsObj.Premium = val;
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == Pets.SpeciesObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == Pets.SpeciesObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.SpeciesObj.EiId).Select(p => p.Value).FirstOrDefault();
                         Pets.SpeciesObj.Species = val;
                     }
                 }
@@ -305,6 +305,14 @@ namespace InsureThatAPI.Controllers
                     }
                 }
 
+            }
+            if(cid!=null && cid>0)
+            {
+                Pets.CustomerId = cid.Value;
+            }
+            if(PcId!=null && PcId>0)
+            {
+                Pets.PcId = PcId;
             }
             return View(Pets);
         }
@@ -352,10 +360,10 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
-            if (actionname != null && controllername != null)
-            {
-                return RedirectToAction(actionname, controllername, new { cid = Pets.CustomerId, PcId = Pets.PcId });
-            }
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = Pets.CustomerId, PcId = Pets.PcId });
+            //}
             return RedirectToAction("TravelCover", "Travel", new { cid = Pets.CustomerId });
         }
         [HttpPost]

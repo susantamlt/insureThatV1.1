@@ -270,11 +270,11 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.CoverLossOfDataFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPElectronics.CoverLossOfDataFPObj.CoverLossofData = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPElectronics.ElectronicsLocationsCoveredFPObj.LocationsCovered = val;
-                    }
+                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId))
+                    //{
+                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.ElectronicsLocationsCoveredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    //    FPElectronics.ElectronicsLocationsCoveredFPObj.LocationsCovered = val;
+                    //}
                     if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPElectronics.ExcessCoverLossOfDataFPObj.EiId))
                     {
                         string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPElectronics.ExcessCoverLossOfDataFPObj.EiId).Select(p => p.Value).FirstOrDefault();

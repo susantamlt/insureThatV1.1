@@ -201,6 +201,12 @@ namespace InsureThatAPI.Controllers
             FPLivestock.AnnualStrawsandAmpoulesFPObj = new AnnualStrawsandAmpoulesFP();
             FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId = 63389;
 
+            FPLivestock.ExcessLivestockFPBObj = new ExcessLivestockFP();
+            FPLivestock.ExcessLivestockFPBObj.EiId = 63393;
+
+            FPLivestock.CoverforsemenLSObj = new CoverforsemenLS();
+            FPLivestock.CoverforsemenLSObj.EiId = 63391;
+
             HttpClient hclient = new HttpClient();
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
             hclient.BaseAddress = new Uri(url);
@@ -251,127 +257,137 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ClassOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ClassOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.ClassOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.ClassOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.ClassOfAnimalFPObj.ClassofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.TypeOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.TypeOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.TypeOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.TypeOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.TypeOfAnimalFPObj.TypeofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.BreedOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.BreedOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.BreedOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.BreedOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.BreedOfAnimalFPObj.BreedofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.AgeOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.AgeOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.AgeOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.AgeOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.AgeOfAnimalFPObj.AgeofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ColourOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ColourOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.ColourOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.ColourOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.ColourOfAnimalFPObj.ColourofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.UseOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.UseOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.UseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.UseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.UseOfAnimalFPObj.UseofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescBrandOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescBrandOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescBrandOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescBrandOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.DescBrandOfAnimalFPObj.BrandofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescMarksOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescMarksOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescMarksOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescMarksOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.DescMarksOfAnimalFPObj.MarkingsofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptSoundHealthofAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptSoundHealthofAnimalFPObj.HealthofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescSoundHealthofAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.DescSoundHealthofAnimalFPObj.Description = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptDiseaseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptDiseaseOfAnimalFPObj.DiseaseofAnimal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescDiseaseOfAnimalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.DescDiseaseOfAnimalFPObj.Description = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptAnimalSyndicatedFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptAnimalSyndicatedFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptAnimalSyndicatedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptAnimalSyndicatedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptAnimalSyndicatedFPObj.AnimalSyndicated = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescAnimalSyndicatedFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.DescAnimalSyndicatedFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescAnimalSyndicatedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.DescAnimalSyndicatedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.DescAnimalSyndicatedFPObj.Description = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.SumInsuredLivestockFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.SumInsuredLivestockFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.SumInsuredLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.SumInsuredLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.SumInsuredLivestockFPObj.SumInsured = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptInfertilityFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptInfertilityFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptInfertilityFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptInfertilityFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptInfertilityFPObj.Infertility = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptLossofUseLivestockFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptLossofUseLivestockFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptLossofUseLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptLossofUseLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptLossofUseLivestockFPObj.LossofUse = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptTheftLivestockFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptTheftLivestockFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptTheftLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptTheftLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptTheftLivestockFPObj.TheftOption = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptUnbornFoalFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.OptUnbornFoalFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptUnbornFoalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.OptUnbornFoalFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.OptUnbornFoalFPObj.UnbornFoal = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ExcessLivestockFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ExcessLivestockFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.ExcessLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.ExcessLivestockFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.ExcessLivestockFPObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.NoOfContainersFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.NoOfContainersFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.NoOfContainersFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.NoOfContainersFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.NoOfContainersFPObj.NumberOfContainers = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.MaxStrawsandAmpoulesFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.MaxStrawsandAmpoulesFPObj.StrawAndAmpoules = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.MaxValOneContainerFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.MaxValOneContainerFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.MaxValOneContainerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.MaxValOneContainerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.MaxValOneContainerFPObj.MaxValoneContainer = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.AnnualStrawsandAmpoulesFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPLivestock.AnnualStrawsandAmpoulesFPObj.AnnualStrawandAmpoules = val;
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.CoverforsemenLSObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.CoverforsemenLSObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.CoverforsemenLSObj.Coverforsemen = val;
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPLivestock.ExcessLivestockFPBObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPLivestock.ExcessLivestockFPBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPLivestock.ExcessLivestockFPBObj.Excess = val;
                     }
                 }
             }

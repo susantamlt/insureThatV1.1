@@ -1,6 +1,7 @@
 ﻿@model InsureThatAPI.Models.GetNewPolicyDetailsRef
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var policydatamulti = 0;
 }
 
 <div class="content mt-60 mb-60">
@@ -69,10 +70,31 @@
                             </div>
                             <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1 col-md-2 col-sm-3 col-xs-12">
                                 <a href="@Url.Action("ViewUpdatePolicyDetails", "Customer",new {cid=@ViewBag.CustomerId, PcId= @Model.PolicyData[i].PcId})" class="btn-primary btn col-sm-12 col-xs-5">View Details</a>
-                                @if (Model.PolicyData[i].PolicyStatus == "NP" || Model.PolicyData[i].PolicyStatus == "RP" || Model.PolicyData[i].PolicyStatus == "AP")
+                                 @*policydatamulti= @Model.PolicyData.Where(o=>o.PolicyNumber== Model.PolicyData[i].PolicyNumber).ToList()*@
+                                @if (Model.PolicyData[i].PolicyStatus == "NP" || Model.PolicyData[i].PolicyStatus == "RP" || Model.PolicyData[i].PolicyStatus == "AP" && @policydatamulti > 1)
                                 {
-                                <a href="#" class="btn-primary btn col-sm-12 col-xs-5">Cancel Policy</a>
+                                    @*<button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12" data-toggle="modal">Cancel Policy</button>*@
                                 }
+                                <div id="cancelpolicymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="cancelpolicymodel" aria-hidden="false">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3 class="pull-left">Cancel Policy</h3>
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                    <img src="~/images/close-icon.png" />
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p>Are you sure cancelling this policy. Action can not be reversed.</p>
+                                                <p>Please enter reason for cancellation <input name="cancelreason" class="cancelpol col-sm-2 form-control form-inline field-length-xs" type="text" /></p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                                <button class="btn btn-default no-border" id="cancelpo" aria-hidden="true"> Confirm </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -86,7 +108,24 @@
     }
 
 </div>
+<script>
+    $("#cancelpo").click(function () {
+        var PcId = $("#pcidd").val();
+        var selectedcid = $("#ciid").val();
+        var selectedTrId = $("#tridd").val();
+        var reson = $(".cancelpol").val();
+        $.ajax({
+            type: "POST",
+            url: "/Customer/CancelPolicy",
+            data: {
+                "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson
+            },
+            success: function (responce) {
+            }
+        });
 
+    });
+</script>
 
 
 

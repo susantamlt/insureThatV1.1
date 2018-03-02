@@ -29,7 +29,8 @@ namespace InsureThatAPI.Controllers
                 Session["Email"] = null;
                 Session["ApiKey"] = null;
                 Session["HprofileId"] = null;
-                Session["profileId"] = null;      
+                Session["profileId"] = null;
+                Session["Home2"] = null;
                 Session["Policyinclustions"] = null;
                 Session["EmailId"] = null;
                 Session["InsuredId"] = null;
@@ -39,6 +40,8 @@ namespace InsureThatAPI.Controllers
                 Session["UnitId"] = null;
                 Session["controller"] = null;
                 Session["Actname"] = null;
+                Session["Policylocal"] = null;
+                Session["InsuredName"] = null;
 
             }
             catch (Exception ex)

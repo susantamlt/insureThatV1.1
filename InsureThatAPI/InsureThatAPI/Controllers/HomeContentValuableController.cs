@@ -87,7 +87,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors"))
+                    else if (Policyincllist.Exists(p => p.name == "Motor" || p.name == "Motors"))
                     {
                         return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                     }
@@ -96,7 +96,7 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                     }
 
-                    else if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
+                    else if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                     {
                         return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                     }
@@ -129,8 +129,24 @@ namespace InsureThatAPI.Controllers
             int profileid = 0;
             if (PcId != null && PcId.HasValue && PcId > 0)
             {
-                unid = Convert.ToInt32(Session["unId"]);
-                profileid = Convert.ToInt32(Session["profileId"]);
+                if (Session["unId"] != null && Session["profileId"] != null)
+                {
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+                }
+                else
+                {
+                    if (policyinclusions.Exists(p => p.Name == "Home Contents"))
+                    {
+                        unid = policyinclusions.Where(p => p.Name == "Home Contents").Select(p => p.UnId).FirstOrDefault();
+                        profileid = policyinclusions.Where(p => p.Name == "Home Contents").Select(p => p.UnId).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid,PcId=PcId });
+                    }
+                }
                 HomeContent.PolicyInclusion = policyinclusions;
                 if (unid == null || unid == 0)
                 {
@@ -143,7 +159,7 @@ namespace InsureThatAPI.Controllers
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
                 HomeContent.ExistingPolicyInclustions = policyinclusions;
 
@@ -221,7 +237,7 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
                     //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == HomeContent.LocationObj.EiId))
                     //{
@@ -236,12 +252,48 @@ namespace InsureThatAPI.Controllers
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HomeContent.SuminsuredObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.SuminsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        HomeContent.SuminsuredObj.Suminsured = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            HomeContent.SuminsuredObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == HomeContent.SuminsuredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var suminsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.SuminsuredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < suminsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60287;
+                                vds.Element.ItId = suminsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.SuminsuredObj.EiId && p.Element.ItId == suminsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            HomeContent.SuminsuredObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HomeContent.DescriptionObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.DescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        HomeContent.DescriptionObj.Description = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            HomeContent.DescriptionObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == HomeContent.DescriptionObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var descriptionList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.DescriptionObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < descriptionList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60285;
+                                vds.Element.ItId = descriptionList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.DescriptionObj.EiId && p.Element.ItId == descriptionList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            HomeContent.DescriptionObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HomeContent.YearclaimObj.EiId))
                     {
@@ -254,7 +306,7 @@ namespace InsureThatAPI.Controllers
                         HomeContent.ExcesspayObj.Excess = val;
                     }
                 }
-                if(unitdetails.SectionData!=null && unitdetails.SectionData.AddressData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
                 {
                     if (unitdetails.SectionData.AddressData != null)
                     {
@@ -264,8 +316,8 @@ namespace InsureThatAPI.Controllers
                         HomeContent.state = unitdetails.SectionData.AddressData.State;
                     }
                 }
-            }           
-            if (unitdetails!=null && unitdetails.ReferralList != null)
+            }
+            if (unitdetails != null && unitdetails.ReferralList != null)
             {
                 HomeContent.ReferralList = unitdetails.ReferralList;
                 HomeContent.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -280,8 +332,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-     
+
             ViewBag.cid = cid;
+            if (cid != null)
+            {
+                HomeContent.CustomerId = cid;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                HomeContent.PcId = PcId;
+            }
             return View(HomeContent);
         }
         [HttpPost]
@@ -302,7 +362,7 @@ namespace InsureThatAPI.Controllers
             }
             HomeContent.ExcesspayObj.ExcessList = HCList;
             var db = new MasterDataEntities();
-            string policyid = null;    
+            string policyid = null;
             Session["profileId"] = null;
             Session["UnId"] = null;
             string actionname = null;
@@ -315,10 +375,10 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
-            if (actionname != null && controllername != null)
-            {
-                return RedirectToAction(actionname, controllername, new { cid = HomeContent.CustomerId, PcId = HomeContent.PcId });
-            }
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = HomeContent.CustomerId, PcId = HomeContent.PcId });
+            //}
             return RedirectToAction("Valuables", new { cid = HomeContent.CustomerId });
         }
         [HttpGet]
@@ -361,7 +421,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors" ))
+                        else if (Policyincllist.Exists(p => p.name == "Motor" || p.name == "Motors"))
                         {
                             return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                         }
@@ -370,7 +430,7 @@ namespace InsureThatAPI.Controllers
                             return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                         }
 
-                        else if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
+                        else if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                         {
                             return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                         }
@@ -443,11 +503,36 @@ namespace InsureThatAPI.Controllers
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
+                int? unid = null;
+                int? profileid = null;
+                if (Session["unId"] != null && Session["profileId"] != null)
+                {
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+                }
+                else
+                {
+                    if (policyinclusions.Exists(p => p.Name == "Valuables"))
+                    {
+                        unid = policyinclusions.Where(p => p.Name == "Valuables").Select(p => p.UnId).FirstOrDefault();
+                        profileid = policyinclusions.Where(p => p.Name == "Valuables").Select(p => p.UnId).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
+                    }
+                }
+              
+                if (unid == null || unid == 0)
+                {
+                    unid = unitdetails.SectionData.UnId;
+                    profileid = unitdetails.SectionData.ProfileUnId;
+                }
                 ValuablesHC.ExistingPolicyInclustions = policyinclusions;
-                int unid = Convert.ToInt32(Session["unId"]);
-                int profileid = Convert.ToInt32(Session["profileId"]);
+                
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -532,27 +617,64 @@ namespace InsureThatAPI.Controllers
 
                         }
                     }
-
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            ValuablesHC.SuminsuredObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var suminsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < suminsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60393;
+                                vds.Element.ItId = suminsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId && p.Element.ItId == suminsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            ValuablesHC.SuminsuredObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            ValuablesHC.DescriptionObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var descriptionList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < descriptionList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60391;
+                                vds.Element.ItId = descriptionList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId && p.Element.ItId == descriptionList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            ValuablesHC.DescriptionObjList = elmnts;
+                        }
+                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.LocationObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.LocationObj.EiId).Select(p => p.Value).FirstOrDefault();
                         ValuablesHC.LocationObj.Location = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.DescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        ValuablesHC.DescriptionObj.Description = val;
-                    }
+
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.ExcesspayObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.ExcesspayObj.EiId).Select(p => p.Value).FirstOrDefault();
                         ValuablesHC.ExcesspayObj.Excess = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.SuminsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        ValuablesHC.SuminsuredObj.Suminsured = val;
-                    }
+
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == ValuablesHC.TotalcoverObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == ValuablesHC.TotalcoverObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -565,7 +687,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-        
+
             if (unitdetails.ReferralList != null)
             {
                 ValuablesHC.ReferralList = unitdetails.ReferralList;
@@ -582,6 +704,14 @@ namespace InsureThatAPI.Controllers
                     }
                 }
 
+            }
+            if (cid != null)
+            {
+                ValuablesHC.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                ValuablesHC.PcId = PcId;
             }
             return View(ValuablesHC);
         }
@@ -603,7 +733,7 @@ namespace InsureThatAPI.Controllers
             ValuablesHC.ExcesspayObj.ExcessList = HCList;
             var db = new MasterDataEntities();
             string policyid = null;
-       
+
             Session["profileId"] = null;
             Session["UnId"] = null;
             string actionname = null;
@@ -616,11 +746,11 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
-            if (actionname != null && controllername != null)
-            {
-                return RedirectToAction(actionname, controllername, new { cid = ValuablesHC.CustomerId, PcId = ValuablesHC.PcId });
-            }
-            return RedirectToAction("FarmContents", "Farm", new { cid = ValuablesHC.CustomerId });
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = ValuablesHC.CustomerId, PcId = ValuablesHC.PcId });
+            //}
+            return RedirectToAction("FarmContents", "Farm", new { cid = ValuablesHC.CustomerId, PcId = ValuablesHC.PcId });
         }
     }
 }

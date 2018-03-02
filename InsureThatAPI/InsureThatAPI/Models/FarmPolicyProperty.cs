@@ -17,11 +17,17 @@ namespace InsureThatAPI.Models
     }
     public class FarmDetails
     {
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
-        public string PolicyId { get; set; }
-        public List<SessionModel> PolicyInclusions { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
         public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
-        public string completionTrackPFP { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         [DataType(DataType.MultilineText)]
         public string  Aboutfarmstructures { get; set; }
         public DetailedDescription DescriptionFBObj { get; set; }
@@ -34,14 +40,37 @@ namespace InsureThatAPI.Models
         public TotalCoverFarmFencing TotalcoverObj { get; set; }
         public OtherFarmStructuresFC OtherstructurefcObj { get; set; }
         public RoofAndWallsFS RoofwallsObj { get; set; }
-        public HarvestedCropsExcess ExcesshcObj { get; set; }
-        public int? Imposed { get; set; }
+        public HarvestedCropsExcess ExcessFBObj { get; set; }
+        public HarvestedCropsExcess ExcesshcFSObj { get; set; }
+        public HarvestedCropsExcess ExcesshcHCObj { get; set; }
+        public bool Imposed { get; set; }
         public HarvestedCropsSumInsured SuminsuredhcObj { get; set; }
         public HarvestedCropsExcess ExcesshcObjH { get; set; }
         public int? ImposedH { get; set; }
         public InterestedPartyName PartynameObj { get; set; }
         public InterestedPartyLocation PartylocationObj { get; set; }
         public InterestedTotalSumInsured TotalsuminsuredObj { get; set; }
+        public LocatioForFP LocationObj { get; set; }
+        public AddressForFP AddressObj { get; set; }
+        public typeoffarmInFP TypeoffarmObj { get; set; }
+        public farmsizeInFP FarmsizeObj { get; set; }
+    }
+    public class typeoffarmInFP
+    {
+        public string typeoffarm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class farmsizeInFP
+    {
+        public string Farmsize{ get; set; }
+    }
+    public class LocatioForFP
+    {
+        public string Location { get; set; }
+    }
+    public class AddressForFP
+    {
+        public string Address { get; set; }
     }
     public class FarmStructures
     {
@@ -76,7 +105,7 @@ namespace InsureThatAPI.Models
     }
     public class ContainCoolroomFB
     {
-        public string Coolroom { get; set; }
+        public bool Coolroom { get; set; }
         public int EiId { get; set; }
     }
     public class SumInsuredsFB

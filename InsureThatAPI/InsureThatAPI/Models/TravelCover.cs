@@ -21,7 +21,9 @@ namespace InsureThatAPI.Models
         public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public NumberOfTravelers NumbertravelersObj { get; set; }
         public TravellersToBeCovered  TravellerscoveredObj  { get; set; }
+        public List<ValueDatas> TravellerscoveredObjList { get; set; }
         public DataOfBirthsTC DataofbirthObj { get; set; }
+        public List<ValueDatas> DataofbirthObjList { get; set; }
         public YourTrips YourtripObj { get; set; }
         public WinterSports WintersportObj { get; set; }
         public ExcessesTC ExcessObj { get; set; }

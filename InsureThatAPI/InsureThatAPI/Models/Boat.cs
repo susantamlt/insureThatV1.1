@@ -48,13 +48,18 @@ namespace InsureThatAPI.Models
         public MarketValues MarketvalueObj { get; set; }
 
         public NameBOs NameboObj { get; set; }
+        public List<ValueDatas> NameboObjList { get; set; }
         public YearsExperienced YearsexperienceObj { get; set; }
+        public List<ValueDatas> YearsexperienceObjList { get; set; }
         public TypesofBoat TypesboatObj { get; set; }
+        public List<ValueDatas> TypesboatObjList { get; set; }
 
         public MarketValues MarketvalueCDObj { get; set; }
         public MotorValues MotorvalueObj { get; set; }
         public AccessoryDescription AccessorydescriptionObj { get; set; }
+        public List<ValueDatas> AccessorydescriptionObjList { get; set; }
         public AccessorySumInsured AccessorysuminsureObj { get; set; }
+        public List<ValueDatas> AccessorysuminsureObjList { get; set; }
         public string Coverforaccessories { get; set; }
         public string Totalcoverboat { get; set; }
         public LiabilityCD LiabilityObj { get; set; }
@@ -68,7 +73,9 @@ namespace InsureThatAPI.Models
         public SailBoats SailboatObj { get; set; }
 
         public NameOfInstitutions InstitutionsObj { get; set; }
+        public List<ValueDatas> InstitutionsObjList { get; set; }
         public LocationsIPB LocationObj { get; set; }
+        public List<ValueDatas> LocationObjList { get; set; }
     }
     public class MotorDetails
     {

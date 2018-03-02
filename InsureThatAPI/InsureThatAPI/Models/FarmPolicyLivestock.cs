@@ -47,6 +47,13 @@ namespace InsureThatAPI.Models
         public MaxStrawsandAmpoulesFP MaxStrawsandAmpoulesFPObj { get; set; }
         public MaxValOneContainerFP MaxValOneContainerFPObj { get; set; }
         public AnnualStrawsandAmpoulesFP AnnualStrawsandAmpoulesFPObj { get; set; }
+        public CoverforsemenLS CoverforsemenLSObj { get; set; }
+        public ExcessLivestockFP ExcessLivestockFPBObj { get; set; }
+    }
+    public class CoverforsemenLS
+    {
+        public string Coverforsemen { get; set; }
+        public int EiId { get; set; }
     }
 
     public class ClassOfAnimalFP

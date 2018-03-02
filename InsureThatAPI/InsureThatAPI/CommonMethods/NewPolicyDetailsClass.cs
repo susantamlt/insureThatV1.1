@@ -416,14 +416,15 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> constructionType()
         {
             List<SelectListItem> constructionList = new List<SelectListItem>();
-            constructionList.Add(new SelectListItem { Value = "1", Text = "Metal walls on Metal Frame" });
-            constructionList.Add(new SelectListItem { Value = "2", Text = "Metal walls on Timber Frame" });
-            constructionList.Add(new SelectListItem { Value = "3", Text = "Timber walls on Timber Frame" });
-            constructionList.Add(new SelectListItem { Value = "4", Text = "Timber walls on Iron Frame" });
-            constructionList.Add(new SelectListItem { Value = "5", Text = "Sandwich panel – EPS" });
-            constructionList.Add(new SelectListItem { Value = "6", Text = "Open sides – Metal Frame" });
-            constructionList.Add(new SelectListItem { Value = "7", Text = "Open sides – Timber Frame" });
-            constructionList.Add(new SelectListItem { Value = "8", Text = "Brick" });
+            constructionList.Add(new SelectListItem { Value = "4", Text = "Metal walls on Metal Frame" });
+            constructionList.Add(new SelectListItem { Value = "3", Text = "Metal walls on Timber Frame" });
+            constructionList.Add(new SelectListItem { Value = "1", Text = "Timber walls on Timber Frame" });
+            ////constructionList.Add(new SelectListItem { Value = "4", Text = "Timber walls on Iron Frame" });
+            ////constructionList.Add(new SelectListItem { Value = "5", Text = "Sandwich panel – EPS" });
+            ////constructionList.Add(new SelectListItem { Value = "6", Text = "Open sides – Metal Frame" });
+            ////constructionList.Add(new SelectListItem { Value = "7", Text = "Open sides – Timber Frame" });
+            ////constructionList.Add(new SelectListItem { Value = "8", Text = "Brick" });
+            constructionList.Add(new SelectListItem { Value = "2", Text = "Timber walls on Metal Frame" });
             return constructionList;
         }
         #endregion

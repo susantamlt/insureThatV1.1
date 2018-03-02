@@ -460,7 +460,7 @@ namespace InsureThatAPI.Controllers
             Session["unId"] = null;
             Session["profileId"] = null;
 
-            return RedirectToAction("BindCover", "Customer", new { cid = cid, PcId = FPMachinery.PcId });
+            return RedirectToAction("PremiumDetails", "Customer", new { cid = cid, PcId = FPMachinery.PcId });
         }
 
     }

@@ -21,7 +21,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> HomeContentsAsync(int? cid, int? PcId)
+        public async System.Threading.Tasks.Task<ActionResult> HomeContents(int? cid, int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> DescriptionListHomeContents = new List<SelectListItem>();
@@ -46,7 +46,7 @@ namespace InsureThatAPI.Controllers
                 {
                     if (Policyincllist != null)
                     {
-                        if (Policyincllist.Exists(p => p.name == "Home Content"))
+                        if (Policyincllist.Exists(p => p.name == "Home Content" || p.name== "Home Contents"))
                         {
 
                         }
@@ -58,12 +58,12 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
                         }
-                        if (Policyincllist.Exists(p => p.name == "Home Content"))
+                        if (Policyincllist.Exists(p => p.name == "Home Content" || p.name == "Home Contents"))
                         {
                             if (Session["unId"] == null && Session["profileId"] == null)
                             {
-                                Session["unId"] = Policyincllist.Where(p => p.name == "Home Content").Select(p => p.UnitId).First();
-                                Session["profileId"] = Policyincllist.Where(p => p.name == "Home Content").Select(p => p.ProfileId).First();
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Home Content" ||  p.name == "Home Contents").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Home Content" || p.name == "Home Contents").Select(p => p.ProfileId).First();
                             }
                         }
                         else
@@ -85,21 +85,23 @@ namespace InsureThatAPI.Controllers
             }
 
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
-            FPHomeContents.CoverForUnspecifiedContentsFPObj = new CoverForUnspecifiedContentsFP();
-            FPHomeContents.CoverForUnspecifiedContentsFPObj.EiId = 63551;
-
+            FPHomeContents.CoveroptionFPObj = new CoverOptionFP();
+            FPHomeContents.CoveroptionFPObj.EiId = 63549;
+            FPHomeContents.UnspecifiedFPObj = new UnspecifiedFP();
+            FPHomeContents.UnspecifiedFPObj.EiId = 63551;
             FPHomeContents.DescriptionFPObj = new DescriptionsFP();
             FPHomeContents.DescriptionFPObj.DescriptionList = DescriptionListHomeContents;
             FPHomeContents.DescriptionFPObj.EiId = 63563;
-
             FPHomeContents.SumInsuredFPObj = new SumInsuredFP();
             FPHomeContents.SumInsuredFPObj.EiId = 63565;
-
-            FPHomeContents.OptHCcoverOptionsFPObj = new OptHCcoverOptionsFP();
-            FPHomeContents.OptHCcoverOptionsFPObj.EiId = 63549;
-
-            FPHomeContents.OptHCLastPaidInsuranceFPObj = new OptHCLastPaidInsuranceFP();
-            FPHomeContents.OptHCLastPaidInsuranceFPObj.EiId = 11111;
+            FPHomeContents.ClaimperiodFPObj = new ClaimFreePeriodFP();
+            FPHomeContents.ClaimperiodFPObj.EiId = 63579;
+            FPHomeContents.ExcessFPHContentObj = new ExcessFPHContent();
+            FPHomeContents.ExcessFPHContentObj.EiId = 63581;
+            FPHomeContents.discountFPObj = new NoClaimDiscountFP();
+            FPHomeContents.discountFPObj.EiId = 63587;
+            FPHomeContents.AgediscountObj = new AgeDiscountFP();
+            FPHomeContents.AgediscountObj.EiId = 63591;
 
             var db = new MasterDataEntities();
             string policyid = null;
@@ -217,41 +219,46 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.CoverForUnspecifiedContentsFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.CoveroptionFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.CoverForUnspecifiedContentsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPHomeContents.CoverForUnspecifiedContentsFPObj.CoverUnspecifiedContent = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.CoveroptionFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPHomeContents.CoveroptionFPObj.Coveroption = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.DescriptionFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.UnspecifiedFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.DescriptionFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.UnspecifiedFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPHomeContents.UnspecifiedFPObj.Unspecified = val;
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.DescriptionFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.DescriptionFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPHomeContents.DescriptionFPObj.Description = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.ExcessFPHContentObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.ExcessFPHContentObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.ExcessFPHContentObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.ExcessFPHContentObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPHomeContents.ExcessFPHContentObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.OptCoverAccidentalDamageFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.ClaimperiodFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.OptCoverAccidentalDamageFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPHomeContents.OptCoverAccidentalDamageFPObj.AccidentalDamage = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.ClaimperiodFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPHomeContents.ClaimperiodFPObj.Claimfreeperiod = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.OptHCcoverOptionsFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.discountFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.OptHCcoverOptionsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPHomeContents.OptHCcoverOptionsFPObj.CoverOptions = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.discountFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPHomeContents.discountFPObj.discount = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.OptHCLastPaidInsuranceFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.AgediscountObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.OptHCLastPaidInsuranceFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPHomeContents.OptHCLastPaidInsuranceFPObj.LastpaidInsurance = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.AgediscountObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPHomeContents.AgediscountObj.Agediscount = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.SumInsuredFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPHomeContents.SumInsuredFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPHomeContents.SumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPHomeContents.SumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPHomeContents.SumInsuredFPObj.SumInsured = val;
                     }
                 }

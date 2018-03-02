@@ -188,7 +188,10 @@ namespace InsureThatAPI.Controllers
             List<SelectListItem> constructionTypeList = new List<SelectListItem>();
             constructionTypeList = FarmDetailsmodel.constructionType();
             FarmDetails FarmDetails = new FarmDetails();
-
+            #region Farm location details
+            FarmDetails.AddressObj = new AddressForFP();
+            FarmDetails.LocationObj = new LocatioForFP();
+            #endregion
             #region Farm Details
             FarmDetails.DescriptionFBObj = new DetailedDescription();
             FarmDetails.DescriptionFBObj.EiId = 62255;
@@ -203,11 +206,12 @@ namespace InsureThatAPI.Controllers
             FarmDetails.SuminsuredFBObj.EiId = 62263;
             FarmDetails.UnrepaireddamageObj = new UnrepairedDamageFS();
             FarmDetails.UnrepaireddamageObj.EiId = 62309;
+            FarmDetails.ExcessFBObj = new HarvestedCropsExcess();
+            FarmDetails.ExcessFBObj.EiId = 62315;
             #endregion
             #region Farm Structures
             List<SelectListItem> ExcessRateList = new List<SelectListItem>();
             ExcessRateList = FarmDetailsmodel.ExcessRateFS();
-
             FarmDetails.SublimitObj = new SubLimitFarmFencing();
             FarmDetails.SublimitObj.EiId = 62283;
             FarmDetails.TotalcoverObj = new TotalCoverFarmFencing();
@@ -218,19 +222,18 @@ namespace InsureThatAPI.Controllers
             FarmDetails.RoofwallsObj.EiId = 62297;
             //FarmStructures.UnrepaireddamageObj = new UnrepairedDamageFS();
             //FarmStructures.UnrepaireddamageObj.EiId = 62309;
-            FarmDetails.ExcesshcObj = new HarvestedCropsExcess();
-            FarmDetails.ExcesshcObj.ExcessHCList = ExcessRateList;
-            FarmDetails.ExcesshcObj.EiId = 62315;
+            FarmDetails.ExcesshcFSObj = new HarvestedCropsExcess();
+            FarmDetails.ExcesshcFSObj.ExcessHCList = ExcessRateList;
+            FarmDetails.ExcesshcFSObj.EiId = 62315;
             #endregion
             #region HarvestedCrops
             List<SelectListItem> ExcessRateLists = new List<SelectListItem>();
             ExcessRateLists = FarmDetailsmodel.excessRate();
-
             FarmDetails.SuminsuredhcObj = new HarvestedCropsSumInsured();
             FarmDetails.SuminsuredhcObj.EiId = 62329;
-            FarmDetails.ExcesshcObj = new HarvestedCropsExcess();
-            FarmDetails.ExcesshcObj.ExcessHCList = ExcessRateLists;
-            FarmDetails.ExcesshcObj.EiId = 62331;
+            FarmDetails.ExcesshcHCObj = new HarvestedCropsExcess();
+            FarmDetails.ExcesshcHCObj.ExcessHCList = ExcessRateLists;
+            FarmDetails.ExcesshcHCObj.EiId = 62331;
             #endregion
             #region Interested Parties
             FarmDetails.PartynameObj = new InterestedPartyName();
@@ -367,17 +370,27 @@ namespace InsureThatAPI.Controllers
                     if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId))
                     {
                         string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.ContaincoolroomObj.Coolroom = val;
+                        FarmDetails.ContaincoolroomObj.Coolroom = true;
                     }
                     if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId))
                     {
                         string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.DescriptionFBObj.Description = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcObj.EiId))
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcessFBObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.ExcesshcObj.Excess = val;
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcessFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.ExcessFBObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcFSObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcFSObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.ExcesshcFSObj.Excess = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcHCObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcHCObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.ExcesshcHCObj.Excess = val;
                     }
                     //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcObjH.EiId))
                     //{

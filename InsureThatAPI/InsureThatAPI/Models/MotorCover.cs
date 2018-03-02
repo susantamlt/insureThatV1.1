@@ -47,10 +47,15 @@ namespace InsureThatAPI.Models
         public MCADVehicleUsed VusedObj { get; set; }
         public MCADCarryingCapacity CcapacityObj { get; set; }
         public DriverName DrivernameObj { get; set; }
+        public List<ValueDatas> DrivernameObjList { get; set; }
         public DriverAge DriverageObj { get; set; }
+        public List<ValueDatas> DriverageObjList { get; set; }
         public DriverGender DrivergenderObj { get; set; }
+        public List<ValueDatas> DrivergenderObjList { get; set; }
         public DriverAmic DriveramicObj { get; set; }
+        public List<ValueDatas> DriveramicObjList { get; set; }
         public UseOfVehicle UsevehicleObj { get; set; }
+        public List<ValueDatas> UsevehicleObjList { get; set; }
         public CoverOptionCD CoveroptionObj { get; set; }
         public CoverTypeCD CovertypeObj { get; set; }
         public MaximumMarketValue MaxMarvalObj { get; set; }
@@ -59,13 +64,17 @@ namespace InsureThatAPI.Models
         public NonStandardAccessories AccessoriesObj { get; set; }
         public string Vehiclemodified { get; set; }
         public AccessoryDescriptionCD DescriptionObj { get; set; }
+        public List<ValueDatas> DescriptionObjList { get; set; }
         public SumInsuredCD SumnsuredObj { get; set; }
+        public List<ValueDatas> SumnsuredObjList { get; set; }
         public string tCAitems { get; set; }
         public LimitOfIndemnityDC LimitindemnityObj { get; set; }
         public RatingDC RatingObj { get; set; }
         public NoClaimBonus NoclaimbonusObj { get; set; }
         public MCInterestedPartyName MCPartynameObj { get; set; }
+        public List<ValueDatas> MCPartynameObjList { get; set; }
         public MCInterestedPartyLocation MCPartyLocationObj { get; set; }
+        public List<ValueDatas> MCPartyLocationObjList { get; set; }
         public HireCarOption CaroptionObj { get; set; }
         public BasicExcess ExcessObj { get; set; }
         public bool MCOEimposed { get; set; }

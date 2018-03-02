@@ -26,10 +26,15 @@ namespace InsureThatAPI.Models
         public string PolicyId { get; set; }
         public string CompletionTrackFPC { get; set; }
         public DescriptionsFC DescriptionFCObj { get; set; }
+        public List<ValueDatas> DescriptionFCObjList { get; set; }
         public YearFPC YearObj { get; set; }
+        public List<ValueDatas> YearObjList { get; set; }
         public MaterialsFC MaterialsObj { get; set; }
+        public List<ValueDatas> MaterialsObjList { get; set; }
         public CoolroomsFC CoolroomFcObj { get; set; }
+        public List<ValueDatas> CoolroomFcObjList { get; set; }
         public SumOfInsured SuminsuredObj { get; set; }
+        public List<ValueDatas> SuminsuredObjList { get; set; }
         public confirmFarmStructures confirmfsObj { get; set; }
         public FarmFencingFC FarmfencingObj { get; set; }
         public FarmFencingTC FarmcencingTcObj { get; set; }
@@ -40,16 +45,25 @@ namespace InsureThatAPI.Models
         public FarmContentsFC FarmContentFMObj { get; set; }
         public ExcessforUM ExcessUMObj { get; set; }
         public DescriptionsFM DescriptionFmObj { get; set; }
+        public List<ValueDatas> DescriptionFmObjList { get; set; }
         public YearFPC YearFMObj { get; set; }
+        public List<ValueDatas> YearFMObjList { get; set; }
         public SerialNumbers SerialnumberObj { get; set; }
+        public List<ValueDatas> SerialnumberObjList { get; set; }
         public ExcessesFPC ExcessesFMObj { get; set; }
+        public List<ValueDatas> ExcessesFMObjList { get; set; }
         public SumOfInsured SuminsuredFMObj { get; set; }
+        public List<ValueDatas> SuminsuredFMObjList { get; set; }
         public TotalSpecifiedItems TotalspecifieditemObj { get; set; }
 
         public DescriptionsFC DescriptionLSObj { get; set; }
+        public List<ValueDatas> DescriptionLSObjList { get; set; }
         public NumberOfAnimals NumberanimalObj { get; set; }
+        public List<ValueDatas> NumberanimalObjList { get; set; }
         public SumInsuredPerAnimals SuminsuredperObj { get; set; }
+        public List<ValueDatas> SuminsuredperObjList { get; set; }
         public SumOfInsured SuminsuredLSObj { get; set; }
+        public List<ValueDatas> SuminsuredLSObjList { get; set; }
         public TotalForLiveStock TotallivestockObj { get; set; }
         public DogAttackOption DogattackObj { get; set; }
         public ExcessesFPC ExcessesLSObj { get; set; }

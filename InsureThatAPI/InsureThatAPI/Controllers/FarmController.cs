@@ -205,9 +205,33 @@ namespace InsureThatAPI.Controllers
                 unid = Convert.ToInt32(Session["unId"]);
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
-            {
-                FarmContents.ExistingPolicyInclustions = policyinclusions;
+                if (PcId != null && PcId.HasValue)
+                {
+                    if (Session["unId"] != null && Session["profileId"] != null)
+                    {
+                        unid = Convert.ToInt32(Session["unId"]);
+                        profileid = Convert.ToInt32(Session["profileId"]);
+                    }
+                    else
+                    {
+                        if (policyinclusions.Exists(p => p.Name == "Farm Property"))
+                        {
+                            unid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
+                            profileid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
+
+                        }
+                        else
+                        {
+                            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
+                        }
+                    }
+
+                    if (unid == null || unid == 0)
+                    {
+                        unid = unitdetails.SectionData.UnId;
+                        profileid = unitdetails.SectionData.ProfileUnId;
+                    }
+                    FarmContents.ExistingPolicyInclustions = policyinclusions;
                 FarmContents.PolicyInclusion = new List<usp_GetUnit_Result>();
                 FarmContents.PolicyInclusion = policyinclusions;
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -288,32 +312,334 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.confirmfsObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.confirmfsObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmContents.confirmfsObj.Confirm = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.CoolroomFcObj.Coolroom = val;
-                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.DescriptionFCObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionFCObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.DescriptionFCObj.Description = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.DescriptionFCObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.DescriptionFCObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DescriptionList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionFCObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DescriptionList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60467;
+                                vds.Element.ItId = DescriptionList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionFCObj.EiId && p.Element.ItId == DescriptionList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.DescriptionFCObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.YearObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.YearObj.Year = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.YearObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var YearFCList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < YearFCList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60468;
+                                vds.Element.ItId = YearFCList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearObj.EiId && p.Element.ItId == YearFCList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.YearObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.MaterialsObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.MaterialsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.MaterialsObj.Materials = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.MaterialsObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var MaterialsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.MaterialsObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < MaterialsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60470;
+                                vds.Element.ItId = MaterialsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.MaterialsObj.EiId && p.Element.ItId == MaterialsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.MaterialsObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.CoolroomFcObj.Coolroom = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var CoolroomList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < CoolroomList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60469;
+                                vds.Element.ItId = CoolroomList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.CoolroomFcObj.EiId && p.Element.ItId == CoolroomList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.CoolroomFcObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.SuminsuredObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60471;
+                                vds.Element.ItId = SuminsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId && p.Element.ItId == SuminsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.SuminsuredObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.DescriptionFmObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionFmObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.DescriptionFmObj.Description = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.DescriptionFmObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.DescriptionFmObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DescriptionFmList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionFmObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DescriptionFmList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60529;
+                                vds.Element.ItId = DescriptionFmList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionFmObj.EiId && p.Element.ItId == DescriptionFmList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.DescriptionFmObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.YearFMObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearFMObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.YearFMObj.Year = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.YearFMObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var YearFmList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearFMObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < YearFmList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60531;
+                                vds.Element.ItId = YearFmList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearFMObj.EiId && p.Element.ItId == YearFmList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.YearFMObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.SerialnumberObj.Serialnumber = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SerialnumberFmList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SerialnumberFmList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60533;
+                                vds.Element.ItId = SerialnumberFmList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId && p.Element.ItId == SerialnumberFmList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.SerialnumberObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.ExcessesFMObj.Excess = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ExcessFmList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ExcessFmList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60535;
+                                vds.Element.ItId = ExcessFmList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId && p.Element.ItId == ExcessFmList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.ExcessesFMObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.SuminsuredFMObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredFmList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredFmList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60537;
+                                vds.Element.ItId = SuminsuredFmList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId && p.Element.ItId == SuminsuredFmList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.SuminsuredFMObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.DescriptionLSObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionLSObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.DescriptionLSObj.Description = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.DescriptionLSObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.DescriptionLSObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DescriptionLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionLSObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DescriptionLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60565;
+                                vds.Element.ItId = DescriptionLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.DescriptionLSObj.EiId && p.Element.ItId == DescriptionLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.DescriptionLSObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.NumberanimalObj.Numberanimal = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var NumberanimalLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < NumberanimalLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60567;
+                                vds.Element.ItId = NumberanimalLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId && p.Element.ItId == NumberanimalLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.NumberanimalObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.SuminsuredperObj.Suminsuredper = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredperLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredperLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60569;
+                                vds.Element.ItId = SuminsuredperLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId && p.Element.ItId == SuminsuredperLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.SuminsuredperObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmContents.SuminsuredLSObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60571;
+                                vds.Element.ItId = SuminsuredLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId && p.Element.ItId == SuminsuredLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmContents.SuminsuredLSObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.DogattackObj.EiId))
                     {
@@ -324,11 +650,6 @@ namespace InsureThatAPI.Controllers
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.ExcessBObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmContents.ExcessBObj.Excess = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.ExcessesFMObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.ExcessesFMObj.Excess = val;
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.ExcessesFpcObj.EiId))
                     {
@@ -375,70 +696,15 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.FarmstructuresObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmContents.FarmstructuresObj.Farmstructures = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.MaterialsObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.MaterialsObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.MaterialsObj.Materials = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.NumberanimalObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.NumberanimalObj.Numberanimal = val;
-                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.NumberhiveObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.NumberhiveObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmContents.NumberhiveObj.Numberhive = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SerialnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.SerialnumberObj.Serialnumber = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredFMObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.SuminsuredFMObj.Suminsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredLSObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.SuminsuredLSObj.Suminsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.SuminsuredObj.Suminsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsuredperObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.SuminsuredperObj.Suminsuredper = val;
-                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.SuminsureHCVdObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.SuminsureHCVdObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmContents.SuminsureHCVdObj.Suminsured = val;
-                    }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmContents.TotallivestockObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmContents.TotallivestockObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    FarmContents.TotallivestockObj.Totallivestock = val;
-                    //}
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmContents.TotalspecifieditemObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmContents.TotalspecifieditemObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    FarmContents.TotalspecifieditemObj.Totalspecifieditem = val;
-                    //}
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmContents.YearFMObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmContents.YearFMObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    FarmContents.YearFMObj.Year = val;
-                    //}
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmContents.YearObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmContents.YearObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmContents.YearObj.Year = val;
                     }
                 }
             }
@@ -458,6 +724,14 @@ namespace InsureThatAPI.Controllers
                     }
                 }
 
+            }
+            if (cid != null)
+            {
+                FarmContents.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                FarmContents.PcId = PcId;
             }
             return View(FarmContents);
         }
@@ -498,13 +772,13 @@ namespace InsureThatAPI.Controllers
                 {
                     controllername = Session["controller"].ToString();
                 }
-                if (actionname != null && controllername != null)
-                {
-                    return RedirectToAction(actionname, controllername, new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
-                }
-                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId });
+                //if (actionname != null && controllername != null)
+                //{
+                //    return RedirectToAction(actionname, controllername, new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
+                //}
+                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId,PcId=FarmContents.PcId });
           
-            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId });
+            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
         }
         
         [HttpPost]
@@ -543,6 +817,53 @@ namespace InsureThatAPI.Controllers
                     desList.Add(new SelectListItem { Value = "", Text = "--Select--" });
                     desListB = commonModel.descriptionLS();
                     desList.AddRange(desListB);
+                    return Json(new { status = true, des = desList });
+                }
+                else if (content == "farmDetails")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    List<SelectListItem> desListB = new List<SelectListItem>();
+                    desList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+                    desListB = commonModel.constructionType();
+                    desList.AddRange(desListB);
+                    return Json(new { status = true, des = desList });
+                }
+                else if (content == "FarmHomeValuables")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    List<SelectListItem> desListB = new List<SelectListItem>();
+                    desList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+                    desListB = commonModel.descriptionListFC();
+                    desList.AddRange(desListB);
+                    return Json(new { status = true, des = desList });
+                }
+                else if (content == "FarmHomeContent")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    List<SelectListItem> desListB = new List<SelectListItem>();
+                    desList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+                    desListB = commonModel.descriptionListFC();
+                    desList.AddRange(desListB);
+                    return Json(new { status = true, des = desList });
+                }
+                else if (content == "FarmMachineryTM")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    List<SelectListItem> desListB = new List<SelectListItem>();
+                    desList = commonModel.TypeOfMachinery();
+                    desListB = commonModel.Power();
+                    return Json(new { status = true, des = desList, con = desListB });
+                }
+                else if (content == "FarmMachineryVVL")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    desList = commonModel.VolumeOfVat();
+                    return Json(new { status = true, des = desList });
+                }
+                else if (content == "FarmMachineryTU")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    desList = commonModel.MachineryTypeOfUnit();
                     return Json(new { status = true, des = desList });
                 }
                 else

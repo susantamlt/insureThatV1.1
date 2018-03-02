@@ -21,7 +21,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> BurglaryAsync(int? cid, int? PcId)
+        public async System.Threading.Tasks.Task<ActionResult> Burglary(int? cid, int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> BurglaryExcessToPay = new List<SelectListItem>();
@@ -143,6 +143,8 @@ namespace InsureThatAPI.Controllers
 
             FPBurglary.OptFPCoverTheftFSAndFCObj = new FPCoverTheftFSAndFC();
             FPBurglary.OptFPCoverTheftFSAndFCObj.EiId = 62619;
+            FPBurglary.FarmFencingFPObj = new FarmFencingFP();
+            FPBurglary.FarmFencingFPObj.EiId = 62589;
 
             FPBurglary.OptFPCoverTheftFarmMachineryObj = new FPCoverTheftFarmMachinery();
             FPBurglary.OptFPCoverTheftFarmMachineryObj.EiId = 62621;
@@ -263,71 +265,71 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.CoolRoomsFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.CoolRoomsFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.CoolRoomsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.CoolRoomsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.CoolRoomsFPObj.CoolRooms = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.CoverYourPropOptionFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.CoverYourPropOptionFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.CoverYourPropOptionFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.CoverYourPropOptionFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.CoverYourPropOptionFPObj.Cover = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.ExcessFPBurglaryObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.ExcessFPBurglaryObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.ExcessFPBurglaryObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.ExcessFPBurglaryObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.ExcessFPBurglaryObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.FarmBuildingExCoolRoomsFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.FarmBuildingExCoolRoomsFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.FarmBuildingExCoolRoomsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.FarmBuildingExCoolRoomsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.FarmContentsFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.FarmContentsFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.FarmContentsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.FarmContentsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.FarmContentsFPObj.FarmContents = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.FarmFencingFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.FarmFencingFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.FarmFencingFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.FarmFencingFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.FarmFencingFPObj.FarmFencing = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.HailNettingStoredFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.HailNettingStoredFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.HailNettingStoredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.HailNettingStoredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.HailNettingStoredFPObj.HailNettingStored = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFarmMachineryObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFarmMachineryObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFarmMachineryObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFarmMachineryObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFSAndFCObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFSAndFCObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFSAndFCObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.OptFPCoverTheftFSAndFCObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OptFPPortalableItemsOptObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OptFPPortalableItemsOptObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.OptFPPortalableItemsOptObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.OptFPPortalableItemsOptObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.OptFPPortalableItemsOptObj.PortalbleItemsOpt = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OtherFarmStructuresFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.OtherFarmStructuresFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.OtherFarmStructuresFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.OtherFarmStructuresFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.OtherFarmStructuresFPObj.OtherFarmStructures = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.SpecifiedItemsOver5KFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.SpecifiedItemsOver5KFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.SpecifiedItemsOver5KFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.SpecifiedItemsOver5KFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.SpecifiedItemsOver5KFPObj.SpecifiedItemOver5K = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPBurglary.UnspecifiedMachineryFPObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPBurglary.UnspecifiedMachineryFPObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPBurglary.UnspecifiedMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPBurglary.UnspecifiedMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPBurglary.UnspecifiedMachineryFPObj.UnspecifiedMachinery = val;
                     }
                    

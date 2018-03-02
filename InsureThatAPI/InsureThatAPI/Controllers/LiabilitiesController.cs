@@ -116,12 +116,37 @@ namespace InsureThatAPI.Controllers
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
+                int? unid = null;
+                int? profileid = null;
+                if (Session["unId"] != null && Session["profileId"] != null)
+                {
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+                }
+                else
+                {
+                    if (policyinclusions.Exists(p => p.Name == "Liability"))
+                    {
+                        unid = policyinclusions.Where(p => p.Name == "Liability").Select(p => p.UnId).FirstOrDefault();
+                        profileid = policyinclusions.Where(p => p.Name == "Liability").Select(p => p.UnId).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid , PcId = PcId });
+                    }
+                }
+
+                if (unid == null || unid == 0)
+                {
+                    unid = unitdetails.SectionData.UnId;
+                    profileid = unitdetails.SectionData.ProfileUnId;
+                }
                 LiabilityCover.PolicyInclusion = policyinclusions;
                 LiabilityCover.ExistingPolicyInclustions = policyinclusions;
-                int unid = Convert.ToInt32(Session["unId"]);
-                int profileid = Convert.ToInt32(Session["profileId"]);
+             
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -242,6 +267,15 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if(cid!=null && cid.HasValue)
+            {
+                LiabilityCover.CustomerId = cid.Value;
+
+            }
+            if(PcId!=null && PcId.HasValue)
+            {
+                LiabilityCover.PcId = PcId;
+            }
             return View(LiabilityCover);
         }
         [HttpPost]
@@ -266,10 +300,10 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
-            if (actionname != null && controllername != null)
-            {
-                return RedirectToAction(actionname, controllername, new { cid = LiabilityCover.CustomerId, PcId = LiabilityCover.PcId });
-            }
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = LiabilityCover.CustomerId, PcId = LiabilityCover.PcId });
+            //}
             return RedirectToAction("VehicleDescription", "MotorCover", new { cid = LiabilityCover.CustomerId });
         }
     }

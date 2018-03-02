@@ -2,6 +2,11 @@
 @{
     ViewBag.Title = "FarmInterruption";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SelectListItem> listsExcess = new List<SelectListItem>();
+    listsExcess.Add(new SelectListItem { Value = "200", Text = "$200" });
+    listsExcess.Add(new SelectListItem { Value = "500", Text = "$500" });
+    listsExcess.Add(new SelectListItem { Value = "1000", Text = "$1,000" });
+    listsExcess.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>FARM PROTECTION POLICY</span> / FARM INTERRUPTION</h4>
@@ -122,9 +127,9 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>What is your expected farm income (excluding <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal">Agistment Income</a>) for the next year? </p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                $@Html.TextBoxFor(p => p.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear, new {@style="display:inline-block;width:95%", @class = "commondatatest form-control form-border-bottom", @id = "expFarmIncome", @data_eiid = @Model.ExpFarmIncomeNextYearFPObj.EiId, @data_regex = 'N' })
+                $@Html.TextBoxFor(p => p.ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear, new { @style = "display:inline-block;width:95%", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "expFarmIncome", @data_eiid = @Model.ExpFarmIncomeNextYearFPObj.EiId, @data_regex = 'N' })
                 @Html.HiddenFor(p => p.ExpFarmIncomeNextYearFPObj.EiId)
-                <label id="ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear-error" class="error" for="OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod"></label>
+                <label id="ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear-error" class="error" for="ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear"></label>
             </div>
             <div id="costumModal1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModal1" aria-hidden="false">
                 <div class="modal-dialog">
@@ -136,10 +141,7 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
-                            <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                            <p>The Money that You receive for agisting farm animals on Your farm.</p>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -161,10 +163,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </p>
-                                <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                <p>The period that starts when the loss or damage occurs and it continues for the period that is shown in the Certificate.</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -175,23 +174,23 @@
             </div>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "6", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodfarm1", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "6", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodfarm1", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>6</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "9", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodfarm2", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "9", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodfarm2", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>9</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "12", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodfarm3", @checked = "checked", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "12", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodfarm3", @checked = "checked", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>12</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "18", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodfarm4", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "18", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodfarm4", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>18</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "24", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodfarm5", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod, "24", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodfarm5", @data_eiid = @Model.OptFarmIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>24</label>
                 </div>
                 <label id="OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod-error" class="error" for="OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod"></label>
@@ -201,30 +200,30 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                $@Html.TextBoxFor(p => p.SumInsuredFarmIncomeFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "commondatatest form-control form-border-bottom", @id = "suminsuredFarmIncome", @value = "$ 2,000,000", @data_eiid = @Model.SumInsuredFarmIncomeFPObj.EiId, @data_regex = 'N' })
+                $@Html.TextBoxFor(p => p.SumInsuredFarmIncomeFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "suminsuredFarmIncome", @value = "$ 2,000,000", @data_eiid = @Model.SumInsuredFarmIncomeFPObj.EiId, @data_regex = 'N' })
                 @Html.HiddenFor(p => p.SumInsuredFarmIncomeFPObj.EiId)
                 <label id="SumInsuredFarmIncomeFPObj.SumInsured-error" class="error" for="SumInsuredFarmIncomeFPObj.SumInsured"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6"><p>Excess for loss of farm income</p></div>
+            <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for loss of farm income</p></div>
             <div class="col-md-3">
-                @Html.DropDownListFor(p => p.ExcessFarmIncomeFPObj.Excess, @Model.ExcessFarmIncomeFPObj.ExcessList, new { @class = "commondataselection form-control form-border-bottom description", @id = "excessFarmIncome", @data_eiid = @Model.ExcessFarmIncomeFPObj.EiId })
+                @Html.DropDownListFor(p => p.ExcessFarmIncomeFPObj.Excess, listsExcess, new { @class = "commondataselection vlidationInsure form-control form-border-bottom description", @id = "excessFarmIncome", @data_eiid = @Model.ExcessFarmIncomeFPObj.EiId })
                 @Html.HiddenFor(p => p.ExcessFarmIncomeFPObj.EiId)
                 <label id="ExcessFarmIncomeFPObj.Excess-error" class="error" for="ExcessFarmIncomeFPObj.Excess"></label>
             </div>
-            <div class="col-md-3">
-                <div class="policy-loc-row">
-                    <input type="checkbox" name="ImposedFarmIncomeObj.Imposed" id="imposed1"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                    <label id="ImposedFarmIncomeObj.Imposed-error" class="error" for="ImposedFarmIncomeObj.Imposed"></label>
-                </div>
-            </div>
+            @*<div class="col-md-3">
+                    <div class="policy-loc-row">
+                        <input type="checkbox" name="ImposedFarmIncomeObj.Imposed" id="imposed1"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                        <label id="ImposedFarmIncomeObj.Imposed-error" class="error" for="ImposedFarmIncomeObj.Imposed"></label>
+                    </div>
+                </div>*@
         </div>
         <h5 class="col-md-12 mt-10">Part B - Loss of Agistment Income</h5>
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>What is your expected <a href="#costumModal1" role="button" data-target="#costumModal1" data-toggle="modal">Agistment Income</a> for the next year?</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                $@Html.TextBoxFor(p => p.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear, new { @style = "width:95%; display:inline-block;", @class = "commondatatest form-control form-border-bottom", @id = "agistIncome", @data_eiid = @Model.ExpAgistIncomeNextYearFPObj.EiId, @data_regex = 'N' })
+                $@Html.TextBoxFor(p => p.ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "agistIncome", @data_eiid = @Model.ExpAgistIncomeNextYearFPObj.EiId, @data_regex = 'N' })
                 @Html.HiddenFor(p => p.ExpAgistIncomeNextYearFPObj.EiId)
                 <label id="ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear-error" class="error" for="ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear"></label>
             </div>
@@ -233,23 +232,23 @@
             <div class="col-md-6 col-sm-6 col-xs-12"><p>How many months of cover do you require? (This is called the <a href="#costumModal2" role="button" data-target="#costumModal2" data-toggle="modal">Indemnity Period</a>) </p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "6", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodAI1", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "6", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodAI1", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>6</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "9", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodAI2", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "9", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodAI2", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>9</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "12", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodAI3", @checked = "checked", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "12", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodAI3", @checked = "checked", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>12</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "18", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodAI4", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "18", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodAI4", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>18</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "24", new { @class = "buildingtype", @id = "OptIndemnityPeriodAI5", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod, "24", new { @class = "buildingtype commondataradio vlidationInsure", @id = "OptIndemnityPeriodAI5", @data_eiid = @Model.OptAgistIncomeIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>24</label>
                 </div>
                 <label id="OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod-error" class="error" for="OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod"></label>
@@ -259,24 +258,24 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                $@Html.TextBoxFor(p => p.SumInsuredAgistIncomeFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "commondatatest form-control form-border-bottom", @id = "Agistsuminsured", @data_eiid = @Model.SumInsuredAgistIncomeFPObj.EiId, @data_regex = 'N' })
+                $@Html.TextBoxFor(p => p.SumInsuredAgistIncomeFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "Agistsuminsured", @data_eiid = @Model.SumInsuredAgistIncomeFPObj.EiId, @data_regex = 'N' })
                 @Html.HiddenFor(p => p.SumInsuredAgistIncomeFPObj.EiId)
                 <label id="SumInsuredAgistIncomeFPObj.SumInsured-error" class="error" for="SumInsuredAgistIncomeFPObj.SumInsured"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6"><p>Excess for agistment income</p></div>
+            <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for agistment income</p></div>
             <div class="col-md-3">
-                @Html.DropDownListFor(p => p.ExcessAgistIncomeFPObj.Excess, @Model.ExcessAgistIncomeFPObj.ExcessList, new { @class = "commondataselection form-control form-border-bottom description", @id = "agistexcess", @data_eiid = @Model.ExcessAgistIncomeFPObj.EiId })
+                @Html.DropDownListFor(p => p.ExcessAgistIncomeFPObj.Excess, listsExcess, new { @class = "commondataselection vlidationInsure form-control form-border-bottom description", @id = "agistexcess", @data_eiid = @Model.ExcessAgistIncomeFPObj.EiId })
                 @Html.HiddenFor(p => p.ExcessAgistIncomeFPObj.EiId)
                 <label id="ExcessAgistIncomeFPObj.Excess-error" class="error" for="ExcessAgistIncomeFPObj.Excess"></label>
             </div>
-            <div class="col-md-3">
-                <div class="policy-loc-row">
-                    <input type="checkbox" name="ImposedAgistObj.Imposed" id="imposed2"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                    <label id="ImposedAgistObj.Imposed-error" class="error" for="ImposedAgistObj.Imposed"></label>
-                </div>
-            </div>
+            @*<div class="col-md-3">
+                    <div class="policy-loc-row">
+                        <input type="checkbox" name="ImposedAgistObj.Imposed" id="imposed2"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                        <label id="ImposedAgistObj.Imposed-error" class="error" for="ImposedAgistObj.Imposed"></label>
+                    </div>
+                </div>*@
         </div>
         <h5 class="col-md-12 mt-10">Part C - <a href="#ExtraCostModal2" role="button" data-target="#ExtraCostModal2" data-toggle="modal">Extra Costs</a></h5>
         <div id="ExtraCostModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ExtraCostModal2" aria-hidden="false">
@@ -289,8 +288,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                        <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>Those extra costs that are needed for the sole purpose of keeping Your farm running normally after an interruption. The interruption must result from damage:</p>
+                        <ul style="list-style:none">
+                            <li>(1) That is covered by the Fixed Farm Property and Mobile Farm Property sections of this policy. We must have agreed to pay a claim for that damage or would have but for the application of an Excess.</li>
+                            <li>(2) To Farm Machinery that is covered by the Motor section of this policy. We must have agreed to pay a claim for that damage or would have but for the application of an Excess.</li>
+                            <li>(3) To Your pastures by fire.</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -302,23 +305,23 @@
             <div class="col-md-6 col-sm-6 col-xs-12"><p>How many months cover do you require? (This is called the <a href="#costumModal2" role="button" data-target="#costumModal2" data-toggle="modal">Indemnity Period</a>) </p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "6", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodExtraCost1", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "6", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodExtraCost1", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>6</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "9", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodExtraCost2", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "9", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodExtraCost2", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>9</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "12", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodExtraCost3", @checked = "checked", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "12", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodExtraCost3", @checked = "checked", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>12</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "18", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodExtraCost4", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "18", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodExtraCost4", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>18</label>
                 </div>
                 <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row">
-                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "24", new { @class = "commondataradio buildingtype", @id = "OptIndemnityPeriodExtraCost5", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
+                    @Html.RadioButtonFor(m => m.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod, "24", new { @class = "commondataradio vlidationInsure buildingtype", @id = "OptIndemnityPeriodExtraCost5", @data_eiid = @Model.OptExtraCostIndemnityPerFPObj.EiId })
                     <label for="radio1"><span><span></span></span>24</label>
                 </div>
                 <label id="OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod-error" class="error" for="OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod"></label>
@@ -328,24 +331,24 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                $@Html.TextBoxFor(p => p.SumInsuredExtraCostFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "commondatatest form-control form-border-bottom", @id = "suminsuredExtracost", @data_eiid = @Model.SumInsuredExtraCostFPObj.EiId, @data_regex = 'N' })
+                $@Html.TextBoxFor(p => p.SumInsuredExtraCostFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "suminsuredExtracost", @data_eiid = @Model.SumInsuredExtraCostFPObj.EiId, @data_regex = 'N' })
                 @Html.HiddenFor(p => p.SumInsuredExtraCostFPObj.EiId)
                 <label id="SumInsuredExtraCostFPObj.SumInsured-error" class="error" for="SumInsuredExtraCostFPObj.SumInsured"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6"><p>Excess for extra costs</p></div>
+            <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for extra costs</p></div>
             <div class="col-md-3">
-                @Html.DropDownListFor(p => p.ExcessExtraCostFPObj.Excess, @Model.ExcessExtraCostFPObj.ExcessList, new { @class = "commondataselection form-control form-border-bottom description", @id = "excessextracost", @data_eiid = @Model.ExcessExtraCostFPObj.EiId })
+                @Html.DropDownListFor(p => p.ExcessExtraCostFPObj.Excess, listsExcess, new { @class = "commondataselection vlidationInsure form-control form-border-bottom description", @id = "excessextracost", @data_eiid = @Model.ExcessExtraCostFPObj.EiId })
                 @Html.HiddenFor(p => p.ExcessExtraCostFPObj.EiId)
                 <label id="ExcessExtraCostFPObj.Excess-error" class="error" for="ExcessExtraCostFPObj.Excess"></label>
             </div>
-            <div class="col-md-3">
-                <div class="policy-loc-row">
-                    <input type="checkbox" name="ImposedExtraCostObj.Imposed" id="imposed3"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                    <label id="ImposedExtraCostObj.Imposed-error" class="error" for="ImposedExtraCostObj.Imposed"></label>
-                </div>
-            </div>
+            @*<div class="col-md-3">
+                    <div class="policy-loc-row">
+                        <input type="checkbox" name="ImposedExtraCostObj.Imposed" id="imposed3"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                        <label id="ImposedExtraCostObj.Imposed-error" class="error" for="ImposedExtraCostObj.Imposed"></label>
+                    </div>
+                </div>*@
         </div>
         <h5 class="col-md-12 mt-10">Part D - <a href="#ShearingDelaysModal2" role="button" data-target="#ShearingDelaysModal2" data-toggle="modal">Shearing Delays</a></h5>
         <div id="ShearingDelaysModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ShearingDelaysModal2" aria-hidden="false">
@@ -358,10 +361,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                        </p>
-                        <p> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p>The extra wages that You have to pay due to a delay in shearing Your livestock. The delay must be caused by the moisture content of their fleece that prevents shearing. The moisture content must not be less than the level shown in the relevant shearing award. The most We will pay under Part D Shearing Delays is $50,000 in any one period of cover as shown on the Certificate.</p>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -372,29 +372,47 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Sum Insured</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                $@Html.TextBoxFor(p => p.SumInsuredShearingDelayFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "commondatatest form-control form-border-bottom", @id = "suminsuredShearing", @data_eiid = @Model.SumInsuredShearingDelayFPObj.EiId, @data_regex = 'N' })
+                $@Html.TextBoxFor(p => p.SumInsuredShearingDelayFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "suminsuredShearing", @data_eiid = @Model.SumInsuredShearingDelayFPObj.EiId, @data_regex = 'N' })
                 @Html.HiddenFor(p => p.SumInsuredShearingDelayFPObj.EiId)
                 <label id="SumInsuredShearingDelayFPObj.SumInsured-error" class="error" for="SumInsuredShearingDelayFPObj.SumInsured"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6"><p>Excess for Shearing Delays</p></div>
+            <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for Shearing Delays</p></div>
             <div class="col-md-3">
-                @Html.DropDownListFor(Model => Model.ExcessShearingDelayFPObj.Excess, @Model.ExcessShearingDelayFPObj.ExcessList, new { @class = "commondataselection form-control form-border-bottom description", @id = "excessShearing", @data_eiid = @Model.ExcessShearingDelayFPObj.EiId })
+                @Html.DropDownListFor(Model => Model.ExcessShearingDelayFPObj.Excess, listsExcess, new { @class = "commondataselection vlidationInsure form-control form-border-bottom description", @id = "excessShearing", @data_eiid = @Model.ExcessShearingDelayFPObj.EiId })
                 @Html.HiddenFor(p => p.ExcessShearingDelayFPObj.EiId)
                 <label id="ExcessShearingDelayFPObj.Excess-error" class="error" for="ExcessShearingDelayFPObj.Excess"></label>
             </div>
-            <div class="col-md-3">
-                <div class="policy-loc-row">
-                    <input type="checkbox" name="ImposedShearingObj.Imposed" id="imposed4"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                    <label id="ImposedShearingObj.Imposed-error" class="error" for="ImposedShearingObj.Imposed"></label>
+            @*<div class="col-md-3">
+                    <div class="policy-loc-row">
+                        <input type="checkbox" name="ImposedShearingObj.Imposed" id="imposed4"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                        <label id="ImposedShearingObj.Imposed-error" class="error" for="ImposedShearingObj.Imposed"></label>
+                    </div>
+                </div>*@
+        </div>
+        <div id="ExcesshomeBuildingModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ExcesshomeBuildingModel" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="pull-left">Excess</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <img src="~/images/close-icon.png" />
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>When you make a claim, you pay the first part of the cost and we pay the rest. Your part is called the <b>excess</b>.  You can reduce the cost of your insurance by choosing a higher excess.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="mt-40">
             <div class="col-md-8"></div>
             <div class="col-md-6 pull-right text-right mt-30">
-                <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Submit</button>
+                <button type="button" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtnSave">Save & Continue</button>
             </div>
         </div>
     }
@@ -402,6 +420,7 @@
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
+        <h3 style="font-size: 11px;margin-bottom: 2px;">Edit or delete previous sections here</h3>
         @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
         {
             for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
@@ -420,8 +439,8 @@
                         });
                     </script>
                     <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
                     </div>
                 </div>
             }
@@ -443,7 +462,12 @@
                             "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
                         },
                         success: function (responce) {
-                            window.location.href = responce;
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
                         }
                     });
                 });
@@ -490,7 +514,7 @@
                 for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
                 {
                     <div class="policy-loc-row">
-                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @disabled = "disabled", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $('.inclusions').click(function () {
@@ -503,12 +527,13 @@
                             });
                         </script>
                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
                         </div>
                     </div>
                     <script type="text/javascript">
                         $(".policy-edit-wrap").click(function () {
+
                             var selectedname = $(this).data('name');
                             var selectedunid = $(this).data('unid');
                             var selectedprofileid = $(this).data('profileid');
@@ -517,7 +542,7 @@
                             var PcId = $(this).data('pcid');
                             var policyStatus = $(this).data('policystatus');
                             // var prId = $(this).data('prId');
-                            var prId = 1021;
+                            var prId = 1029;
                             $.ajax({
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
@@ -525,7 +550,12 @@
                                     "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
                                 },
                                 success: function (responce) {
-                                    window.location.href = responce;
+                                    if (responce.Status == false) {
+                                        $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                                    } else {
+                                        window.location.href = responce;
+                                    }
                                 }
                             });
                         });
@@ -557,11 +587,12 @@
                     </script>
                 }
             }
+
         }
         <div class="clearfix"></div>
         <div class="dropdown pc pc-in">
-            <a class="new-cover-policy" href="#">New Cover</a>
-            <ul class="dropdown-menu col-md-12">
+            <a class="new-cover-policy" href="#">New Section</a>
+            <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
@@ -586,7 +617,12 @@
                         url: "/Customer/AddUnit",
                         data: { "unit": unitname, "cid": cid, "pcid": pcid },
                         success: function (responce) {
-                            window.location.href = responce;
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
                         }
                     });
                 });
@@ -594,78 +630,137 @@
         </div>
     </div>
 </div>
-<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $.validator.addMethod("regex", function (value, element, regexp) {
-            if (regexp.constructor != RegExp)
-                regexp = new RegExp(regexp);
-            else if (regexp.global)
-                regexp.lastIndex = 0;
-            return this.optional(element) || regexp.test(value);
-        }, "Please check your input.");
-        $("form[name='farmInterruption']").validate({
-            rules: {
-                "ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear": {
-                    regex: /^[0-9]*$/,
-                },
-                "SumInsuredFarmIncomeFPObj.SumInsured": {
-                    regex: /^[0-9]*$/,
-                },
-                "ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear": {
-                    regex: /^[0-9]*$/,
-                },
-                "SumInsuredAgistIncomeFPObj.SumInsured": {
-                    regex: /^[0-9]*$/,
-                },
-                "SumInsuredExtraCostFPObj.SumInsured": {
-                    regex: /^[0-9]*$/,
-                },
-                "SumInsuredShearingDelayFPObj.SumInsured": {
-                    regex: /^[0-9]*$/,
-                },
-            },
-            messages: {
-                "ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear": {
-                    regex: "Only numeric are allowed"
-                },
-                "SumInsuredFarmIncomeFPObj.SumInsured": {
-                    regex: "Only numeric are allowed"
-                },
-                "ExpAgistIncomeNextYearFPObj.AgistIncomeNextYear": {
-                    regex: "Only numeric are allowed"
-                },
-                "SumInsuredAgistIncomeFPObj.SumInsured": {
-                    regex: "Only numeric are allowed"
-                },
-                "SumInsuredExtraCostFPObj.SumInsured": {
-                    regex: "Only numeric are allowed"
-                },
-                "SumInsuredShearingDelayFPObj.SumInsured": {
-                    regex: "Only numeric are allowed"
-                },
-            },
-            onfocusout: function (element) {
-                this.element(element);
-            },
-            submitHandler: function (form) {
-                form.submit();
+        $("#ptabbtnSave").click(function (e) {
+            e.preventDefault();
+            var valid = 1;
+            $(".vlidationInsure").each(function () {
+                var id = $(this).attr('id');
+                var nameAttr = $(this).attr('name');
+                var lastChar = id.substr(id.length - 1);
+                var newval = $(this).val();
+                if (nameAttr == "ExpFarmIncomeNextYearFPObj.FarmIncomeNextYear") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter farm income next year').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod") {
+                    if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please check indemnity period for months").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $("input[name='" + nameAttr + "']").css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "SumInsuredFarmIncomeFPObj.SumInsured") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "ExcessFarmIncomeFPObj.Excess") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please select excess for agistment income').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod") {
+                    if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please check indemnity period for months").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $("input[name='" + nameAttr + "']").css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "SumInsuredExtraCostFPObj.SumInsured") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "ExcessExtraCostFPObj.Excess") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please select excess for extra costs').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "SumInsuredShearingDelayFPObj.SumInsured") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+                if (nameAttr == "ExcessShearingDelayFPObj.Excess") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please select excess for shearing delays').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#ptab4 #' + id).css({ "border": "" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                    }
+                }
+            });
+            if (valid == 1) {
+                $("form[name='farmInterruption']").submit();
             }
         });
     });
-    $(document).on('change', '.commondataselection', function () {
-        var Value = $(this).val();
-        var EIId = $(this).data('eiid');
-        var ItId = "0";
-        elementAjaxCall(Value, EIId, ItId);
-    });
-    $(document).on('change', '.commondataradio', function () {
-        var Value = $(this).val();
-        var EIId = $(this).data('eiid');
-        var ItId = "0";
-        elementAjaxCall(Value, EIId, ItId);
-    });
+
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
@@ -701,40 +796,6 @@
             $("label[for='" + name + "']").text('').css({ "display": "none" });
             elementAjaxCall(Value, EIId, ItId);
         }
-    });
-    $(document).on('click', '#premium', function () {
-        $.ajax({
-            url: '/Customer/PremiumDetails',
-            type: "POST",
-            crossOrigin: true,
-            data: {},
-            success: function (data) {
-                if (data.Status == true) {
-                    var html1 = "";
-                    if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
-                        var html = "";
-                        $.each(data.Premium, function (index, value) {
-                            html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
-                        });
-                        if (html != '') {
-                            $('#premiumModel-p-b').html(html);
-                        }
-                    }
-                    if (data.UnderwriterFee != null) {
-                        html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
-                    }
-                    if (data.FeeGst != null) {
-                        html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
-                    }
-                    if (data.InvoiceTotal != null) {
-                        html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
-                    }
-                    if (html1 != '') {
-                        $('#premiumModel-p-f').html(html1);
-                    }
-                }
-            }
-        });
     });
     function elementAjaxCall(Value, EIId, ItId) {
         if (Value != '' && EIId != '') {

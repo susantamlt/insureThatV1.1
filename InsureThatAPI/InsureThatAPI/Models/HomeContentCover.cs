@@ -26,7 +26,9 @@ namespace InsureThatAPI.Models
         public ExcessesPay ExcesspayObj { get; set; }
         public Imposednew ImposedObj { get; set; }
         public Descriptions DescriptionObj { get; set; }
+        public List<ValueDatas> DescriptionObjList { get; set; }
         public SumInsures SuminsuredObj { get; set; }
+        public List<ValueDatas> SuminsuredObjList { get; set; }
         public TotalCovers TotalcoverObj { get; set; }
         public IEnumerable<SelectListItem> SubUrb { get; set; }
         public List<usp_GetUnit_Result> ExistingPolicyInclustions{ get; set; }
@@ -46,8 +48,10 @@ namespace InsureThatAPI.Models
         public Addresses AddressObj { get; set; }
         public LocationNew LocationObj { get; set; }
         public ExcessesPay ExcesspayObj { get; set; }
-        public SumInsures SuminsuredObj { get; set; }
         public Descriptions DescriptionObj { get; set; }
+        public List<ValueDatas> DescriptionObjList { get; set; }
+        public SumInsures SuminsuredObj { get; set; }
+        public List<ValueDatas> SuminsuredObjList { get; set; }
         public TotalCovers TotalcoverObj { get; set; }
         public Unspecifics UnspecificObj { get; set; }
         public IEnumerable<SelectListItem> SubUrb { get; set; }

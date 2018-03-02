@@ -49,6 +49,10 @@
         </div>
     </div>
     <div class="clearfix"></div>
+    @*@if (Model.ErrorMessage != null)
+    {
+        <div class="col-md-9 col-sm-6 col-xs-12" style="color:red;" >@Model.ErrorMessage</div>
+    }*@
     @if (TempData["ErrorMsg"] != null)
     {
         <div class="col-md-9 col-sm-6 col-xs-12 error">@TempData["ErrorMsg"]</div>
@@ -57,7 +61,7 @@
         @using (Html.BeginForm("AdvCustomerSearch", "Customer", FormMethod.Post, new { CustomerId = 1, enctype = "multipart/form-data", id = "advancedSearch", name = "advancedSearch" }))
         {
             @Html.AntiForgeryToken()
-            @Html.HiddenFor(o=>o.Actntype)
+            @Html.HiddenFor(o => o.Actntype)
             <div class="row">
                 <div class="col-md-2 col-sm-2 col-xs-12 mt-10">INSURED NAME</div>
                 <div class="col-md-4 col-sm-4 col-xs-12" id="insuredName-div">
@@ -118,7 +122,7 @@
         @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Get, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
-            if (Model.Actntype== null || Model.Actntype != "Attach")
+            if (Model.Actntype == null || Model.Actntype != "Attach")
             {
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12"></div>
@@ -133,10 +137,21 @@
     </div>
 </div>
 <style type="text/css">
-    .device-lg #slider .emphasis-title h1 {font-size: 52px;}
-    .device-md #slider .emphasis-title h1 {font-size: 44px;}
-    #wrapper {background: url(../images/yellow-overlay.png) no-repeat right top;}
-    .error {color: #FF0000;}
+    .device-lg #slider .emphasis-title h1 {
+        font-size: 52px;
+    }
+
+    .device-md #slider .emphasis-title h1 {
+        font-size: 44px;
+    }
+
+    #wrapper {
+        background: url(../images/yellow-overlay.png) no-repeat right top;
+    }
+
+    .error {
+        color: #FF0000;
+    }
 </style>
 <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
 <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
@@ -163,7 +178,7 @@
             }
         });
     });
-    
+
     $("#newcust").click(function () {
         var phonenu = $("#newphoneno").val();
         var name = $("#newname").val();
@@ -307,16 +322,16 @@
                 url: "/customer/AdvCustomerSearch",
                 data: { "InsuredName": name },
                 success: function (responce) {
-                    if (responce.results[0].MobileNo != null && responce.results[0].MobileNo != '') {
+                    if (responce != null && responce.results!=null && responce.results[0]!=null && responce.results[0].MobileNo != null && responce.results[0].MobileNo != '') {
                         var mNumber1 = responce.results[0].MobileNo;
                         var mNumber = mNumber1.replace(' ', '');
                         $('#phonenu').val(mNumber.replace(' ', ''));
-                    } else if (responce.results[0].PhoneNo != '') {
+                    } else if (responce != null && responce.results != null &&  responce.results[0] != null && responce.results[0].PhoneNo != '') {
                         var pNumber1 = responce.results[0].PhoneNo;
                         var pNumber = pNumber1.replace(' ', '');
                         $('#phonenu').val(pNumber.replace(' ', ''));
                     }
-                    else if (responce.results[0].InsuredID != '') {
+                    else if (responce != null && responce.results != null &&  responce.results[0] != null && responce.results[0].InsuredID != '') {
                         var insuredid1 = responce.results[0].InsuredID;
                         $('#insuredid').val(insuredid1);
                         //if (insuredid1 != '' && insuredid1 != null && insuredid1.contains(' ')) {
@@ -328,7 +343,7 @@
                         $('#phonenu').val('');
                         $('#insuredid').val('');
                     }
-                    if (responce.results[0].PolicyNumbers != '') {
+                    if (responce != null && responce.results != null && responce.results[0]!=null &&  responce.results[0].PolicyNumbers != '') {
                         $.each(responce.results[0].PolicyNumbers, function (key, value) {
                             $('#policyno').empty().append($('<option></option>').val(key).html(value));
                         });
@@ -337,7 +352,9 @@
 
                         $('.search-btn').prop("disabled", false);
                     }
-                    $('#email').val(responce.results[0].EmailID);
+                    if (responce != null && responce.results != null && responce.results[0] != null && responce.results[0].EmailID!=null) {
+                        $('#email').val(responce.results[0].EmailID);
+                    }
 
                 }
             });

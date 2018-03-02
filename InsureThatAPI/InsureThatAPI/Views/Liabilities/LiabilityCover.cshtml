@@ -29,7 +29,7 @@
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
-                  
+
                 </div>
             </div>
         </div>
@@ -144,6 +144,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+        <div class="error"></div>
         <div class="form">
             <div class="mt-10 mb-10 col-md-12">
                 <p class="col-md-10 col-sm-10 col-xs-12">Personal Liability and Farm Liability are combined on this policy.</p>
@@ -212,12 +213,12 @@
     <div class="well">
         <h3 style="font-size: 11px;margin-bottom: 2px;">Edit or delete previous sections here</h3>
         @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
-    {
-        for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
         {
-            <div class="policy-loc-row">
-                @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
-                <script type="text/javascript">
+            for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+            {
+                <div class="policy-loc-row">
+                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                    <script type="text/javascript">
                     $(document).ready(function () {
                         $('.inclusions').click(function () {
                             var name = $(this).attr('data-name');
@@ -227,14 +228,14 @@
 
                         });
                     });
-                </script>
-                <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                    <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                    <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                    </script>
+                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                    </div>
                 </div>
-            </div>
-    }
-    <script>
+            }
+            <script>
         $(".policy-edit-wrap").click(function () {
             var selectedname = $(this).data('name');
             var selectedunid = $(this).data('unid');
@@ -249,10 +250,15 @@
                 type: "POST",
                 url: "/Customer/EndorsePolicy",
                 data: {
-                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "effcdate": null
                 },
                 success: function (responce) {
-                    window.location.href = responce;
+                    if (responce.Status == false) {
+                        $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                    } else {
+                        window.location.href = responce;
+                    }
                 }
             });
         });
@@ -290,17 +296,17 @@
                 }
             });
         });
-    </script>
-}
-else
-{
-if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
-{
-    for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
-    {
-        <div class="policy-loc-row">
-            @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
-            <script type="text/javascript">
+            </script>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        <script type="text/javascript">
                 $(document).ready(function () {
                     $('.inclusions').click(function () {
                         var name = $(this).attr('data-name');
@@ -310,13 +316,13 @@ if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
 
                     });
                 });
-            </script>
-            <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
-                <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
-            </div>
-        </div>
-        <script>
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                    <script>
             $(".policy-edit-wrap").click(function () {
 
                 var selectedname = $(this).data('name');
@@ -332,10 +338,15 @@ if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
                     type: "POST",
                     url: "/Customer/EndorsePolicy",
                     data: {
-                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
+                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1, "effcdate": null
                     },
                     success: function (responce) {
-                        window.location.href = responce;
+                        if (responce.Status == false) {
+                            $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                        } else {
+                            window.location.href = responce;
+                        }
                     }
                 });
             });
@@ -364,22 +375,22 @@ if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
                     });
                 }
             });
-        </script>
-}
-}
+                    </script>
+                }
+            }
 
-}
+        }
         <div class="clearfix"></div>
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
-                <li><a href="javascript:void(0);" class="Liabilities">+  Liability </a></li>
+                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
+
                 <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
                 <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
             </ul>
@@ -388,13 +399,18 @@ if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
                     var unitname = $(this).children("a").attr("class");
                     var cid = $("#ciid").val();
                     var pcid = $("#pcidd").val();
+                    var prid = 1029;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/AddUnit",
-                        data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                        data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
                         success: function (responce) {
-
-                            window.location.href = responce;
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
                         }
                     });
                 });
@@ -470,7 +486,7 @@ $(document).on('focusout', ".commondatatest", function () {
     } else {
         var ItId = ItIdN;
     }
-    if (!regex.test(Value)) {
+    if (regex!='' && !regex.test(Value)) {
         $('#' + id).css({ "border": "1px solid #ff0000" });
         $("label[for='" + name + "']").text(text).css({ "display": "block" });
     } else if (Value != "") {

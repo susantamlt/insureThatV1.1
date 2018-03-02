@@ -36,6 +36,8 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = MCVehicleDescription.CustomerId;
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+            unitdetails.AddressList = new List<AddressData>();
+            AddressData ad = new AddressData();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
             var policyinclusions = new List<usp_GetUnit_Result>();
             if (PcId != null && PcId > 0)
@@ -44,7 +46,7 @@ namespace InsureThatAPI.Controllers
             }
 
             string apikey = null;
-            bool policyinclusion = (policyinclusions != null && policyinclusions.Count() > 0 && policyinclusions.Exists(p => p.Name == "Motors"));
+            bool policyinclusion = (policyinclusions != null && policyinclusions.Count() > 0 && policyinclusions.Exists(p => p.Name == "Motor"));
 
             if (Session["apiKey"] != null)
             {
@@ -238,7 +240,8 @@ namespace InsureThatAPI.Controllers
             if (policyinclusion == true && PcId != null && PcId.HasValue)
             {
                 MCVehicleDescription.ExistingPolicyInclustions = policyinclusions;
-
+                MCVehicleDescription.PolicyInclusion = new List<usp_GetUnit_Result>();
+                MCVehicleDescription.PolicyInclusion = policyinclusions;
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                 var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                 if (EmpResponse != null)
@@ -306,14 +309,24 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData!=null && unitdetails.SectionData.RowsourceData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.RowsourceData != null)
                 {
                     if (unitdetails.SectionData.RowsourceData.Exists(p => p.Element.ElId == MCVehicleDescription.AccessoriesObj.EiId))
                     {
                     }
                 }
-                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
+
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
+                    if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
+                    {
+                        MCVehicleDescription.AdaddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + ", " + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
+                    }
+                    else if(unitdetails.AddressData!=null && unitdetails.AddressData.Count()>0)
+                    {
+                        MCVehicleDescription.AdaddressObj.Address = unitdetails.AddressData[0].AddressLine1 + ", " + unitdetails.AddressData[0].Suburb + ", " + unitdetails.AddressData[0].State + ", " + unitdetails.AddressData[0].Postcode;
+
+                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.AccessoriesObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.AccessoriesObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -349,10 +362,97 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.CovertypeObj.EiId).Select(p => p.Value).FirstOrDefault();
                         MCVehicleDescription.CovertypeObj.Covertype = val;
                     }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            MCVehicleDescription.MCPartynameObj.Name = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var NameIpList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < NameIpList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60967;
+                                vds.Element.ItId = NameIpList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId && p.Element.ItId == NameIpList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            MCVehicleDescription.MCPartynameObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            MCVehicleDescription.MCPartyLocationObj.Location = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var LocationIpList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < LocationIpList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60969;
+                                vds.Element.ItId = LocationIpList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId && p.Element.ItId == LocationIpList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            MCVehicleDescription.MCPartyLocationObjList = elmnts;
+                        }
+                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.DescriptionObj.Description = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            MCVehicleDescription.DescriptionObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DescriptionList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DescriptionList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60891;
+                                vds.Element.ItId = DescriptionList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DescriptionObj.EiId && p.Element.ItId == DescriptionList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            MCVehicleDescription.DescriptionObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            MCVehicleDescription.SumnsuredObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 60893;
+                                vds.Element.ItId = SuminsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId && p.Element.ItId == SuminsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            MCVehicleDescription.SumnsuredObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId))
                     {
@@ -442,16 +542,6 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.McmakeObj.EiId).Select(p => p.Value).FirstOrDefault();
                         MCVehicleDescription.McmakeObj.Make = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartyLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.MCPartyLocationObj.Location = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCPartynameObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.MCPartynameObj.Name = val;
-                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.MCscdObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCscdObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -493,13 +583,7 @@ namespace InsureThatAPI.Controllers
                         {
                             MCVehicleDescription.SFinstalledObj.Installed = false;
 
-                        }                     
-
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SumnsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.SumnsuredObj.Suminsured = val;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.UnspecifieditemsObj.EiId))
                     {
@@ -537,7 +621,6 @@ namespace InsureThatAPI.Controllers
                         {
                             MCVehicleDescription.VusedObj.Vused = false;
                         }
-                     
                     }
                 }
             }
@@ -558,6 +641,15 @@ namespace InsureThatAPI.Controllers
                     }
                 }
 
+            }
+            if(cid!=null && cid.HasValue)
+            {
+                MCVehicleDescription.CustomerId = cid.Value;
+
+            }
+            if(PcId!=null && PcId.HasValue)
+            {
+                MCVehicleDescription.PcId = PcId;
             }
             return View(MCVehicleDescription);
         }
@@ -598,10 +690,10 @@ namespace InsureThatAPI.Controllers
                 {
                     controllername = Session["controller"].ToString();
                 }
-                if (actionname != null && controllername != null)
-                {
-                    return RedirectToAction(actionname, controllername, new { cid = MCVehicleDescription.CustomerId, PcId = MCVehicleDescription.PcId });
-                }
+                //if (actionname != null && controllername != null)
+                //{
+                //    return RedirectToAction(actionname, controllername, new { cid = MCVehicleDescription.CustomerId, PcId = MCVehicleDescription.PcId });
+                //}
                 return RedirectToAction("BoatDetails", "Boat", new { cid = MCVehicleDescription.CustomerId });
             
             return RedirectToAction("BoatDetails", "Boat", new { cid = MCVehicleDescription.CustomerId });

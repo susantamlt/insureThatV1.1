@@ -175,7 +175,7 @@ namespace InsureThatAPI.CommonMethods
             string loginKey = string.Empty;
             int IyId = 9262;
             string EncrptForLogin = String.Format("{0:ddddyyyyMMdd}", DateTime.UtcNow);
-//EncrptForLogin = "Tuesday20180220";
+        //  EncrptForLogin = "Friday20180302";
             PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
             loginKey = Encrypt(PlainTextEncrpted, EncrptForLogin);
             LoginDetailsRef loginDetailsref = new LoginDetailsRef();

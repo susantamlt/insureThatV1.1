@@ -180,63 +180,82 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null && unitdetails.ProfileData.ValueData!=null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId).Select(p => p.Value).FirstOrDefault();
                         TravelCover.DataofbirthObj.Dataofbirth = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.ExcessObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.ExcessObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.ExcessObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.ExcessObj.EiId).Select(p => p.Value).FirstOrDefault();
                         TravelCover.ExcessObj.Excess = val;
                     }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.ImposedObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.ImposedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val == "1")
-                    //    {
-                    //        TravelCover.ImposedObj.Imposed = true;
-                    //    }
-                    //    else
-                    //    {
-                    //        TravelCover.ImposedObj.Imposed = false;
-                    //    }
-                    //}
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.LocationObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.LocationObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    TravelCover.LocationObj.Location = val;
-                    //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.NumbertravelersObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.NumbertravelersObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        TravelCover.NumbertravelersObj.Numbertravelers = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            TravelCover.TravellerscoveredObj.Travellerscovered = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var TravellerscoveredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < TravellerscoveredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61429;
+                                vds.Element.ItId = TravellerscoveredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId && p.Element.ItId == TravellerscoveredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            TravelCover.TravellerscoveredObjList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            TravelCover.DataofbirthObj.Dataofbirth = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DataofbirthList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DataofbirthList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61431;
+                                vds.Element.ItId = DataofbirthList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthObj.EiId && p.Element.ItId == DataofbirthList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            TravelCover.DataofbirthObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId).Select(p => p.Value).FirstOrDefault();
                         TravelCover.TravellerscoveredObj.Travellerscovered = val;
                     }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.UnspecificvaluablesObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.UnspecificvaluablesObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    TravelCover.UnspecificvaluablesObj.Unspecificvaluables = val;
-                    //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.WintersportObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.WintersportObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.WintersportObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.WintersportObj.EiId).Select(p => p.Value).FirstOrDefault();
                         TravelCover.WintersportObj.Wintersport = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == TravelCover.YourtripObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.YourtripObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == TravelCover.YourtripObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.YourtripObj.EiId).Select(p => p.Value).FirstOrDefault();
                         TravelCover.YourtripObj.Yourtrip = val;
                     }
                 }
             }
-          
+
             if (unitdetails!=null && unitdetails.ReferralList != null)
             {
                 TravelCover.ReferralList = unitdetails.ReferralList;
@@ -253,6 +272,14 @@ namespace InsureThatAPI.Controllers
                     }
                 }
 
+            }
+            if (cid != null)
+            {
+                TravelCover.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                TravelCover.PcId = PcId;
             }
             return View(TravelCover);
         }
@@ -282,10 +309,10 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
-            if (actionname != null && controllername != null)
-            {
-                return RedirectToAction(actionname, controllername, new { cid = TravelCover.CustomerId, PcId = TravelCover.PcId });
-            }
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = TravelCover.CustomerId, PcId = TravelCover.PcId });
+            //}
             return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = TravelCover.CustomerId });
             //return View(TravelCover);
         }

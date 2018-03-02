@@ -211,17 +211,7 @@ namespace InsureThatAPI.Controllers
             MobileFarmContents.ExcessFarmContentFPObj.ExcessList = excessToPay;
             MobileFarmContents.ExcessFarmContentFPObj.EiId = 62407;
 
-            if (Session["CompletionTrackFPC"] != null)
-            {
-                Session["CompletionTrackFPC"] = Session["CompletionTrackFPC"];
-                MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-            }
-            else
-            {
-                Session["CompletionTrackFPC"] = "0-0-0-0"; ;
-                MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
-            }
-
+          
             var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.MobileFarmProperty), Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
             if (details != null && details.Any())
             {
@@ -314,7 +304,7 @@ namespace InsureThatAPI.Controllers
                 //    Session["CompletionTrackFPC"] = "1-0-0-0"; ;
                 //    MobileFarmContents.CompletionTrackFPC = Session["CompletionTrackFPC"].ToString();
                 //}
-                return RedirectToAction("FarmMachinery", new { cid = MobileFarmContents.CustomerId });
+                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = MobileFarmContents.CustomerId });
             }
 
             return View(MobileFarmContents);

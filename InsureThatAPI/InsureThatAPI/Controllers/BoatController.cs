@@ -170,7 +170,7 @@ namespace InsureThatAPI.Controllers
             BoatDetails.MarketvalueObj = new MarketValues();
             BoatDetails.MarketvalueObj.EiId = 61163;
             #endregion
-            #region CoverDetails
+            #region BoatOperater
             BoatDetails.NameboObj = new NameBOs();
             BoatDetails.NameboObj.NameBOList = NameBOLists;
             BoatDetails.NameboObj.EiId = 61187;
@@ -179,7 +179,7 @@ namespace InsureThatAPI.Controllers
             BoatDetails.TypesboatObj = new TypesofBoat();
             BoatDetails.TypesboatObj.EiId = 61191;
             #endregion
-            #region BoatOperater
+            #region CoverDetails
             BoatDetails.MarketvalueCDObj = new MarketValues();
             BoatDetails.MarketvalueCDObj.EiId = 61207;
             BoatDetails.MotorvalueObj = new MotorValues();
@@ -237,7 +237,16 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                  if (PcId == null && Session["unId"] != null && Session["profileId"] != null)
+                {
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+               else if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Boat&SectionUnId=&ProfileUnId=");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
@@ -284,19 +293,11 @@ namespace InsureThatAPI.Controllers
                         }
                     }
                 }
-                else if (PcId == null && Session["unId"] != null && Session["profileId"] != null)
-                {
-                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                    if (EmpResponse != null)
-                    {
-                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
-                    }
-                }
+              
             }
             if (unitdetails != null)
             {
-                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.BoatnameObj.EiId))
                     {
@@ -307,16 +308,6 @@ namespace InsureThatAPI.Controllers
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AddressObj.EiId).Select(p => p.Value).FirstOrDefault();
                         BoatDetails.AddressObj.Address = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        BoatDetails.AccessorydescriptionObj.Description = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        BoatDetails.AccessorysuminsureObj.Suminsured = val;
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.DetectorObj.EiId))
                     {
@@ -338,20 +329,171 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.FreeperiodObj.EiId).Select(p => p.Value).FirstOrDefault();
                         BoatDetails.FreeperiodObj.Freeperiod = val;
                     }
-                    //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == BoatDetails.FueltypeObj.EiId))
-                    //{
-                    //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == BoatDetails.FueltypeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    BoatDetails.FueltypeObj.f = val;
-                    //}
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.HullmeterialObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.NameboObj.EiId))
                     {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.HullmeterialObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        BoatDetails.HullmeterialObj.Meterials = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.NameboObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.NameboObj.Name = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.NameboObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var NameLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.NameboObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < NameLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61187;
+                                vds.Element.ItId = NameLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.NameboObj.EiId && p.Element.ItId == NameLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.NameboObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.YearsexperienceObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.YearsexperienceObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.YearsexperienceObj.Year = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.YearsexperienceObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var YearLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.YearsexperienceObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < YearLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61189;
+                                vds.Element.ItId = YearLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.YearsexperienceObj.EiId && p.Element.ItId == YearLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.YearsexperienceObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.TypesboatObj.Type = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var TypeLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < TypeLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61191;
+                                vds.Element.ItId = TypeLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId && p.Element.ItId == TypeLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.TypesboatObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.AccessorydescriptionObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DescriptionLsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DescriptionLsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61213;
+                                vds.Element.ItId = DescriptionLsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorydescriptionObj.EiId && p.Element.ItId == DescriptionLsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.AccessorydescriptionObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.AccessorysuminsureObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61215;
+                                vds.Element.ItId = SuminsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.AccessorysuminsureObj.EiId && p.Element.ItId == SuminsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.AccessorysuminsureObjList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.InstitutionsObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.InstitutionsObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        BoatDetails.InstitutionsObj.Name = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.InstitutionsObj.Name = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.InstitutionsObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var NameIPList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.InstitutionsObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < NameIPList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61277;
+                                vds.Element.ItId = NameIPList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.InstitutionsObj.EiId && p.Element.ItId == NameIPList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.InstitutionsObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.LocationObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.LocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            BoatDetails.LocationObj.Location = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == BoatDetails.LocationObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var LocationIPList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.LocationObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < LocationIPList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61279;
+                                vds.Element.ItId = LocationIPList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.LocationObj.EiId && p.Element.ItId == LocationIPList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            BoatDetails.LocationObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.HullmeterialObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.HullmeterialObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        BoatDetails.HullmeterialObj.Meterials = val;
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.LengthmetreObj.EiId))
                     {
@@ -408,11 +550,6 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.MotorvalueObj.EiId).Select(p => p.Value).FirstOrDefault();
                         BoatDetails.MotorvalueObj.Motorvalue = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.NameboObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.NameboObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        BoatDetails.NameboObj.Name = val;
-                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.NodiscountObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.NodiscountObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -452,11 +589,6 @@ namespace InsureThatAPI.Controllers
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.TypeboatObj.EiId).Select(p => p.Value).FirstOrDefault();
                         BoatDetails.TypeboatObj.Type = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.TypesboatObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        BoatDetails.TypesboatObj.Type = val;
                     }
                 }
             }
@@ -518,10 +650,10 @@ namespace InsureThatAPI.Controllers
                 {
                     controllername = Session["controller"].ToString();
                 }
-                if (actionname != null && controllername != null)
-                {
-                    return RedirectToAction(actionname, controllername, new { cid = BoatDetails.CustomerId, PcId = BoatDetails.PcId });
-                }
+                //if (actionname != null && controllername != null)
+                //{
+                //    return RedirectToAction(actionname, controllername, new { cid = BoatDetails.CustomerId, PcId = BoatDetails.PcId });
+                //}
                 return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
                // return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
             

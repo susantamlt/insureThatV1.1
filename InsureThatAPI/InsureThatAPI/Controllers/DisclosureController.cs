@@ -59,7 +59,7 @@ namespace InsureThatAPI.Controllers
             DisclosureDetails.DutydisclosureObj = new DutyOfDisclosure();
             DisclosureDetails.DutydisclosureObj.EiId = 2018;
             DisclosureDetails.DetailsboxObj = new DetailsBox();
-            DisclosureDetails.DetailsboxObj.EiId = 416;
+            DisclosureDetails.DetailsboxObj.EiId = 415;
             return View(DisclosureDetails);
 
         }

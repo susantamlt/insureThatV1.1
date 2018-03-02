@@ -20,7 +20,7 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> ClaimsDetails()
+        public async System.Threading.Tasks.Task<ActionResult> ClaimsDetails(int? cid)
         {
             NewPolicyDetailsClass Calimmodel = new NewPolicyDetailsClass();
             List<SelectListItem> ClaimTypeList = new List<SelectListItem>();
@@ -60,7 +60,10 @@ namespace InsureThatAPI.Controllers
             ClaimsDetails.InsurerObj.EiId = 77;
             ClaimsDetails.DriverObj = new ClaimDriver();
             ClaimsDetails.DriverObj.EiId = 79;
-           // ClaimsDetails.CustomerId = cid;
+            if (cid != null && cid.HasValue)
+            {
+                ClaimsDetails.CustomerId = cid.Value;
+            }
             return View(ClaimsDetails);
         }
         [HttpPost]

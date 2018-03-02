@@ -3,9 +3,9 @@
     ViewBag.Title = "Flood Area";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
-    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
-        <h2>FLOOD COVER</h2>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 endorsmentview">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
+        <h2>IMPORTANT INFORMATION</h2>
     </div>
     @using (Html.BeginForm("FloodArea", "Flood", FormMethod.Post, new { @id = "floodcover", @name = "floodcover" }))
     {
@@ -17,9 +17,10 @@
         <div class="mt-10 mb-10 col-md-12 ">
             <p class="col-md-8 col-sm-8 col-xs-12 policy-loc-row">Do you require <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Flood</a> cover for the Farm Property, Home Building or Home Contents?</p>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.FloodArea, "1", new { @class = "flodar vlidationInsure", @id = "floodcoveryes" })<label for="radio1"><span><span></span></span>Yes</label></div>
-                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.FloodArea, "0", new { @class = "flodar vlidationInsure", @id = "floodcoverno" })<label for="radio1"><span><span></span></span>No</label></div>
-                <br />
+                <div class="policy-loc-row">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.FloodArea, "1", new { @class = "flodar vlidationInsure", @id = "floodcoveryes" })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.FloodArea, "0", new { @class = "flodar vlidationInsure", @id = "floodcoverno" })<label for="radio1"><span><span></span></span>No</label></div>
+                </div>
                 <label id="FloodArea-error" class="error" for="FloodArea" style="clear:both;"></label>
             </div>
         </div>
@@ -45,15 +46,45 @@
                 </div>
             </div>
         </div>
-
+        <div class="mt-10 mb-10 col-md-12 ">
+            <p class="col-md-8 col-sm-8 col-xs-12 policy-loc-row">Is your Home Building within 100 metres from uncleared natural bushland, a state or national forest or a commercial plantation of trees?</p>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                <div class="policy-loc-row">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.Isbuildinglocated, "1", new { @class = "Isbuildinglocated vlidationInsure", @id = "Isbuildinglocatedyes" })<label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.Isbuildinglocated, "0", new { @class = "Isbuildinglocated vlidationInsure", @id = "Isbuildinglocatedno" })<label for="radio1"><span><span></span></span>No</label></div>
+                </div>
+                <label id="Isbuildinglocated-error" class="error" for="Isbuildinglocated" style="clear:both;"></label>
+            </div>
+        </div>
+        <div class="mt-10 mb-10 col-md-12 ">
+            <p class="col-md-8 col-sm-8 col-xs-12 policy-loc-row">From what date would you like your policy to commence?</p>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.TextBoxFor(p => p.Startdate, new { @class = "form-control form-border-bottom datePicker vlidationInsure dateStartEnter", @id = "startdate", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                <label id="Startdate-error" class="error" for="Startdate" style="clear:both;"></label>
+            </div>
+        </div>
+        <div class="mt-10 mb-10 col-md-12 ">
+            <p class="col-md-8 col-sm-8 col-xs-12 policy-loc-row">Would you like this change this expiry date?</p>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.TextBoxFor(p => p.Expirydate, new { @class = "form-control form-border-bottom datePicker vlidationInsure datecalculation", @id = "expirydate", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                <label id="Expirydate-error" class="error" for="Expirydate" style="clear:both;"></label>
+            </div>
+        </div>
+        <div class="mt-10 mb-10 col-md-12 ">
+            <p class="col-md-8 col-sm-8 col-xs-12 policy-loc-row">Period of cover</p>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.TextBoxFor(p => p.Periodofcover, new { @readonly = "readonly", @class = "form-control form-border-bottom vlidationInsure", @id = "Periodofcover" })
+                <label id="Periodofcover-error" class="error" for="Periodofcover" style="clear:both;"></label>
+            </div>
+        </div>
+        <div class="mt-10 mb-10 col-md-12 ">
+            <p class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">Please note that all quotations will be reviewed by our underwriter to ensure that all is in order before completion.  This process may take up to 12 hours (Monday to Friday) once you have accepted our quote and requested us to proceed.</p>
+            <p class="col-md-12 col-sm-12 col-xs-12 policy-loc-row">A standard policy is for a 12 month period.  If you would like a different policy length, please advise.   Please note that a period less than 10 months will require approval by the underwriter.</p>
+        </div>
         if (ViewBag.error != null)
         {
             <div style="color:red;"><p class="mt-10 mb-10 col-md-12 policy-loc-row sadhide">@ViewBag.error <img src="~/images/sad.png" alt="sad" width="60" /></p></div>
         }
-        @*@*if (ViewBag.errors != null)
-        {
-            <div style="color:red;" class="text-center"><p class="mt-10 mb-10 col-md-12 policy-loc-row">@ViewBag.errors</p></div>
-        }*@
         <div class="clearfix"></div>
         <div class="col-md-8 col-sm-8 col-xs-12 policy-loc-row"></div>
         <div class="col-md-4 col-sm-4 col-xs-12 errorhiden"></div>
@@ -63,36 +94,209 @@
         </div>
     }
 </div>
-<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
-<script>
+<script src="~/js/jquery.inputmask.bundle.js"></script>
+<script src="~/js/inputmask.date.extensions.js"></script>
+<script type="text/javascript">
     $(document).ready(function () {
-        var floodvalue = -1;
-
-
         $(document).on('click', 'input[name="FloodArea"]', function () {
             var isb = $("input[name='FloodArea']:checked").val();
-          
             if (isb == 1) {
-                floodvalue = 1;
+                var floodvalue = 1;
             }
-            else if (isb == 0)
-            {
-                floodvalue = 0;
+            else if (isb == 0) {
+                var floodvalue = 0;
                 $(".sadhide").hide();
             }
         });
-       
-        $(".ptabbtn3").click(function () {
-        
-            if (floodvalue == 0 || floodvalue == 1) {
-              
-            }
-            else if (floodvalue == -1) {
-                $(".errorhiden").text("Please select NO to continue.").css({ 'color': 'red' }).delay(10000).fadeOut();
-                return false;
+        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+        var floodvalue = -1;
+
+        $(".ptabbtn3").click(function (e) {
+            e.preventDefault();
+            //if (floodvalue == 0 || floodvalue == 1) {
+            //} else if (floodvalue == -1) {
+            //    $(".errorhiden").text("Please select NO to continue.").css({ 'color': 'red' }).delay(10000).fadeOut();
+            //    return false;
+            //}
+
+            var valid = 1;
+            $(".vlidationInsure").each(function () {
+                var id = $(this).attr('id');
+                var nameAttr = $(this).attr('name');
+                var newval = $(this).val();
+                if (nameAttr == "FloodArea") {
+                    if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please select flood area.").css({ "display": "block" });
+                        valid = 0;
+                    } else if ($("input[name='" + nameAttr + "']:checked").val() == '1') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Sorry we do not offer flood cover at this time. Click No to continue without flood cover.").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "Isbuildinglocated") {
+                    if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please select building area with in 100 meters.").css({ "display": "block" });
+                        valid = 0;
+                    } else if ($("input[name='" + nameAttr + "']:checked").val() == '1') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Sorry, we cannot insure homes within 100 meters of Uncleared Natural Bushland, a State or National Forest or a commercial plantation of trees. This risk has been declined by the underwriter.").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "Startdate") {
+                    var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+                    var DaterVal1 = newval.split('/');
+                    var DaterVal2 = DaterVal1[2] + '/' + DaterVal1[1] + '/' + DaterVal1[0];
+                    var laeeDate = diffDateCalculate(DaterVal2);
+                    var futuredate1 = CalculateMonthDayYear(newval);
+                    var futuredate = futuredate1.split('-');
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter start date').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != '' && !regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != '' && laeeDate == false) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('You can not provide past date').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != '' && (futuredate[0] > 0 || futuredate[1] > 0 || futuredate[2] > 28)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('You can not provide greater then 28days future date').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != "") {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text('').css({ "display": "none" });
+                    }
+                }
+                if (nameAttr == "Expirydate") {
+                    var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+                    var dateValS = $('#startdate').val();
+                    var DaterVal21 = newval.split('/');
+                    var DaterVal2 = DaterVal21[2] + '/' + DaterVal21[1] + '/' + DaterVal21[0];
+                    var DaterVal11 = dateValS.split('/');
+                    var DaterVal1 = DaterVal11[2] + '/' + DaterVal11[1] + '/' + DaterVal11[0];
+                    var laeeDate = diffDateCalculateE(DaterVal2, DaterVal1);
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter expiry date').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != '' && !regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != '' && laeeDate == false) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('You can not provide past date').css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval != "") {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text('').css({ "display": "none" });
+                    }
+                }
+                if (nameAttr == "Periodofcover") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please set period of cover.").css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval < 3) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please set expiry date greater then or equal to 3 months.").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+            });
+            if (valid == 1) {
+                $("form[name='floodcover']").submit();
             }
         });
+    });
+    $(document).on('focusout', '.dateStartEnter', function (event) {
+        var dateVal = $(this).val();
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+        var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+        var DaterVal1 = dateVal.split('/');
+        var DaterVal2 = DaterVal1[2] + '/' + DaterVal1[1] + '/' + DaterVal1[0];
+        var laeeDate = diffDateCalculate(DaterVal2);
+        var futuredate1 = CalculateMonthDayYear(dateVal);
+        var futuredate = futuredate1.split('-');
+        if (dateVal != '' && regex.test(dateVal)) {
+            if (laeeDate == false) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You can not provide past date').css({ "display": "block" });
+            } else if (futuredate[0] > 0 || futuredate[1] > 0 || futuredate[2] > 28) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You can not provide greater then 28days future date').css({ "display": "block" });
+            } else {
+                var TodayDate = new Date(DaterVal2);
+                var expDate = new Date(TodayDate.getFullYear(), TodayDate.getMonth(), TodayDate.getDate() + 365);
+                var expNewdate = expDate.getDate() + '/' + (expDate.getMonth() + 1) + '/' + expDate.getFullYear();
+                $('#expirydate').val(expNewdate);
+                var tMonths1 = CalculateMonthDayYearE(expNewdate, dateVal);
+                var tMonths = tMonths1.split('-');
+                if (tMonths[0] > 0) {
+                    var monthsNewData = parseInt(tMonths[0] * 12) + parseInt(tMonths[1]);
+                } else {
+                    var monthsNewData = tMonths[1];
+                }
+                $('#Periodofcover').val(monthsNewData);
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+            }
+        } else {
+            $('#' + id).css({ "border": "1px solid #ff0000" });
+            $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+        }
+    });
+    $(document).on('focusout', '.datecalculation', function (event) {
+        var dateVal = $(this).val();
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+        var dateValS = $('#startdate').val();
+        var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+        if (dateVal != '' && dateValS != '' && regex.test(dateVal) && regex.test(dateValS)) {
+            var DaterVal21 = dateVal.split('/');
+            var DaterVal2 = DaterVal21[2] + '/' + DaterVal21[1] + '/' + DaterVal21[0];
+            var DaterVal11 = dateValS.split('/');
+            var DaterVal1 = DaterVal11[2] + '/' + DaterVal11[1] + '/' + DaterVal11[0];
+            var laeeDate = diffDateCalculateE(DaterVal2, DaterVal1);
+            var futuredate1 = CalculateMonthDayYearE(dateVal, dateValS);
+            var futuredate = futuredate1.split('-');
+            if (laeeDate == false) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You can not provide previous date').css({ "display": "block" });
+            } else if (futuredate[0] > 1) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You can not provide greater then one year future date').css({ "display": "block" });
+            } else {
+                if (futuredate[0] > 0) {
+                    var monthsNewData = parseInt(futuredate[0] * 12) + parseInt(futuredate[1]);
+                } else {
+                    var monthsNewData = futuredate[1];
+                }
+                $('#Periodofcover').val(monthsNewData);
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+            }
+        } else {
+            $('#' + id).css({ "border": "1px solid #ff0000" });
+            $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+        }
     });
 </script>
 

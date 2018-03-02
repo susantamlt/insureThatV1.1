@@ -22,18 +22,23 @@ namespace InsureThatAPI.Models
         public List<SessionModel> PolicyInclusions { get; set; }
         public string ApiKey { get; set; }
         public string PolicyId { get; set; }
-        public OptCoverAccidentalDamageFP OptCoverAccidentalDamageFPObj { get; set; }
-        public CoverForUnspecifiedContentsFP CoverForUnspecifiedContentsFPObj { get; set; }
+        public CoverOptionFP CoveroptionFPObj { get; set; }
+        public UnspecifiedFP UnspecifiedFPObj { get; set; }
         public DescriptionsFP DescriptionFPObj { get; set; }
         public SumInsuredFP SumInsuredFPObj { get; set; }
-        public OptHCcoverOptionsFP OptHCcoverOptionsFPObj { get; set; }
-        public OptHCLastPaidInsuranceFP OptHCLastPaidInsuranceFPObj { get; set; }
+        public ClaimFreePeriodFP ClaimperiodFPObj { get; set; }
+        public NoClaimDiscountFP discountFPObj { get; set; }
         public ExcessFPHContent ExcessFPHContentObj { get; set; }
+        public AgeDiscountFP AgediscountObj { get; set; }
     }
-
-    public class CoverForUnspecifiedContentsFP
+    public class AgeDiscountFP
     {
-        public string CoverUnspecifiedContent { get; set; }
+        public string Agediscount { get; set; }
+        public int EiId { get; set; }
+    }
+    public class UnspecifiedFP
+    {
+        public string Unspecified { get; set; }
         public int EiId { get; set; }
     }
 
@@ -50,21 +55,21 @@ namespace InsureThatAPI.Models
         public int EiId { get; set; }
     }
 
-    public class OptHCcoverOptionsFP
+    public class ClaimFreePeriodFP
     {
-        public string CoverOptions { get; set; }
+        public string Claimfreeperiod { get; set; }
         public int EiId { get; set; }
     }
 
-    public class OptHCLastPaidInsuranceFP
+    public class NoClaimDiscountFP
     {
-        public string LastpaidInsurance { get; set; }
+        public string discount { get; set; }
         public int EiId { get; set; }
 
     }
-    public class OptCoverAccidentalDamageFP
+    public class CoverOptionFP
     {
-        public string AccidentalDamage { get; set; }
+        public string Coveroption { get; set; }
         public int EiId { get; set; }
     }
     public class ExcessFPHContent

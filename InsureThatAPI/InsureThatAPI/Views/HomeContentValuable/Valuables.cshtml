@@ -16,6 +16,8 @@
     listsExcessVal.Add(new SelectListItem { Value = "600", Text = "$600" });
     listsExcessVal.Add(new SelectListItem { Value = "1000", Text = "$1,000" });
     listsExcessVal.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
+    var CountTotal = 0;
+    var jCount = 0;
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>RURAL LIFESTYLE POLICY</span> / VALUABLES</h4>
@@ -129,6 +131,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+        <div class="error"></div>
         <div class="col-md-12 mt-10 mb-10">
             <p class="col-md-12"><a href="#homecontensModel1" role="button" data-target="#homecontensModel1" data-toggle="modal"><strong>What is considered Valuables?</strong></a></p>
             <div id="homecontensModel1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="homecontensModel1" aria-hidden="false">
@@ -216,17 +219,46 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="tname-tr-1">
-                            <td>
-                                @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description1", @style = "width:100%;", @data_itid = "0", @data_regex = "AN" })
-                                @Html.HiddenFor(p => p.DescriptionObj.EiId)
-                            </td>
-                            <td class="price stotal">
-                                $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-inline field-length-xs no-border sumoftotalcover vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured1", @data_itid = "0", @style = "width: 89%;", @data_regex = "N" })
-                                @Html.HiddenFor(p => p.SuminsuredObj.EiId)
-                            </td>
-                            <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
-                        </tr>
+                        @if (Model.DescriptionObjList != null && Model.DescriptionObjList.Count() > 0)
+                        {
+                            CountTotal = Model.DescriptionObjList.Count();
+                            for (int i = 0; i < Model.DescriptionObjList.Count(); i++)
+                            {
+                                jCount = i + 1;
+                                <tr id="tname-tr-@jCount">
+                                    <td>
+                                        @Html.TextBoxFor(p => p.DescriptionObj.Description, Model.DescriptionObjList[i].Value, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid = i, @data_regex = "AN" })
+                                        @Html.HiddenFor(p => p.DescriptionObj.EiId)
+                                    </td>
+                                    <td class="price stotal">
+                                        $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = i, @style = "width: 89%;", @data_regex = "N" })
+                                        @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                    </td>
+                                    @if (jCount == CountTotal)
+                                    {
+                                        <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameAdd(@jCount)" class="button-3d">+</a></td>
+                                    }
+                                    else
+                                    {
+                                        <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameRemove(@jCount)" class="button-3d">-</a></td>
+                                    }
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr id="tname-tr-1">
+                                <td>
+                                    @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid = "0", @data_regex = "AN" })
+                                    @Html.HiddenFor(p => p.DescriptionObj.EiId)
+                                </td>
+                                <td class="price stotal">
+                                    $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = "0", @style = "width: 89%;", @data_regex = "N" })
+                                    @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                </td>
+                                <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
+                            </tr>
+                        }
                     </tbody>
                     <tfoot>
                         <tr>
@@ -288,19 +320,19 @@
                 <div class="policy-loc-row">
                     @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
                     <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('.inclusions').click(function () {
-                            var name = $(this).attr('data-name');
-                            var nid = $(this).attr('data-nid');
-                            $('.policy-ed-del-wrapper').hide();
-                            $("#policy-ed-del-wrap-" + nid).show();
+                        $(document).ready(function () {
+                            $('.inclusions').click(function () {
+                                var name = $(this).attr('data-name');
+                                var nid = $(this).attr('data-nid');
+                                $('.policy-ed-del-wrapper').hide();
+                                $("#policy-ed-del-wrap-" + nid).show();
 
+                            });
                         });
-                    });
                     </script>
                     <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
                     </div>
                 </div>
             }
@@ -319,10 +351,15 @@
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
                         data: {
-                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "effcdate": null
                         },
                         success: function (responce) {
-                            window.location.href = responce;
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
                         }
                     });
                 });
@@ -371,68 +408,73 @@
                     <div class="policy-loc-row">
                         @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
                         <script type="text/javascript">
-                    $(document).ready(function () {
-                        $('.inclusions').click(function () {
-                            var name = $(this).attr('data-name');
-                            var nid = $(this).attr('data-nid');
-                            $('.policy-ed-del-wrapper').hide();
-                            $("#policy-ed-del-wrap-" + nid).show();
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
 
-                        });
-                    });
+                                });
+                            });
                         </script>
                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
                         </div>
                     </div>
                     <script type="text/javascript">
-                $(".policy-edit-wrap").click(function () {
-                    var selectedname = $(this).data('name');
-                    var selectedunid = $(this).data('unid');
-                    var selectedprofileid = $(this).data('profileid');
-                    var selectedcid = $(this).data('cid');
-                    var selectedTrId = $(this).data('trid');
-                    var PcId = $(this).data('pcid');
-                    var policyStatus = $(this).data('policystatus');
-                    // var prId = $(this).data('prId');
-                    var prId = 1029;
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/EndorsePolicy",
-                        data: {
-                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
-                        },
-                        success: function (responce) {
-                            window.location.href = responce;
-                        }
-                    });
-                });
-                $(".policy-delet-wrap").click(function () {
-                    var r = confirm("Are you sure you want to delete this section?");
-                    if (r == true) {
-                        var PcId = $("#pcidd").val();
-                        var selectedunid = $(this).data('unid');
-                        var selectedcid = $(this).data('cid');
-                        var PcId = $(this).data('pcid');
-                        var selectedname = $(this).data('name');
-                        var selectedprofileid = $(this).data('profileid');
-                        var selectedTrId = $(this).data('trid');
-                        var policyStatus = $(this).data('policystatus');
-                        var currId = $(this).attr("id");
-                        $.ajax({
-                            type: "POST",
-                            url: "/Customer/DeleteUnit",
-                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
-                            success: function (responce) {
-                                if (responce.Status == true) {
-                                    var prentId = $('#' + currId).parent().parent().attr("id");
-                                    $('#' + prentId).remove();
+                        $(".policy-edit-wrap").click(function () {
+                            var selectedname = $(this).data('name');
+                            var selectedunid = $(this).data('unid');
+                            var selectedprofileid = $(this).data('profileid');
+                            var selectedcid = $(this).data('cid');
+                            var selectedTrId = $(this).data('trid');
+                            var PcId = $(this).data('pcid');
+                            var policyStatus = $(this).data('policystatus');
+                            // var prId = $(this).data('prId');
+                            var prId = 1029;
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/EndorsePolicy",
+                                data: {
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1, "effcdate": null
+                                },
+                                success: function (responce) {
+                                    if (responce.Status == false) {
+                                        $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                                    } else {
+                                        window.location.href = responce;
+                                    }
                                 }
+                            });
+                        });
+                        $(".policy-delet-wrap").click(function () {
+                            var r = confirm("Are you sure you want to delete this section?");
+                            if (r == true) {
+                                var PcId = $("#pcidd").val();
+                                var selectedunid = $(this).data('unid');
+                                var selectedcid = $(this).data('cid');
+                                var PcId = $(this).data('pcid');
+                                var selectedname = $(this).data('name');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedTrId = $(this).data('trid');
+                                var policyStatus = $(this).data('policystatus');
+                                var currId = $(this).attr("id");
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/DeleteUnit",
+                                    data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                    success: function (responce) {
+                                        if (responce.Status == true) {
+                                            var prentId = $('#' + currId).parent().parent().attr("id");
+                                            $('#' + prentId).remove();
+                                        }
+                                    }
+                                });
                             }
                         });
-                    }
-                });
                     </script>
                 }
             }
@@ -442,13 +484,13 @@
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
-                <li><a href="javascript:void(0);" class="Liabilities">+  Liability </a></li>
+                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
+
                 <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
                 <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
             </ul>
@@ -457,12 +499,18 @@
                             var unitname = $(this).children("a").attr("class");
                             var cid = $("#ciid").val();
                             var pcid = $("#pcidd").val();
+                            var prid = 1029;
                             $.ajax({
                                 type: "POST",
                                 url: "/Customer/AddUnit",
-                                data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
                                 success: function (responce) {
-                                    window.location.href = responce;
+                                    if (responce.Status == false) {
+                                        $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                                    } else {
+                                        window.location.href = responce;
+                                    }
                                 }
                             });
                         });
@@ -470,6 +518,16 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr td .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            var itid = $(this).data('itid');
+            var nItid = itid + 1;
+            $(this).attr('id', id + '' + nItid);;
+        });
+    });
+</script>
 <link href="~/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
@@ -526,227 +584,227 @@
             }
 </script>
 <script type="text/javascript">
-            $(document).ready(function () {
-                $("#ptabbtnFHC").click(function (e) {
-                    e.preventDefault();
-                    var valid = 1;
-                    $(".vlidationInsure").each(function () {
-                        var id = $(this).attr('id');
-                        var nameAttr = $(this).attr('name');
-                        var lastChar = id.substr(id.length - 1);
-                        var newval = $(this).val();
-                        //if (nameAttr == "AddressObj.Address") {
-                        //    var regex = /^[a-zA-Z0-9,/ ]*$/;
-                        //    if (newval == '') {
-                        //        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        //        $("label[for='" + nameAttr + "']").text('Plese enter address').css({ "display": "block" });
-                        //        valid = 0;
-                        //    } else {
-                        //        $('#' + id).css({ "border": "" });
-                        //        $("label[for='" + nameAttr + "']").text("");
-                        //    }
-                        //}
-
-                        if (nameAttr == "UnspecificObj.Unspecific") {
-                            var regex = /^[0-9]*$/;
-                            var newValValuables = newval.replace(/,/g, '');
-                            if (newValValuables == '') {
-                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                $("label[for='" + nameAttr + "']").text('Please enter unspecified contents').css({ "display": "block" });
-                                valid = 0;
-                            } else if (!regex.test(newValValuables)) {
-                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
-                                valid = 0;
-                            } else {
-                                $('#' + id).css({ "border": "" });
-                                $("label[for='" + nameAttr + "']").text("");
-                            }
-                        }
-                        if (nameAttr == "DescriptionObj.Description") {
-                            var regex = /^[a-zA-Z0-9 ]*$/;
-                            if (!regex.test(newval)) {
-                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
-                                valid = 0;
-                            } else {
-                                $('#' + id).css({ "border": "" });
-                                $("label[for='" + nameAttr + "']").text("");
-                            }
-                        }
-                        if (nameAttr == "SuminsuredObj.Suminsured") {
-                            var regex = /^[0-9]*$/;
-                            var newValValuablesS = newval.replace(/,/g, '');
-                            if ($('#description' + lastChar).val() != '' && newValValuablesS == '') {
-                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                $("label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
-                                valid = 0;
-                            } else if ($('#description' + lastChar).val() != '' && !regex.test(newValValuablesS)) {
-                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
-                                valid = 0;
-                            } else {
-                                $('#' + id).css({ "border": "" });
-                                $("label[for='" + nameAttr + "']").text("");
-                            }
-                        }
-                    });
-                    if (valid == 1) {
-                        $("form[name='valuables']").submit();
-                    }
-                });
-            });
-            $(document).on('focusout', ".commondatatest", function () {
-                var Value = $(this).val();
-                var EIId = $(this).data('eiid');
-                var ItIdN = $(this).data('itid');
-                var Nregex = $(this).data('regex');
-                var name = $(this).attr('name');
+    $(document).ready(function () {
+        $("#ptabbtnFHC").click(function (e) {
+            e.preventDefault();
+            var valid = 1;
+            $(".vlidationInsure").each(function () {
                 var id = $(this).attr('id');
-                if (ItIdN == 'undefined' || ItIdN == "") {
-                    var ItId = "0";
-                } else {
-                    var ItId = ItIdN;
+                var nameAttr = $(this).attr('name');
+                var lastChar = id.substr(id.length - 1);
+                var newval = $(this).val();
+                //if (nameAttr == "AddressObj.Address") {
+                //    var regex = /^[a-zA-Z0-9,/ ]*$/;
+                //    if (newval == '') {
+                //        $('#' + id).css({ "border": "1px solid #ff0000" });
+                //        $("label[for='" + nameAttr + "']").text('Plese enter address').css({ "display": "block" });
+                //        valid = 0;
+                //    } else {
+                //        $('#' + id).css({ "border": "" });
+                //        $("label[for='" + nameAttr + "']").text("");
+                //    }
+                //}
+
+                if (nameAttr == "UnspecificObj.Unspecific") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuables = newval.replace(/,/g, '');
+                    if (newValValuables == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter unspecified contents').css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newValValuables)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
                 }
-                var regex = "";
-                var text = "";
-                if (Nregex == 'N') {
-                    regex = /^[0-9]*$/;
-                    text = "Only numeric are allowed";
-                } else if (Nregex == 'A') {
-                    regex = /^[a-zA-Z ]*$/;
-                    text = "Special character & numeric are not allowed";
-                } else if (Nregex == 'AN') {
-                    regex = /^[a-zA-Z0-9 ]*$/;
-                    text = "Special character are not allowed";
-                } else if (Nregex == 'AS') {
-                    regex = /^[a-zA-Z/ ]*$/;
-                    text = "Numeric are not allowed";
+                if (nameAttr == "DescriptionObj.Description") {
+                    var regex = /^[a-zA-Z0-9 ]*$/;
+                    if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
                 }
-                if (!regex.test(Value)) {
-                    $('#' + id).css({ "border": "1px solid #ff0000" });
-                    $("label[for='" + name + "']").text(text).css({ "display": "block" });
-                } else if (Value != "") {
-                    $('#' + id).css({ "border": "" });
-                    $("label[for='" + name + "']").text('').css({ "display": "none" });
-                    elementAjaxCall(Value, EIId, ItId);
+                if (nameAttr == "SuminsuredObj.Suminsured") {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if ($('#description' + lastChar).val() != '' && newValValuablesS == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
+                        valid = 0;
+                    } else if ($('#description' + lastChar).val() != '' && !regex.test(newValValuablesS)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
                 }
             });
-            function elementAjaxCall(Value, EIId, ItId) {
-                if (Value != '' && EIId != '') {
-                    $.ajax({
-                        url: '/Customer/ElementDetails',
-                        type: "POST",
-                        crossOrigin: true,
-                        data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
-                        success: function (data) {
-                            if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
-                                var valuedata = data.valuedata;
-                                if (valuedata != '' && valuedata != null) {
-                                    $.each(valuedata, function (index, value) {
-                                        var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                        //$('#' + StateIdNewOne).val(value.Value);
-                                        if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
-                                            var statedata = data.stateData;
-                                            if (statedata != '' && statedata != null) {
-                                                $.each(statedata, function (index1, value1) {
-                                                    var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
-                                                    if (value1.Value == 'Invisible') {
-                                                        $('#' + StateIdNew).removeAttr('readonly');
-                                                        $('#' + StateIdNew).removeAttr('disabled');
-                                                        $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                        $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
-                                                        $('#' + StateIdNew).removeAttr('required', 'required');
-                                                    } else if (value1.Value == 'Disabled') {
-                                                        $('#' + StateIdNew).attr('disabled', 'disabled');
-                                                        $('#' + StateIdNew).removeAttr('readonly');
-                                                        $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                        $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                        $('#' + StateIdNew).removeAttr('required', 'required');
-                                                    } else if (value1.Value == 'Read Only') {
-                                                        $('#' + StateIdNew).attr('readonly', 'readonly');
-                                                        $('#' + StateIdNew).removeAttr('disabled');
-                                                        $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                        $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                        $('#' + StateIdNew).removeAttr('required', 'required');
-                                                    } else if (value1.Value == 'Strike Through') {
-                                                        $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
-                                                        $('#' + StateIdNew).removeAttr('readonly');
-                                                        $('#' + StateIdNew).removeAttr('disabled');
-                                                        $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                        $('#' + StateIdNew).removeAttr('required', 'required');
-                                                    } else if (value1.Value == 'Required') {
-                                                        $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                        $('#' + StateIdNew).removeAttr('readonly');
-                                                        $('#' + StateIdNew).removeAttr('disabled');
-                                                        $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                        $('#' + StateIdNew).attr('required', 'required');
-                                                    } else if (value1.Value == '"Not Rendered') {
-                                                        $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                        $('#' + StateIdNew).removeAttr('readonly');
-                                                        $('#' + StateIdNew).removeAttr('disabled');
-                                                        $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                        $('#' + StateIdNew).removeAttr('required', 'required');
-                                                    }
-                                                });
+            if (valid == 1) {
+                $("form[name='valuables']").submit();
+            }
+        });
+    });
+    $(document).on('focusout', ".commondatatest", function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        var ItIdN = $(this).data('itid');
+        var Nregex = $(this).data('regex');
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+        if (ItIdN == undefined || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
+        var regex = "";
+        var text = "";
+        if (Nregex == 'N') {
+            regex = /^[0-9]*$/;
+            text = "Only numeric are allowed";
+        } else if (Nregex == 'A') {
+            regex = /^[a-zA-Z ]*$/;
+            text = "Special character & numeric are not allowed";
+        } else if (Nregex == 'AN') {
+            regex = /^[a-zA-Z0-9 ]*$/;
+            text = "Special character are not allowed";
+        } else if (Nregex == 'AS') {
+            regex = /^[a-zA-Z/ ]*$/;
+            text = "Numeric are not allowed";
+        }
+        if (!regex.test(Value)) {
+            $('#' + id).css({ "border": "1px solid #ff0000" });
+            $("label[for='" + name + "']").text(text).css({ "display": "block" });
+        } else if (Value != "") {
+            $('#' + id).css({ "border": "" });
+            $("label[for='" + name + "']").text('').css({ "display": "none" });
+            elementAjaxCall(Value, EIId, ItId);
+        }
+    });
+    function elementAjaxCall(Value, EIId, ItId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                //$('#' + StateIdNewOne).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
                                             }
-                                        }
-                                    });
+                                        });
+                                    }
                                 }
-                            }
-                            //if (data.referrallist != null || data.referrallist != "") {
-                            //    $('#referralList-p').html('No Referral List');
-                            //} else {
-                            //    $('#referralList-p').html(data.referrallist);
-                            //}
-                            if (data.referrallists == "") {
-                                $('#referralList-p').html('No Referral List');
-                            } else {
-                                $('#referralList-p').html(data.referrallists);
-                            }
-                            if (data.usermessage == "") {
-                                var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
-                                var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
-                                if (newIDforCurrentElementTypes == 'radio') {
-                                    var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
-                                } else if (newIDforCurrentElementTypes == 'checkbox') {
-                                    var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
-                                } else {
-                                    var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
-                                }
-                                $("label[for='" + labelid + "']").html('');
-                                $("label[for='" + labelid + "']").css({ "display": "none" });
-                            } else {
-                                var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
-                                var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
-                                if (newIDforCurrentElementTypes == 'radio') {
-                                    var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
-                                } else if (newIDforCurrentElementTypes == 'checkbox') {
-                                    var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
-                                } else {
-                                    var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
-                                }
-                                $("label[for='" + labelid + "']").html(data.usermessage);
-                                $("label[for='" + labelid + "']").css({ "display": "block" });
-                            }
+                            });
                         }
-                    });
+                    }
+                    //if (data.referrallist != null || data.referrallist != "") {
+                    //    $('#referralList-p').html('No Referral List');
+                    //} else {
+                    //    $('#referralList-p').html(data.referrallist);
+                    //}
+                    if (data.referrallists == "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallists);
+                    }
+                    if (data.usermessage == "") {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        $("label[for='" + labelid + "']").html('');
+                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                    } else {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        $("label[for='" + labelid + "']").html(data.usermessage);
+                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                    }
+                }
+            });
+        }
+    }
+    $(document).on('click', '.savepolicyP', function () {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/SavePolicy",
+            data: { "PrId": 1029 },
+            success: function (res) {
+                if (res.status == true) {
+                    var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html(html);
+                } else {
+                    var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html('');
                 }
             }
-            $(document).on('click', '.savepolicyP', function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/Customer/SavePolicy",
-                    data: { "PrId": 1029 },
-                    success: function (res) {
-                        if (res.status == true) {
-                            var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                            $('#savepolicyresult').html(html);
-                        } else {
-                            var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                            $('#savepolicyresult').html('');
-                        }
-                    }
-                });
-            });
+        });
+    });
 </script>

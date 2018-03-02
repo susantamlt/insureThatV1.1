@@ -45,6 +45,7 @@ namespace InsureThatAPI.Controllers
             Session["InsuredId"] = null;
             Session["Actn"] = null;
             Session["UnitId"] = null;
+            Session["InsuredName"] = null;
             if (Session["apiKey"] != null)
             {
 
@@ -93,12 +94,14 @@ namespace InsureThatAPI.Controllers
                 {
                     Session["InsuredId"] = insureddetails.Insureds.Select(p => p.InsuredID).FirstOrDefault();
                     Session["EmailId"] = customersearch.emailId;
-                    return Json(new { results = insureddetails.Insureds.Select(p => new InsuredListDDL() { id = p.InsuredID, text = p.CompanyBusinessName + p.FirstName + " " + p.MiddleName + " " + p.LastName }).ToList() });
+
+                    return Json(new { results = insureddetails.Insureds.Select(p => new InsuredListDDL() { id = p.InsuredID, text = p.CompanyBusinessName + p.FirstName + " " + p.MiddleName + " " + p.LastName + " (" + p.Address + ")" }).ToList() });
                 }
                 else if (insureddetails.Insureds != null && insureddetails.Insureds.Count() > 0)
                 {
                     Session["InsuredId"] = insureddetails.Insureds.Select(p => p.InsuredID).FirstOrDefault();
                     Session["EmailId"] = customersearch.emailId;
+                    Session["InsuredName"] = insureddetails.Insureds.Select(p => p.FirstName).FirstOrDefault();
                     int? customerid = db.IT_InsertCustomerMaster(customersearch.emailId, customersearch.InsuredId, customersearch.policyNo, null, customersearch.insuredName, null).SingleOrDefault();
                     return RedirectToAction("InsuredPolicys", "Customer", new { InsuredId = insureddetails.Insureds.Select(p => p.InsuredID).FirstOrDefault(), cid = customerid });
                 }
@@ -123,13 +126,8 @@ namespace InsureThatAPI.Controllers
         [HttpGet]
         public ActionResult AdvancedCustomerSearch(CustomerSearch customersearch, string actions)
         {
-            Session["EmailId"] = null;
-            Session["InsuredId"] = null;
-            Session["UnitId"] = null;
-            Session["Actn"] = null;
-            Session["controller"] = null;
-            Session["Actname"] = null;
-            if (Session["apiKey"] != null)
+
+            if (Session["Apikey"] != null)
             {
                 if (actions != null && !string.IsNullOrEmpty(actions))
                 {
@@ -140,6 +138,18 @@ namespace InsureThatAPI.Controllers
             else
             {
                 return RedirectToAction("AgentLogin", "Login");
+            }
+            Session["EmailId"] = null;
+            Session["InsuredId"] = null;
+            Session["UnitId"] = null;
+            Session["Actn"] = null;
+            Session["controller"] = null;
+            Session["Actname"] = null;
+            Session["InsuredName"] = null;
+            Session["Home2"] = null;
+            if (TempData["ExistingError"] != null)
+            {
+                ViewBag.errormessage = TempData["ExistingError"].ToString();
             }
             return View(customersearch);
         }
@@ -152,6 +162,7 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AdvancedCustomerSearch", "Customer");
             }
             string ApiKey = " ";
+            customersearch.ErrorMessage = new List<string>();
             //else if ((PolicyNo ==null || String.IsNullOrWhiteSpace(PolicyNo))  && (InsuredName==null || String.IsNullOrWhiteSpace(InsuredName)) && (EmailId==null || String.IsNullOrWhiteSpace(EmailId)) && (PhoneNo==null || String.IsNullOrWhiteSpace(PhoneNo)))
             //{
             //    TempData["ErrorMsg"] = "Enter any details to search";
@@ -177,9 +188,15 @@ namespace InsureThatAPI.Controllers
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-            if (customersearch != null && (customersearch.emailId != null || customersearch.phoneNo != null))
+            string[] name = null;
+            if (customersearch.insuredName != null)
             {
+                string[] stringSeparators = new string[] { " (" };
+                name = InsuredName.Split(stringSeparators, StringSplitOptions.None);
+            }
+            if (customersearch != null && (customersearch.emailId != null || customersearch.phoneNo != null) || customersearch.insuredName != null)
+            {
+
                 //On Submit
                 HttpResponseMessage Ress = await hclient.GetAsync("InsuredDetails?ApiKey=" + ApiKey + "&iyId=" + customersearch.iyId + "&policyNo=" + customersearch.policyNo + "&insuredName=" + null + "&emailId=" + customersearch.emailId + "&phoneNo=" + customersearch.phoneNo);
                 if (Ress.IsSuccessStatusCode)
@@ -188,7 +205,7 @@ namespace InsureThatAPI.Controllers
 
                     var EmpResponse = Ress.Content.ReadAsStringAsync().Result;
                     insureddetails = JsonConvert.DeserializeObject<GetInsuredDetailsRef>(EmpResponse);
-                    if (insureddetails.Insureds != null)
+                    if (insureddetails.Insureds != null && insureddetails.Insureds.Count > 0)
                     {
                         //if (customersearch.Actntype != null && customersearch.Actntype == "Attach")
                         //{
@@ -199,6 +216,7 @@ namespace InsureThatAPI.Controllers
                         ViewBag.InsuredId = insureddetails.Insureds.Select(p => p.InsuredID).FirstOrDefault();
                         Session["InsuredId"] = ViewBag.InsuredId;
                         Session["EmailId"] = customersearch.emailId;
+                        Session["InsuredName"] = insureddetails.Insureds.Select(p => p.FirstName).FirstOrDefault();
                         // int cid=db.IT_CC_Insert_InsuredDetails()
                         if (insureddetails != null && insureddetails.Insureds.Count() > 0)
                         {
@@ -216,15 +234,39 @@ namespace InsureThatAPI.Controllers
                             }
                         }
                         int? customerid = db.IT_InsertCustomerMaster(customersearch.emailId, customersearch.InsuredId, customersearch.policyNo, null, customersearch.insuredName, null).SingleOrDefault();
+                        if (Request.IsAjaxRequest())
+                        {
+                            return Json(new { results = insureddetails.Insureds });
+                        }
                         return RedirectToAction("InsuredPolicys", "Customer", new { InsuredId = ViewBag.InsuredId, cid = customerid });
 
                     }
+                    if (insureddetails != null && insureddetails.Status == "Failure" && insureddetails.ErrorMessage != null && insureddetails.ErrorMessage.Count() > 0)
+                    {
+                        if (Request.IsAjaxRequest())
+                        {
+                        }
+                        else
+                        {
+                            TempData["ErrorMsg"] = "No Data available";
+                            //customersearch.ErrorMessage.Add(ViewBag.errormessage);
+                            return RedirectToAction("AdvancedCustomerSearch", "Customer", customersearch);
+                        }
+                    }
+                    //else
+                    //{
+                    //    ViewBag.errormessage = "No Data available";
+                    //    customersearch.ErrorMessage = ViewBag.errormessage;
+                    //    return View(customersearch);
+                    //}
                 }
             }
             if (Request.IsAjaxRequest())
             {
                 //On Auto Search
-                HttpResponseMessage Res = await hclient.GetAsync("InsuredDetails?ApiKey=" + ApiKey + "&iyId=" + customersearch.iyId + "&policyNo=" + PolicyNo + "&insuredName=" + InsuredName + "&emailId=" + EmailId + "&phoneNo=" + PhoneNo);
+
+                // string[] name = InsuredName.Split(" (");
+                HttpResponseMessage Res = await hclient.GetAsync("InsuredDetails?ApiKey=" + ApiKey + "&iyId=" + customersearch.iyId + "&policyNo=" + PolicyNo + "&insuredName=" + name[0] + "&emailId=" + EmailId + "&phoneNo=" + PhoneNo);
 
                 if (Res.IsSuccessStatusCode)
                 {
@@ -341,6 +383,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            //ViewBag.ErrorMessage = "Old Password does not match.";
             return View();
         }
         #region Display Policy List Based on Insured Id
@@ -349,7 +392,7 @@ namespace InsureThatAPI.Controllers
         public async System.Threading.Tasks.Task<ActionResult> InsuredPolicys(int? InsuredId, int? cid)
         {
             string apikey = null;
-            if (Session["apiKey"] != null)
+            if (Session["ApiKey"] != null)
             {
                 apikey = Session["ApiKey"].ToString();
             }
@@ -357,11 +400,16 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
+            Session["Policylocal"] = null;
             GetNewPolicyDetailsRef policydetails = new GetNewPolicyDetailsRef();
             PolicyList policylist = new PolicyList();
             policydetails.PolicyData = new List<PolicyDetails>();
             //InsuredId = 108454;
             Session["UnitId"] = null;
+            if (Session["InsuredId"] != null)
+            {
+                InsuredId = Convert.ToInt32(Session["InsuredId"]);
+            }
             if (InsuredId.HasValue && InsuredId > 0)
             {
                 //  insureddetails.InsuredID = Convert.ToInt32(Session["InsuredId"]);
@@ -398,6 +446,7 @@ namespace InsureThatAPI.Controllers
             if (Session["apiKey"] != null)
             {
                 Session["apiKey"] = Session["apiKey"];
+
             }
             else
             {
@@ -431,6 +480,7 @@ namespace InsureThatAPI.Controllers
                 {
                     ViewBag.cid = model.CustomerId;
                 }
+                model.ErrorMessage = new List<string>();
                 ApiKey = Session["apiKey"].ToString();
                 HttpResponseMessage Res = await hclient.GetAsync("PolicyDetails?ApiKey=" + ApiKey + "&Action=Retrieve&PcId=" + PcId + "&TrId=0&PrId=&InsuredId=&EffectiveDate=&Reason=");/*insureddetails.InsuredID */
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
@@ -440,12 +490,29 @@ namespace InsureThatAPI.Controllers
                 {
                     return RedirectToAction("AgentLogin", "Login");
                 }
+                if (model.ErrorMessage != null && model.Status == "Failure")
+                {
+                    if (model.ErrorMessage != null && model.ErrorMessage.Count() > 0)
+                    {
+                        for (int i = 0; i < model.ErrorMessage.Count(); i++)
+                        {
+                            TempData["ErrorMsg"] = model.ErrorMessage[0];
+                        }
+                    }
+                }
                 if (model != null)
                 {
-                    //  Session["apiKey"] = model.ApiKey;
-                    if (model.PolicyData != null && (model.UnitData != null && model.UnitData.Count()>0))
+                    if (model.ApiKey != null)
                     {
-                        var insertpolicydetails = db.IT_dt_Insert_PolicyDetails(model.PolicyData.PolicyNumber,model.PolicyData.InsuredId, model.PolicyData.TransactionNumber, model.PolicyData.PcId, model.PolicyData.TrId, model.PolicyData.TermNumber, model.PolicyData.AccountManagerID,
+                        Session["apiKey"] = model.ApiKey;
+                    }
+                    else
+                    {
+                        Session["apiKey"] = ApiKey;
+                    }
+                    if (model.PolicyData != null && (model.UnitData != null && model.UnitData.Count() > 0))
+                    {
+                        var insertpolicydetails = db.IT_dt_Insert_PolicyDetails(model.PolicyData.PolicyNumber, model.PolicyData.InsuredId, model.PolicyData.TransactionNumber, model.PolicyData.PcId, model.PolicyData.TrId, model.PolicyData.TermNumber, model.PolicyData.AccountManagerID,
                             model.PolicyData.PolicyStatus, model.PolicyData.CoverPeriod, model.PolicyData.CoverPeriodUnit, model.PolicyData.InceptionDate, model.PolicyData.ExpiryDate, model.PolicyData.EffectiveDate, model.PolicyData.PrId, model.PolicyData.IyId,
                             model.PolicyData.InsuredName, model.PolicyData.RemoveStampDuty, model.PolicyData.CreatedbyUserId, model.PolicyData.Timecreated, model.PolicyData.IsFloodCoverRequired, model.PolicyData.HasMadeAClaim, model.PolicyData.Reason, model.Status).SingleOrDefault();
 
@@ -453,11 +520,13 @@ namespace InsureThatAPI.Controllers
                         {
                             if (model.UnitData != null && model.UnitData.Count > 0)
                             {
+                                Session["Policylocal"] = insertpolicydetails;
                                 var getunits = db.usp_GetUnit(null, PcId, null).ToList();
                                 if (getunits != null && getunits.Count() > 0)
                                 {
                                     var deleteunits = db.IT_dt_Delete_Unit(null, insertpolicydetails, null, null, null, null, null, null, null);
                                 }
+                                var getunitss = db.usp_GetUnit(null, PcId, null).ToList();
                                 for (int i = 0; i < model.UnitData.Count; i++)
                                 {
                                     var insertunits = db.IT_dt_Insert_Unit(insertpolicydetails, model.UnitData[i].Component, model.UnitData[i].Name, model.UnitData[i].UnId, model.UnitData[i].UnitNumber,
@@ -602,10 +671,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            return RedirectToAction("InsuredPolicys", "Customer", new
-            {
-                                cid = cid
-            });
+            return RedirectToAction("AdvancedCustomerSearch", "Customer");
         }
 
         //[HttpPost]
@@ -703,6 +769,8 @@ namespace InsureThatAPI.Controllers
                 Session["Policyinclustions"] = null;
                 Session["controller"] = null;
                 Session["Actn"] = null;
+                Session["Home2"] = null;
+
                 PolicyTypes model = new PolicyTypes();
                 if (insureId.HasValue)
                 {
@@ -740,7 +808,7 @@ namespace InsureThatAPI.Controllers
             PolicyDetails pds = new PolicyDetails();
             ViewEditPolicyDetails pd = new ViewEditPolicyDetails();
             pd = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
-            if (pd != null)
+            if (pd != null && pd.PolicyData != null && pd.PolicyData.PcId == -1)
             {
                 if (pd.ApiKey != null)
                 {
@@ -749,6 +817,10 @@ namespace InsureThatAPI.Controllers
                 var insertresult = db.IT_dt_Insert_PolicyDetails(pd.PolicyData.PolicyNumber, model.InsureId, pd.PolicyData.TransactionNumber, pd.PolicyData.PcId, pd.PolicyData.TrId, pd.PolicyData.TermNumber, pd.PolicyData.AccountManagerID, pd.PolicyData.PolicyStatus,
                     pd.PolicyData.CoverPeriod, pd.PolicyData.CoverPeriodUnit, pd.PolicyData.InceptionDate, pd.PolicyData.ExpiryDate, pd.PolicyData.EffectiveDate, pd.PolicyData.PrId, pd.PolicyData.IyId, pd.PolicyData.InsuredName, pd.PolicyData.RemoveStampDuty, pd.PolicyData.CreatedbyUserId,
                     pd.PolicyData.Timecreated, pd.PolicyData.IsFloodCoverRequired, pd.PolicyData.HasMadeAClaim, pd.Reason, pd.Status).SingleOrDefault();
+            }
+            else
+            {
+                return View(model);
             }
             if (pd.UnitData != null && pd.UnitData.Count > 0)
             {
@@ -1110,8 +1182,13 @@ namespace InsureThatAPI.Controllers
                 sd.Element = new Elements();
                 int UnId = Convert.ToInt32(Session["unId"]);
                 int ProfileId = Convert.ToInt32(Session["HprofileId"]);
+                if (ProfileId == null || ProfileId == 0)
+                {
+                    ProfileId = Convert.ToInt32(Session["profileId"]);
+                }
                 List<ValueDatass> valueData = new List<ValueDatass>();
                 List<StateData> stateData = new List<StateData>();
+                List<RowsourceDatas> RowsourceData = new List<RowsourceDatas>();
                 if (Session["ApiKey"] != null)
                 {
                     ApiKey = Session["apiKey"].ToString();
@@ -1125,8 +1202,34 @@ namespace InsureThatAPI.Controllers
                 }
                 else
                 {
+                    return Json(new { Status = false, data = "login" });
                     return RedirectToAction("AgentLogin", "Login");
                 }
+                //DataTable dt = new DataTable();
+                //Type objectType = typeof(ElementDetails);
+                //// Loop over properties.
+                //foreach (System.Reflection.PropertyInfo property in objectType.GetProperties())
+                //{
+                //    if (property.GetValue(model, null) == null)
+                //    {
+                //        if (property.PropertyType.Name == "String")
+
+                //            property.SetValue(model, "", null);
+
+
+                //        else if (property.PropertyType.Name == "Nullable`1")
+
+                //            property.SetValue(model, 0, null);
+                //        else if (property.PropertyType.Name == "DateTime")
+
+                //            property.SetValue(model, new List<string>(), null);
+
+
+                //        else if (property.PropertyType.Name == "List`1")
+
+                //            property.SetValue(model, new List<string>(), null);
+                //    }
+                //}
                 StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                 var responses = await hclient.PostAsync("" +
                     "ElementDetails", content);
@@ -1134,11 +1237,38 @@ namespace InsureThatAPI.Controllers
                 if (result != null)
                 {
                     modell = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(result);
-                    if (modell.ReferralList != null)
+                    if (modell.ElementData != null && modell.ElementData.RowsourceData != null && modell.ElementData.RowsourceData.Count() > 0)
+                    {
+                        for (int i = 0; i < modell.ElementData.RowsourceData.Count(); i++)
+                        {
+                            RowsourceDatas rd = new RowsourceDatas();
+                            Elements el = new Elements();
+                            rd.Element = new Elements();
+                            rd.Options = new List<Option>();
+                            rd.Element.ElId = modell.ElementData.RowsourceData[i].Element.ElId;
+                            rd.Element.ItId = modell.ElementData.RowsourceData[i].Element.ItId;
+                            List<Option> oplist = new List<Option>();
+                            if (modell.ElementData.RowsourceData[i].Options != null && modell.ElementData.RowsourceData[i].Options.Count() > 0)
+                            {
+
+                                for (int j = 0; j < modell.ElementData.RowsourceData[i].Options.Count(); j++)
+                                {
+                                    Option op = new Option();
+                                    op.DataText = modell.ElementData.RowsourceData[i].Options[j].DataText;
+                                    op.DataValue = modell.ElementData.RowsourceData[i].Options[j].DataValue;
+                                    oplist.Add(op);
+                                }
+                            }
+                            rd.Options = oplist;
+                            RowsourceData.Add(rd);
+                        }
+
+                    }
+                    if (modell != null && modell.ReferralList != null)
                     {
                         string ReferralList = modell.ReferralList;
                     }
-                    if (modell.ElementData.ValueData != null)
+                    if (modell.ElementData != null && modell.ElementData.ValueData != null)
                     {
                         if (modell.ElementData.ValueData != null && modell.ElementData.ValueData.Count() > 0)
                         {
@@ -1151,7 +1281,7 @@ namespace InsureThatAPI.Controllers
                                 valueData.Add(vd);
                             }
                         }
-                        if (modell.ElementData.StateData != null && modell.ElementData.StateData.Count > 0)
+                        if (modell.ElementData != null && modell.ElementData.StateData != null && modell.ElementData.StateData.Count > 0)
                         {
                             string statevalue = "0";
                             for (int j = 0; j < modell.ElementData.StateData.Count(); j++)
@@ -1187,7 +1317,7 @@ namespace InsureThatAPI.Controllers
                             }
                         }
                     }
-                    return Json(new { Status = true, valuedata = valueData, stateData = stateData, referrallist = modell.ReferralList, error = modell.ErrorMessage, status = modell.Status, usermessage = modell.ElementData.UserMessage, referrallists = modell.ElementData.ReferralList });
+                    return Json(new { Status = true, rowsorcedata = RowsourceData, valuedata = valueData, stateData = stateData, referrallist = modell.ReferralList, error = modell.ErrorMessage, status = modell.Status, usermessage = modell.ElementData.UserMessage, referrallists = modell.ElementData.ReferralList });
                 }
             }
             return Json(new { Status = false });
@@ -1249,7 +1379,8 @@ namespace InsureThatAPI.Controllers
             else
             {
                 return RedirectToAction("AgentLogin", "Login");
-            }if (PcId != null && PcId.HasValue)
+            }
+            if (PcId != null && PcId.HasValue)
             {
                 model.PcId = PcId.Value.ToString();
             }
@@ -1304,7 +1435,8 @@ namespace InsureThatAPI.Controllers
         #endregion
         [HttpPost]
         #region AJAX Unit Details saving
-        public async System.Threading.Tasks.Task<ActionResult> AddUnit(string unit, int? cid, int? pcid)
+        [ValidateInput(false)]
+        public async System.Threading.Tasks.Task<ActionResult> AddUnit(string unit, int? cid, int? pcid, int? Prid)
         {
             if (Request.IsAjaxRequest())
             {
@@ -1313,20 +1445,42 @@ namespace InsureThatAPI.Controllers
                     var db = new MasterDataEntities();
                     ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
                     string apikey = Session["ApiKey"].ToString();
+                    string profile = "";
+                    if (Prid == 1029 && (unit == "Home Contents" || unit == "Valuables"))
+                    {
+                        if (Session["profileId"] != null)
+                        {
+                            profile = Session["profileId"].ToString();
+                        }
+                    }
                     if (pcid != null && pcid > 0)
                     {
                         HttpClient hclient = new HttpClient();
                         string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                         hclient.BaseAddress = new Uri(url);
-                        hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=" + unit + "&SectionUnId=&ProfileUnId=");
+                        hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json")); 
+                        HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=" + unit + "&SectionUnId=&ProfileUnId="+ profile);
                         var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                         if (EmpResponse != null)
                         {
                             unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                            if (unitdetails.Status == "Failure")
+                            {
+                                return Json(new
+                                {
+                                    Status = false
+                                });
+                            }
                             if (unitdetails.SectionData != null)
                             {
-                                var insertunits = db.IT_dt_Insert_Unit(4, "Section", unit, unitdetails.SectionData.UnId, unitdetails.SectionData.UnitNumber,
+                                int? policynu = -1;
+                                Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                                if (Session["Policylocal"] != null)
+                                {
+                                    policynu = Convert.ToInt32(Session["Policylocal"]);
+                                }
+                                var insertunits = db.IT_dt_Insert_Unit(policynu, "Section", unit, unitdetails.SectionData.UnId, unitdetails.SectionData.UnitNumber,
                                          "True", unitdetails.SectionData.ProfileUnId, unitdetails.ReferralList, unitdetails.Status).SingleOrDefault();
 
                             }
@@ -1347,69 +1501,83 @@ namespace InsureThatAPI.Controllers
                             }
                             sess.name = unit;
                             values.Add(sess);
-                            if (unit == "Home Buildings")
-                            {
-                                SessionModel ss = new SessionModel();
-                                ss.name = "Liability";
-                                ss.UnitId = null;
-                                ss.ProfileId = null;
-                                values.Add(ss);
-                            }
+                            //if (unit == "Home Buildings")
+                            //{
+                            //    SessionModel ss = new SessionModel();
+                            //    ss.name = "Liability";
+                            //    ss.UnitId = null;
+                            //    ss.ProfileId = null;
+                            //    values.Add(ss);
+                            //}
 
                             Session["Policyinclustions"] = values;
-
+                            Session["unId"] = null;
+                            Session["profileId"] = null;
                         }
                     }
-                    if (unit == "Home Buildings")
+                    if (Prid.HasValue && Prid == 1029)
                     {
-                        return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid }));
-                        // return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid });
+                        if (unit == "Home Buildings")
+                        {
+                            Session["HprofileId"] = null;
+                            Session["Home2"] = 1;
+                            return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid }));
+                            // return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Home Content" || unit == "Home Contents")
+                        {
+                            Session["profileId"] = Session["HprofileId"].ToString();
+                            return Json(Url.Action("HomeContent", "HomeContentValuable", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Valuables")
+                        {
+                            Session["profileId"] = Session["HprofileId"].ToString();
+                            return Json(Url.Action("Valuables", "HomeContentValuable", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Farm Property")
+                        {
+                            return Json(Url.Action("FarmContents", "Farm", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Liability")
+                        {
+                            return Json(Url.Action("LiabilityCover", "Liabilities", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Pets" || unit == "Pet")
+                        {
+                            return Json(Url.Action("PetsCover", "Pets", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Motor" || unit == "Motors")
+                        {
+                            Session["profileId"] = 0;
+                            return Json(Url.Action("VehicleDescription", "MotorCover", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Boat")
+                        {
+                            Session["profileId"] = 0;
+                            return Json(Url.Action("BoatDetails", "Boat", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = pcid });
+                        }
+                        else if (unit == "Travel")
+                        {
+                            return Json(Url.Action("TravelCover", "Travel", new { cid = cid, PcId = pcid }));
+                            return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = pcid });
+                        }
                     }
-                    else if (unit == "Home Content")
+                    else if (Prid != null && Prid.HasValue && Prid == 1021)
                     {
-                        return Json(Url.Action("HomeContent", "HomeContentValuable", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Valuables")
-                    {
-                        return Json(Url.Action("Valuables", "HomeContentValuable", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Farm Property")
-                    {
-                        return Json(Url.Action("FarmContents", "Farm", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Liability")
-                    {
-                        return Json(Url.Action("LiabilityCover", "Liabilities", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Pets")
-                    {
-                        return Json(Url.Action("PetsCover", "Pets", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Motor")
-                    {
-                        return Json(Url.Action("VehicleDescription", "MotorCover", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Boat")
-                    {
-                        return Json(Url.Action("BoatDetails", "Boat", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = pcid });
-                    }
-                    else if (unit == "Travel")
-                    {
-                        return Json(Url.Action("TravelCover", "Travel", new { cid = cid, PcId = pcid }));
-                        return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = pcid });
+
                     }
 
                 }
                 else
                 {
-                    return RedirectToAction("AgentLogin", "Login");
+                    return Json(Url.Action("AgentLogin", "Login"));
                 }
             }
             return Json(new
@@ -1485,66 +1653,77 @@ namespace InsureThatAPI.Controllers
         public async System.Threading.Tasks.Task<ActionResult> ViewSection(string name, int? PcId, int? cid, int? trId, int? unid, int? profileid, string policyStatus, int prId, int unitid)
         {
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
-            if (Request.IsAjaxRequest())
+            try
             {
-                if (Session["ApiKey"] != null)
+                if (Request.IsAjaxRequest())
                 {
-                    Session["UnitId"] = unitid;
-                    Session["unId"] = unid;
-                    Session["profileId"] = profileid;
-                    // Session["UnitId"] = unitid;
-                    if (name == "Home" || name == "Home Buildings")
+                    if (Session["ApiKey"] != null)
                     {
+                        Session["UnitId"] = unitid;
+                        Session["unId"] = unid;
+                        Session["profileId"] = profileid;
+                        // Session["UnitId"] = unitid;
+                        if (name == "Home" || name == "Home Buildings")
+                        {
 
-                        return Json(Url.Action("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        // return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid });
-                    }
-                    else if (name == "Home Content" || name == "Home Contents")
-                    {
-                        return Json(Url.Action("HomeContents", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Valuables")
-                    {
-                        return Json(Url.Action("Valuables", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Farm Property")
-                    {
-                        return Json(Url.Action("FarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Liability")
-                    {
-                        return Json(Url.Action("Liability", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Pets")
-                    {
-                        return Json(Url.Action("Pets", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Motor")
-                    {
-                        return Json(Url.Action("Motors", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Boat")
-                    {
-                        return Json(Url.Action("Boat", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
-                    }
-                    else if (name == "Travel")
-                    {
-                        return Json(Url.Action("Travels", "PolicyDetails", new { cid = cid, PcId = PcId }));
-                        return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
-                    }
+                            return Json(Url.Action("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            // return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid });
+                        }
+                        else if (name == "Home Content" || name == "Home Contents")
+                        {
+                            return Json(Url.Action("HomeContents", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Valuables")
+                        {
+                            return Json(Url.Action("Valuables", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Farm Property")
+                        {
+                            return Json(Url.Action("FarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Liability")
+                        {
+                            return Json(Url.Action("Liability", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Pets")
+                        {
+                            return Json(Url.Action("Pets", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Motor")
+                        {
+                            return Json(Url.Action("Motors", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Boat")
+                        {
+                            return Json(Url.Action("Boat", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
+                        }
+                        else if (name == "Travel")
+                        {
+                            return Json(Url.Action("Travels", "PolicyDetails", new { cid = cid, PcId = PcId }));
+                            return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
+                        }
 
+                    }
+                    else
+                    {
+                        return RedirectToAction("AgentLogin", "Login");
+                    }
                 }
-                else
+            }
+            catch (Exception ex)
+            {
+                return Json(new
                 {
-                    return RedirectToAction("AgentLogin", "Login");
-                }
+                    Status = false
+
+                });
             }
             return Json(new
             {
@@ -1557,120 +1736,148 @@ namespace InsureThatAPI.Controllers
 
         [HttpPost]
         #region AJAX call for Endorsing Policy
-        public async System.Threading.Tasks.Task<ActionResult> EndorsePolicy(string name, int? PcId, int? cid, int? trId, int? unid, int? profileid, string policyStatus, int prId, int? calltype)
+        public async System.Threading.Tasks.Task<ActionResult> EndorsePolicy(string name, int? PcId, int? cid, int? trId, int? unid, int? profileid, string policyStatus, int prId, int? calltype, string effcdate)
         {
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
-            if (Request.IsAjaxRequest())
+            try
             {
-                if (Session["ApiKey"] != null)
+                if (Request.IsAjaxRequest())
                 {
-                    var db = new MasterDataEntities();
-                    string apikey = Session["ApiKey"].ToString();
-                    if (policyStatus == "NP" || policyStatus == "AP" || policyStatus == "RP")
+                    if (Session["ApiKey"] != null)
                     {
+                        var db = new MasterDataEntities();
+                        string apikey = Session["ApiKey"].ToString();
+                        if (policyStatus == "NP" || policyStatus == "AP" || policyStatus == "RP")
+                        {
 
+                        }
+                        else
+                        {
+                            Session["unId"] = unid;
+                            Session["profileId"] = profileid;
+                        }
+                        if (calltype == null && policyStatus == "NP" || policyStatus == "AP" || policyStatus == "RP")
+                        {
+                            HttpClient hclient = new HttpClient();
+                            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                            hclient.BaseAddress = new Uri(url);
+                            var dateAndTime = DateTime.UtcNow;
+                            var date = dateAndTime.Date.ToString("yyyy-MM-dd");
+                            if (effcdate != null)
+                            {
+                                date = effcdate;
+                            }
+                            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            HttpResponseMessage endorse = await hclient.GetAsync("PolicyDetails?apiKey=" + apikey + "&action=Endorse&pcId=" + PcId + "&trId=" + trId
+                                + "&prId=&InsuredId=&effectiveDate=" + date + "&reason=");/*insureddetails.InsuredID */
+                            var EmpResponse = endorse.Content.ReadAsStringAsync().Result;
+                            if (EmpResponse != null)
+                            {
+                                unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                                if (unitdetails.Status == "Success")
+                                {
+                                    Session["ApiKey"] = unitdetails.ApiKey;
+                                }
+                                if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
+                                {
+                                    return Json(new
+                                    {
+                                        Status = false,
+                                        error = "unitdetails.ErrorMessage"
+
+                                    });
+                                }
+                                if (unitdetails.UnitData != null)
+                                {
+                                    if (unitdetails.UnitData.Exists(p => p.Name == "Home Buildings"))
+                                    {
+                                        Session["unId"] = unitdetails.UnitData.Where(p => p.Name == "Home Buildings").Select(p => p.UnId).FirstOrDefault();
+                                        Session["profileId"] = unitdetails.UnitData.Where(p => p.Name == "Home Buildings").Select(p => p.ProfileUnId).FirstOrDefault();
+                                        Session["HprofileId"] = unitdetails.UnitData.Where(p => p.Name == "Home Buildings").Select(p => p.ProfileUnId).FirstOrDefault();
+                                    }
+                                }
+                            }
+                            return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId }));
+                        }
+
+
+                        if ((unitdetails != null && unitdetails.PolicyData != null && unitdetails.PolicyData.PrId == (int)PolicyType.RLS || (prId != null && prId == 1029)))//unitdetails != null && unitdetails.PolicyData != null &&
+                        {
+                            Session["unId"] = unid;
+                            Session["profileId"] = profileid;
+
+                            if (name == "Home")
+                            {
+                                return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId });
+                            }
+                            if (name == "Home Buildings")
+                            {
+                                return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Home Content" || name == "Home Contents")
+                            {
+                                return Json(Url.Action("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Valuables")
+                            {
+                                return Json(Url.Action("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Farm Property")
+                            {
+                                return Json(Url.Action("FarmContents", "Farm", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Liability")
+                            {
+                                return Json(Url.Action("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Pets" || name == "Pet")
+                            {
+                                return Json(Url.Action("PetsCover", "Pets", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Motor" || name == "Motors")
+                            {
+                                return Json(Url.Action("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Boat")
+                            {
+                                return Json(Url.Action("BoatDetails", "Boat", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
+                            }
+                            else if (name == "Travel")
+                            {
+                                return Json(Url.Action("TravelCover", "Travel", new { cid = cid, PcId = PcId }));
+                                return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
+                            }
+                        }
+                        //else if (unitdetails!=null && unitdetails.PolicyData != null)
+                        //{
+                        //    Session["unId"] = unid;
+                        //    Session["profileId"] = profileid;
+                        //    return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
+                        //}
                     }
                     else
                     {
-                        Session["unId"] = unid;
-                        Session["profileId"] = profileid;
+                        return RedirectToAction("AgentLogin", "Login");
                     }
-                    if (calltype == null && policyStatus == "NP" || policyStatus == "AP" || policyStatus == "RP")
-                    {
-                        HttpClient hclient = new HttpClient();
-                        string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
-                        hclient.BaseAddress = new Uri(url);
-                        var dateAndTime = DateTime.UtcNow;
-                        var date = dateAndTime.Date.ToString("yyyy-MM-dd");
-                        hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        HttpResponseMessage endorse = await hclient.GetAsync("PolicyDetails?apiKey=" + apikey + "&action=Endorse&pcId=" + PcId + "&trId=" + trId
-                            + "&prId=&InsuredId=&effectiveDate=" + date + "&reason=");/*insureddetails.InsuredID */
-                        var EmpResponse = endorse.Content.ReadAsStringAsync().Result;
-                        if (EmpResponse != null)
-                        {
-                            unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
-                            if (unitdetails.Status == "Success")
-                            {
-                                Session["ApiKey"] = unitdetails.ApiKey;
-                            }
-                            if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
-                            {
-                                return Json(new
-                                {
-                                    Status = false,
-                                    error = "unitdetails.ErrorMessage"
-
-                                });
-                            }
-                        }
-                    }
-                    if ((unitdetails != null && unitdetails.PolicyData != null && unitdetails.PolicyData.PrId == (int)PolicyType.RLS || (prId != null && prId == 1029)))//unitdetails != null && unitdetails.PolicyData != null &&
-                    {
-                        Session["unId"] = unid;
-                        Session["profileId"] = profileid;
-                     
-                        if (name == "Home")
-                        {
-                            return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId });
-                        }
-                        if (name == "Home Buildings")
-                        {
-                            return Json(Url.Action("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Home Content" || name == "Home Contents")
-                        {
-                            return Json(Url.Action("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Valuables")
-                        {
-                            return Json(Url.Action("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Farm Property")
-                        {
-                            return Json(Url.Action("FarmContents", "Farm", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Liability")
-                        {
-                            return Json(Url.Action("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Pets")
-                        {
-                            return Json(Url.Action("PetsCover", "Pets", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Motor")
-                        {
-                            return Json(Url.Action("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Boat")
-                        {
-                            return Json(Url.Action("BoatDetails", "Boat", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
-                        }
-                        else if (name == "Travel")
-                        {
-                            return Json(Url.Action("TravelCover", "Travel", new { cid = cid, PcId = PcId }));
-                            return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
-                        }
-                    }
-                    //else if (unitdetails!=null && unitdetails.PolicyData != null)
-                    //{
-                    //    Session["unId"] = unid;
-                    //    Session["profileId"] = profileid;
-                    //    return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid });
-                    //}
                 }
-                else
+            }
+            catch (Exception ex)
+            {
+                return Json(new
                 {
-                    return RedirectToAction("AgentLogin", "Login");
-                }
+                    Status = false
+
+                });
+
             }
             return Json(new
             {
@@ -1694,6 +1901,14 @@ namespace InsureThatAPI.Controllers
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
                     string apikey = Session["ApiKey"].ToString();
+                    if (Reson != null && !string.IsNullOrEmpty(Reson))
+                    {
+
+                    }
+                    else
+                    {
+                        Reson = "Nothing";
+                    }
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpResponseMessage cancelpolicy = await hclient.GetAsync("PolicyDetails?apiKey=" + apikey + "&action=Cancel&pcId=" + PcId + "&trId" + trId + "&prId=&InsuredId=&effectiveDate=" + DateTime.UtcNow + "&reason=" + Reson);
                     var EmpResponse = cancelpolicy.Content.ReadAsStringAsync().Result;
@@ -1895,7 +2110,7 @@ namespace InsureThatAPI.Controllers
         #endregion
 
         #region Action Add Home Profile
-        public async System.Threading.Tasks.Task<ActionResult> AddHomeProfile(string Add, string suburb, string state, int postcode)
+        public async System.Threading.Tasks.Task<ActionResult> AddHomeProfile(string Add, string suburb, string state, string postcode)
         {
             if (Request.IsAjaxRequest())
             {
@@ -1911,9 +2126,9 @@ namespace InsureThatAPI.Controllers
                     }
                     homeprofile.ApiKey = Session["ApiKey"].ToString();
                     homeprofile.AddressLine = Add;
-                    homeprofile.Suburb = suburb;
-                    homeprofile.State = state;
-                    homeprofile.Postcode = postcode;
+                    homeprofile.Suburb = suburb.Trim();
+                    homeprofile.State = state.Trim();
+                    homeprofile.Postcode = postcode.Trim();
                     homeprofile.AddressID = 0;
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
@@ -1986,13 +2201,21 @@ namespace InsureThatAPI.Controllers
             {
                 model.EmailID = Session["EmailId"].ToString();
             }
+            if (Session["InsuredName"] != null)
+            {
+                model.FirstName = Session["InsuredName"].ToString();
+            }
+            else
+            {
+                model.FirstName = null;
+            }
             GetInsuredDetailsRef refmodel = new GetInsuredDetailsRef();
             refmodel.AddressData = new List<AddressData>();
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            if (model.EmailID != null)
+            if (model.EmailID != null || model.FirstName != null)
             {
                 //On Submit
-                HttpResponseMessage Ress = await hclient.GetAsync("InsuredDetails?ApiKey=" + ApiKey + "&iyId=" + 9262 + "&policyNo=&insuredName=" + null + "&emailId=" + model.EmailID + "&phoneNo=");
+                HttpResponseMessage Ress = await hclient.GetAsync("InsuredDetails?ApiKey=" + ApiKey + "&iyId=" + 9262 + "&policyNo=&insuredName=" + model.FirstName + "&emailId=" + model.EmailID + "&phoneNo=");
                 if (Ress.IsSuccessStatusCode)
                 {
                     var EmpResponse = Ress.Content.ReadAsStringAsync().Result;
@@ -2034,6 +2257,7 @@ namespace InsureThatAPI.Controllers
                 if (obj.suburb != null && obj.state != null && obj.postcode != null)
                 {
                     obj.suburb = obj.suburb + ", " + obj.state + ", " + obj.postcode;
+                    obj.Address = model.Address + " ," + obj.suburb;
                 }
                 obj.TradingName = model.TradingName;
             }
@@ -2054,9 +2278,19 @@ namespace InsureThatAPI.Controllers
                     model.state = sublist[1];
                     model.postcode = sublist[2];
                 }
-
             }
-            if (model.DOB == null)
+            if (model.Address != null)
+            {
+                string[] sublist = model.Address.Split(',');
+                if (sublist[0] != null)
+                {
+                    model.Address = sublist[0];
+                    model.suburb = sublist[1];
+                    model.state = sublist[2];
+                    model.postcode = sublist[3];
+                }
+            }
+            if (model.DOB != null)
             {
 
             }
@@ -2218,12 +2452,8 @@ namespace InsureThatAPI.Controllers
 
                                 property.SetValue(model, 0, null);
                             else if (property.PropertyType.Name == "DateTime")
-
                                 property.SetValue(model, new List<string>(), null);
-
-
                             else if (property.PropertyType.Name == "List`1")
-
                                 property.SetValue(model, new List<string>(), null);
                         }
                     }
@@ -2231,13 +2461,11 @@ namespace InsureThatAPI.Controllers
                     modells.AddressData = new List<AddressData>();
                     modells.InsuredData = new InsuredDetails();
                     modells.Insureds = new List<InsuredDetails>();
-
                     StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                     var responses = await hclient.PostAsync("InsuredDetails", content);
                     var result = await responses.Content.ReadAsStringAsync();
                     if (result != null)
                     {
-                        //if(result.Status=="Failure")
                         modells = JsonConvert.DeserializeObject<GetInsuredDetailsRef>(result);
                         if (modells.Status != "Failure")
                         {
@@ -2311,6 +2539,8 @@ namespace InsureThatAPI.Controllers
                 {
                     var db = new MasterDataEntities();
                     ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+                    Identifiers idntfrs = new Identifiers();
+                    unitdetails.IdentifierUpdates = new List<Identifiers>();
                     HttpClient hclient = new HttpClient();
                     int? insuredId = 0;
                     if (Session["InsuredId"] != null)
@@ -2330,6 +2560,41 @@ namespace InsureThatAPI.Controllers
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (Session["Policyinclustions"] != null)
+                        {
+                            var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+                            if (Policyincllist != null)
+                            {
+                                if (unitdetails.IdentifierUpdates != null && unitdetails.IdentifierUpdates.Count() > 0)
+                                {
+                                    int? ProfileId = 0;
+                                    for (int i = 0; i < unitdetails.IdentifierUpdates.Count(); i++)
+                                    {
+                                        if (unitdetails.IdentifierUpdates[i].Name == "UnId")
+                                        {
+                                            for (int j = 0; j < Policyincllist.Count; j++)
+                                            {
+                                                if(Policyincllist[j].ProfileId== unitdetails.IdentifierUpdates[i].OldId)
+                                                {
+                                                   ProfileId = unitdetails.IdentifierUpdates[i].NewId;
+                                                    Policyincllist[j].ProfileId = ProfileId;
+                                                }
+                                                 if (Policyincllist[j].UnitId == unitdetails.IdentifierUpdates[i].OldId)
+                                                {
+                                                    Policyincllist[j].UnitId = unitdetails.IdentifierUpdates[i].NewId;
+                                                    
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                Session["Policyinclustions"] = Policyincllist;
+                            }
+                        }
+                        if (unitdetails.Status == "Failure")
+                        {
+                            return Json(new { status = false, result = "Failed to save, please try later." });
+                        }
                         return Json(new { status = true, result = "Saved successfully." });
                     }
                     else
@@ -2422,6 +2687,7 @@ namespace InsureThatAPI.Controllers
             //return Json(new { status = false, result = "Failed to save, please try after some time." });
         }
         #endregion
+
         #region Logout
         [HttpPost]
         public ActionResult Logout()
@@ -2430,6 +2696,7 @@ namespace InsureThatAPI.Controllers
 
         }
         #endregion
+
         #region View Document
         public async System.Threading.Tasks.Task<ActionResult> ViewDocument()
         {
@@ -2456,28 +2723,29 @@ namespace InsureThatAPI.Controllers
             }
             return Json(new { status = false, ErrorMessage = "" });
         }
-        [HttpPost]
+        [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> PrintDocument(int PrintId)
         {
             string apikey = null;
-            if (Request.IsAjaxRequest())
+            //if (Request.IsAjaxRequest())
+            //{
+            if (Session["ApiKey"] != null)
             {
-                if (Session["ApiKey"] != null)
+                HttpClient hclient = new HttpClient();
+                string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                hclient.BaseAddress = new Uri(url);
+                apikey = Session["ApiKey"].ToString();
+                hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                HttpResponseMessage documentslist = await hclient.GetAsync("PrintDetails?ApiKey=" + apikey + "&&PrintId=" + PrintId);
+                var EmpResponse = documentslist.Content.ReadAsStringAsync().Result;
+                if (EmpResponse != null)
                 {
-                    HttpClient hclient = new HttpClient();
-                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
-                    hclient.BaseAddress = new Uri(url);
-                    apikey = Session["ApiKey"].ToString();
-                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    HttpResponseMessage documentslist = await hclient.GetAsync("PrintDetails?ApiKey=" + apikey + "&&PrintId=" + PrintId);
-                    var EmpResponse = documentslist.Content.ReadAsStringAsync().Result;
-                    if (EmpResponse != null)
-                    {
-                        return Json(new { status = true, result = EmpResponse, ErrorMessage = "" });
-                    }
+
+                    return Json(new { status = true, result = EmpResponse, ErrorMessage = "" }, JsonRequestBehavior.AllowGet);
                 }
             }
-            return Json(new { status = false, ErrorMessage = "" });
+            //}
+            return Json(new { status = false, ErrorMessage = "" }, JsonRequestBehavior.AllowGet);
         }
 
         #endregion

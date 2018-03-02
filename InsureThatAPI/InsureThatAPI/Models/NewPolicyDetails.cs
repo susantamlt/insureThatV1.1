@@ -223,6 +223,11 @@ namespace InsureThatAPI.Models
         public int? policyType { get; set; }
         public int FloodArea { get; set; }
         public int? insureId { get; set; }
+        public string Startdate { get; set; }
+        public string Expirydate { get; set; }
+        public string Periodofcover { get; set; }
+        public string Isbuildinglocated { get; set; }
+
     }
     public class HomeProfile
     {
@@ -232,12 +237,14 @@ namespace InsureThatAPI.Models
         public string AddressLine { get; set; }
         public string Suburb { get; set; }
         public string State { get; set; }
-        public int Postcode { get; set; }
+        public string Postcode { get; set; }
 
 
     }
         public class ViewEditPolicyDetails
     {
+
+        public List<AddressData> AddressList { get; set; }
         public string PolicyStatus { get; set; }
         public int? AddressID { get; set; }
         public int CustomerId { get; set; }
@@ -264,7 +271,7 @@ namespace InsureThatAPI.Models
         public float? InvoiceAmount { get; set; }
         public List<string> ReferralFullList { get; set; }
         public string Reason { get; set; }
-        public List<string> IdentifierUpdates { get; set; }
+        public List<Identifiers> IdentifierUpdates { get; set; }
         public List<ValueData> ValueData { get; set; }
         public List<StateData> StateData { get; set; }
         public ElementDetails ElementData { get; set; }
@@ -273,6 +280,12 @@ namespace InsureThatAPI.Models
 
 
 
+    }
+    public class Identifiers
+    {
+        public string Name { get; set; }
+        public int? OldId { get; set; }
+        public int? NewId { get; set; }
     }
     public class AddressData
     {
