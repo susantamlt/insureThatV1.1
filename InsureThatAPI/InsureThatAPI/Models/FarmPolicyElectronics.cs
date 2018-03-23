@@ -25,17 +25,29 @@ namespace InsureThatAPI.Models
         public string PolicyId { get; set; }
         public ElectronicsLocationsCoveredFP ElectronicsLocationsCoveredFPObj { get; set; }
         public TypeOfUnitFP TypeOfUnitFPObj { get; set; }
+        public List<ValueDatas> TypeOfUnitFPList { get; set; }
         public MakeAndModelFP MakeAndModelFPObj { get; set; }
+        public List<ValueDatas> MakeAndModelFPList { get; set; }
         public SerialNumberFP SerialNumberFPObj { get; set; }
+        public List<ValueDatas> SerialNumberFPList { get; set; }
         public NoOfUnitsFP NoOfUnitsFPObj { get; set; }
+        public List<ValueDatas> NoOfUnitsFPList { get; set; }
         public OptPortableItemsFP OptPortableItemsFPObj { get; set; }
+        public List<ValueDatas> OptPortableItemsFPList { get; set; }
         public SumInsuredPerUnitFP SumInsuredPerUnitFPObj { get; set; }
+        public List<ValueDatas> SumInsuredPerUnitFPList { get; set; }
         public TotalSumInsuredFP TotalSumInsuredFPObj { get; set; }
+        public List<ValueDatas> TotalSumInsuredFPList { get; set; }
         public ExcessElectronicsFP ExcessElectronicsFPObj { get; set; }
         public CoverLossOfDataFP CoverLossOfDataFPObj { get; set; }
         public ExcessCoverLossOfDataFP ExcessCoverLossOfDataFPObj { get; set; }
+        public AddressEAddress AddressObj { get; set; }
     }
-
+    public class AddressEAddress
+    {
+        public string Address { get; set; }
+        public int EiId { get; set; }
+    }
     public class ElectronicsLocationsCoveredFP
     {
         public string LocationsCovered { get; set; }
@@ -69,7 +81,7 @@ namespace InsureThatAPI.Models
 
     public class OptPortableItemsFP
     {
-        public string PortableItemsOption { get; set; }
+        public bool PortableItemsOption { get; set; }
         public int EiId { get; set; }
     }
 

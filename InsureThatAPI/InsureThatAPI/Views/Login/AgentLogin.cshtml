@@ -13,11 +13,9 @@
     <link rel="stylesheet" href="~/css/layout.css" type="text/css" />
     <link rel="stylesheet" href="~/css/content.css" type="text/css" />
     <link rel="stylesheet" href="~/css/form.css" type="text/css">
-
     <link rel="stylesheet" href="~/css/font-icons.css" type="text/css" />
     <link rel="stylesheet" href="~/css/animate.css" type="text/css" />
     <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css" />
-
     <link rel="stylesheet" href="~/css/responsive.css" type="text/css" />
     <link rel="stylesheet" href="~/css/insuredthatsolution.css" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -221,7 +219,26 @@
             });
         });
     </script>
-    <script src="~/js/jquery.validate.unobtrusive.js"></script>
+    <script type="text/javascript" src="~/js/jquery.backDetect.js"></script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $('body').backDetect(function () {
+                //if (confirm('Look forward to the future, not the past!')) {
+                history.pushState(null, null, null);
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/Logout",
+                    data: {},
+                    success: function (responce) {
+                        window.location.href = responce;
+                    }
+                });
+                //} else {
+                //    history.pushState(null, null, null);
+                //}
+            });
+        });
+    </script>
     <script type="text/javascript">
         function adtxsuccess() {
             $("#errormessages").delay(100000).fadeOut();

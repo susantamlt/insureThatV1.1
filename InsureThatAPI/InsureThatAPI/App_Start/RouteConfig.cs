@@ -16,7 +16,7 @@ namespace InsureThatAPI
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Login", action = "AgentLogin", id = UrlParameter.Optional }
+                defaults: new { controller = "Home", action = "Index1", id = UrlParameter.Optional }
             );
         }
     }

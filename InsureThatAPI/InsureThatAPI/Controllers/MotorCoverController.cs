@@ -9,6 +9,11 @@ using System.Net.Http.Headers;
 using InsureThatAPI.CommonMethods;
 using Newtonsoft.Json;
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Text;
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Web.Helpers;
+using System.Web.Script.Serialization;
 
 namespace InsureThatAPI.Controllers
 {
@@ -77,23 +82,25 @@ namespace InsureThatAPI.Controllers
             descriptionList = MCVehicleDescriptionmodel.MCCDDescription();
 
             List<SelectListItem> BasicExcessList = new List<SelectListItem>();
-            BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+
             BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
             BasicExcessList.Add(new SelectListItem { Value = "60955", Text = "Under 25 Excess" });
             string policyid = null;
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
             if (PcId != null && PcId.HasValue && PcId > 0)
             {
                 policyid = PcId.ToString();
                 MCVehicleDescription.PolicyId = policyid;
             }
-
             else if (Session["Policyinclustions"] != null)
             {
                 #region Policy Selected or not testing
                 List<SessionModel> PolicyInclustions = new List<SessionModel>();
 
                 MCVehicleDescription.PolicyInclusions = Policyincllist;
+                MCVehicleDescription.NewSections = new List<string>();
+                MCVehicleDescription.NewSections = cmn.NewSectionHome(MCVehicleDescription.PolicyInclusions);
                 if (Policyincllist != null)
                 {
                     if (Policyincllist.Exists(p => p.name == "Motor"))
@@ -101,11 +108,20 @@ namespace InsureThatAPI.Controllers
                     }
                     else
                     {
-                        if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
+                        if (Policyincllist.Exists(p => p.name == "Boat"))
+                        {
+                            return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
+                        }
+                        if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                         {
                             return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = PcId });
                         }
-                        if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors"))
+                        if (Policyincllist.Exists(p => p.name == "Travel"))
+                        {
+                            return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
+                        }
+
+                        if (Policyincllist.Exists(p => p.name == "Motor" || p.name == "Motors"))
                         {
                             if (Session["unId"] == null && Session["profileId"] == null)
                             {
@@ -164,24 +180,31 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.VmodifiedObj.EiId = 60805;
             MCVehicleDescription.DmodifiedObj = new MCADdescribeModified();
             MCVehicleDescription.DmodifiedObj.EiId = 60807;
-            MCVehicleDescription.SFinstalledObj = new MCADSecurityFeaturesInstalled();
-            MCVehicleDescription.SFinstalledObj.EiId = 60809;
+            MCVehicleDescription.AlarmObj = new AlarmInstalled();
+            MCVehicleDescription.AlarmObj.EiId = 60809;
+            MCVehicleDescription.EngineImmobiliserObj = new EngineImmobiliserInstalled();
+            MCVehicleDescription.EngineImmobiliserObj.EiId = 60811;
+            MCVehicleDescription.PrivateUseObj = new PrivateUse();
+            MCVehicleDescription.PrivateUseObj.EiId = 60821;
+            MCVehicleDescription.FarmUseObj = new FarmUse();
+            MCVehicleDescription.FarmUseObj.EiId = 60823;
+            MCVehicleDescription.BusinessUseObj = new BusinessUse();
+            MCVehicleDescription.BusinessUseObj.EiId = 60825;
             MCVehicleDescription.VusedObj = new MCADVehicleUsed();
             MCVehicleDescription.VusedObj.EiId = 60821;
             MCVehicleDescription.CcapacityObj = new MCADCarryingCapacity();
             MCVehicleDescription.CcapacityObj.EiId = 60811;
             #endregion
             #region Driver
-            MCVehicleDescription.DrivernameObj = new DriverName();
-            MCVehicleDescription.DrivernameObj.EiId = 60843;
+            DriverList drlist = new DriverList();
+            Driver dr = new Driver();
             MCVehicleDescription.DriverageObj = new DriverAge();
-            MCVehicleDescription.DriverageObj.EiId = 60843;
+
             MCVehicleDescription.DrivergenderObj = new DriverGender();
             MCVehicleDescription.DrivergenderObj.GenderList = DriversGendarList;
-            MCVehicleDescription.DrivergenderObj.EiId = 60843;
-            MCVehicleDescription.DriveramicObj = new DriverAmic();
-            MCVehicleDescription.DriveramicObj.EiId = 60843;
+            MCVehicleDescription.DriverDatas = new DriverList();
             MCVehicleDescription.UsevehicleObj = new UseOfVehicle();
+            MCVehicleDescription.DriverDatas.DriverData = new List<Driver>();
             MCVehicleDescription.UsevehicleObj.EiId = 60845;
             #endregion
             #region Cover Details
@@ -212,12 +235,17 @@ namespace InsureThatAPI.Controllers
             #region Optional Extra Excess
             MCVehicleDescription.CaroptionObj = new HireCarOption();
             MCVehicleDescription.CaroptionObj.EiId = 60947;
+            MCVehicleDescription.NoClaimBonusOptionObj = new HireCarOption();
+            MCVehicleDescription.NoClaimBonusOptionObj.EiId = 60945;
+            MCVehicleDescription.WindscreenObj = new HireCarOption();
+            MCVehicleDescription.WindscreenObj.EiId = 60943;
             MCVehicleDescription.ExcessObj = new BasicExcess();
             MCVehicleDescription.ExcessObj.EiId = 60951;
             MCVehicleDescription.Excess21UnderObj = new Excess21UnderPEE();
             MCVehicleDescription.Excess21UnderObj.EiId = 60953;
             MCVehicleDescription.Excess25UnderObj = new Excess25UnderPEE();
             MCVehicleDescription.Excess25UnderObj.EiId = 60955;
+
             #endregion
             #region Interested Parties
             MCVehicleDescription.MCPartynameObj = new MCInterestedPartyName();
@@ -232,9 +260,13 @@ namespace InsureThatAPI.Controllers
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
             int profileid = 0;
-            if (Session["unId"] != null && Session["profileId"] != null)
+            if (Session["unId"] != null)
             {
                 unid = Convert.ToInt32(Session["unId"]);
+                profileid = Convert.ToInt32(Session["profileId"]);
+            }
+            if (Session["profileId"] != null)
+            {
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
             if (policyinclusion == true && PcId != null && PcId.HasValue)
@@ -251,9 +283,9 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                if (PcId == null && Session["unId"] == null && (Session["profileId"] == null && profileid==0))
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Motor&SectionUnId=&ProfileUnId=");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Motor&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -286,10 +318,10 @@ namespace InsureThatAPI.Controllers
                                 Policyincllist.FindAll(p => p.name == "Motor").First().UnitId = unitdetails.SectionData.UnId;
                                 Policyincllist.FindAll(p => p.name == "Motor").First().ProfileId = unitdetails.SectionData.ProfileUnId;
                             }
-                            MCVehicleDescription.PolicyInclusions = Policyincllist;
-                            Session["Policyinclustions"] = Policyincllist;
-
                         }
+                        Session["MprofileId"] = unitdetails.SectionData.UnId;
+                        MCVehicleDescription.PolicyInclusions = Policyincllist;
+                        Session["Policyinclustions"] = Policyincllist;
                         if (unitdetails != null && unitdetails.SectionData != null)
                         {
                             Session["unId"] = unitdetails.SectionData.UnId;
@@ -307,6 +339,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            
             if (unitdetails != null)
             {
                 if (unitdetails.SectionData != null && unitdetails.SectionData.RowsourceData != null)
@@ -322,7 +355,7 @@ namespace InsureThatAPI.Controllers
                     {
                         MCVehicleDescription.AdaddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + ", " + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
                     }
-                    else if(unitdetails.AddressData!=null && unitdetails.AddressData.Count()>0)
+                    else if (unitdetails.AddressData != null && unitdetails.AddressData.Count() > 0)
                     {
                         MCVehicleDescription.AdaddressObj.Address = unitdetails.AddressData[0].AddressLine1 + ", " + unitdetails.AddressData[0].Suburb + ", " + unitdetails.AddressData[0].State + ", " + unitdetails.AddressData[0].Postcode;
 
@@ -345,7 +378,38 @@ namespace InsureThatAPI.Controllers
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.CaroptionObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.CaroptionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.CaroptionObj.Caroption = val;
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.CaroptionObj.Caroption = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.CaroptionObj.Caroption = false;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.WindscreenObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.WindscreenObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.WindscreenObj.Caroption = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.WindscreenObj.Caroption = false;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.NoClaimBonusOptionObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.NoClaimBonusOptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.NoClaimBonusOptionObj.Caroption = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.NoClaimBonusOptionObj.Caroption = false;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.CcapacityObj.EiId))
                     {
@@ -454,20 +518,29 @@ namespace InsureThatAPI.Controllers
                             MCVehicleDescription.SumnsuredObjList = elmnts;
                         }
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId))
+                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId))
+                    //{
+                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    //    MCVehicleDescription.DmodifiedObj.Dmodified = val;
+                    //}
+                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId))
+                    //{
+                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    //    MCVehicleDescription.DriverageObj.Age = val;
+                    //}
+                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId))
+                    //{
+                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    //    MCVehicleDescription.DrivernameObj.Name = val;
+                    //}
+                    if (unitdetails.SectionData.ValueData != null)
                     {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.DmodifiedObj.Dmodified = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.DriverageObj.Age = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.DrivernameObj.Name = val;
+                        HttpResponseMessage getunit = await hclient.GetAsync("DriverDetails?ApiKey=" + apikey);
+                        var EmpResponses = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponses != null)
+                        {
+                            MCVehicleDescription.DriverDatas = JsonConvert.DeserializeObject<DriverList>(EmpResponses);
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.EnumberObj.EiId))
                     {
@@ -572,19 +645,6 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.RnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
                         MCVehicleDescription.RnumberObj.Rnumber = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.SFinstalledObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.SFinstalledObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        if (val == "1")
-                        {
-                            MCVehicleDescription.SFinstalledObj.Installed = true;
-                        }
-                        else if (val == "0")
-                        {
-                            MCVehicleDescription.SFinstalledObj.Installed = false;
-
-                        }
-                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.UnspecifieditemsObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.UnspecifieditemsObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -610,22 +670,70 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.VregisterObj.EiId).Select(p => p.Value).FirstOrDefault();
                         MCVehicleDescription.VregisterObj.Register = val;
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.VusedObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.AlarmObj.EiId))
                     {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.VusedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.AlarmObj.EiId).Select(p => p.Value).FirstOrDefault();
                         if (val == "1")
                         {
-                            MCVehicleDescription.VusedObj.Vused = true;
+                            MCVehicleDescription.AlarmObj.Alarm = true;
                         }
                         else if (val == "0")
                         {
-                            MCVehicleDescription.VusedObj.Vused = false;
+                            MCVehicleDescription.AlarmObj.Alarm = false;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.EngineImmobiliserObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.EngineImmobiliserObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.EngineImmobiliserObj.Engineimmobiliser = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.EngineImmobiliserObj.Engineimmobiliser = false;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.PrivateUseObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.PrivateUseObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.PrivateUseObj.Private = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.PrivateUseObj.Private = false;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.FarmUseObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.FarmUseObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.FarmUseObj.Farm = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.FarmUseObj.Farm = false;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.BusinessUseObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.BusinessUseObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            MCVehicleDescription.BusinessUseObj.Business = true;
+                        }
+                        else if (val == "0")
+                        {
+                            MCVehicleDescription.BusinessUseObj.Business = false;
                         }
                     }
                 }
             }
             #endregion
-            if (unitdetails!=null && unitdetails.ReferralList != null)
+            if (unitdetails != null && unitdetails.ReferralList != null)
             {
                 MCVehicleDescription.ReferralList = unitdetails.ReferralList;
                 MCVehicleDescription.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -642,14 +750,24 @@ namespace InsureThatAPI.Controllers
                 }
 
             }
-            if(cid!=null && cid.HasValue)
+            if (cid != null && cid.HasValue)
             {
                 MCVehicleDescription.CustomerId = cid.Value;
 
             }
-            if(PcId!=null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
                 MCVehicleDescription.PcId = PcId;
+            }
+            if (MCVehicleDescription.DriverDatas.DriverData != null && MCVehicleDescription.DriverDatas.DriverData.Count() == 0)
+            {
+                dr.Name = "";
+                dr.AccidentsAndConvictions = "";
+                dr.Dob = "";
+                dr.DriverNumber = "";
+                dr.Gender = "1";
+                dr.YearLicensed = 0;
+                MCVehicleDescription.DriverDatas.DriverData.Add(dr);
             }
             return View(MCVehicleDescription);
         }
@@ -676,763 +794,79 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.McmakeObj.MakeList = VehicleMakeList;
             MCVehicleDescription.FmmctypeObj.FmFamilyList = FamilyLists;
             string policyid = null;
-            var db = new MasterDataEntities();      
-       
-                Session["unId"] = null;
-                Session["profileId"] = null;
-                string actionname = null;
-                string controllername = null;
+            var db = new MasterDataEntities();
+
+            Session["unId"] = null;
+            Session["profileId"] = null;
+            string actionname = null;
+            string controllername = null;
             if (Session["Actname"] != null)
             {
                 actionname = Session["Actname"].ToString();
             }
             if (Session["controller"] != null)
-                {
-                    controllername = Session["controller"].ToString();
-                }
-                //if (actionname != null && controllername != null)
-                //{
-                //    return RedirectToAction(actionname, controllername, new { cid = MCVehicleDescription.CustomerId, PcId = MCVehicleDescription.PcId });
-                //}
-                return RedirectToAction("BoatDetails", "Boat", new { cid = MCVehicleDescription.CustomerId });
-            
-            return RedirectToAction("BoatDetails", "Boat", new { cid = MCVehicleDescription.CustomerId });
+            {
+                controllername = Session["controller"].ToString();
+            }
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = MCVehicleDescription.CustomerId, PcId = MCVehicleDescription.PcId });
+            //}
+            return RedirectToAction("BoatDetails", "Boat", new { cid = MCVehicleDescription.CustomerId, PcId = MCVehicleDescription.PcId });
         }
-        //[HttpGet]
-        //public ActionResult AdditionalDetails(int? cid)
-        //{
-        //    NewPolicyDetailsClass MCAdditionalDetailsmodel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> AddressList = new List<SelectListItem>();
-        //    AddressList = MCAdditionalDetailsmodel.MCADAddress();
-        //    List<SelectListItem> VNList = new List<SelectListItem>();
-        //    VNList = MCAdditionalDetailsmodel.MCADVinNumber();
-        //    List<SelectListItem> ENList = new List<SelectListItem>();
-        //    ENList = MCAdditionalDetailsmodel.MCADEngineNumber();
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> Drivers(string dataToSend)
+        {
+            DriverList drs = new DriverList();
+            List<Driver> newdriver = new List<Driver>();
+            drs.DriverData = new List<Driver>();
+            var users = new JavaScriptSerializer().Deserialize<List<Driver>>(dataToSend);
+            if(users!=null && users.Count()>0)
+            {
+                for (int i = 0; i < users.Count(); i++)
+                {
+                    Driver dr = new Driver();
 
-        //    MCAdditionalDetails MCAdditionalDetails = new MCAdditionalDetails();
-        //    MCAdditionalDetails.KeptnightObj = new MCADKeptAtNight();
-        //    MCAdditionalDetails.KeptnightObj.EiId = 60793;
-        //    MCAdditionalDetails.AdaddressObj = new MCADAddress();
-        //    MCAdditionalDetails.AdaddressObj.AddressList = AddressList;
-        //    MCAdditionalDetails.AdaddressObj.EiId = 0;
-        //    MCAdditionalDetails.VregisterObj = new MCADVehicleRegistered();
-        //    MCAdditionalDetails.VregisterObj.EiId = 60797;
-        //    MCAdditionalDetails.RnumberObj = new MCADRegistrationNumber();
-        //    MCAdditionalDetails.RnumberObj.EiId = 60799;
-        //    MCAdditionalDetails.VnumberObj = new MCADVinNumber();
-        //    MCAdditionalDetails.VnumberObj.VnumberList = VNList;
-        //    MCAdditionalDetails.VnumberObj.EiId = 60801;
-        //    MCAdditionalDetails.EnumberObj = new MCADEngineNumber();
-        //    MCAdditionalDetails.EnumberObj.EnumberList = ENList;
-        //    MCAdditionalDetails.EnumberObj.EiId = 60803;
-        //    MCAdditionalDetails.VmodifiedObj = new MCADVehicleModified();
-        //    MCAdditionalDetails.VmodifiedObj.EiId = 60805;
-        //    MCAdditionalDetails.DmodifiedObj = new MCADdescribeModified();
-        //    MCAdditionalDetails.DmodifiedObj.EiId = 60807;
-        //    MCAdditionalDetails.SFinstalledObj = new MCADSecurityFeaturesInstalled();
-        //    MCAdditionalDetails.SFinstalledObj.EiId = 60809;
-        //    MCAdditionalDetails.VusedObj = new MCADVehicleUsed();
-        //    MCAdditionalDetails.VusedObj.EiId = 60821;
-        //    MCAdditionalDetails.CcapacityObj = new MCADCarryingCapacity();
-        //    MCAdditionalDetails.CcapacityObj.EiId = 60811;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCAdditionalDetails.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCAdditionalDetails.CustomerId;
-        //    }
-        //    if (Session["completionTrackMC"] != null)
-        //    {
-        //        Session["completionTrackMC"] = Session["completionTrackMC"];
-        //        MCAdditionalDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["completionTrackMC"] = "0-0-0-0-0-0"; ;
-        //        MCAdditionalDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-        //        {
-        //            MCAdditionalDetails.KeptnightObj.Keptnight = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId).FirstOrDefault();
-        //            MCAdditionalDetails.KeptnightObj.Keptnight = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VregisterObj.EiId))
-        //        {
-        //            MCAdditionalDetails.VregisterObj.Register = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.VregisterObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.RnumberObj.EiId))
-        //        {
-        //            MCAdditionalDetails.RnumberObj.Rnumber = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.RnumberObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.KeptnightObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.VnumberObj.EiId).FirstOrDefault();
-        //            MCAdditionalDetails.VnumberObj.Vnumber = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.EnumberObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == MCAdditionalDetails.EnumberObj.EiId).FirstOrDefault();
-        //            MCAdditionalDetails.EnumberObj.Enumber = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VmodifiedObj.EiId))
-        //        {
-        //            MCAdditionalDetails.VmodifiedObj.Vmodified = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.VmodifiedObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.DmodifiedObj.EiId))
-        //        {
-        //            MCAdditionalDetails.DmodifiedObj.Dmodified = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.DmodifiedObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.SFinstalledObj.EiId))
-        //        {
-        //            MCAdditionalDetails.SFinstalledObj.Installed = Convert.ToBoolean(details.Where(q => q.QuestionId == MCAdditionalDetails.SFinstalledObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.VusedObj.EiId))
-        //        {
-        //            MCAdditionalDetails.VusedObj.Vused = Convert.ToBoolean(details.Where(q => q.QuestionId == MCAdditionalDetails.VusedObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCAdditionalDetails.CcapacityObj.EiId))
-        //        {
-        //            MCAdditionalDetails.CcapacityObj.Ccapacity = Convert.ToString(details.Where(q => q.QuestionId == MCAdditionalDetails.CcapacityObj.EiId).FirstOrDefault().Answer);
-        //        }
-        //    }
-        //    return View(MCAdditionalDetails);
-        //}
-        //[HttpPost]
-        //public ActionResult AdditionalDetails(int? cid, MCAdditionalDetails MCAdditionalDetails)
-        //{
-        //    NewPolicyDetailsClass MCAdditionalDetailsmodel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> AddressList = new List<SelectListItem>();
-        //    AddressList = MCAdditionalDetailsmodel.MCADAddress();
-        //    List<SelectListItem> VNList = new List<SelectListItem>();
-        //    VNList = MCAdditionalDetailsmodel.MCADVinNumber();
-        //    List<SelectListItem> ENList = new List<SelectListItem>();
-        //    ENList = MCAdditionalDetailsmodel.MCADEngineNumber();
+                    dr.AccidentsAndConvictions = users[i].AccidentsAndConvictions;
+                    dr.Name = users[i].Name;
+                    dr.Dob = users[i].Dob;
+                    if (users[i].Gender == "1")
+                    {
+                        dr.Gender = "M";
+                    }
+                    else
+                    {
+                        dr.Gender = "F";
+                    }
+                    dr.DriverNumber = "0";
+                    dr.YearLicensed = users[i].YearLicensed;
+                    newdriver.Add(dr);
+                }
+            }
+            drs.DriverData = newdriver;
 
-        //    MCAdditionalDetails.AdaddressObj.AddressList = AddressList;
-        //    MCAdditionalDetails.VnumberObj.VnumberList = VNList;
-        //    MCAdditionalDetails.EnumberObj.EnumberList = ENList;
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            if (Request.IsAjaxRequest())
+            {
+                if (Session["ApiKey"] != null)
+                {
+                    string ApiKey = Session["apiKey"].ToString();
+                    drs.ApiKey = ApiKey;
+                }
+                else
+                {
+                    return Json(new { Status = false, data = "login" });
+                    return RedirectToAction("AgentLogin", "Login");
+                }
+                StringContent content = new StringContent(JsonConvert.SerializeObject(drs), Encoding.UTF8, "application/json");
+                var responses = await hclient.PostAsync("" + "DriverDetails?", content);
+            }
+            return Json(new { Status = true });
+        }
 
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCAdditionalDetails.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCAdditionalDetails.CustomerId;
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (MCAdditionalDetails.KeptnightObj != null && MCAdditionalDetails.KeptnightObj.EiId > 0 && MCAdditionalDetails.KeptnightObj.Keptnight != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.KeptnightObj.EiId, MCAdditionalDetails.KeptnightObj.Keptnight.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.AdaddressObj != null && MCAdditionalDetails.AdaddressObj.EiId > 0 && MCAdditionalDetails.AdaddressObj.Address != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.AdaddressObj.EiId, MCAdditionalDetails.AdaddressObj.Address.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.VregisterObj != null && MCAdditionalDetails.VregisterObj.EiId > 0 && MCAdditionalDetails.VregisterObj.Register != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VregisterObj.EiId, MCAdditionalDetails.VregisterObj.Register.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.RnumberObj != null && MCAdditionalDetails.RnumberObj.EiId > 0 && MCAdditionalDetails.RnumberObj.Rnumber != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.RnumberObj.EiId, MCAdditionalDetails.RnumberObj.Rnumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.VnumberObj != null && MCAdditionalDetails.VnumberObj.EiId > 0 && MCAdditionalDetails.VnumberObj.Vnumber != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VnumberObj.EiId, MCAdditionalDetails.VnumberObj.Vnumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.EnumberObj != null && MCAdditionalDetails.EnumberObj.EiId > 0 && MCAdditionalDetails.EnumberObj.Enumber != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.EnumberObj.EiId, MCAdditionalDetails.EnumberObj.Enumber.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.VmodifiedObj != null && MCAdditionalDetails.VmodifiedObj.EiId > 0 && MCAdditionalDetails.VmodifiedObj.Vmodified != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VmodifiedObj.EiId, MCAdditionalDetails.VmodifiedObj.Vmodified.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.DmodifiedObj != null && MCAdditionalDetails.DmodifiedObj.EiId > 0 && MCAdditionalDetails.DmodifiedObj.Dmodified != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.DmodifiedObj.EiId, MCAdditionalDetails.DmodifiedObj.Dmodified.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.SFinstalledObj != null && MCAdditionalDetails.SFinstalledObj.EiId > 0 && MCAdditionalDetails.SFinstalledObj.Installed != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.SFinstalledObj.EiId, MCAdditionalDetails.SFinstalledObj.Installed.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.VusedObj != null && MCAdditionalDetails.VusedObj.EiId > 0 && MCAdditionalDetails.VusedObj.Vused != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.VusedObj.EiId, MCAdditionalDetails.VusedObj.Vused.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCAdditionalDetails.CcapacityObj != null && MCAdditionalDetails.CcapacityObj.EiId > 0 && MCAdditionalDetails.CcapacityObj.Ccapacity != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCAdditionalDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCAdditionalDetails.CcapacityObj.EiId, MCAdditionalDetails.CcapacityObj.Ccapacity.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["completionTrackMC"] != null)
-        //        {
-        //            Session["completionTrackMC"] = Session["completionTrackMC"];
-        //            MCAdditionalDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //            if (MCAdditionalDetails.completionTrackMC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = MCAdditionalDetails.completionTrackMC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 2)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["completionTrackMC"] = Completionstring;
-        //                MCAdditionalDetails.completionTrackMC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["completionTrackMC"] = "0-1-0-0-0-0"; ;
-        //            MCAdditionalDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //        }
-        //        return RedirectToAction("Drivers", new { cid = MCAdditionalDetails.CustomerId });
-        //    }
-        //    return View(MCAdditionalDetails);
-        //}
-        //[HttpGet]
-        //public ActionResult Drivers(int? cid)
-        //{
-        //    List<SelectListItem> DriversGendarList = new List<SelectListItem>();
-        //    DriversGendarList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-        //    DriversGendarList.Add(new SelectListItem { Value = "1", Text = "Male" });
-        //    DriversGendarList.Add(new SelectListItem { Value = "2", Text = "Female" });
-        //    MCDrivers MCDrivers = new MCDrivers();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCDrivers.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCDrivers.CustomerId;
-        //    }
-        //    MCDrivers.DrivernameObj = new DriverName();
-        //    MCDrivers.DrivernameObj.EiId = 60843;
-        //    MCDrivers.DriverageObj = new DriverAge();
-        //    MCDrivers.DriverageObj.EiId = 60843;
-        //    MCDrivers.DrivergenderObj = new DriverGender();
-        //    MCDrivers.DrivergenderObj.GenderList = DriversGendarList;
-        //    MCDrivers.DrivergenderObj.EiId = 60843;
-        //    MCDrivers.DriveramicObj = new DriverAmic();
-        //    MCDrivers.DriveramicObj.EiId = 60843;
-        //    MCDrivers.UsevehicleObj = new UseOfVehicle();
-        //    MCDrivers.UsevehicleObj.EiId = 60845;
-        //    if (Session["completionTrackMC"] != null)
-        //    {
-        //        Session["completionTrackMC"] = Session["completionTrackMC"];
-        //        MCDrivers.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["completionTrackMC"] = "0-0-0-0-0-0"; ;
-        //        MCDrivers.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == MCDrivers.DrivernameObj.EiId))
-        //        {
-        //            MCDrivers.DrivernameObj.Name = details.Where(q => q.QuestionId == MCDrivers.DrivernameObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCDrivers.DriverageObj.EiId))
-        //        {
-        //            MCDrivers.DriverageObj.Age = details.Where(q => q.QuestionId == MCDrivers.DriverageObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCDrivers.DrivergenderObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == MCDrivers.DrivergenderObj.EiId).FirstOrDefault();
-        //            MCDrivers.DrivergenderObj.Gender = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCDrivers.DriveramicObj.EiId))
-        //        {
-        //            MCDrivers.DriveramicObj.Amic = details.Where(q => q.QuestionId == MCDrivers.DriveramicObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCDrivers.UsevehicleObj.EiId))
-        //        {
-        //            MCDrivers.UsevehicleObj.Usevehicle = details.Where(q => q.QuestionId == MCDrivers.UsevehicleObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //    }
-        //    return View(MCDrivers);
-        //}
-        //[HttpPost]
-        //public ActionResult Drivers(int? cid, MCDrivers MCDrivers)
-        //{
-        //    List<SelectListItem> DriversGendarList = new List<SelectListItem>();
-        //    DriversGendarList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-        //    DriversGendarList.Add(new SelectListItem { Value = "1", Text = "Male" });
-        //    DriversGendarList.Add(new SelectListItem { Value = "2", Text = "Female" });
-        //    MCDrivers.DrivergenderObj.GenderList = DriversGendarList;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCDrivers.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCDrivers.CustomerId;
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (MCDrivers.DrivernameObj != null && MCDrivers.DrivernameObj.EiId > 0 && MCDrivers.DrivernameObj.Name != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DrivernameObj.EiId, MCDrivers.DrivernameObj.Name.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCDrivers.DriverageObj != null && MCDrivers.DriverageObj.EiId > 0 && MCDrivers.DriverageObj.Age != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DriverageObj.EiId, MCDrivers.DriverageObj.Age.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCDrivers.DrivergenderObj != null && MCDrivers.DrivergenderObj.EiId > 0 && MCDrivers.DrivergenderObj.Gender != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DrivergenderObj.EiId, MCDrivers.DrivergenderObj.Gender.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCDrivers.DriveramicObj != null && MCDrivers.DriveramicObj.EiId > 0 && MCDrivers.DriveramicObj.Amic != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.DriveramicObj.EiId, MCDrivers.DriveramicObj.Amic.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCDrivers.UsevehicleObj != null && MCDrivers.UsevehicleObj.EiId > 0 && MCDrivers.UsevehicleObj.Usevehicle != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCDrivers.CustomerId, Convert.ToInt32(RLSSection.Motor), MCDrivers.UsevehicleObj.EiId, MCDrivers.UsevehicleObj.Usevehicle.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["completionTrackMC"] != null)
-        //        {
-        //            Session["completionTrackMC"] = Session["completionTrackMC"];
-        //            MCDrivers.completionTrackMC = Session["completionTrackMC"].ToString();
-        //            if (MCDrivers.completionTrackMC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = MCDrivers.completionTrackMC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 4)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["completionTrackMC"] = Completionstring;
-        //                MCDrivers.completionTrackMC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["completionTrackMC"] = "0-0-1-0-0-0"; ;
-        //            MCDrivers.completionTrackMC = Session["completionTrackMC"].ToString();
-        //        }
-        //        return RedirectToAction("CoverDetails", new { cid = MCDrivers.CustomerId });
-        //    }
-        //    return View();
-        //}
-        //[HttpGet]
-        //public ActionResult CoverDetails(int? cid)
-        //{
-        //    NewPolicyDetailsClass CoverDetailsmodel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> descriptionList = new List<SelectListItem>();
-        //    descriptionList = CoverDetailsmodel.MCCDDescription();
-        //    MCCoverDetails MCCoverDetails = new MCCoverDetails();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCCoverDetails.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCCoverDetails.CustomerId;
-        //    }
-        //    MCCoverDetails.CoveroptionObj = new CoverOptionCD();
-        //    MCCoverDetails.CoveroptionObj.EiId = 60859;
-        //    MCCoverDetails.CovertypeObj = new CoverTypeCD();
-        //    MCCoverDetails.CovertypeObj.EiId = 60861;
-        //    MCCoverDetails.MaxMarvalObj = new MaximumMarketValue();
-        //    MCCoverDetails.MaxMarvalObj.EiId = 60865;
-        //    MCCoverDetails.CaravanannexObj = new CaravanAnnex();
-        //    MCCoverDetails.CaravanannexObj.EiId = 60871;
-        //    MCCoverDetails.UnspecifieditemsObj = new UnspecifiedItems();
-        //    MCCoverDetails.UnspecifieditemsObj.EiId = 60873;
-        //    MCCoverDetails.AccessoriesObj = new NonStandardAccessories();
-        //    MCCoverDetails.AccessoriesObj.EiId = 60877;
-        //    MCCoverDetails.DescriptionObj = new AccessoryDescriptionCD();
-        //    MCCoverDetails.DescriptionObj.DescriptionList = descriptionList;
-        //    MCCoverDetails.DescriptionObj.EiId = 60891;
-        //    MCCoverDetails.SumnsuredObj = new SumInsuredCD();
-        //    MCCoverDetails.SumnsuredObj.EiId = 60893;
-        //    MCCoverDetails.LimitindemnityObj = new LimitOfIndemnityDC();
-        //    MCCoverDetails.LimitindemnityObj.EiId = 60905;
-        //    MCCoverDetails.RatingObj = new RatingDC();
-        //    MCCoverDetails.RatingObj.EiId = 60917;
-        //    MCCoverDetails.NoclaimbonusObj = new NoClaimBonus();
-        //    MCCoverDetails.NoclaimbonusObj.EiId = 60919;
-        //    if (Session["completionTrackMC"] != null)
-        //    {
-        //        Session["completionTrackMC"] = Session["completionTrackMC"];
-        //        MCCoverDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["completionTrackMC"] = "0-0-0-0-0-0"; ;
-        //        MCCoverDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == MCCoverDetails.CoveroptionObj.EiId))
-        //        {
-        //            MCCoverDetails.CoveroptionObj.Coveroption = details.Where(q => q.QuestionId == MCCoverDetails.CoveroptionObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCCoverDetails.CovertypeObj.EiId))
-        //        {
-        //            MCCoverDetails.CovertypeObj.Covertype = details.Where(q => q.QuestionId == MCCoverDetails.CovertypeObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCCoverDetails.MaxMarvalObj.EiId))
-        //        {
-        //            MCCoverDetails.MaxMarvalObj.Marketvalue = details.Where(q => q.QuestionId == MCCoverDetails.MaxMarvalObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCCoverDetails.CaravanannexObj.EiId))
-        //        {
-        //            MCCoverDetails.CaravanannexObj.Annex = details.Where(q => q.QuestionId == MCCoverDetails.CaravanannexObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCCoverDetails.DescriptionObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == MCCoverDetails.DescriptionObj.EiId).FirstOrDefault();
-        //            MCCoverDetails.DescriptionObj.Description = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-
-        //    }
-        //    return View(MCCoverDetails);
-        //}
-        //[HttpPost]
-        //public ActionResult CoverDetails(int? cid, MCCoverDetails MCCoverDetails)
-        //{
-        //    NewPolicyDetailsClass CoverDetailsmodel = new NewPolicyDetailsClass();
-        //    List<SelectListItem> descriptionList = new List<SelectListItem>();
-        //    descriptionList = CoverDetailsmodel.MCCDDescription();
-        //    MCCoverDetails.DescriptionObj.DescriptionList = descriptionList;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCCoverDetails.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCCoverDetails.CustomerId;
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (MCCoverDetails.CoveroptionObj != null && MCCoverDetails.CoveroptionObj.EiId > 0 && MCCoverDetails.CoveroptionObj.Coveroption != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.CoveroptionObj.EiId, MCCoverDetails.CoveroptionObj.Coveroption.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.CovertypeObj != null && MCCoverDetails.CovertypeObj.EiId > 0 && MCCoverDetails.CovertypeObj.Covertype != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.CovertypeObj.EiId, MCCoverDetails.CovertypeObj.Covertype.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.MaxMarvalObj != null && MCCoverDetails.MaxMarvalObj.EiId > 0 && MCCoverDetails.MaxMarvalObj.Marketvalue != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.MaxMarvalObj.EiId, MCCoverDetails.MaxMarvalObj.Marketvalue.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.CaravanannexObj != null && MCCoverDetails.CaravanannexObj.EiId > 0 && MCCoverDetails.CaravanannexObj.Annex != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.CaravanannexObj.EiId, MCCoverDetails.CaravanannexObj.Annex.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.UnspecifieditemsObj != null && MCCoverDetails.UnspecifieditemsObj.EiId > 0 && MCCoverDetails.UnspecifieditemsObj.Item != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.UnspecifieditemsObj.EiId, MCCoverDetails.UnspecifieditemsObj.Item.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.AccessoriesObj != null && MCCoverDetails.AccessoriesObj.EiId > 0 && MCCoverDetails.AccessoriesObj.Accessories != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.AccessoriesObj.EiId, MCCoverDetails.AccessoriesObj.Accessories.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.DescriptionObj != null && MCCoverDetails.DescriptionObj.EiId > 0 && MCCoverDetails.DescriptionObj.Description != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.DescriptionObj.EiId, MCCoverDetails.DescriptionObj.Description.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.SumnsuredObj != null && MCCoverDetails.SumnsuredObj.EiId > 0 && MCCoverDetails.SumnsuredObj.Suminsured != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.SumnsuredObj.EiId, MCCoverDetails.SumnsuredObj.Suminsured.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.LimitindemnityObj != null && MCCoverDetails.LimitindemnityObj.EiId > 0 && MCCoverDetails.LimitindemnityObj.Indemnity != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.LimitindemnityObj.EiId, MCCoverDetails.LimitindemnityObj.Indemnity.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.RatingObj != null && MCCoverDetails.RatingObj.EiId > 0 && MCCoverDetails.RatingObj.Rating != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.RatingObj.EiId, MCCoverDetails.RatingObj.Rating.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCCoverDetails.NoclaimbonusObj != null && MCCoverDetails.NoclaimbonusObj.EiId > 0 && MCCoverDetails.NoclaimbonusObj.Bonus != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCCoverDetails.CustomerId, Convert.ToInt32(RLSSection.Motor), MCCoverDetails.NoclaimbonusObj.EiId, MCCoverDetails.NoclaimbonusObj.Bonus.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["completionTrackMC"] != null)
-        //        {
-        //            Session["completionTrackMC"] = Session["completionTrackMC"];
-        //            MCCoverDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //            if (MCCoverDetails.completionTrackMC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = MCCoverDetails.completionTrackMC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 6)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["completionTrackMC"] = Completionstring;
-        //                MCCoverDetails.completionTrackMC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["completionTrackMC"] = "0-0-0-1-0-0"; ;
-        //            MCCoverDetails.completionTrackMC = Session["completionTrackMC"].ToString();
-        //        }
-        //        return RedirectToAction("OptionalExtrasExcesses", new { cid = MCCoverDetails.CustomerId });
-        //    }
-        //    return View(MCCoverDetails);
-        //}
-        //[HttpGet]
-        //public ActionResult OptionalExtrasExcesses(int? cid)
-        //{
-        //    List<SelectListItem> BasicExcessList = new List<SelectListItem>();
-        //    BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-        //    BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
-        //    BasicExcessList.Add(new SelectListItem { Value = "60955", Text = "Under 25 Excess" });
-        //    MCOptionalExtrasExcesses MCOptionalExtrasExcesses = new MCOptionalExtrasExcesses();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCOptionalExtrasExcesses.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCOptionalExtrasExcesses.CustomerId;
-        //    }
-        //    MCOptionalExtrasExcesses.CaroptionObj = new HireCarOption();
-        //    MCOptionalExtrasExcesses.CaroptionObj.EiId = 60947;
-        //    MCOptionalExtrasExcesses.ExcessObj = new BasicExcess();
-        //    MCOptionalExtrasExcesses.ExcessObj.ExcessList = BasicExcessList;
-        //    MCOptionalExtrasExcesses.ExcessObj.EiId = 60951;
-        //    if (Session["completionTrackMC"] != null)
-        //    {
-        //        Session["completionTrackMC"] = Session["completionTrackMC"];
-        //        MCOptionalExtrasExcesses.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["completionTrackMC"] = "0-0-0-0-0-0"; ;
-        //        MCOptionalExtrasExcesses.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == MCOptionalExtrasExcesses.CaroptionObj.EiId))
-        //        {
-        //            MCOptionalExtrasExcesses.CaroptionObj.Caroption = details.Where(q => q.QuestionId == MCOptionalExtrasExcesses.CaroptionObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCOptionalExtrasExcesses.ExcessObj.EiId))
-        //        {
-        //            var loc = details.Where(q => q.QuestionId == MCOptionalExtrasExcesses.ExcessObj.EiId).FirstOrDefault();
-        //            MCOptionalExtrasExcesses.ExcessObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-        //        }
-        //    }
-        //    return View(MCOptionalExtrasExcesses);
-        //}
-        //[HttpPost]
-        //public ActionResult OptionalExtrasExcesses(int? cid, MCOptionalExtrasExcesses MCOptionalExtrasExcesses)
-        //{
-        //    List<SelectListItem> BasicExcessList = new List<SelectListItem>();
-        //    BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-        //    BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
-        //    BasicExcessList.Add(new SelectListItem { Value = "60955", Text = "Under 25 Excess" });
-        //    MCOptionalExtrasExcesses.ExcessObj.ExcessList = BasicExcessList;
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCOptionalExtrasExcesses.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCOptionalExtrasExcesses.CustomerId;
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (MCOptionalExtrasExcesses.CaroptionObj != null && MCOptionalExtrasExcesses.CaroptionObj.EiId > 0 && MCOptionalExtrasExcesses.CaroptionObj.Caroption != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCOptionalExtrasExcesses.CustomerId, Convert.ToInt32(RLSSection.Motor), MCOptionalExtrasExcesses.CaroptionObj.EiId, MCOptionalExtrasExcesses.CaroptionObj.Caroption.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCOptionalExtrasExcesses.ExcessObj != null && MCOptionalExtrasExcesses.ExcessObj.EiId > 0 && MCOptionalExtrasExcesses.ExcessObj.Excess != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCOptionalExtrasExcesses.CustomerId, Convert.ToInt32(RLSSection.Motor), MCOptionalExtrasExcesses.ExcessObj.EiId, MCOptionalExtrasExcesses.ExcessObj.Excess.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["completionTrackMC"] != null)
-        //        {
-        //            Session["completionTrackMC"] = Session["completionTrackMC"];
-        //            MCOptionalExtrasExcesses.completionTrackMC = Session["completionTrackMC"].ToString();
-        //            if (MCOptionalExtrasExcesses.completionTrackMC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = MCOptionalExtrasExcesses.completionTrackMC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 8)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["completionTrackMC"] = Completionstring;
-        //                MCOptionalExtrasExcesses.completionTrackMC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["completionTrackMC"] = "0-0-0-0-1-0"; ;
-        //            MCOptionalExtrasExcesses.completionTrackMC = Session["completionTrackMC"].ToString();
-        //        }
-        //        return RedirectToAction("InterestedParties", new { cid = MCOptionalExtrasExcesses.CustomerId });
-        //    }
-        //    return View(MCOptionalExtrasExcesses);
-        //}
-        //[HttpGet]
-        //public ActionResult InterestedParties(int? cid)
-        //{
-        //    MCInterestedParties MCInterestedParties = new MCInterestedParties();
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCInterestedParties.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCInterestedParties.CustomerId;
-        //    }
-        //    MCInterestedParties.MCPartynameObj = new MCInterestedPartyName();
-        //    MCInterestedParties.MCPartynameObj.EiId = 60967;
-        //    MCInterestedParties.MCPartyLocationObj = new MCInterestedPartyLocation();
-        //    MCInterestedParties.MCPartyLocationObj.EiId = 60969;
-        //    if (Session["completionTrackMC"] != null)
-        //    {
-        //        Session["completionTrackMC"] = Session["completionTrackMC"];
-        //        MCInterestedParties.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    else
-        //    {
-        //        Session["completionTrackMC"] = "0-0-0-0-0-0"; ;
-        //        MCInterestedParties.completionTrackMC = Session["completionTrackMC"].ToString();
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(RLSSection.Motor), Convert.ToInt32(PolicyType.RLS), policyid).ToList();
-        //    if (details != null && details.Any())
-        //    {
-        //        if (details.Exists(q => q.QuestionId == MCInterestedParties.MCPartynameObj.EiId))
-        //        {
-        //            MCInterestedParties.MCPartynameObj.Name = details.Where(q => q.QuestionId == MCInterestedParties.MCPartyLocationObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //        if (details.Exists(q => q.QuestionId == MCInterestedParties.MCPartyLocationObj.EiId))
-        //        {
-        //            MCInterestedParties.MCPartyLocationObj.Location = details.Where(q => q.QuestionId == MCInterestedParties.MCPartyLocationObj.EiId).FirstOrDefault().Answer;
-        //        }
-        //    }
-        //    return View(MCInterestedParties);
-        //}
-        //[HttpPost]
-        //public ActionResult InterestedParties(int? cid, MCInterestedParties MCInterestedParties)
-        //{
-        //    if (cid != null)
-        //    {
-        //        ViewBag.cid = cid;
-        //        MCInterestedParties.CustomerId = cid.Value;
-        //    }
-        //    else
-        //    {
-        //        ViewBag.cid = MCInterestedParties.CustomerId;
-        //    }
-        //    var db = new MasterDataEntities();
-        //    string policyid = null;
-        //    if (cid.HasValue && cid > 0)
-        //    {
-        //        if (MCInterestedParties.MCPartynameObj != null && MCInterestedParties.MCPartynameObj.EiId > 0 && MCInterestedParties.MCPartynameObj.Name != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCInterestedParties.CustomerId, Convert.ToInt32(RLSSection.Motor), MCInterestedParties.MCPartynameObj.EiId, MCInterestedParties.MCPartynameObj.Name.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (MCInterestedParties.MCPartyLocationObj != null && MCInterestedParties.MCPartyLocationObj.EiId > 0 && MCInterestedParties.MCPartyLocationObj.Location != null)
-        //        {
-        //            db.IT_InsertCustomerQnsData(MCInterestedParties.CustomerId, Convert.ToInt32(RLSSection.Motor), MCInterestedParties.MCPartyLocationObj.EiId, MCInterestedParties.MCPartyLocationObj.Location.ToString(), Convert.ToInt32(PolicyType.RLS), policyid);
-        //        }
-        //        if (Session["completionTrackMC"] != null)
-        //        {
-        //            Session["completionTrackMC"] = Session["completionTrackMC"];
-        //            MCInterestedParties.completionTrackMC = Session["completionTrackMC"].ToString();
-        //            if (MCInterestedParties.completionTrackMC != null)
-        //            {
-        //                string Completionstring = string.Empty;
-        //                char[] arr = MCInterestedParties.completionTrackMC.ToCharArray();
-
-        //                for (int i = 0; i < arr.Length; i++)
-        //                {
-        //                    char a = arr[i];
-        //                    if (i == 10)
-        //                    {
-        //                        a = '1';
-        //                    }
-        //                    Completionstring = Completionstring + a;
-        //                }
-        //                Session["completionTrackMC"] = Completionstring;
-        //                MCInterestedParties.completionTrackMC = Completionstring;
-        //            }
-        //        }
-        //        else
-        //        {
-        //            Session["completionTrackMC"] = "0-0-0-0-0-1"; ;
-        //            MCInterestedParties.completionTrackMC = Session["completionTrackMC"].ToString();
-        //        }
-        //        return RedirectToAction("BindCover", "Customer", new { cid = cid });
-        //        // return RedirectToAction("VehicleDescription", new { cid = MCInterestedParties.CustomerId });
-        //    }
-        //    return View(MCInterestedParties);
-        //}
         [HttpPost]
         public ActionResult MotorAjaxcontent(int id, string content)
         {

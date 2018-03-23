@@ -27,7 +27,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save and exit.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -114,12 +114,12 @@
     }, new { @id = "petsCover", @name = "petsCover" }))
     {
         @Html.AntiForgeryToken()
-        <div class="error"></div>
+        <div class="error errornew"></div>
         <div class="form">
             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
             @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
             <div class="mt-10 mb-10 col-md-12">
-                <p><a href="#PetsModal3" role="button" data-target="#PetsModal3" data-toggle="modal">click here to see the information about Pets</a></p>
+                <p class="col-md-12"><a href="#PetsModal3" role="button" data-target="#PetsModal3" data-toggle="modal"><strong>Click here to see the information about Pets</strong></a></p>
             </div>
             <div id="PetsModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="PetsModal3" aria-hidden="false">
                 <div class="modal-dialog">
@@ -142,6 +142,7 @@
                                 <li>(2) It was deemed a humane and essential course of action by the Veterinarian.</li>
                             </ul>
                             <p>We will pay 100% of approved Veterinarian costs up to an annual limit of $12,500</p>
+                            <p>*Please refer to the policy wording for full details</p>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -232,6 +233,7 @@
                     @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DatebirthObj.EiId, @id = "dateofbirth", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
                     @Html.HiddenFor(p => p.DatebirthObj.EiId)
                     <label id="DatebirthObj.Datebirth-error" class="error" for="DatebirthObj.Datebirth"></label>
+                    <input name="DatebirthObj.Datebirth.error" id="DatebirthObjDatebirtherror" type="hidden" value="" />
                 </div>
             </div>
             <div class="mt-10 mb-10 col-md-12 cl-61343">
@@ -274,15 +276,15 @@
                 </div>
             </div>
             <div class="mt-10 mb-10 col-md-12 cl-61347" id="acLimit">
-                <p class="col-md-5 col-sm-5 col-xs-12">An annual cover limit</p>
+                <p class="col-md-5 col-sm-5 col-xs-12">Annual cover limit</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    $@Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnualcoverlimitObj.EiId, @id = "annualcoverlimit", @data_regex = "N" })
+                    $@Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, "12,500", new { @style = "display:inline-block;width:95%;background:none;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnualcoverlimitObj.EiId, @id = "annualcoverlimit", @data_regex = "N", @readonly = "readonly" })
                     @Html.HiddenFor(p => p.AnnualcoverlimitObj.EiId)
                     <label id="AnnualcoverlimitObj.Annualcoverlimit-error" class="error" for="AnnualcoverlimitObj.Annualcoverlimit"></label>
                 </div>
             </div>
             <div class="mt-10 mb-10 col-md-12 cl-61349">
-                <p class="col-md-5 col-sm-5 col-xs-12">Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p>
+                <p class="col-md-5 col-sm-5 col-xs-12">Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p>
                 <div class="col-md-4 col-sm-4 col-xs-12">
                     @Html.DropDownListFor(model => model.ExcessPetObj.Excess, @Model.ExcessPetObj.ExcessList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm vlidationInsure commondataselection", @data_eiid = @Model.ExcessPetObj.EiId, @id = "excess" })
                     @Html.HiddenFor(p => p.ExcessPetObj.EiId)
@@ -299,7 +301,12 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <p>When you make a claim, you pay the first part of the cost and we pay the rest. Your part is called the <b>excess</b>.  You can reduce the cost of your insurance by choosing a higher excess.</p>
+                            <p>The amount that We will deduct from a claims settlement. This amount is shown in the Certificate.</p>
+                            <p>Please Note</p>
+                            <ul style="list-style:none">
+                                <li>(A) If more than one claim arises out of the same event We will only apply the largest Excess.</li>
+                                <li>(B) We will not deduct a young driver's Excess if the event that caused the claim happened when Your Vehicle was with a business for service, repair or parking.</li>
+                            </ul>
                         </div>
                         <div class="modal-footer">
                             <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -311,7 +318,7 @@
                 <h3>Would you like to include following</h3>
             </div>
             <div class="mt-10 mb-10 col-md-12 cl-61365">
-                <p class="col-md-3 col-sm-3 col-xs-12">Boarding fees :</p>
+                <p class="col-md-3 col-sm-3 col-xs-12"><a href="#BoardingFeesPetsModel" role="button" data-target="#BoardingFeesPetsModel" data-toggle="modal">Boarding fees :</a></p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
@@ -331,7 +338,7 @@
                                 var val = $(this).val();
                                 if ($(this).val() == '1') {
                                     $('#aLimitbf').show();
-                                    $('#annuallimitbf').show();
+                                    $('#annuallimitbf').val('The lesser of $1,000 and 20 days');
                                 } else {
                                     $('#aLimitbf').hide();
                                     $('#annuallimitbf').val("");
@@ -341,13 +348,123 @@
                     </script>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61367" id="aLimitbf" @if (@Model.BoardingfeeObj.Boardingfee == "0" || @Model.BoardingfeeObj.Boardingfee == "" || @Model.BoardingfeeObj.Boardingfee == null) { <text> style="display: none;" </text> }>
-                    $@Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitbfObj.EiId, @id = "annuallimitbf", @style = "width: 50%;margin-right:5px;", @data_regex = "N" }) (Annual limit : The lessor of $1,000 or 200 days)
+                    @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">*@
+                    $@Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatest", @data_eiid = @Model.AnnuallimitbfObj.EiId, @id = "annuallimitbf", @style = "width: 94%;display:inline-block;float: none;background:none;",@readonly = "readonly" ,@data_regex = "ANS" })
                     @Html.HiddenFor(p => p.AnnuallimitbfObj.EiId)
                     <label id="AnnuallimitbfObj.Annuallimitbf-error" class="error" for="AnnuallimitbfObj.Annuallimitbf"></label>
+                    @*</div>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">(Annual limit : The lessor of $1,000 or 200 days)</div>*@
+                </div>
+            </div>
+            <div id="BoardingFeesPetsModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="BoardingFeesPetsModel" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="pull-left">Boarding Fees</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <img src="~/images/close-icon.png" />
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>We cover the costs to board Your Pet if:</p>
+                            <ul style="list-style:none">
+                                <li>[a] You are hospitalised for more than 3 consecutive days, and</li>
+                                <li>[b] You are the sole carer and owner of Your Pet.</li>
+                            </ul>
+                            <p>We do not cover:</p>
+                            <ul style="list-style:none">
+                                <li>[a] You being hospitalised due to an illness or injury that existed before You purchased this policy.</li>
+                                <li>[b] You being pregnant, giving birth or any treatment that is not related to an illness or injury.</li>
+                                <li>[c] Your treatment for alcoholism, drug abuse or addiction.</li>
+                                <li>[d] Elective or cosmetic surgery.</li>
+                                <li>[e] Attempted suicide or You harming Yourself in any way.</li>
+                                <li>[f] The general exclusions shown on pages 19-20.</li>
+                            </ul>
+                            <p>We will pay 100% of cost for a maximum of 20 days or $1,000 to a kennel or cattery to board Your Pet.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="DeathfromIllnessPetsModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="DeathfromIllnessPetsModel" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="pull-left">Death from Illness</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <img src="~/images/close-icon.png" />
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>You are covered for the death of Your Pet as a direct result of an Illness provided it is covered under this policy.</p>
+                            <p>We cover the price that You paid for Your Pet if it either dies or needs to be euthanased as a direct result of an Illness. We will pay up to the benefit limit of $1,500, either:</p>
+                            <ul style="list-style:none">
+                                <li>[a] the purchase price You paid for Your Pet (You must have proof of how much You did pay), or</li>
+                                <li>[b] where this is not available, then We will pay the market value of Your Pet.</li>
+                            </ul>
+                            <p>We do not cover death resulting from:</p>
+                            <ul style="list-style:none">
+                                <li>[a] Pre-existing Medical Conditions.</li>
+                                <li>[b] A Condition occurring within the applicable Waiting Period.</li>
+                                <li>[c] An Illness caused endoparasites (such as worms) or ectoparasites (such as ticks, fleas, skin mites).</li>
+                                <li>
+                                    [d] Treatment for the following regardless of whether Your Pet was vaccinated or not:
+                                    <ul style="list-style:none">
+                                        <li>(i) for dogs; infectious hepatitis, parvovirus, canine distemper, parain influenza and all forms of kennel cough;</li>
+                                        <li>(ii) for cats; panleukopaenia, chlamydia, leukemia, Feline Immuno Deficiency, Feline Infectious Peritonitis, viral rhinotracheitis, calicivirus, herpes virus and all forms of cat flu.</li>
+                                    </ul>
+                                </li>
+                                <li>[e] Any declared pandemic disease that causes widespread illness affecting cats and dogs,</li>
+                                <li>[f] Breeding, pregnancy or giving birth.</li>
+                                <li>[g] Voluntary euthanasia.</li>
+                                <li>[h] The general exclusions shown on pages 19-20.</li>
+                            </ul>
+                            <p>We will pay the price You paid for Your Pet up to a limit of $1,500.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="DeathfromInjuryPetsModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="DeathfromInjuryPetsModel" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="pull-left">Death from Injury</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <img src="~/images/close-icon.png" />
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>You are covered for the death of Your Pet as a direct result of an Injury provided it is covered under this policy.</p>
+                            <p>We cover the price that You paid for Your Pet if it either dies or needs to be euthanased as a direct result of an Injury. We will pay up to the benefit limit, either:</p>
+                            <ul style="list-style:none">
+                                <li>[a] The purchase price You paid for Your Pet (You must have proof of how much You did pay), or</li>
+                                <li>[b] Where this is not available, then We will pay the market value of Your Pet.</li>
+                            </ul>
+                            <p>We do not cover:</p>
+                            <ul style="list-style:none">
+                                <li>[a] Pre-existing Medical Conditions.</li>
+                                <li>[b] A Condition occurring within the applicable Waiting Period.</li>
+                                <li>[c] Any disease.</li>
+                                <li>[d] Dislocated kneecaps, elbow dysplasia or fractured teeth.</li>
+                                <li>[e] Breeding, pregnancy or giving birth.</li>
+                                <li>[f] Voluntary euthanasia.</li>
+                                <li>[g] The general exclusions shown on pages 19-20.</li>
+                            </ul>
+                            <p>We will pay 100% of approved Veterinarian costs up to an annual limit of $1,500.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="mt-10 mb-10 col-md-12 cl-61369">
-                <p class="col-md-3 col-sm-3 col-xs-12">Death from illness :</p>
+                <p class="col-md-3 col-sm-3 col-xs-12"><a href="#DeathfromIllnessPetsModel" role="button" data-target="#DeathfromIllnessPetsModel" data-toggle="modal">Death from illness :</a></p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
@@ -367,7 +484,7 @@
                                 var val = $(this).val();
                                 if ($(this).val() == '1') {
                                     $('#aLimitdt').show();
-                                    $('#annuallimit').show();
+                                    $('#annuallimit').val('1,500');
                                 } else {
                                     $('#aLimitdt').hide();
                                     $('#annuallimit').val("");
@@ -376,14 +493,17 @@
                         });
                     </script>
                 </div>
-                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61371" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0" || @Model.DeathillnessObj.Deathillness == null || @Model.DeathillnessObj.Deathillness == "" ) { <text> style="display: none;" </text> }>
-                    $@Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitdtObj.EiId, @id = "annuallimit", @style = "width: 50%;margin-right:5px;", @data_regex = "N" }) (Annual limit : $1500)
+                <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61371" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0" || @Model.DeathillnessObj.Deathillness == null || @Model.DeathillnessObj.Deathillness == "") { <text> style="display: none;" </text> }>
+                    @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">*@
+                    $@Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitdtObj.EiId, @id = "annuallimit", @style = "width: 94%;display:inline-block;float: none;background:none;", @data_regex = "N",@readonly="readonly" })
                     @Html.HiddenFor(p => p.AnnuallimitdtObj.EiId)
                     <label id="AnnuallimitdtObj.Annuallimit-error" class="error" for="AnnuallimitdtObj.Annuallimit"></label>
+                    @*</div>
+                <div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">(Annual limit : $1,500)</div>*@
                 </div>
             </div>
             <div class="mt-10 mb-10 col-md-12 cl-61373">
-                <p class="col-md-3 col-sm-3 col-xs-12">Death from injury :</p>
+                <p class="col-md-3 col-sm-3 col-xs-12"><a href="#DeathfromInjuryPetsModel" role="button" data-target="#DeathfromInjuryPetsModel" data-toggle="modal">Death from injury :</a></p>
                 <div class="col-md-3 col-sm-3 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
@@ -403,7 +523,7 @@
                                 var val = $(this).val();
                                 if ($(this).val() == '1') {
                                     $('#aLimitij').show();
-                                    $('#annuallimitij').show();
+                                    $('#annuallimitij').val('1,500');
                                 } else {
                                     $('#aLimitij').hide();
                                     $('#annuallimitij').val("");
@@ -413,9 +533,12 @@
                     </script>
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61375" id="aLimitij" @if (@Model.DeathinjuryObj.Deathinjury == "0" || @Model.DeathinjuryObj.Deathinjury == "" || @Model.DeathinjuryObj.Deathinjury == null) { <text> style="display: none;" </text> }>
-                    $@Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitijObj.EiId, @id = "annuallimitij", @style = "width: 50%;margin-right:5px;", @data_regex = "N" }) (Annual limit : $1500)
+                    @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">*@
+                    $@Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitijObj.EiId, @id = "annuallimitij", @style = "width: 94%;display:inline-block;float: none;background:none;", @data_regex = "N", @readonly = "readonly" })
                     @Html.HiddenFor(p => p.AnnuallimitijObj.EiId)
                     <label id="AnnuallimitijObj.Annuallimitij-error" class="error" for="AnnuallimitijObj.Annuallimitij"></label>
+                    @*</div>*@
+                    @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">(Annual limit : $1,500)</div>*@
                 </div>
             </div>
         </div>
@@ -529,7 +652,7 @@
                             });
                         </script>
                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId"  data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
                             <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
                         </div>
                     </div>
@@ -588,38 +711,68 @@
         <div class="clearfix"></div>
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
-            <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Contents">+  Home Content</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pet">+  Pets</a></li>
-            
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
-            </ul>
-            <script type="text/javascript">
-                        $(document).on('click', 'ul.unit > li', function () {
-                            var unitname = $(this).children("a").attr("class");
-                            var cid = $("#ciid").val();
-                            var pcid = $("#pcidd").val();
-                            var prid = 1029;
-                            $.ajax({
-                                type: "POST",
-                                url: "/Customer/AddUnit",
-                                data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
-                                success: function (responce) {
-                                    if (responce.Status == false) {
-                                        $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                        $("html, body").animate({ scrollTop: 0 }, "slow");
-                                    } else {
-                                        window.location.href = responce;
-                                    }
+            @if (Model.NewSections != null && Model.NewSections.Count() > 0)
+            {
+                <ul class="dropdown-menu col-md-12 unit">
+                    @for (int i = 0; i < Model.NewSections.Count(); i++)
+                    {
+                        if (Model.NewSections[i] == "HomeBuildings")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Buildings
+                                </a>
+                            </li>
+                        }
+                        else if (Model.NewSections[i] == "HomeContents")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Contents
+                                </a>
+                            </li>
+
+                        }
+                        else if (Model.NewSections[i] == "FarmProperty")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Farm Property
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + @Model.NewSections[i]
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+                <script type="text/javascript">
+                    $(document).on('click', 'ul.unit > li', function () {
+                        var unitname = $(this).children("a").attr("class");
+                        var cid = $("#ciid").val();
+                        var pcid = $("#pcidd").val();
+                        var prid = 1029;
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/AddUnit",
+                            data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
+                            success: function (responce) {
+                                if (responce.Status == false) {
+                                    $(".errornew").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                                } else {
+                                    window.location.href = responce;
                                 }
-                            });
+                            }
                         });
-            </script>
+                    });
+                </script>
+            }
         </div>
     </div>
 </div>
@@ -635,14 +788,32 @@
         var Boardingfee = $("input[name='BoardingfeeObj.Boardingfee']:checked").val();
         if (Boardingfee == '' || Boardingfee == '0') {
             $('#aLimitbf').css({ 'display': 'none' });
+            $('#annuallimitbf').val('');
+        } else {
+            $('#aLimitbf').css({ 'display': 'block' });
+            if ($('#annuallimitbf').val() == '') {
+                $('#annuallimitbf').val('The lesser of $1,000 and 20 days');
+            }
         }
         var Deathillness = $("input[name='DeathillnessObj.Deathillness']:checked").val();
         if (Deathillness == '' || Deathillness == '0') {
-            $('#annuallimit').css({ 'display': 'none' });
+            $('#aLimitdt').css({ 'display': 'none' });
+            $('#annuallimit').val('');
+        } else {
+            $('#aLimitdt').css({ 'display': 'block' });
+            if ($('#annuallimit').val() == '') {
+                $('#annuallimit').val('1,500');
+            }
         }
         var Deathinjury = $("input[name='DeathinjuryObj.Deathinjury']:checked").val();
         if (Deathinjury == '' || Deathinjury == '0') {
-            $('#annuallimitij').css({ 'display': 'none' });
+            $('#aLimitij').css({ 'display': 'none' });
+            $('#annuallimitij').val('');
+        } else {
+            $('#aLimitij').css({ 'display': 'block' });
+            if ($('#annuallimitij').val() == '') {
+                $('#annuallimitij').val('1,500');
+            }
         }
     });
 </script>
@@ -659,8 +830,8 @@
                 var newval = $(this).val();
                 var valueNew = $(this).val();
                 var Value = $(this).val();
-                if (nameAttr== "SpeciesObj.Species") {
-                    if (Value=='') {
+                if (nameAttr == "SpeciesObj.Species") {
+                    if (Value == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('Please select wish to insure').css({ "display": "block" });
                         valid = 0;
@@ -710,6 +881,7 @@
                     }
                 }
                 if (nameAttr == "DatebirthObj.Datebirth") {
+                    var Wholives = $("input[name='" + nameAttr + ".error']").val();
                     var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
                     var rVal = valueNew.split('/');
                     var uptoYears = 0;
@@ -719,25 +891,28 @@
                         var newDatePets = rVal[1] + '/' + rVal[0] + '/' + rVal[2];
                         diffDateCalculatePets = diffDateCalculateER(newDatePets);
                     }
-                    if (Value=='') {
+                    if (Value == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('Please enter date of birth').css({ "display": "block" });
                         valid = 0;
                     } else if (newval != '' && !regex.test(newval)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        $("#petsCover label[for='" + nameAttr + "']").text('Please enter an appropriate year').css({ "display": "block" });
                         valid = 0;
                     } else if (rVal[2] != '' && rVal[2].length != 4) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        $("#petsCover label[for='" + nameAttr + "']").text('Please enter an appropriate year').css({ "display": "block" });
                         valid = 0;
                     } else if (diffDateCalculatePets == false) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('You can not provide future year').css({ "display": "block" });
+                        $("#petsCover label[for='" + nameAttr + "']").text('You cannot provide a date in the future').css({ "display": "block" });
                         valid = 0;
                     } else if (uptoYears > 9) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('We will cover your animals up untill the age of 9 years').css({ "display": "block" });
+                        valid = 0;
+                    } else if (Wholives == 'Decline') {
+                        $("#petsCover input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -756,7 +931,7 @@
                 }
                 if (nameAttr == "DescriptionillnessObj.Descriptionillness") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if ($("input[name='PreexistingObj.Preexisting']:checked").val() == "1" && newval=="") {
+                    if ($("input[name='PreexistingObj.Preexisting']:checked").val() == "1" && newval == "") {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('Please enter description of illness').css({ "display": "block" });
                         valid = 0;
@@ -808,13 +983,9 @@
                 if (nameAttr == "AnnuallimitbfObj.Annuallimitbf") {
                     var regex = /^[0-9]*$/;
                     var newValHc = newval.replace(/,/g, '');
-                    if ($("input[name='BoardingfeeObj.Boardingfee']:checked").val() =="1" && newValHc == '') {
+                    if ($("input[name='BoardingfeeObj.Boardingfee']:checked").val() == "1" && newValHc == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('Please enter annualcover limit for boarding fees').css({ "display": "block" });
-                        valid = 0;
-                    } else if (!regex.test(newValHc)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Only numeric & "," are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -909,7 +1080,7 @@
         } else {
             var ItId = ItIdN;
         }
-        if (!regex.test(Value)) {
+        if (regex!='' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
@@ -974,25 +1145,57 @@
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             }
-
                                         });
                                     }
                                 }
                             });
                         }
                     }
-                    //if (data.referrallist != null || data.referrallist != "") {
-                    //    $('#referralList-p').html('No Referral List');
-                    //} else {
-                    //    $('#referralList-p').html(data.referrallist);
-                    //}
+                    if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
+                        var rowsorcedata = data.rowsorcedata;
+                        if (rowsorcedata != '' && rowsorcedata != null) {
+                            $.each(rowsorcedata, function (index, value) {
+                                var rowsorcedataIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                var rowsorcedataType = $("[data-eiid=" + value.Element.ElId + "]").attr('type');
+                                var rowsorcedataName = $("[data-eiid=" + value.Element.ElId + "]").attr('name');
+                                var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
+                                var rowsorcedataOption = value.Options;
+                                if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
+                                    var html = '<option value="">--Select--</option>';
+                                    $.each(rowsorcedataOption, function (index1, value1) {
+                                        if (value1.DataValue == 0) {
+                                        } else {
+                                            html += '<option value="' + value1.DataValue + '">' + value1.DataText + '</option>';
+                                        }
+                                    });
+                                    if (rowsorcedataType == undefined) {
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    } else {
+                                        var NewHtml = '<select class="form-control vlidationInsure form-border-bottom commondataselection" data-eiid="' + rowsorcedataEIID + '" id="' + rowsorcedataIdNewOne + '" name="' + rowsorcedataName + '"></select>';
+                                        $('#' + rowsorcedataIdNewOne).replaceWith(NewHtml);
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.status == "Decline") {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('Decline');
+                    } else {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('');
+                    }
                     if (data.referrallists == "") {
                         $('#referralList-p').html('No Referral List');
                     } else {
                         $('#referralList-p').html(data.referrallists);
                     }
-                    if (data.usermessage == "") {
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -1001,10 +1204,16 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html('');
-                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html('');
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "none" });
+                        } else {
+                            $("label[for='" + labelid + "']").html('');
+                            $("label[for='" + labelid + "']").css({ "display": "none" });
+                        }
                     } else {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -1013,8 +1222,13 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html(data.usermessage);
-                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html(data.usermessage);
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "block" });
+                        } else {
+                            $("label[for='" + labelid + "']").html(data.usermessage);
+                            $("label[for='" + labelid + "']").css({ "display": "block" });
+                        }
                     }
                 }
             });

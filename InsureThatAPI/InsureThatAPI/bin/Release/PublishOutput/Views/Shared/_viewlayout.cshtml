@@ -1,0 +1,645 @@
+﻿
+<!DOCTYPE html>
+<html dir="ltr" lang="en-US">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="author" content="SemiColonWeb" />
+    <!-- Stylesheets -->
+    <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Raleway:300,400,500,600,700" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/layout.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/content.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/form.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/font-icons.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/animate.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/responsive.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/datepicker.min.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/insuredthatsolution.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--[if lt IE 9]>
+        <script src="http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="~/js/jquery.js"></script>
+    <!-- Document Title -->
+    <title>Insure that</title>
+    <style type="text/css">
+        .device-lg #slider .emphasis-title h1 {
+            font-size: 52px;
+        }
+
+        .device-md #slider .emphasis-title h1 {
+            font-size: 44px;
+        }
+    </style>
+</head>
+<body class="stretched">
+    <!-- Document Wrapper -->
+    <div id="wrapper" class="clearfix">
+        <!-- Header -->
+        <header id="header" class="full-header transparent-header">
+            <div id="header-wrap">
+                <div class="container clearfix">
+                    <div id="primary-menu-trigger"><i class="icon-reorder"></i></div>
+                    <!-- Logo -->
+                    <div id="logo">
+                        <a href="#" class="standard-logo" data-dark-logo="~/images/logo-dark.png"><img src="~/images/logo.png" alt="Canvas Logo"></a>
+                        <a href="#" class="retina-logo" data-dark-logo="~/images/logo-dark@2x.png"><img src="~/images/logo@2x.png" alt="Canvas Logo"></a>
+                    </div><!-- #logo end -->
+                    <!-- Primary Navigation -->
+                    <nav id="primary-menu">
+                        <!--<a style="" class=" btn color-bk-btn col-md-4 leftmargin-sm" href="@Url.Action(" AdvancedCustomerSearch", "Customer" )">Close This Policy</a>-->
+                        <a class="changepsswrd btn color-bk-btn col-md-4 leftmargin-sm" href="@Url.Action("ChangePassword", "Customer")" type="button">Change Password</a>
+                        <button class="logoutfun btn color-bk-btn col-md-4 leftmargin-sm" type="button">Logout</button>
+                    </nav><!-- #primary-menu end -->
+                </div>
+            </div>
+        </header><!-- #header end -->
+        <!-- Content -->
+        <section id="content">
+            <div class="content-wrap">
+                <div class="container clearfix">
+                    @RenderBody()
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer id="footer">
+            <!-- Copyrights -->
+            <div id="copyrights">
+                <div class="container-fluid clearfix">
+                    <div class="col_half">
+                        <div class="copyright-links"><a href="#">Terms of Use</a> / <a href="#">Privacy Policy</a></div>
+                    </div>
+                    <div class="col_half col_last tright">
+                        <div class="fright clearfix">
+                            <a href="#" class="social-icon si-small si-borderless si-facebook">
+                                <i class="icon-facebook"></i>
+                                <i class="icon-facebook"></i>
+                            </a>
+                            <a href="#" class="social-icon si-small si-borderless si-twitter">
+                                <i class="icon-twitter"></i>
+                                <i class="icon-twitter"></i>
+                            </a>
+                            <a href="#" class="social-icon si-small si-borderless si-linkedin">
+                                <i class="icon-linkedin"></i>
+                                <i class="icon-linkedin"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- #copyrights end -->
+        </footer><!-- #footer end -->
+    </div><!-- #wrapper end -->
+    <!-- Go To Top -->
+    <div id="gotoTop" class="icon-angle-up"></div>
+    <!-- External JavaScripts -->
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".commondatatestComma").each(function () {
+                $(this).val(function (index, value) {
+                    return value
+                        .replace(/\D/g, "")
+                        .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                        ;
+                });
+            });
+        });
+        $(document).on('keyup', '.commondatatestUpperCase', function (event) {
+            $(this).val($(this).val().toUpperCase());
+        });
+        $(document).on('keyup', '.commondatatestFilter', function (event) {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var minm = $(this).data('min');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            var text = '';
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (newval == 'none' || newval == 'nil' || newval == '0') {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[id='" + name + "-error']").text('Please enter text').css({ "display": "block" });
+            } else if (newval != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[id='" + name + "-error']").text('').css({ "display": "none" });
+                elementAjaxCall(newval, EIId, ItId);
+            }
+        });
+        $(document).on('keyup', '.commondatatestComma', function (event) {
+            // skip for arrow keys
+            //if (event.which >= 37 && event.which <= 40) return;
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    ;
+            });
+        });
+        $(document).on('focusout', '.commondatatestComma', function (event) {
+            // skip for arrow keys
+            //if (event.which >= 37 && event.which <= 40) return;
+            // format number
+            $(this).val(function (index, value) {
+                return value
+                    .replace(/\D/g, "")
+                    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                    ;
+            });
+        });
+        $(document).on('focusout', ".commondatatestMin", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var minm = $(this).data('min');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            var text = '';
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (minm == undefined || minm == "") {
+                var min = "0";
+            } else {
+                var min = minm;
+                text = "Please enter a value greater than or equal to $" + commaReplace(min);
+            }
+            var regex = /^[0-9]*$/;
+            var rVal = newval.replace(/,/g, '');
+            if (!regex.test(rVal)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[id='" + name + "-error']").text('Only numeric are allowed').css({ "display": "block" });
+            } else if (min != '0' && rVal < min) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[id='" + name + "-error']").text(text).css({ "display": "block" });
+            } else if (rVal != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[id='" + name + "-error']").text('').css({ "display": "none" });
+                elementAjaxCall(rVal, EIId, ItId);
+            }
+        });
+        $(document).on('focusout', ".commondatatestMax", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var maxm = $(this).data('max');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            var text = '';
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (maxm == undefined || maxm == "") {
+                var max = "0";
+            } else {
+                var max = maxm;
+                text = "Please enter a value less than or equal to $" + commaReplace(max);
+            }
+            var regex = /^[0-9]*$/;
+            var rVal = newval.replace(/,/g, '');
+            if (!regex.test(rVal)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Only numeric are allowed').css({ "display": "block" });
+            } else if (max != '0' && rVal > max) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text(text).css({ "display": "block" });
+            } else if (rVal != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+                elementAjaxCall(rVal, EIId, ItId);
+            }
+        });
+        $(document).on('focusout', ".commondatatestPrice", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            var regex = /^[0-9]*$/;
+            var text = "";
+            var rVal = newval.replace(/,/g, '');
+            if (!regex.test(rVal)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Only numeric are allowed').css({ "display": "block" });
+            } else if (rVal != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+                elementAjaxCall(rVal, EIId, ItId);
+            }
+        });
+        $(document).on('focusout', ".commondatatestPriceChange", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var minm = $(this).data('min');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            var rVal = newval.replace(/,/g, '');
+            var text = '';
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (minm == undefined || minm == "") {
+                var min = "0";
+            } else {
+                var min = minm;
+
+            }
+            if (rVal < min) {
+                var newval = commaReplace(min);
+                $(this).val(newval);
+                $("label[id='" + name + "-error']").text('This has been adjusted to the minimum sum insured.').css({ "display": "block" });
+                rVal = min;
+            }
+            var regex = /^[0-9]*$/;
+            if (!regex.test(rVal)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[id='" + name + "-error']").text('Only numeric are allowed').css({ "display": "block" });
+            } else if (min != '0' && rVal < min) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[id='" + name + "-error']").text(text).css({ "display": "block" });
+            } else if (rVal != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[id='" + name + "-error']").text('').css({ "display": "none" });
+                elementAjaxCall(rVal, EIId, ItId);
+            }
+        });
+        $(document).on('change', '.commondataselection', function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var ItIdN = $(this).data('itid');
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+
+            if (Value != '') {
+                elementAjaxCall(Value, EIId, ItId);
+            }
+        });
+        $(document).on('change', '.commondataradio', function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var ItIdN = $(this).data('itid');
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (Value != '') {
+                elementAjaxCall(Value, EIId, ItId);
+            }
+        });
+        $(document).on('focusout', ".commondatatestYearHome", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            var regex = /^[0-9]*$/;
+            var text = "";
+            var rVal = newval.replace(/,/g, '');
+            var currentYear = new Date().getFullYear();
+            if (rVal != '' && !regex.test(rVal)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Only numeric are allowed').css({ "display": "block" });
+            } else if (rVal != '' && rVal.length != 4) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Year is not proper. Please check').css({ "display": "block" });
+            } else if (rVal != '' && rVal > currentYear) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You can not provide future year').css({ "display": "block" });
+            } else if (rVal != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+                elementAjaxCall(rVal, EIId, ItId);
+            }
+        });
+        $(document).on('focusout', ".commondataDDMMYYY", function () {
+            var Value = $(this).val();
+            var EIId = $(this).data('eiid');
+            var Nregex = $(this).data('regex');
+            var name = $(this).attr('name');
+            var ItIdN = $(this).data('itid');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+            var text = "";
+            var rVal = newval.split('/');
+            var currentYear = new Date().getFullYear();
+            if (Value != '' && !regex.test(Value)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
+            } else if (Value != '' && rVal[2] != '' && rVal[2].length != 4) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
+            } else if (rVal[2] != '' && rVal[2] > currentYear) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You cannot provide a date in the future').css({ "display": "block" });
+            } else if (Value != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+                elementAjaxCall(Value, EIId, ItId);
+            }
+        });
+        $(document).on('click', '#premium', function () {
+            $.ajax({
+                url: '/Customer/PremiumDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: {},
+                success: function (data) {
+                    if (data.Status == true) {
+                        var html1 = "";
+                        if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
+                            var html = "";
+                            $.each(data.Premium, function (index, value) {
+                                html += '<tr><td>' + value.SectionName + '</td><td>$' + commaReplace(value.Base) + '</td><td>$' + commaReplace(value.Fsl) + '</td><td>$' + commaReplace(value.Gst) + '</td><td>$' + commaReplace(value.StampDuty) + '</td><td>$' + commaReplace(value.Gross) + '</td></tr>';
+                            });
+                            if (html != '') {
+                                $('#premiumModel-p-b').html(html);
+                            }
+                        }
+                        if (data.UnderwriterFee != null) {
+                            html1 += '<tr><td colspan="5">Underwriter Fee</td><td>$' + commaReplace(data.UnderwriterFee) + '<td></tr>';
+                        }
+                        if (data.FeeGst != null) {
+                            html1 += '<tr><td colspan="5">Fee GST</td><td>$' + commaReplace(data.FeeGst) + '<td></tr>';
+                        }
+                        if (data.InvoiceTotal != null) {
+                            html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + commaReplace(data.InvoiceTotal) + '<td></tr>';
+                        }
+                        if (html1 != '') {
+                            $('#premiumModel-p-f').html(html1);
+                        }
+                    }
+                }
+            });
+        });
+        function commaReplace(value) {
+            return value.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
+        }
+        function CalculateDiff(FromDate) {
+            var d = new Date();
+            var newFromDate = FromDate.split('/');
+            var ToDate = (d.getMonth() + 1) + '/' + d.getDate() + "/" + d.getFullYear();
+            var FromDateConvert = newFromDate[1] + '/' + newFromDate[0] + '/' + newFromDate[2];
+            if (FromDateConvert != "" && ToDate != "") {
+                var From_date = new Date(FromDateConvert);
+                var To_date = new Date(ToDate);
+                var diff_date = To_date - From_date;
+                var years = Math.floor(diff_date / 31536000000);
+                var months = Math.floor((diff_date % 31536000000) / 2628000000);
+                var days = Math.floor(((diff_date % 31536000000) % 2628000000) / 86400000);
+                return years;
+            } else {
+                return 0;
+            }
+        }
+        function CalculateMonthDayYear(FromDate) {
+            var d = new Date();
+            var newFromDate = FromDate.split('/');
+            var ToDate = (d.getMonth() + 1) + '/' + d.getDate() + "/" + d.getFullYear();
+            var FromDateConvert = newFromDate[1] + '/' + newFromDate[0] + '/' + newFromDate[2];
+            if (FromDateConvert != "" && ToDate != "") {
+                var From_date = new Date(FromDateConvert);
+                var To_date = new Date(ToDate);
+                if (From_date < To_date) {
+                    var diff_date = To_date - From_date;
+                } else {
+                    var diff_date = From_date - To_date;
+                }
+                var years = Math.floor(diff_date / 31536000000);
+                var months = Math.floor((diff_date % 31536000000) / 2628000000);
+                var days = Math.floor(((diff_date % 31536000000) % 2628000000) / 86400000);
+                return years + '-' + months + '-' + days;
+            } else {
+                return 0;
+            }
+        }
+        function CalculateMonthDayYearE(FromDate, sdate) {
+            var newFromDate = FromDate.split('/');
+            var newFromDateS = sdate.split('/');
+            var ToDate = newFromDateS[1] + '/' + newFromDateS[0] + '/' + newFromDateS[2];
+            var FromDateConvert = newFromDate[1] + '/' + newFromDate[0] + '/' + newFromDate[2];
+            if (FromDateConvert != "" && ToDate != "") {
+                var From_date = new Date(FromDateConvert);
+                var To_date = new Date(ToDate);
+                if (From_date < To_date) {
+                    var diff_date = To_date - From_date;
+                } else {
+                    var diff_date = From_date - To_date;
+                }
+                var years = Math.floor(diff_date / 31536000000);
+                var months = Math.floor((diff_date % 31536000000) / 2628000000);
+                var days = Math.floor(((diff_date % 31536000000) % 2628000000) / 86400000);
+                return years + '-' + months + '-' + days;
+            } else {
+                return 0;
+            }
+        }
+        function diffDateCalculate(date) {
+            var date1 = new Date(date);
+            var date2 = new Date();
+            if (date1 < date2) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        function diffDateCalculateER(date) {
+            var date1 = new Date(date);
+            var date2 = new Date();
+            if (date1 > date2) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        function diffDateCalculateE(date, sdate) {
+            var date1 = new Date(date);
+            var date2 = new Date(sdate);
+            if (date1 < date2) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+    </script>
+    <script type="text/javascript" src="~/js/plugins.js"></script>
+    <script type="text/javascript" src="~/js/functions.js"></script>
+    <script type="text/javascript">
+        $('.dropdown').hover(function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+        }, function () {
+            $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $("body").on('click keypress', function () {
+                ResetThisSession();
+            });
+        });
+        var timeInSecondsAfterSessionOut = 3000000000; // to change the session time out, change this value. Must be in seconds.
+        var secondTick = 0;
+        function ResetThisSession() {
+            secondTick = 0;
+        }
+        function StartThisSessionTimer() {
+            secondTick++;
+            var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+            timeLeft = timeInSecondsAfterSessionOut - secondTick;
+            $("#spanTimeLeft").html(timeLeft);
+
+            if (secondTick > timeInSecondsAfterSessionOut) {
+                clearTimeout(tick);
+                window.location = "/Home/Index";
+                return;
+            }
+            tick = setTimeout("StartThisSessionTimer()", 1000);
+        }
+        StartThisSessionTimer();
+        $(document).ready(function () {
+            $(".logoutfun").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/Logout",
+                    data: {},
+                    success: function (responce) {
+                        window.location.href = responce;
+                    }
+                });
+            });
+        });
+        //$(".changepsswrd").click(function () {
+        //    $.ajax({
+        //        type: "Get",
+        //        url: "/Customer/ChangePassword",
+        //        data: {},
+        //        success: function (responce) {
+        //            window.location.href = responce;
+        //        }
+        //    });
+        //});
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(window).keydown(function (event) {
+                if (event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
+        $(document).on('focusout', ".commondataDDMMYYYlocal", function () {
+            var Value = $(this).val();
+            var name = $(this).attr('name');
+            var id = $(this).attr('id');
+            var newval = $(this).val();
+            var diff = true;
+            var startdate = $(".startdates").val();
+            var startdateVal = startdate.split('/');
+            var startdatevalNew = startdateVal[1] + '/' + startdateVal[0] + '/' + startdateVal[2];
+            var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+            var text = "";
+            var rVal = newval.split('/');
+            var rvalNew = rVal[1] + '/' + rVal[0] + '/' + rVal[2];
+            if (startdate != '' && newval != '' && regex.test(startdate) && regex.test(newval)) {
+                diff = diffDateCalculateE(rvalNew, startdatevalNew);
+            }
+            if (Value != '' && !regex.test(Value)) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
+            } else if (Value != '' && rVal[2] != '' && rVal[2].length != 4) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
+            } else if (diff == false) {
+                $('#' + id).css({ "border": "1px solid #ff0000" });
+                $("label[for='" + name + "']").text('You can not provide past date than start date').css({ "display": "block" });
+            } else if (Value != "") {
+                $('#' + id).css({ "border": "" });
+                $("label[for='" + name + "']").text('').css({ "display": "none" });
+            }
+        });
+        $(document).on('click', '.commondatacheckbox', function () {
+            var Value = '';
+            if ($(this).is(':checked') != false) {
+                Value = 1;
+            } else {
+                Value = 0;
+            }
+            var EIId = $(this).data('eiid');
+            var ItIdN = $(this).data('itid');
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (Value != '') {
+                elementAjaxCall(Value, EIId, ItId);
+            }
+        });
+    </script>
+    <script type="text/javascript" src="~/js/jquery.backDetect.js"></script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $('body').backDetect(function () {
+                //if (confirm('Look forward to the future, not the past!')) {
+                history.pushState(null, null, null);
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/Logout",
+                    data: {},
+                    success: function (responce) {
+                        window.location.href = responce;
+                    }
+                });
+                //} else {
+                //    history.pushState(null, null, null);
+                //}
+            });
+        });
+    </script>
+
+</body>
+</html>

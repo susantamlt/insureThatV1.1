@@ -43,7 +43,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save and exit.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -133,7 +133,7 @@
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         <div class="error"></div>
         <div class="col-md-12 mt-10 mb-10">
-            <p class="col-md-12"><a href="#homecontensModel1" role="button" data-target="#homecontensModel1" data-toggle="modal"><strong>What is considered Valuables?</strong></a></p>
+            <p class="col-md-12"><a href="#homecontensModel1" role="button" data-target="#homecontensModel1" data-toggle="modal"><strong>What is considered Valuables?</strong></a></p>           
             <div id="homecontensModel1" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="homecontensModel1" aria-hidden="false">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -164,6 +164,7 @@
                                 <li>(A) Specify each Valuable with its own Sum Insured; or </li>
                                 <li>(B) Nominate a total figure as the Sum Insured for all Your Valuables instead of listing them individually.</li>
                             </ul>
+                            <p>*Please refer to the policy wording for full details</p>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
                             </div>
@@ -184,6 +185,7 @@
                         <div class="modal-body">
                             <p>(1) Specified item - We will pay the Sum Insured that is listed in the Certificate for that item, Collection or Set.</p>
                             <p>(2) Unspecified item - We will pay up to $10,000 for any one unspecified item under this section. The most We will pay per claim is the Sum Insured for unspecified Valuables as shown on the Certificate.</p>
+                            <p>*Please refer to the policy wording for full details</p>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
                             </div>
@@ -191,24 +193,26 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4"><p>Location</p></div>
-            <div class="col-md-8">
-                <div class="col-md-12" @*style="padding:0px 1px;"*@>
-                    @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "col-sm-2 form-control form-inline field-length-xs vlidationInsure", @placeholder = "location", @id = "addresshome", @style = "width: 100%;", @readonly = "readonly" })
-                    <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
+            </div>
+            <div class="col-md-12 mt-10 mb-10">
+                <div class="col-md-4"><p>Location</p></div>
+                <div class="col-md-8">
+                    <div class="col-md-12" @*style="padding:0px 1px;"*@>
+                        @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "col-sm-2 form-control form-inline field-length-xs vlidationInsure", @placeholder = "location", @id = "addresshome", @style = "width: 100%;", @readonly = "readonly" })
+                        <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
+                    </div>
                 </div>
             </div>
-        </div>
         <div class="col-md-12 mt-10 mb-10">
             <div class="col-md-4"><p>Please advise the amount you need to insure your unspecified valuables</p><p class="mini-text">(We will pay up to $10,000 for any one unspecified item under this section)</p></div>
             <div class="col-md-8">
-                $@Html.TextBoxFor(p => p.UnspecificObj.Unspecific, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.UnspecificObj.EiId, @id = "unspecific", @data_regex = "N" })
+                $@Html.TextBoxFor(p => p.UnspecificObj.Unspecific, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.UnspecificObj.EiId, @id = "unspecific", @data_regex = "N" })
                 <label id="UnspecificObj.Unspecific-error" class="error" for="UnspecificObj.Unspecific"></label>
             </div>
             <div class="col-md-5">@Html.HiddenFor(p => p.UnspecificObj.EiId)</div>
         </div>
         <div class="col-md-12 mt-10 mb-10">
-            <p class="col-md-12"><strong>Specified valuables (If you wish to specify any item that are valued over $10,000, please list them here)</strong></p>
+            <p class="col-md-12"><strong>Specified valuables (If you wish to specify any items that are valued over $10,000, please list them here)</strong></p>
             <div class="col-md-12 table-8">
                 <table class="table" style="width:100%;">
                     <thead>
@@ -226,20 +230,28 @@
                             {
                                 jCount = i + 1;
                                 <tr id="tname-tr-@jCount">
-                                    <td>
-                                        @Html.TextBoxFor(p => p.DescriptionObj.Description, Model.DescriptionObjList[i].Value, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid = i, @data_regex = "AN" })
-                                        @Html.HiddenFor(p => p.DescriptionObj.EiId)
-                                    </td>
-                                    <td class="price stotal">
-                                        $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = i, @style = "width: 89%;", @data_regex = "N" })
-                                        @Html.HiddenFor(p => p.SuminsuredObj.EiId)
-                                    </td>
                                     @if (jCount == CountTotal)
                                     {
+                                        <td>
+                                            @Html.TextBoxFor(p => p.DescriptionObj.Description, Model.DescriptionObjList[i].Value, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid ='0', @data_regex = "ANS" })
+                                            @Html.HiddenFor(p => p.DescriptionObj.EiId)
+                                        </td>
+                                        <td class="price stotal">
+                                            $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @maxlength = "13", @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = '0', @style = "width: 89%;", @data_regex = "N" })
+                                            @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                        </td>                                    
                                         <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameAdd(@jCount)" class="button-3d">+</a></td>
                                     }
                                     else
                                     {
+                                        <td>
+                                            @Html.TextBoxFor(p => p.DescriptionObj.Description, Model.DescriptionObjList[i].Value, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid = jCount, @data_regex = "ANS" })
+                                            @Html.HiddenFor(p => p.DescriptionObj.EiId)
+                                        </td>
+                                        <td class="price stotal">
+                                            $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @maxlength = "13", @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = jCount, @style = "width: 89%;", @data_regex = "N" })
+                                            @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                        </td>  
                                         <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameRemove(@jCount)" class="button-3d">-</a></td>
                                     }
                                 </tr>
@@ -249,11 +261,11 @@
                         {
                             <tr id="tname-tr-1">
                                 <td>
-                                    @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid = "0", @data_regex = "AN" })
+                                    @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @id = "description", @style = "width:100%;", @data_itid = "0", @data_regex = "ANS" })
                                     @Html.HiddenFor(p => p.DescriptionObj.EiId)
                                 </td>
                                 <td class="price stotal">
-                                    $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = "0", @style = "width: 89%;", @data_regex = "N" })
+                                    $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @maxlength = "13", @class = "form-control form-inline field-length-xs no-border vlidationInsure  sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @id = "suminsured", @data_itid = "0", @style = "width: 89%;", @data_regex = "N" })
                                     @Html.HiddenFor(p => p.SuminsuredObj.EiId)
                                 </td>
                                 <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
@@ -279,7 +291,7 @@
             </div>
         </div>
         <div class="mt-10 mb-10 col-md-12 ">
-            <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+            <div class="col-md-6"><p>Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
             <div class="col-md-3">
                 @Html.DropDownListFor(p => p.ExcesspayObj.Excess, listsExcessVal, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm vlidationInsure commondataselection", @data_eiid = @Model.ExcesspayObj.EiId, @id = "excess" })
                 @Html.HiddenFor(p => p.ExcesspayObj.EiId)
@@ -296,7 +308,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>When you make a claim, you pay the first part of the cost and we pay the rest. Your part is called the excess.  You can reduce the cost of your insurance by choosing a higher excess.</p>
+                        <p>The amount that We will deduct from a claims settlement. This amount is shown in the Certificate.</p>
+                        <p>Please Note</p>
+                        <ul style="list-style:none">
+                            <li>(A) If more than one claim arises out of the same event We will only apply the largest Excess.</li>
+                            <li>(B) We will not deduct a young driver's Excess if the event that caused the claim happened when Your Vehicle was with a business for service, repair or parking.</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -484,15 +501,45 @@
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
-                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
+                @if (Model.NewSections != null && Model.NewSections.Count() > 0)
+                {
+                    for (int i = 0; i < Model.NewSections.Count(); i++)
+                    {
+                        if (Model.NewSections[i] == "HomeBuildings")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Buildings
+                                </a>
+                            </li>
+                        }
+                        else if (Model.NewSections[i] == "HomeContents")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Contents
+                                </a>
+                            </li>
 
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+                        }
+                        else if (Model.NewSections[i] == "FarmProperty")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Farm Property
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + @Model.NewSections[i]
+                                </a>
+                            </li>
+                        }
+                    }
+                }
             </ul>
             <script type="text/javascript">
                         $(document).on('click', 'ul.unit > li', function () {
@@ -559,17 +606,35 @@
             });
             function tnameAdd(id) {
                 var countId = id + 1;
+                var i = 0;
+                $(".table tbody tr").each(function () {
+                    var RowId = $(this).attr('id');
+                    $("#" + RowId + " .form-control").removeAttr("data-itid");
+                    $("#" + RowId + " .form-control").attr("data-itid", i);
+                    i++;
+                });
                 var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-                var html = '<tr id="tname-tr-' + countId + '"><td> @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @data_itid = "", @id = "description", @style = "width:100%;", @data_regex = "A" }) @Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="price stotal">$@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @class = "form-control form-inline field-length-xs no-border vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "", @id = "suminsured",@style = "width: 89%;", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td > <td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd('+countId+')" class="button-3d">+</a></td></tr>';
+                var html = '<tr id="tname-tr-' + countId + '"><td> @Html.TextBoxFor(p => p.DescriptionObj.Description, new { @class = "form-control form-inline field-length-lg no-border vlidationInsure commondatatest", @data_eiid = @Model.DescriptionObj.EiId, @data_itid = "", @id = "description", @style = "width:100%;", @data_regex = "ANS" }) @Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="price stotal">$@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @maxlength = "13", @class = "form-control form-inline field-length-xs no-border vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "", @id = "suminsured",@style = "width: 89%;", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td > <td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd('+countId+')" class="button-3d">+</a></td></tr>';
                 $("#tname-" + id).html(replaceA);
                 $("#tname-tr-" + id).after(html);
-                $("#tname-tr-" + countId + " .form-control").attr("data-itid", id);
+                $("#tname-tr-" + countId + " .form-control").attr("data-itid", 0);
                 $("#tname-tr-" + countId + " .form-control").val('');
                 $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);
                 $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
             }
             function tnameRemove(id) {
                 $("#tname-tr-" + id).remove();
+                var rowCount = $('.table tbody tr').length;
+                var i = 0;
+                $(".table tbody tr").each(function () {
+                    var RowId = $(this).attr('id');
+                    if (i != (rowCount-1)) {
+                        $("#" + RowId + " .form-control").attr("data-itid", i);
+                    } else {
+                        $("#" + RowId + " .form-control").attr("data-itid", 0);
+                    }
+                    i++;
+                });
                 var sum = 0;
                 $(".sumoftotalcover").each(function () {
                     var Value = $(this).val();
@@ -623,9 +688,9 @@
                 }
                 if (nameAttr == "DescriptionObj.Description") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (!regex.test(newval)) {
+                    if ($('#suminsured' + lastChar).val() != '' && newval == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Please enter description').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -657,7 +722,7 @@
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
-        var ItIdN = $(this).data('itid');
+        var ItIdN = $(this).attr('data-itid');
         var Nregex = $(this).data('regex');
         var name = $(this).attr('name');
         var id = $(this).attr('id');
@@ -681,7 +746,7 @@
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
         }
-        if (!regex.test(Value)) {
+        if (regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
@@ -719,7 +784,7 @@
                                                 $('#' + StateIdNew).attr('disabled', 'disabled');
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Read Only') {
                                                 $('#' + StateIdNew).attr('readonly', 'readonly');
@@ -752,18 +817,51 @@
                             });
                         }
                     }
-                    //if (data.referrallist != null || data.referrallist != "") {
-                    //    $('#referralList-p').html('No Referral List');
-                    //} else {
-                    //    $('#referralList-p').html(data.referrallist);
-                    //}
+                    if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
+                        var rowsorcedata = data.rowsorcedata;
+                        if (rowsorcedata != '' && rowsorcedata != null) {
+                            $.each(rowsorcedata, function (index, value) {
+                                var rowsorcedataIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                var rowsorcedataType = $("[data-eiid=" + value.Element.ElId + "]").attr('type');
+                                var rowsorcedataName = $("[data-eiid=" + value.Element.ElId + "]").attr('name');
+                                var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
+                                var rowsorcedataOption = value.Options;
+                                if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
+                                    var html = '<option value="">--Select--</option>';
+                                    $.each(rowsorcedataOption, function (index1, value1) {
+                                        if (value1.DataValue == 0) {
+                                        } else {
+                                            html += '<option value="' + value1.DataValue + '">' + value1.DataText + '</option>';
+                                        }
+                                    });
+                                    if (rowsorcedataType == undefined) {
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    } else {
+                                        var NewHtml = '<select class="form-control vlidationInsure form-border-bottom commondataselection" data-eiid="' + rowsorcedataEIID + '" id="' + rowsorcedataIdNewOne + '" name="' + rowsorcedataName + '"></select>';
+                                        $('#' + rowsorcedataIdNewOne).replaceWith(NewHtml);
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.status == "Decline") {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('Decline');
+                    } else {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('');
+                    }
                     if (data.referrallists == "") {
                         $('#referralList-p').html('No Referral List');
                     } else {
                         $('#referralList-p').html(data.referrallists);
                     }
-                    if (data.usermessage == "") {
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -772,10 +870,16 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html('');
-                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html('');
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "none" });
+                        } else {
+                            $("label[for='" + labelid + "']").html('');
+                            $("label[for='" + labelid + "']").css({ "display": "none" });
+                        }
                     } else {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -784,8 +888,13 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html(data.usermessage);
-                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html(data.usermessage);
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "block" });
+                        } else {
+                            $("label[for='" + labelid + "']").html(data.usermessage);
+                            $("label[for='" + labelid + "']").css({ "display": "block" });
+                        }
                     }
                 }
             });
@@ -799,10 +908,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html);
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html('');
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
                 }
             }
         });

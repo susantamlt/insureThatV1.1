@@ -359,27 +359,42 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
                     <div class="well">
                         <h3>Policy Sections</h3>
-                        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
-                {
-                    for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
-                    {
-                                <div class="policy-loc-row">
-                                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
-                                    <script type="text/javascript">
-                                        $(document).ready(function () {
-                                            $('.inclusions').click(function () {
-                                                var name = $(this).attr('data-name');
-                                                var nid = $(this).attr('data-nid');
-                                                $('.policy-ed-del-wrapper').hide();
-                                                $("#policy-ed-del-wrap-" + nid).show();
-                                            });
-                                        });
-                                    </script>
-                                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                        @if (Model.PolicyData.PolicyStatus == "CQ" || Model.PolicyData.PolicyStatus == "CP")
+                        {
+                            if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                            {
+                                for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                                {
+                                    <div class="policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
                                     </div>
-                                </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                            {
+                                for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                                {
+                                    <div class="policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $('.inclusions').click(function () {
+                                                    var name = $(this).attr('data-name');
+                                                    var nid = $(this).attr('data-nid');
+                                                    $('.policy-ed-del-wrapper').hide();
+                                                    $("#policy-ed-del-wrap-" + nid).show();
+                                                });
+                                            });
+                                        </script>
+                                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                                        </div>
+                                    </div>
+                                }
                             }
                         }
                         <div class="clearfix"></div>

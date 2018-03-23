@@ -21,7 +21,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> Valuables(int? cid,int? PcId)
+        public async System.Threading.Tasks.Task<ActionResult> Valuables(int? cid, int? PcId)
         {
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             string ApiKey = null;
@@ -42,48 +42,27 @@ namespace InsureThatAPI.Controllers
                 {
                     if (Policyincllist != null)
                     {
-                       if (Policyincllist.Exists(p => p.name == "Valuables"))
-                            {
-                               
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
-                            {
-                                return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+                        if (Policyincllist.Exists(p => p.name == "Valuables"))
+                        {
 
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Motor"))
+                        {
+                            return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
+                        }
+                        if (Policyincllist.Exists(p => p.name == "Valuables"))
+                        {
+                            if (Session["unId"] == null && Session["profileId"] == null)
                             {
-                                return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Valuables").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Valuables").Select(p => p.ProfileId).First();
                             }
-                            else if (Policyincllist.Exists(p => p.name == "Home Building"))
-                            {
-                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Home Content"))
-                            {
-                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                            {
-                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Motor"))
-                            {
-                                return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
-                            }
-                            if (Policyincllist.Exists(p => p.name == "Valuables"))
-                            {
-                                if (Session["unId"] == null && Session["profileId"] == null)
-                                {
-                                    Session["unId"] = Policyincllist.Where(p => p.name == "Valuables").Select(p => p.UnitId).First();
-                                    Session["profileId"] = Policyincllist.Where(p => p.name == "Valuables").Select(p => p.ProfileId).First();
-                                }
-                            }
-                            else
-                            {
-                                return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
-                            }
-                        
+                        }
+                        else
+                        {
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                        }
+
                     }
                 }
             }
@@ -246,7 +225,7 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPValuables.SpecifiedItemSumInsuredObj.ItemSumInsured = val;
                     }
-                   
+
                 }
             }
             return View(FPValuables);
@@ -276,7 +255,7 @@ namespace InsureThatAPI.Controllers
             var db = new MasterDataEntities();
             Session["unId"] = null;
             Session["profileId"] = null;
-            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid });
+            return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = FPValuables.CustomerId, PcId = FPValuables.PcId });
         }
     }
 }

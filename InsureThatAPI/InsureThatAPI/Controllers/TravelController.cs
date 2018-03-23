@@ -33,11 +33,14 @@ namespace InsureThatAPI.Controllers
             }
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
             TravelCover TravelCover = new TravelCover();
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            TravelCover.NewSections = new List<string>();
             if (Session["Policyinclustions"] != null)
             {
                 List<SessionModel> PolicyInclustions = new List<SessionModel>();
                 TravelCover.PolicyInclusions = new List<SessionModel>();
                 TravelCover.PolicyInclusions = Policyincllist;
+                TravelCover.NewSections= cmn.NewSectionHome(TravelCover.PolicyInclusions);
                 if (Policyincllist != null)
                 {
 
@@ -71,7 +74,6 @@ namespace InsureThatAPI.Controllers
             ExcTcList = Tmodel.excessRate();
             var db = new MasterDataEntities();
             TravelCover.PolicyInclusion = new List<usp_GetUnit_Result>();
-
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             TravelCover.TravellerscoveredObj = new TravellersToBeCovered();
@@ -87,7 +89,6 @@ namespace InsureThatAPI.Controllers
             TravelCover.ExcessObj = new ExcessesTC();
             TravelCover.ExcessObj.EiId = 61443;
             TravelCover.ExcessObj.ExcessList = ExcTcList;
-
             string policyid = null;
             bool policyinclusion = policyinclusions.Exists(p => p.Name == "Travel");
             HttpClient hclient = new HttpClient();
@@ -104,6 +105,8 @@ namespace InsureThatAPI.Controllers
             if (policyinclusion == true && PcId != null && PcId.HasValue)
             {
                 TravelCover.ExistingPolicyInclustions = policyinclusions;
+                TravelCover.PolicyInclusion = policyinclusions;
+                TravelCover.NewSections = cmn.NewSectionP(policyinclusions);
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -124,6 +127,20 @@ namespace InsureThatAPI.Controllers
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                         if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
                         {
+                            bool exists = TravelCover.PolicyInclusions.Exists(p => p.name == "Travel");
+                            if (exists == true)
+                            {
+                                List<SessionModel> values = new List<SessionModel>();
+                                values = (List<SessionModel>)Session["Policyinclustions"];
+                                for (int k = 0; k < values.Count(); k++)
+                                {
+                                    if (values[k].name == "Travel" && values[k].UnitId == null && values[k].ProfileId == null)
+                                    {
+                                        values.RemoveAt(k);
+                                    }
+                                }
+                                Session["Policyinclustions"] = values;
+                            }
                             var errormessage = "First please provide cover for Home Buildings.";
                             if (unitdetails.ErrorMessage.Contains(errormessage))
                             {
@@ -313,7 +330,7 @@ namespace InsureThatAPI.Controllers
             //{
             //    return RedirectToAction(actionname, controllername, new { cid = TravelCover.CustomerId, PcId = TravelCover.PcId });
             //}
-            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = TravelCover.CustomerId });
+            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = TravelCover.CustomerId, PcId = TravelCover.PcId });
             //return View(TravelCover);
         }
     }

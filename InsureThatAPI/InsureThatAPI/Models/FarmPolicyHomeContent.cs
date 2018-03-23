@@ -25,7 +25,9 @@ namespace InsureThatAPI.Models
         public CoverOptionFP CoveroptionFPObj { get; set; }
         public UnspecifiedFP UnspecifiedFPObj { get; set; }
         public DescriptionsFP DescriptionFPObj { get; set; }
+        public List<ValueDatas> DescriptionFPList { get; set; }
         public SumInsuredFP SumInsuredFPObj { get; set; }
+        public List<ValueDatas> SumInsuredFPList { get; set; }
         public ClaimFreePeriodFP ClaimperiodFPObj { get; set; }
         public NoClaimDiscountFP discountFPObj { get; set; }
         public ExcessFPHContent ExcessFPHContentObj { get; set; }

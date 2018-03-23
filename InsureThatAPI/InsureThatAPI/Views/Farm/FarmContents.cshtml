@@ -43,7 +43,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save and exit.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -147,16 +147,16 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
             @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
-            <div class="error"></div>
+            <div class="error errornew"></div>
             <div id="ptab1">
                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2 style="font-size: 21px;margin-bottom: 0;">FARM STRUCTURES AND FARM CONTENTS</h2></div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <p><a href="#FarmContentsModal3" role="button" data-target="#FarmContentsModal3" data-toggle="modal">Click here to see the information about Farm Contents?</a></p>
-                    <p><a href="#FarmStructuresModal3" role="button" data-target="#FarmStructuresModal3" data-toggle="modal">Click here to see the information about Farm Structures</a></p>
+                <div class="mt-10 mb-10 col-md-12 col-md-12">
+                    <p class="col-md-12"><a href="#FarmStructuresModal3" role="button" data-target="#FarmStructuresModal3" data-toggle="modal"><strong>Click here to see the information about Farm Structures</strong></a></p>
+                    <p class="col-md-12"><a href="#FarmContentsModal3" role="button" data-target="#FarmContentsModal3" data-toggle="modal"><strong>Click here to see the information about Farm Contents</strong></a></p>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
-                    <h5>Farm Building Details</h5>
-                    <p>What type of Farm Building do you need to cover?</p>
+                    <h5 class="col-md-12">Farm Building</h5>
+                    <p class="col-md-12">What type of Farm Building do you need to cover?</p>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <div class="col-md-12 table-8">
@@ -164,7 +164,7 @@
                             <thead>
                                 <tr>
                                     <th class="space_left">Description</th>
-                                    <th class="space_left">Year</th>
+                                    <th class="space_left">Year Built</th>
                                     <th class="space_left">Construction</th>
                                     <th class="space_left">Coolroom</th>
                                     <th class="space_left">Sum Insured</th>
@@ -179,35 +179,56 @@
                                     {
                                         jCount = i + 1;
                                         <tr id="tnameFC-tr-@jCount">
-                                            <td class="no-border">
-                                                @Html.TextBoxFor(p => p.DescriptionFCObj.Description, Model.DescriptionFCObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = i, @id = "description", @data_regex = "AN" })
-                                                @Html.HiddenFor(p => p.DescriptionFCObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                @Html.TextBoxFor(p => p.YearObj.Year, Model.YearObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = i, @id = "year", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.YearObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                @Html.DropDownListFor(Model => Model.MaterialsObj.Materials, @Model.MaterialsObj.MaterialsList, "-- Select --", new { @class = "form-control form-border-bottom vlidationInsure commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = i, @id = "materials" })
-                                                @Html.HiddenFor(p => p.MaterialsObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                <div class="policy-loc-row">
-                                                    <input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom" class="vlidationInsure" data-itid="@i"><label for="checkbox1"><span><span></span></span></label>
-                                                </div>
-                                            </td>
-                                            <td class="no-border">
-                                                $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @style = "display:inline-block;width:90%;", @class = "form-control form-border-bottom  vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = i, @id = "suminsured", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.SuminsuredObj.EiId)
-                                            </td>
                                             @if (jCount == CountTotal)
                                             {
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.DescriptionFCObj.Description, Model.DescriptionFCObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = '0', @id = "description", @data_regex = "AN" })
+                                                    @Html.HiddenFor(p => p.DescriptionFCObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.YearObj.Year, Model.YearObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = '0', @id = "year", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.YearObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(Model => Model.MaterialsObj.Materials, @Model.MaterialsObj.MaterialsList, "-- Select --", new { @class = "form-control form-border-bottom vlidationInsure commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = '0', @id = "materials" })
+                                                    @Html.HiddenFor(p => p.MaterialsObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    <div class="policy-loc-row">
+                                                        <input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom" class="vlidationInsure" data-itid="@i"><label for="checkbox1"><span><span></span></span></label>
+                                                    </div>
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @style = "display:inline-block;width:90%;", @class = "form-control form-border-bottom  vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = '0', @id = "suminsured", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                                </td>
                                                 <td class="no-border" id="tnameFC-@jCount"><a href="javascript:void(0)" onclick="tnameAddFC(@jCount)" class="button-3d">+</a></td>
                                                 jCount = 0;
                                                 CountTotal = 0;
                                             }
                                             else
                                             {
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.DescriptionFCObj.Description, Model.DescriptionFCObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = jCount, @id = "description", @data_regex = "AN" })
+                                                    @Html.HiddenFor(p => p.DescriptionFCObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.YearObj.Year, Model.YearObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = jCount, @id = "year", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.YearObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(Model => Model.MaterialsObj.Materials, @Model.MaterialsObj.MaterialsList, "-- Select --", new { @class = "form-control form-border-bottom vlidationInsure commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = jCount, @id = "materials" })
+                                                    @Html.HiddenFor(p => p.MaterialsObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    <div class="policy-loc-row">
+                                                        <input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom" class="vlidationInsure" data-itid="@jCount"><label for="checkbox1"><span><span></span></span></label>
+                                                    </div>
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, Model.SuminsuredObjList[i].Value, new { @maxlength = "13", @style = "display:inline-block;width:90%;", @class = "form-control form-border-bottom  vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = jCount, @id = "suminsured", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredObj.EiId)
+                                                </td>
                                                 <td class="no-border" id="tnameFC-@jCount"><a href="javascript:void(0)" onclick="tnameRemoveFC(@jCount)" class="button-3d">-</a></td>
                                             }
                                         </tr>
@@ -234,7 +255,7 @@
                                             </div>
                                         </td>
                                         <td class="no-border">
-                                            $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @style = "display:inline-block;width:90%;", @class = "form-control form-border-bottom  vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "0", @id = "suminsured", @data_regex = "N" })
+                                            $@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width:90%;", @class = "form-control form-border-bottom  vlidationInsure sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "0", @id = "suminsured", @data_regex = "N" })
                                             @Html.HiddenFor(p => p.SuminsuredObj.EiId)
                                         </td>
                                         <td class="no-border" id="tnameFC-1"><a href="javascript:void(0)" onclick="tnameAddFC(1)" class="button-3d">+</a></td>
@@ -297,26 +318,28 @@
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Please advise the cost per kilometre to replace your fencing</p></div>
+                    <p class="col-md-12"><strong>Farm Fencing</strong></p>
+                    <div class="col-md-6"><p>Please advise the cost per kilometre to replace your Farm Fencing</p></div>
                     <div class="col-md-6">
-                        $@Html.TextBoxFor(p => p.FarmfencingObj.Farmfencing, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmfencingObj.EiId, @id = "farmfencing", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.FarmfencingObj.Farmfencing, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmfencingObj.EiId, @id = "farmfencing", @data_regex = "N" })
                         @Html.HiddenFor(p => p.FarmfencingObj.EiId)
                         <label id="FarmfencingObj.Farmfencing-error" class="error" for="FarmfencingObj.Farmfencing"></label>
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>What is the total replacement cost of fencing cover you would like?</p></div>
+                    <div class="col-md-6"><p>What is the total replacement cost of Farm Fencing cover you would like?</p></div>
                     <div class="col-md-6">
-                        $@Html.TextBoxFor(p => p.FarmcencingTcObj.Totalcover, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmcencingTcObj.EiId, @id = "totalcover", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.FarmcencingTcObj.Totalcover, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmcencingTcObj.EiId, @id = "totalcover", @data_regex = "N" })
                         @Html.HiddenFor(p => p.FarmcencingTcObj.EiId)
                         <label id="FarmcencingTcObj.Totalcover-error" class="error" for="FarmcencingTcObj.Totalcover"></label>
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-12"><strong>Other Farm Structures</strong></p>
                     <div class="col-md-6">
                         <p>
                             Please advise how much you would like the rest of your <a href="#FarmStructuresModal3" role="button" data-target="#FarmStructuresModal3" data-toggle="modal">Farm Structures</a> to be insured<br />
-                            <span class="mini-text">(includes covered ways, exterior light fittings, irrigation systems, pens, sheep dips, stockyards, pipes, cables, power and telephone poles, silos, solar power units, tanks and windmills)</span>
+                            <span class="mini-text">(includes covered ways, exterior light fittings, irrigation systems, pens, sheep dips, stockyards, pipes, cables, power and telephone poles, silos, solar power units, tanks and windmills, but not Farm Fencing.  Farm Fencing can be covered above)</span>
                         </p>
                     </div>
                     <div id="FarmStructuresModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="FarmStructuresModal3" aria-hidden="false">
@@ -350,7 +373,7 @@
                                         <li>(1) Home Buildings.</li>
                                         <li>(2) Glasshouses, shade houses and structures designed to house growing plants.</li>
                                     </ul>
-
+                                    <p>*Please refer to the policy wording for full details</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -359,15 +382,16 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        $@Html.TextBoxFor(p => p.FarmstructuresObj.Farmstructures, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmstructuresObj.EiId, @id = "farmstructures", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.FarmstructuresObj.Farmstructures, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmstructuresObj.EiId, @id = "farmstructures", @data_regex = "N" })
                         @Html.HiddenFor(p => p.FarmstructuresObj.EiId)
                         <label id="FarmstructuresObj.Farmstructures-error" class="error" for="FarmstructuresObj.Farmstructures"></label>
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-12"><strong>Farm Contents</strong></p>
                     <div class="col-md-6"><p>How much cover do you need to replace your <a href="#FarmContentsModal3" role="button" data-target="#FarmContentsModal3" data-toggle="modal">Farm Contents?</a></p></div>
                     <div class="col-md-6">
-                        $@Html.TextBoxFor(p => p.FarmContentFcObj.Farmcontents, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmContentFcObj.EiId, @id = "farmstructuresFc", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.FarmContentFcObj.Farmcontents, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmContentFcObj.EiId, @id = "farmstructuresFc", @data_regex = "N" })
                         @Html.HiddenFor(p => p.FarmContentFcObj.EiId)
                         <label id="FarmContentFcObj.Farmcontents-error" class="error" for="FarmContentFcObj.Farmcontents"></label>
                     </div>
@@ -410,6 +434,7 @@
                                     <li>(16) Vehicle that runs on rails or an accessory to such a vehicle;</li>
                                     <li>(17) Watercraft or an accessory to a watercraft</li>
                                 </ul>
+                                <p>*Please refer to the policy wording for full details</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -418,7 +443,7 @@
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12 ">
-                    <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-6"><p>Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
                     <div class="col-md-3">
                         @Html.DropDownListFor(Model => Model.ExcessesFpcObj.Excess, listsExcessFC, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessesFpcObj.EiId, @id = "excessFC" })
                         @Html.HiddenFor(p => p.ExcessesFpcObj.EiId)
@@ -431,10 +456,63 @@
             </div>
             <div id="ptab2" style="display:none;">
                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>FARM MACHINERY</h2></div>
+                <div class="mt-10 mb-10 col-md-12 col-md-12">
+                    <p class="col-md-12"><a href="#FarmMecModal3" role="button" data-target="#FarmMecModal3" data-toggle="modal"><strong>What is considered Farm Machinery?</strong></a></p>
+                    <p class="col-md-12"><a href="#FarmMecsModal3" role="button" data-target="#FarmMecsModal3" data-toggle="modal"><strong>What is covered under this section?</strong></a></p>
+                </div>
+                <div id="FarmMecModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="FarmMecModal3" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Farm Machinery</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>A self-propelled or motor drawn machine or implement designed specifically for agricultural purposes and used primarily for agricultural purposes.</p>
+                                <p>It does not include any machine or implement that is required to be registered under any motor vehicle registration Act or legislation, whether or not such registration is in place.</p>
+                                <p>*Please refer to the policy wording for full details</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="FarmMecsModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="FarmMecsModal3" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Farm Machinery Cover</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>It is covered against accidental loss or damage that takes place anywhere in Australia during the period of cover.</p>
+                                <ul style="list-style:none">
+                                    <li>(1) Fire;</li>
+                                    <li>(2) Earthquake;</li>
+                                    <li>(3) Explosion;</li>
+                                    <li>(4) Impact by anything that flies or falls from the sky;</li>
+                                    <li>(5) Lightning;</li>
+                                    <li>(6) Malicious acts;</li>
+                                    <li>(7) Storm; or</li>
+                                    <li>(8) Volcanoes</li>
+                                </ul>
+                                <p>*Please refer to the policy wording for full details</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <div class="col-md-6"><p>How much cover do you need for unspecified farm machinery?<br /><span class="mini-text">(You can insure unspecified items of farm machinery up to $5,000 for any one item.)</span></p></div>
                     <div class="col-md-6">
-                        $@Html.TextBoxFor(p => p.FarmContentFMObj.Farmcontents, new { @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmContentFMObj.EiId, @id = "farmcontents", @style = "display:inline-block;width:95%", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.FarmContentFMObj.Farmcontents, new { @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmContentFMObj.EiId, @id = "farmcontents", @style = "display:inline-block;width:95%", @data_regex = "N" })
                         @Html.HiddenFor(p => p.FarmContentFMObj.EiId)
                         <label id="FarmContentFMObj.Farmcontents-error" class="error" for="FarmContentFMObj.Farmcontents"></label>
                     </div>
@@ -449,7 +527,7 @@
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <p class="col-md-12">Please list your specified item/s of machinery below (valued over $5,000 per item)</p>
-                    <p class="col-md-12 mini-text">Please advise details such as the model number of a tractor, the type of caravan etc</p>
+                    @*<p class="col-md-12 mini-text">Please advise details such as the model number of a tractor, the type of caravan etc</p>*@
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <div class="col-md-12 table-8">
@@ -457,7 +535,7 @@
                             <thead>
                                 <tr>
                                     <th class="space_left">Description</th>
-                                    <th class="space_left">Year</th>
+                                    <th class="space_left">Year Manufacture</th>
                                     <th class="space_left">Serial Number</th>
                                     <th class="space_left">Excess</th>
                                     <th class="space_left">Sum Insured</th>
@@ -472,34 +550,54 @@
                                     {
                                         jCount = i + 1;
                                         <tr id="tnameFM-tr-@jCount">
-                                            <td class="no-border">
-                                                @Html.TextBoxFor(p => p.DescriptionFmObj.Description, Model.DescriptionFmObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = i, @id = "description", @data_regex = "AN" })
-                                                @Html.HiddenFor(p => p.DescriptionFmObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                @Html.TextBoxFor(p => p.YearFMObj.Year, Model.YearFMObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = i, @id = "year", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.YearFMObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, Model.SerialnumberObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = i, @id = "serialnumber", @data_regex = "NA" })
-                                                @Html.HiddenFor(p => p.SerialnumberObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                @Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, @Model.ExcessesFpcObj.ExcessList, new { @class = "form-control vlidationInsure form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = i, @id = "excess" })
-                                                @Html.HiddenFor(p => p.ExcessesFMObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                $@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, Model.SuminsuredFMObjList[i].Value, new { @style = "display:inline-block;width: 93%", @class = "suminsuredfarmmachinary form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = i, @id = "suminsured", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.SuminsuredFMObj.EiId)
-                                            </td>
                                             @if (jCount == CountTotal)
                                             {
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.DescriptionFmObj.Description, Model.DescriptionFmObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = '0', @id = "description", @data_regex = "AN" })
+                                                    @Html.HiddenFor(p => p.DescriptionFmObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.YearFMObj.Year, Model.YearFMObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = '0', @id = "year", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.YearFMObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, Model.SerialnumberObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = '0', @id = "serialnumber", @data_regex = "NA" })
+                                                    @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, @Model.ExcessesFpcObj.ExcessList, new { @class = "form-control vlidationInsure form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = '0', @id = "excess" })
+                                                    @Html.HiddenFor(p => p.ExcessesFMObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, Model.SuminsuredFMObjList[i].Value, new { @maxlength = "13", @style = "display:inline-block;width: 92%", @class = "suminsuredfarmmachinary form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = '0', @id = "suminsured", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredFMObj.EiId)
+                                                </td>
                                                 <td class="no-border" id="tnameFM-@jCount"><a href="javascript:void(0)" onclick="tnameAddFM(@jCount)" class="button-3d">+</a></td>
                                                 jCount = 0;
                                                 CountTotal = 0;
                                             }
                                             else
                                             {
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.DescriptionFmObj.Description, Model.DescriptionFmObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = jCount, @id = "description", @data_regex = "AN" })
+                                                    @Html.HiddenFor(p => p.DescriptionFmObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.YearFMObj.Year, Model.YearFMObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = jCount, @id = "year", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.YearFMObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, Model.SerialnumberObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = jCount, @id = "serialnumber", @data_regex = "NA" })
+                                                    @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, @Model.ExcessesFpcObj.ExcessList, new { @class = "form-control vlidationInsure form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = jCount, @id = "excess" })
+                                                    @Html.HiddenFor(p => p.ExcessesFMObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, Model.SuminsuredFMObjList[i].Value, new { @maxlength = "13", @style = "display:inline-block;width: 92%", @class = "suminsuredfarmmachinary form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = jCount, @id = "suminsured", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredFMObj.EiId)
+                                                </td>
                                                 <td class="no-border" id="tnameFM-@jCount"><a href="javascript:void(0)" onclick="tnameRemoveFM(@jCount)" class="button-3d">-</a></td>
                                             }
                                         </tr>
@@ -525,7 +623,7 @@
                                             @Html.HiddenFor(p => p.ExcessesFMObj.EiId)
                                         </td>
                                         <td class="no-border">
-                                            $@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, new { @style = "display:inline-block;width: 93%", @class = "suminsuredfarmmachinary form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = "0", @id = "suminsured", @data_regex = "N" })
+                                            $@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width: 92%", @class = "suminsuredfarmmachinary form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = "0", @id = "suminsured", @data_regex = "N" })
                                             @Html.HiddenFor(p => p.SuminsuredFMObj.EiId)
                                         </td>
                                         <td class="no-border" id="tnameFM-1"><a href="javascript:void(0)" onclick="tnameAddFM(1)" class="button-3d">+</a></td>
@@ -558,7 +656,10 @@
             <div id="ptab3" style="display:none;">
                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>LIVESTOCK</h2></div>
                 <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-lg-12"><a href="#livestockModal31" role="button" data-target="#livestockModal31" data-toggle="modal"><strong>Click here to see the definition for your livestock.</strong></a></p>
                     <p class="col-lg-12"><a href="#livestockModal3" role="button" data-target="#livestockModal3" data-toggle="modal"><strong>Click here to see the cover available for your livestock.</strong></a></p>
+                </div>
+                <div class="mt-10 mb-10 col-md-12">
                     <div class="col-md-12 table-8">
                         <table class="table" style=" width: 100%; ">
                             <thead>
@@ -578,30 +679,46 @@
                                     {
                                         jCount = i + 1;
                                         <tr id="tnameLS-tr-@jCount">
-                                            <td class="no-border">
-                                                @Html.DropDownListFor(p => p.DescriptionLSObj.Description, Model.DescriptionLSObj.DescriptionList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = i, @id = "description" })
-                                                @Html.HiddenFor(p => p.DescriptionLSObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                @Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, Model.NumberanimalObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure autoCalculateLS commondatatest", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = i, @id = "numberanimal", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.NumberanimalObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                $@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, Model.SuminsuredperObjList[i].Value, new { @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = i, @id = "suminsuredper", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.SuminsuredperObj.EiId)
-                                            </td>
-                                            <td class="no-border">
-                                                $@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, Model.SuminsuredLSObjList[i].Value, new { @readonly = "readonly", @style = "display:inline-block;width:93%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = i, @id = "suminsured", @data_regex = "N" })
-                                                @Html.HiddenFor(p => p.SuminsuredLSObj.EiId)
-                                            </td>
                                             @if (jCount == CountTotal)
                                             {
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.DescriptionLSObj.Description, Model.DescriptionLSObj.DescriptionList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = '0', @id = "description" })
+                                                    @Html.HiddenFor(p => p.DescriptionLSObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, Model.NumberanimalObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure autoCalculateLS commondatatest", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = '0', @id = "numberanimal", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.NumberanimalObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, Model.SuminsuredperObjList[i].Value, new { @maxlength = "13", @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = '0', @id = "suminsuredper", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredperObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, Model.SuminsuredLSObjList[i].Value, new { @maxlength = "13", @readonly = "readonly", @style = "display:inline-block;width:92%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = '0', @id = "suminsured", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredLSObj.EiId)
+                                                </td>
                                                 <td class="no-border" id="tnameLS-@jCount"><a href="javascript:void(0)" onclick="tnameAddLS(@jCount)" class="button-3d">+</a></td>
                                                 jCount = 0;
                                                 CountTotal = 0;
                                             }
                                             else
                                             {
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.DescriptionLSObj.Description, Model.DescriptionLSObj.DescriptionList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = jCount, @id = "description" })
+                                                    @Html.HiddenFor(p => p.DescriptionLSObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, Model.NumberanimalObjList[i].Value, new { @class = "form-control form-border-bottom vlidationInsure autoCalculateLS commondatatest", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = jCount, @id = "numberanimal", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.NumberanimalObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, Model.SuminsuredperObjList[i].Value, new { @maxlength = "13", @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = jCount, @id = "suminsuredper", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredperObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    $@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, Model.SuminsuredLSObjList[i].Value, new { @maxlength = "13", @readonly = "readonly", @style = "display:inline-block;width:92%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = jCount, @id = "suminsured", @data_regex = "N" })
+                                                    @Html.HiddenFor(p => p.SuminsuredLSObj.EiId)
+                                                </td>
                                                 <td class="no-border" id="tnameLS-@jCount"><a href="javascript:void(0)" onclick="tnameRemoveLS(@jCount)" class="button-3d">-</a></td>
                                             }
                                         </tr>
@@ -619,11 +736,11 @@
                                             @Html.HiddenFor(p => p.NumberanimalObj.EiId)
                                         </td>
                                         <td class="no-border">
-                                            $@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, new { @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = "0", @id = "suminsuredper", @data_regex = "N" })
+                                            $@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, new { @maxlength = "13", @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = "0", @id = "suminsuredper", @data_regex = "N" })
                                             @Html.HiddenFor(p => p.SuminsuredperObj.EiId)
                                         </td>
                                         <td class="no-border">
-                                            $@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, new { @readonly = "readonly", @style = "display:inline-block;width:93%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = "0", @id = "suminsured", @data_regex = "N" })
+                                            $@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, new { @maxlength = "13", @readonly = "readonly", @style = "display:inline-block;width:92%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = "0", @id = "suminsured", @data_regex = "N" })
                                             @Html.HiddenFor(p => p.SuminsuredLSObj.EiId)
                                         </td>
                                         <td class="no-border" id="tnameLS-1"><a href="javascript:void(0)" onclick="tnameAddLS(1)" class="button-3d">+</a></td>
@@ -650,6 +767,58 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
+                                <h3 class="pull-left">Livestock Cover</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>We will extend Livestock in this section to cover the death of Your livestock that is caused by an attack by a dog. This includes the humane killing of Your livestock that arises from such an attack.</p>
+                                <p>The humane killing must be certified by a registered veterinary surgeon.</p>
+                                <p>But We will not cover You if the dog or dogs are owned by:</p>
+                                <ul style="list-style:none;">
+                                    <li>[a] A person who lives on Your farm.</li>
+                                    <li>[b] You.</li>
+                                    <li>[c] Your Employee.</li>
+                                </ul>
+                                <p>The most that We will pay under this extra benefit is $50,000 in any one period of cover shown on the Certificate</p>
+                                <p>*Please refer to the policy wording for full details</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="livestockModal4" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="livestockModal4" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="pull-left">Dog Attack</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                    <img src="~/images/close-icon.png" />
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>We will extend Livestock in this section to cover the death of Your livestock that is caused by an attack by a dog. This includes the humane killing of Your livestock that arises from such an attack.</p>
+                                <p>The humane killing must be certified by a registered veterinary surgeon.</p>
+                                <p>But We will not cover You if the dog or dogs are owned by:</p>
+                                <ul style="list-style:none;">
+                                    <li>[a] A person who lives on Your farm.</li>
+                                    <li>[b] You.</li>
+                                    <li>[c] Your Employee.</li>
+                                </ul>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="livestockModal31" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="livestockModal31" aria-hidden="false">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
                                 <h3 class="pull-left">Livestock</h3>
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                     <img src="~/images/close-icon.png" />
@@ -657,7 +826,7 @@
                             </div>
                             <div class="modal-body">
                                 <p>Your farm animals when they are at the Location. They are covered against accidental death that is caused during the period of cover by:</p>
-                                <ul style="list-style:none;">
+                                <ul style="list-style:none">
                                     <li>(1) Fire;</li>
                                     <li>(2) Earthquake;</li>
                                     <li>(3) Electrocution;</li>
@@ -669,6 +838,7 @@
                                     <li>(9) Storm; or</li>
                                     <li>(10) Volcanic eruption.</li>
                                 </ul>
+                                <p>*Please refer to the policy wording for full details</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -677,7 +847,7 @@
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
-                    <p class="col-md-8 col-sm-8 col-xs-12">Do you wish to insure your livestock against dog attack?</p>
+                    <p class="col-md-8 col-sm-8 col-xs-12">Do you wish to insure your livestock against <a href="#livestockModal4" role="button" data-target="#livestockModal4" data-toggle="modal">Dog Attack?</a></p>
                     <div class="col-md-4 col-sm-4 col-xs-12">
                         <div class="policy-loc-row">
                             <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
@@ -694,7 +864,7 @@
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12 ">
-                    <div class="col-md-4"><p>Please Select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-4"><p>Please Select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
                     <div class="col-md-4">
                         @Html.DropDownListFor(Model => Model.ExcessesLSObj.Excess, listsExcessFM2, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessesLSObj.EiId, @id = "excess" })
                         @Html.HiddenFor(p => p.ExcessesLSObj.EiId)
@@ -709,36 +879,40 @@
             </div>
             <div id="ptab4" style="display:none;">
                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2 style="font-size: 25px;margin-bottom: 0;">HARVESTED CROPS AND BEEHIVES</h2></div>
-                <h5><a href="#HarvestedCropModal3" role="button" data-target="#HarvestedCropModal3" data-toggle="modal">Harvested Crops</a></h5>
-                <div id="HarvestedCropModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="HarvestedCropModal3" aria-hidden="false">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="pull-left">Harvested Crops</h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                    <img src="~/images/close-icon.png" />
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Harvested crops that You have grown or bought that are at the Location. They are covered against accidental loss or damage.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-12"><strong>Harvested Crops</strong></p>
+                    <div id="HarvestedCropModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="HarvestedCropModal3" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Harvested Crops</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Harvested crops that You have grown or bought that are at the Location. They are covered against accidental loss or damage.</p>
+                                    <p>*Please refer to the policy wording for full details</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><a href="#HarvestedCropModal3" role="button" data-target="#HarvestedCropModal3" data-toggle="modal"><strong>What is covered under Harvested Crops?</strong></a></p>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12"><span class="mini-text">We can insure your harvested crops (eg Hay) and grains stored at the location</span></p>
                     <div class="col-md-4"><p>How much cover do you need for your harvested crops?</p></div>
                     <div class="col-md-8">
-                        $@Html.TextBoxFor(p => p.SuminsureHCVdObj.Suminsured, new { @style = "display:inline-block;width:95%", @class = "form-control vlidationInsure form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsureHCVdObj.EiId, @id = "suminsuredHCB", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.SuminsureHCVdObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width:95%", @class = "form-control vlidationInsure form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsureHCVdObj.EiId, @id = "suminsuredHCB", @data_regex = "N" })
                         @Html.HiddenFor(p => p.SuminsureHCVdObj.EiId)
                         <label id="SuminsureHCVdObj.Suminsured-error" class="error" for="SuminsureHCVdObj.Suminsured"></label>
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12 ">
-                    <div class="col-md-4"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-4"><p>Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
                     <div class="col-md-4">
                         @Html.DropDownListFor(p => p.ExcessesHCVObj.Excess, listsExcessFM2, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessesHCVObj.EiId, @id = "excessHCB" })
                         @Html.HiddenFor(p => p.ExcessesHCVObj.EiId)
@@ -746,24 +920,28 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-                <h5><a href="#BeehivesModal3" role="button" data-target="#BeehivesModal3" data-toggle="modal">Beehives</a></h5>
-                <div id="BeehivesModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="BeehivesModal3" aria-hidden="false">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="pull-left">Beehives</h3>
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                    <img src="~/images/close-icon.png" />
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>Your beehives. They are covered against accidental loss or damage that takes place at the Location during the period of cove.</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                <div class="mt-10 mb-10 col-md-12">
+                    <p class="col-md-12"><strong>Beehives</strong></p>
+                    <div id="BeehivesModal3" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="BeehivesModal3" aria-hidden="false">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3 class="pull-left">Beehives</h3>
+                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                        <img src="~/images/close-icon.png" />
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>Your beehives. They are covered against accidental loss or damage that takes place at the Location during the period of cover.</p>
+                                    <p>*Please refer to the policy wording for full details</p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <p class="col-md-12"><a href="#BeehivesModal3" role="button" data-target="#BeehivesModal3" data-toggle="modal"><strong>What is covered under Beehives?</strong></a></p>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
                     <div class="col-md-4"><p>Would you like to insure your beehives?</p></div>
@@ -778,12 +956,12 @@
                 <div class="mt-10 mb-10 col-md-12 cl-@Model.SuminsuredHbcObj.EiId" id="TAIRbeehives" style="display:none;">
                     <div class="col-md-4"><p>What is the total amount of insurance you require for your beehives?</p></div>
                     <div class="col-md-8">
-                        $@Html.TextBoxFor(p => p.SuminsuredHbcObj.Suminsured, new { @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredHbcObj.EiId, @id = "suminsuredHCB1", @data_regex = "N" })
+                        $@Html.TextBoxFor(p => p.SuminsuredHbcObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredHbcObj.EiId, @id = "suminsuredHCB1", @data_regex = "N" })
                         @Html.HiddenFor(p => p.SuminsuredHbcObj.EiId)
                         <label id="SuminsuredHbcObj.Suminsured-error" class="error" for="SuminsuredHbcObj.Suminsured"></label>
                     </div>
                 </div>
-                <div class="mt-10 mb-10 col-md-12">
+                <div class="mt-10 mb-10 col-md-12" id="TAIRbeehives1" style="display:none;">
                     <div class="col-md-4"><p>How many hives do you have?</p></div>
                     <div class="col-md-8">
                         @Html.TextBoxFor(p => p.NumberhiveObj.Numberhive, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.NumberhiveObj.EiId, @id = "numberhiveHBC", @data_regex = "N" })
@@ -792,7 +970,7 @@
                     </div>
                 </div>
                 <div class="mt-10 mb-10 col-md-12 ">
-                    <div class="col-md-4"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                    <div class="col-md-4"><p>Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
                     <div class="col-md-4">
                         @Html.DropDownListFor(p => p.ExcessBObj.Excess, listsExcessFM2, new { @class = "gray-bg-underline vlidationInsure form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessBObj.EiId, @id = "excessbHBC" })
                         @Html.HiddenFor(p => p.ExcessBObj.EiId)
@@ -825,7 +1003,12 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>When you make a claim, you pay the first part of the cost and we pay the rest. Your part is called the excess.  You can reduce the cost of your insurance by choosing a higher excess.</p>
+                    <p>The amount that We will deduct from a claims settlement. This amount is shown in the Certificate.</p>
+                    <p>Please Note</p>
+                    <ul style="list-style:none">
+                        <li>(A) If more than one claim arises out of the same event We will only apply the largest Excess.</li>
+                        <li>(B) We will not deduct a young driver's Excess if the event that caused the claim happened when Your Vehicle was with a business for service, repair or parking.</li>
+                    </ul>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -958,8 +1141,6 @@
                                 var PcId = $(this).data('pcid');
                                 var policyStatus = $(this).data('policystatus');
                                 // var prId = $(this).data('prId');
-                                alert(selectedunid);
-                                alert(selectedprofileid);
                                 var prId = 1029;
                                 $.ajax({
                                     type: "POST",
@@ -1011,14 +1192,45 @@
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Contents">+  Home Content</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pet">+  Pets</a></li>
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+                @if (Model.NewSections != null && Model.NewSections.Count() > 0)
+                {
+                    for (int i = 0; i < Model.NewSections.Count(); i++)
+                    {
+                        if (Model.NewSections[i] == "HomeBuildings")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Buildings
+                                </a>
+                            </li>
+                        }
+                        else if (Model.NewSections[i] == "HomeContents")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Contents
+                                </a>
+                            </li>
+
+                        }
+                        else if (Model.NewSections[i] == "FarmProperty")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Farm Property
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + @Model.NewSections[i]
+                                </a>
+                            </li>
+                        }
+                    }
+                }
             </ul>
             <script type="text/javascript">
                             $(document).on('click', 'ul.unit > li', function () {
@@ -1032,7 +1244,7 @@
                                     data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
                                     success: function (responce) {
                                         if (responce.Status == false) {
-                                            $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $(".errornew").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
                                             $("html, body").animate({ scrollTop: 0 }, "slow");
                                         } else {
                                             window.location.href = responce;
@@ -1153,7 +1365,7 @@
                 var regex = /^[0-9]*$/;
                 if ($('#ptab1 #description' + lastChar).val() != '' && newval == '') {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text("Please select year").css({ "display": "block" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter year").css({ "display": "block" });
                     valid = 0;
                 } else if (!regex.test(newval) && newval != '') {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1161,7 +1373,7 @@
                     valid = 0;
                 } else if (newval != '' && newval.length != 4) {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text("Year is not proper. Please check").css({ "display": "block" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text("Please enter an appropriate year").css({ "display": "block" });
                     valid = 0;
                 } else if (newval != '' && newval > currentYear) {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1227,13 +1439,19 @@
             if (nameAttr == "FarmfencingObj.Farmfencing") {
                 var regex = /^[0-9]*$/;
                 var newValValuablesS = newval.replace(/,/g, '');
+                var totalCoverRaw = $('#ptab1 #totalcover').val();
+                var totalCover = totalCoverRaw.replace(/,/g, '');
                 if (newValValuablesS == '') {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab1 label[for='" + nameAttr + "']").text('Please enter farm fencing').css({ "display": "block" });
                     valid = 0;
-                } else if (!regex.test(newValValuablesS)) {
+                } else if (newValValuablesS!='' && !regex.test(newValValuablesS)) {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab1 label[for='" + nameAttr + "']").text('Only numeric values are allowed').css({ "display": "block" });
+                    valid = 0;
+                } else if (totalCover != '' && totalCover < newValValuablesS){
+                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                    $("#ptab1 label[for='" + nameAttr + "']").text('Fencing per km cost cannot be greater than total cost').css({ "display": "block" });
                     valid = 0;
                 } else {
                     $('#ptab1 #' + id).css({ "border": "" });
@@ -1324,11 +1542,7 @@
             }
             if (nameAttr == "DescriptionFmObj.Description") {
                 var regex = /^[a-zA-Z0-9 ]*$/;
-                if (newval == '') {
-                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text('Please enter description').css({ "display": "block" });
-                    valid = 0;
-                } else if (!regex.test(newval)) {
+                if (newval != '' && !regex.test(newval)) {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
                     valid = 0;
@@ -1339,9 +1553,9 @@
             }
             if (nameAttr == "YearFMObj.Year") {
                 var regex = /^[0-9]*$/;
-                if (newval == '') {
+                if ($('#ptab2 #description' + lastChar).val()!='' && newval == '') {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text("Please select year").css({ "display": "block" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please enter year").css({ "display": "block" });
                     valid = 0;
                 } else if (!regex.test(newval) && newval != '') {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1349,7 +1563,7 @@
                     valid = 0;
                 } else if (newval != '' && newval.length != 4) {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text("Year is not proper. Please check").css({ "display": "block" });
+                    $("#ptab2 label[for='" + nameAttr + "']").text("Please enter an appropriate year").css({ "display": "block" });
                     valid = 0;
                 } else if (newval != '' && newval > currentYear) {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1362,11 +1576,11 @@
             }
             if (nameAttr == "SerialnumberObj.Serialnumber") {
                 var regex = /^[a-zA-z0-9]*$/;
-                if (newval == '') {
+                if ($('#ptab2 #description' + lastChar).val() != '' && newval == '') {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Please enter serial number').css({ "display": "block" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
+                } else if (newval != '' && !regex.test(newval)) {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
                     valid = 0;
@@ -1376,7 +1590,7 @@
                 }
             }
             if (nameAttr == "ExcessesFMObj.Excess") {
-                if (newval == '') {
+                if ($('#ptab2 #description' + lastChar).val() != '' && newval == '') {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Please select excess').css({ "display": "block" });
                     valid = 0;
@@ -1388,11 +1602,11 @@
             if (nameAttr == "SuminsuredFMObj.Suminsured") {
                 var regex = /^[0-9]*$/;
                 var newValValuablesS = newval.replace(/,/g, '');
-                if (newValValuablesS == '') {
+                if ($('#ptab2 #description' + lastChar).val() != '' && newValValuablesS == '') {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Please enter sum insured').css({ "display": "block" });
                     valid = 0;
-                } else if (!regex.test(newValValuablesS)) {
+                } else if (newValValuablesS!='' && !regex.test(newValValuablesS)) {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                     valid = 0;
@@ -1525,7 +1739,7 @@
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
-        var ItIdN = $(this).data('itid');
+        var ItIdN = $(this).attr('data-itid');
         var Nregex = $(this).data('regex');
         var name = $(this).attr('name');
         var id = $(this).attr('id');
@@ -1590,7 +1804,7 @@
                                                 $('#' + StateIdNew).attr('disabled', 'disabled');
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Read Only') {
                                                 $('#' + StateIdNew).attr('readonly', 'readonly');
@@ -1623,18 +1837,51 @@
                             });
                         }
                     }
-                    //if (data.referrallist != null || data.referrallist != "") {
-                    //    $('#referralList-p').html('No Referral List');
-                    //} else {
-                    //    $('#referralList-p').html(data.referrallist);
-                    //}
+                    if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
+                        var rowsorcedata = data.rowsorcedata;
+                        if (rowsorcedata != '' && rowsorcedata != null) {
+                            $.each(rowsorcedata, function (index, value) {
+                                var rowsorcedataIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                var rowsorcedataType = $("[data-eiid=" + value.Element.ElId + "]").attr('type');
+                                var rowsorcedataName = $("[data-eiid=" + value.Element.ElId + "]").attr('name');
+                                var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
+                                var rowsorcedataOption = value.Options;
+                                if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
+                                    var html = '<option value="">--Select--</option>';
+                                    $.each(rowsorcedataOption, function (index1, value1) {
+                                        if (value1.DataValue == 0) {
+                                        } else {
+                                            html += '<option value="' + value1.DataValue + '">' + value1.DataText + '</option>';
+                                        }
+                                    });
+                                    if (rowsorcedataType == undefined) {
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    } else {
+                                        var NewHtml = '<select class="form-control vlidationInsure form-border-bottom commondataselection" data-eiid="' + rowsorcedataEIID + '" id="' + rowsorcedataIdNewOne + '" name="' + rowsorcedataName + '"></select>';
+                                        $('#' + rowsorcedataIdNewOne).replaceWith(NewHtml);
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.status == "Decline") {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('Decline');
+                    } else {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('');
+                    }
                     if (data.referrallists == "") {
                         $('#referralList-p').html('No Referral List');
                     } else {
                         $('#referralList-p').html(data.referrallists);
                     }
-                    if (data.usermessage == "") {
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -1643,10 +1890,16 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html('');
-                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html('');
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "none" });
+                        } else {
+                            $("label[for='" + labelid + "']").html('');
+                            $("label[for='" + labelid + "']").css({ "display": "none" });
+                        }
                     } else {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -1655,8 +1908,13 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html(data.usermessage);
-                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html(data.usermessage);
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "block" });
+                        } else {
+                            $("label[for='" + labelid + "']").html(data.usermessage);
+                            $("label[for='" + labelid + "']").css({ "display": "block" });
+                        }
                     }
                 }
             });
@@ -1666,7 +1924,7 @@
         var countId = id + 1;
         $('#tnameFC-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveFC(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tnameFC-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFCObj.Description, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = "", @id = "description", @data_regex = "AN" })@Html.HiddenFor(p => p.DescriptionFCObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "vlidationInsure form-control form-border-bottom commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = "", @id = "year"})@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.MaterialsObj.Materials, Enumerable.Empty<SelectListItem>(),new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = "", @id = "materials" })@Html.HiddenFor(p => p.MaterialsObj.EiId)</td><td class="no-border"><div class="policy-loc-row"><input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom" class="vlidationInsure"><label for="checkbox1"><span><span></span></span></label></div></td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @style = "display:inline-block;width: 90%", @class = "vlidationInsure form-control form-border-bottom sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "", @id = "suminsured", @data_regex="N" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td><td class="no-border" id="tnameFC-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddFC(' + countId + ')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tnameFC-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFCObj.Description, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionFCObj.EiId, @data_itid = "", @id = "description", @data_regex = "AN" })@Html.HiddenFor(p => p.DescriptionFCObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "vlidationInsure form-control form-border-bottom commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @data_itid = "", @id = "year"})@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.MaterialsObj.Materials, Enumerable.Empty<SelectListItem>(),new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MaterialsObj.EiId, @data_itid = "", @id = "materials" })@Html.HiddenFor(p => p.MaterialsObj.EiId)</td><td class="no-border"><div class="policy-loc-row"><input type="checkbox" name="CoolroomFcObj.Coolroom" id="coolroom" class="vlidationInsure"><label for="checkbox1"><span><span></span></span></label></div></td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width: 90%", @class = "vlidationInsure form-control form-border-bottom sumoftotalcover commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredObj.EiId, @data_itid = "", @id = "suminsured", @data_regex="N" })@Html.HiddenFor(p => p.SuminsuredObj.EiId)</td><td class="no-border" id="tnameFC-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddFC(' + countId + ')" class="button-3d">+</a></td></tr>';
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
@@ -1683,7 +1941,7 @@
                     });
                     $("#tnameFC-" + id).html(replaceA);
                     $("#tnameFC-tr-" + id).after(html);
-                    $("#tnameFC-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tnameFC-tr-" + countId + " .form-control").attr("data-itid", 0);
                     $("#tnameFC-tr-" + countId + " .form-control").val('');
                     $("#tnameFC-tr-" + countId + ' #materials').html(html2);
                     $("#tnameFC-tr-" + countId + ' #description').attr('id', "description" + countId);
@@ -1691,6 +1949,17 @@
                     $("#tnameFC-tr-" + countId + ' #materials').attr('id', "materials" + countId);
                     $("#tnameFC-tr-" + countId + ' #coolroom').attr('id', "coolroom" + countId);
                     $("#tnameFC-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                    var rowCount = $('#ptab1 .table tbody tr').length;
+                    var i = 1;
+                    $("#ptab1 .table tbody tr").each(function () {
+                        var RowId = $(this).attr('id');
+                        if (i != rowCount) {
+                            $("#" + RowId + " .form-control").attr("data-itid", i);
+                        } else {
+                            $("#" + RowId + " .form-control").attr("data-itid", 0);
+                        }
+                        i++;
+                    });
                 } else {
                     $('#tnameFC-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
                 }
@@ -1699,12 +1968,23 @@
     }
     function tnameRemoveFC(id) {
         $("#tnameFC-tr-" + id).remove();
+        var rowCount = $('#ptab1 .table tbody tr').length;
+        var i = 1;
+        $("#ptab1 .table tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            if (i != rowCount) {
+                $("#" + RowId + " .form-control").attr("data-itid", i);
+            } else {
+                $("#" + RowId + " .form-control").attr("data-itid", 0);
+            }
+            i++;
+        });
     }
     function tnameAddFM(id) {
         var countId = id + 1;
         $('#tnameFM-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveFM(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tnameFM-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFmObj.Description, new { @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = "", @id = "description", @data_regex = "AN" })@Html.HiddenFor(p => p.DescriptionFmObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearFMObj.Year, new { @class = "vlidationInsure form-control form-border-bottom commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = "", @id = "year",@data_regex = "N" })@Html.HiddenFor(p => p.YearFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = "", @id = "serialnumber", @data_regex = "NA" })@Html.HiddenFor(p => p.SerialnumberObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = "", @id = "excess" })@Html.HiddenFor(p => p.ExcessesFMObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, new { @style = "display:inline-block;width: 93%", @class = "vlidationInsure form-control suminsured form-border-bottom commondatatestComma commondatatestPrice suminsuredfarmmachinary", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = "", @id = "suminsured", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredFMObj.EiId)</td><td class="no-border" id="tnameFM-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddFM(' + countId + ')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tnameFM-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.DescriptionFmObj.Description, new { @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.DescriptionFmObj.EiId, @data_itid = "", @id = "description", @data_regex = "AN" })@Html.HiddenFor(p => p.DescriptionFmObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearFMObj.Year, new { @class = "vlidationInsure form-control form-border-bottom commondatatestYearHome", @data_eiid = @Model.YearFMObj.EiId, @data_itid = "", @id = "year",@data_regex = "N" })@Html.HiddenFor(p => p.YearFMObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @data_itid = "", @id = "serialnumber", @data_regex = "NA" })@Html.HiddenFor(p => p.SerialnumberObj.EiId)</td><td class="no-border">@Html.DropDownListFor(Model => Model.ExcessesFMObj.Excess, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.ExcessesFMObj.EiId, @data_itid = "", @id = "excess" })@Html.HiddenFor(p => p.ExcessesFMObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredFMObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width: 92%", @class = "vlidationInsure form-control suminsured form-border-bottom commondatatestComma commondatatestPrice suminsuredfarmmachinary", @data_eiid = @Model.SuminsuredFMObj.EiId, @data_itid = "", @id = "suminsured", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredFMObj.EiId)</td><td class="no-border" id="tnameFM-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddFM(' + countId + ')" class="button-3d">+</a></td></tr>';
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
@@ -1717,7 +1997,7 @@
                     });
                     $("#tnameFM-" + id).html(replaceA);
                     $("#tnameFM-tr-" + id).after(html);
-                    $("#tnameFM-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tnameFM-tr-" + countId + " .form-control").attr("data-itid", 0);
                     $("#tnameFM-tr-" + countId + " .form-control").val('');
                     $("#tnameFM-tr-" + countId + ' #excess').html(html1);
                     $("#tnameFM-tr-" + countId + ' #description').attr('id', "description" + countId);
@@ -1726,6 +2006,17 @@
                     $("#tnameFM-tr-" + countId + ' #excess').attr('id', "excess" + countId);
                     $("#tnameFM-tr-" + countId + ' #imposed').attr('id', "imposed" + countId);
                     $("#tnameFM-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                    var rowCount = $('#ptab2 .table tbody tr').length;
+                    var i = 1;
+                    $("#ptab2 .table tbody tr").each(function () {
+                        var RowId = $(this).attr('id');
+                        if (i != rowCount) {
+                            $("#" + RowId + " .form-control").attr("data-itid", i);
+                        } else {
+                            $("#" + RowId + " .form-control").attr("data-itid", 0);
+                        }
+                        i++;
+                    });
                 } else {
                     $('#tnameFM-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
                 }
@@ -1734,6 +2025,17 @@
     }
     function tnameRemoveFM(id) {
         $("#tnameFM-tr-" + id).remove();
+        var rowCount = $('#ptab2 .table tbody tr').length;
+        var i = 1;
+        $("#ptab2 .table tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            if (i != rowCount) {
+                $("#" + RowId + " .form-control").attr("data-itid", i);
+            } else {
+                $("#" + RowId + " .form-control").attr("data-itid", 0);
+            }
+            i++;
+        });
         var sum = 0;
         $(".suminsuredfarmmachinary").each(function () {
             var Value = $(this).val();
@@ -1757,7 +2059,6 @@
         var newval = commaReplace(sum);
         $("#ptab2 #totalspaceific").val(newval);
     });
-
     $(document).ready(function () {
         var sum = 0;
         $(".suminsuredfarmmachinary").each(function () {
@@ -1784,7 +2085,7 @@
         var countId = id + 1;
         $('#tnameLS-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveLS(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tnameLS-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionLSObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = "", @id = "description" })@Html.HiddenFor(p => p.DescriptionLSObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, new { @class = "vlidationInsure form-control form-border-bottom autoCalculateLS commondatatestComma commondatatestPrice", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = "", @id = "numberanimal", @data_regex = "N" })@Html.HiddenFor(p => p.NumberanimalObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, new { @style = "display:inline-block;width:93%;", @class = "vlidationInsure form-control form-border-bottom autoCalculateLS commondatatest", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = "", @id = "suminsuredper", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredperObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, new { @style = "display:inline-block;width:93%;", @class = "vlidationInsure form-control form-border-bottom suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = "", @id = "suminsured", @data_regex = "N",@readonly="readonly" })@Html.HiddenFor(p => p.SuminsuredLSObj.EiId)</td><td class="no-border" id="tnameLS-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddLS('+countId+')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tnameLS-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionLSObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DescriptionLSObj.EiId, @data_itid = "", @id = "description" })@Html.HiddenFor(p => p.DescriptionLSObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.NumberanimalObj.Numberanimal, new { @class = "vlidationInsure form-control form-border-bottom autoCalculateLS commondatatest", @data_eiid = @Model.NumberanimalObj.EiId, @data_itid = "", @id = "numberanimal", @data_regex = "N" })@Html.HiddenFor(p => p.NumberanimalObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredperObj.Suminsuredper, new { @maxlength = "13", @style = "display:inline-block;width:93%;", @class = "form-control autoCalculateLS form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredperObj.EiId, @data_itid = "", @id = "suminsuredper", @data_regex = "N" })@Html.HiddenFor(p => p.SuminsuredperObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SuminsuredLSObj.Suminsured, new { @maxlength = "13", @style = "display:inline-block;width:92%;", @class = "form-control form-border-bottom vlidationInsure suminsurefarmLivestock commondatatestComma commondatatestPrice", @data_eiid = @Model.SuminsuredLSObj.EiId, @data_itid = "", @id = "suminsured", @data_regex = "N",@readonly="readonly" })@Html.HiddenFor(p => p.SuminsuredLSObj.EiId)</td><td class="no-border" id="tnameLS-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddLS('+countId+')" class="button-3d">+</a></td></tr>';
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
@@ -1798,18 +2099,40 @@
                     $("#tnameLS-" + id).html(replaceA);
                     $("#tnameLS-tr-" + id).after(html);
                     $("#tnameLS-tr-" + countId + ' #description').html(html1);
-                    $("#tnameLS-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tnameLS-tr-" + countId + " .form-control").attr("data-itid", 0);
                     $("#tnameLS-tr-" + countId + " .form-control").val('');
                     $("#tnameLS-tr-" + countId + ' #description').attr('id', "description" + countId);
                     $("#tnameLS-tr-" + countId + ' #numberanimal').attr('id', "numberanimal" + countId);
                     $("#tnameLS-tr-" + countId + ' #suminsuredper').attr('id', "suminsuredper" + countId);
                     $("#tnameLS-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
+                    var rowCount = $('#ptab3 .table tbody tr').length;
+                    var i = 1;
+                    $("#ptab3 .table tbody tr").each(function () {
+                        var RowId = $(this).attr('id');
+                        if (i != rowCount) {
+                            $("#" + RowId + " .form-control").attr("data-itid", i);
+                        } else {
+                            $("#" + RowId + " .form-control").attr("data-itid", 0);
+                        }
+                        i++;
+                    });
                 }
             }
         });
     }
     function tnameRemoveLS(id) {
         $("#tnameLS-tr-" + id).remove();
+        var rowCount = $('#ptab3 .table tbody tr').length;
+        var i = 1;
+        $("#ptab3 .table tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            if (i != rowCount) {
+                $("#" + RowId + " .form-control").attr("data-itid", i);
+            } else {
+                $("#" + RowId + " .form-control").attr("data-itid", 0);
+            }
+            i++;
+        });
         var sum = 0;
         $(".suminsurefarmLivestock").each(function () {
             var Value = $(this).val();
@@ -1924,9 +2247,9 @@
                 }
                 if (nameAttr == "NumberhiveObj.Numberhive") {
                     var regex = /^[0-9]*$/;
-                    if (newval == '') {
+                    if ($("input[name='beehivesWouldLike']:checked").val() == '1' && newval == '') {
                         $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
-                        $("#ptab4 label[for='" + nameAttr + "']").text('Please enter hives').css({ "display": "block" });
+                        $("#ptab4 label[for='" + nameAttr + "']").text('Please enter how many hives do you have?').css({ "display": "block" });
                         valid = 0;
                     } else if (!regex.test(newval)) {
                         $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1947,7 +2270,6 @@
                         $("#ptab4 label[for='" + nameAttr + "']").text('');
                     }
                 }
-
                 if (nameAttr == "rlsFSFChome") {
                     if (newval == '') {
                         $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1992,10 +2314,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html);
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html('');
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
                 }
             }
         });
@@ -2004,8 +2326,22 @@
         var isb = $("input[name='beehivesWouldLike']:checked").val();
         if (isb == 1) {
             $('#TAIRbeehives').css({ 'display': 'block' });
+            $('#TAIRbeehives1').css({ 'display': 'block' });
         } else {
             $('#TAIRbeehives').css({ 'display': 'none' });
+            $('#TAIRbeehives1').css({ 'display': 'none' });
+        }
+    });
+    $(document).on('focusout', '#totalcover', function () {
+        var regex = /^[0-9]*$/;
+        var Cval1 = $(this).val();
+        var Cval = Cval1.replace(/,/g, '');
+        var Pval2 = $('#ptab1 #farmfencing').val();
+        var Pval = Pval2.replace(/,/g, '');
+        var idnew = $('#ptab1 #farmfencing').data('eiid');
+        if (Cval != '' && Pval != '' && Cval < Pval) {
+            $('#ptab1 #farmfencing').val(Cval1);
+            elementAjaxCall(Cval, idnew, 0);
         }
     });
 </script>

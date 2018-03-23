@@ -19,7 +19,7 @@ namespace InsureThatAPI.Models
         public List<InsuredDetails> Insureds { get; set; }
         public InsuredDetails InsuredData { get; set; }
         public List<AddressData> AddressData { get; set; }
-        public List<string> IdentifierUpdates { get; set; }
+        public List<Identifiers> IdentifierUpdates { get; set; }
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
     }
@@ -80,7 +80,7 @@ namespace InsureThatAPI.Models
         public string CompanyBusinessName { get; set; }
         public string TradingName { get; set; }
         public string ABN { get; set; }
-        public string Address { get; set; }
+        public string AddressLine { get; set; }
         public int? AddressID { get; set; }
         public int? PostalAddressID { get; set; }
         public string MobileNo { get; set; }

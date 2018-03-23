@@ -71,42 +71,50 @@ namespace InsureThatAPI.Controllers
                     {
                      
                     }
-                    else
+                    else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
                     {
-                        if (Policyincllist.Exists(p => p.name == "Transit"))
-                        {
-                            return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Valuables"))
-                        {
-                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
-                        {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+                        return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                    {
+                        return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                    }
 
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Home Building"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Home Content"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                        {
-                            return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Motor"))
-                        {
-                            return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
-                        }
-                        if (Policyincllist.Exists(p => p.name == "Money"))
+                    else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                    {
+                        return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                    }
+
+                    else if (Policyincllist.Exists(p => p.name == "Transit"))
+                    {
+                        return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                    {
+                        return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                    {
+                        return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Home Contents"))
+                    {
+                        return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                    {
+                        return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                    {
+                        return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Motor"))
+                    {
+                        return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
+                    }
+                    if (Policyincllist.Exists(p => p.name == "Money"))
                         {
                             if (Session["unId"] == null && Session["profileId"] == null)
                             {
@@ -118,7 +126,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
                         }
-                    }
+                    
             }
             #endregion
         }
@@ -135,6 +143,8 @@ namespace InsureThatAPI.Controllers
             FPMoney.ExcessFPMoneyObj = new ExcessFPMoney();
             FPMoney.ExcessFPMoneyObj.ExcessList = FPMoneyExcessToPay;
             FPMoney.ExcessFPMoneyObj.EiId = 62801;
+            FPMoney.AddressObj = new AddressMnAddress();
+            FPMoney.AddressObj.EiId = 0;
 
             HttpClient hclient = new HttpClient();
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
@@ -157,7 +167,7 @@ namespace InsureThatAPI.Controllers
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Money&SectionUnId=&ProfileUnId=");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Money&SectionUnId=&ProfileUnId=-1");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -186,58 +196,39 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMoney.AtTheLocationObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMoney.AtTheLocationObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMoney.AtTheLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMoney.AtTheLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPMoney.AtTheLocationObj.atLocation = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMoney.LockedSafeAtLocationObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMoney.LockedSafeAtLocationObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMoney.LockedSafeAtLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMoney.LockedSafeAtLocationObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPMoney.LockedSafeAtLocationObj.lockedsafeatlocation = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMoney.BankorOtherFinanInstObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMoney.BankorOtherFinanInstObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMoney.BankorOtherFinanInstObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMoney.BankorOtherFinanInstObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPMoney.BankorOtherFinanInstObj.bankorotherFinanInst = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPMoney.ExcessFPMoneyObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMoney.ExcessFPMoneyObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPMoney.ExcessFPMoneyObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMoney.ExcessFPMoneyObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPMoney.ExcessFPMoneyObj.Excess = val;
                     }
                 }
+                if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
+                {
+                    if (unitdetails.SectionData.AddressData != null)
+                    {
+                        FPMoney.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
+                    }
+                }
             }
-            
-
-
-
-            //var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
-            //if (details != null && details.Any())
-            //{
-            //    if (details.Exists(q => q.QuestionId == FPMoney.AtTheLocationObj.EiId))
-            //    {
-            //        FPMoney.AtTheLocationObj.atLocation = Convert.ToString(details.Where(q => q.QuestionId == FPMoney.AtTheLocationObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == FPMoney.LockedSafeAtLocationObj.EiId))
-            //    {
-            //        FPMoney.LockedSafeAtLocationObj.lockedsafeatlocation = Convert.ToString(details.Where(q => q.QuestionId == FPMoney.LockedSafeAtLocationObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == FPMoney.BankorOtherFinanInstObj.EiId))
-            //    {
-            //        FPMoney.BankorOtherFinanInstObj.bankorotherFinanInst = Convert.ToString(details.Where(q => q.QuestionId == FPMoney.BankorOtherFinanInstObj.EiId).FirstOrDefault().Answer);
-            //    }
-            //    if (details.Exists(q => q.QuestionId == FPMoney.ExcessFPMoneyObj.EiId))
-            //    {
-            //        var loc = details.Where(q => q.QuestionId == FPMoney.ExcessFPMoneyObj.EiId).FirstOrDefault();
-            //        FPMoney.ExcessFPMoneyObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-            //    }
-            //}
             return View(FPMoney);
         }
-
         [HttpPost]
         public ActionResult Money(int? cid, FPMoney FPMoney)
         {
@@ -248,29 +239,9 @@ namespace InsureThatAPI.Controllers
             FPMoney.ExcessFPMoneyObj.ExcessList = MoneyExcessToPay;
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (FPMoney.AtTheLocationObj != null && FPMoney.AtTheLocationObj.EiId > 0 && FPMoney.AtTheLocationObj.atLocation != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMoney.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FPMoney.AtTheLocationObj.EiId, FPMoney.AtTheLocationObj.atLocation.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMoney.LockedSafeAtLocationObj != null && FPMoney.LockedSafeAtLocationObj.EiId > 0 && FPMoney.LockedSafeAtLocationObj.lockedsafeatlocation != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMoney.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FPMoney.LockedSafeAtLocationObj.EiId, FPMoney.LockedSafeAtLocationObj.lockedsafeatlocation.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMoney.BankorOtherFinanInstObj != null && FPMoney.BankorOtherFinanInstObj.EiId > 0 && FPMoney.BankorOtherFinanInstObj.bankorotherFinanInst != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMoney.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FPMoney.BankorOtherFinanInstObj.EiId, FPMoney.BankorOtherFinanInstObj.bankorotherFinanInst.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-
-                if (FPMoney.ExcessFPMoneyObj != null && FPMoney.ExcessFPMoneyObj.EiId > 0 && FPMoney.ExcessFPMoneyObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(FPMoney.CustomerId, Convert.ToInt32(FarmPolicySection.FixedFarmProperty), FPMoney.ExcessFPMoneyObj.EiId, FPMoney.ExcessFPMoneyObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-            }
-            return RedirectToAction("Transit","FarmPolicyTransit" , new { cid = cid });
+            Session["unId"] = null;
+            Session["profileId"] = null;
+            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = FPMoney.CustomerId, PcId = FPMoney.PcId });
         }
     }
 }

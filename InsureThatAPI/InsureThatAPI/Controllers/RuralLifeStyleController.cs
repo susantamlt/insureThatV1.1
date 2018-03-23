@@ -41,6 +41,7 @@ namespace InsureThatAPI.Controllers
             string apikey = null;
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
             HB2HomeDescription homebuilding = new HB2HomeDescription();
             Option excobj = new Option();
 
@@ -113,6 +114,9 @@ namespace InsureThatAPI.Controllers
 
             homebuilding.DomesticdwellingObj = new DomesticDwellings();
             homebuilding.DomesticdwellingObj.EiId = 60057;
+
+            homebuilding.RustDamageObj = new RustDamage();
+            homebuilding.RustDamageObj.EiId = 60034;
             #endregion
             #region Occupancy Details
             homebuilding.WholivesObj = new WhoLives();
@@ -169,6 +173,8 @@ namespace InsureThatAPI.Controllers
             else if (Session["Policyinclustions"] != null)
             {
                 homebuilding.PolicyInclusions = Policyincllist;
+                homebuilding.NewSections = new List<string>();
+                homebuilding.NewSections = cmn.NewSectionHome(homebuilding.PolicyInclusions);
             }
             if (TempData["Error"] != null)
             {
@@ -205,6 +211,7 @@ namespace InsureThatAPI.Controllers
             if (policyinclusion == true && PcId != null && PcId.HasValue)
             {
                 homebuilding.ExistingPolicyInclustions = policyinclusions;
+                homebuilding.NewSections = cmn.NewSectionP(policyinclusions);
                 int sectionId = policyinclusions.Where(p => p.Name == "Home Buildings" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 int? profileunid = policyinclusions.Where(p => p.Name == "Home Buildings" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -212,7 +219,13 @@ namespace InsureThatAPI.Controllers
                 if (EmpResponse != null)
                 {
                     unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
-                }
+                    if (unitdetails != null && unitdetails.SectionData != null)
+                    {
+                        Session["unId"] = unitdetails.SectionData.UnId;
+                        Session["HprofileId"] = unitdetails.SectionData.ProfileUnId;
+                        Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                    }
+                 }
             }
             else
             {
@@ -227,6 +240,7 @@ namespace InsureThatAPI.Controllers
                         {
                             Session["unId"] = unitdetails.SectionData.UnId;
                             Session["HprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
                             if (Session["Home2"]!=null)
                             {
                                 homebuilding.Home2 = 1;
@@ -417,7 +431,19 @@ namespace InsureThatAPI.Controllers
                         //        homebuilding.AgediscountObj.Agediscount = val;
                         //    }
                         //}
-
+                        
+                         if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.RustDamageObj.EiId))
+                        {
+                            string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.RustDamageObj.EiId).Select(p => p.Value).FirstOrDefault();
+                            if (val != null && !string.IsNullOrEmpty(val))
+                            {
+                                homebuilding.RustDamageObj.RustDamages = Convert.ToInt32(val);
+                            }
+                            else
+                            {
+                                homebuilding.RustDamageObj.RustDamages = -1;
+                            }
+                        }
                         if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ConsecutivedayObj.EiId))
                         {
                             string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == homebuilding.ConsecutivedayObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -501,6 +527,10 @@ namespace InsureThatAPI.Controllers
                             if (val != null && val != "0" && !string.IsNullOrEmpty(val))
                             {
                                 homebuilding.LastReplumbedObj.Replumbed = val;
+                            }
+                            if(val != null && val != "0" && val =="-1")
+                            {
+                                homebuilding.LastReplumbedObj.Replumbed = "";
                             }
                         }
                         if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == homebuilding.ExtwallsmadeObj.EiId))

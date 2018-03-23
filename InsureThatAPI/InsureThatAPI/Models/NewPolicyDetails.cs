@@ -155,6 +155,17 @@ namespace InsureThatAPI.Models
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
     }
+    public class Location
+    {
+        public string AddressLine { get; set; }
+        public string Suburb { get; set; }
+        public string State { get; set; }
+        public string Postcode { get; set; }
+    }
+    public class LocationList
+    {
+        public List<Location> LocalityData { get; set; }
+    }
     public class PolicyList
     {
         public List<PolicyDetails> PolicyListDetails { get; set; }
@@ -218,13 +229,16 @@ namespace InsureThatAPI.Models
     }
     public class Floodarea
     {
+        public string ApiKey { get; set; }
+        public string InceptionDate { get; set; }
+        public string ExpiryDate { get; set; }
+        public string EffectiveDate { get; set; }
+        public int? IsFloodRequired { get; set; }
+        public int? HasMadeAClaim { get; set; }
         public int? FldDefault { get; set; }
         public int? CustomerId { get; set; }
         public int? policyType { get; set; }
-        public int FloodArea { get; set; }
         public int? insureId { get; set; }
-        public string Startdate { get; set; }
-        public string Expirydate { get; set; }
         public string Periodofcover { get; set; }
         public string Isbuildinglocated { get; set; }
 

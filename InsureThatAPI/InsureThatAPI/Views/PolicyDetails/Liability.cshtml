@@ -47,10 +47,8 @@
             </h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
             <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
             <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
-
             <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         </div>
 
@@ -81,9 +79,9 @@
                     </div>
                     <div class="row">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yyyy")</div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yyyy")</div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: <span id="pStartDate">@Model.PolicyData.InceptionDate.ToString("dd/MM/yyyy")</span></div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: <span id="pEndDate">@Model.PolicyData.ExpiryDate.ToString("dd/MM/yyyy")</span></div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: @Model.PolicyData.CoverPeriod &nbsp;@Model.PolicyData.CoverPeriodUnit</div>
                         </div>
                     </div>
                 </div>
@@ -96,14 +94,8 @@
                     </div>
                     @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
                     {
-                        @*<a href="#cancelpolicymodel" class="btn-primary btn col-md-12">Cancel Policy</a>*@
-                        <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12" data-toggle="modal">Cancel Policy</button>
-
+                        <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12 width-480-100" data-toggle="modal">Cancel Policy</button>
                     }
-                    @*else
-                        {
-                            <a href="#Bindcovermodel" class="btn-primary btn col-md-12">Bind Policy</a>
-                        }*@
                 </div>
                 <div id="cancelpolicymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="cancelpolicymodel" aria-hidden="false">
                     <div class="modal-dialog">
@@ -115,8 +107,12 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure cancelling this policy. Action can not be reversed.</p>
-                                <p>Please enter reason for cancellation <input name="cancelreason" class="cancelpol col-sm-2 form-control form-inline field-length-xs" type="text" /></p>
+                                <p style="margin-bottom: 5px;">Are you sure cancelling this policy. Action can not be reversed.</p>
+                                <p style="margin-bottom: 5px;">Please enter reason for cancellation <input name="cancelreason" class="cancelpol form-control form-inline" type="text" /></p>
+                                <p style="margin-bottom: 5px;">
+                                    Cancellation Date <input name="pCanDate" id="pCanDate" class="form-control form-inline datePicker" data-inputmask-alias="date" data-inputmask-inputformat="dd/mm/yyyy" />
+                                    <label id="pCanDate-error" class="error" for="pCanDate" style="display:none;"></label>
+                                </p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -124,6 +120,11 @@
                             </div>
                         </div>
                     </div>
+                    <script src="~/js/jquery.inputmask.bundle.js"></script>
+                    <script src="~/js/inputmask.date.extensions.js"></script>
+                    <script type="text/javascript">
+                        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+                    </script>
                 </div>
                 <div id="Bindcovermodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="Bindcovermodel" aria-hidden="false">
                     <div class="modal-dialog">
@@ -209,7 +210,6 @@
                 {
                     using (Html.BeginForm("ActionName", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
                     {
-
                         @Html.AntiForgeryToken()
                         <div class="well">
                             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
@@ -251,6 +251,39 @@
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60671) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60671).Value != ""))
                                     {
                                         <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 60671).Value))</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">Turnover from Your Farming activities</p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60673) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60673).Value != ""))
+                                    {
+                                        <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 60673).Value))</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">Products covered</p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 60675) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60675).Value != ""))
+                                    {
+                                        if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60675).Value=="1")
+                                        {
+                                            <span>Farm Produce</span>
+                                        }
+                                        else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60675).Value == "2")
+                                        {
+                                            <span>Manufactured Farm Products</span>
+                                        }
+                                        else if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 60675).Value == "1,2")
+                                        {
+                                            <span>Farm Produce,Manufactured Farm Products</span>
+                                        }
+                                        else
+                                        {
+                                            <span>&nbsp;</span>
+                                        }
                                     }
                                 </p>
                             </div>
@@ -299,10 +332,24 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
                     <div class="well">
                         <h3>Policy Sections</h3>
-                        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
-                {
-                    for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
-                    {
+                       @if (Model.PolicyData.PolicyStatus == "CQ" || Model.PolicyData.PolicyStatus == "CP")
+                       {
+                           if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                           {
+                               for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                               {
+                                <div class="policy-loc-row">
+                                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
+                                </div>
+                               }
+                           }
+                       }
+                       else
+                       {
+                           if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                           {
+                               for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                               {
                                 <div class="policy-loc-row">
                                     @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
                                     <script type="text/javascript">
@@ -320,8 +367,9 @@
                                         <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
                                     </div>
                                 </div>
-                            }
-                        }
+                               }
+                           }
+                       }
                         <div class="clearfix"></div>
                         <div class="dropdown pc pc-in">
                             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
@@ -368,168 +416,188 @@
 <script src="~/js/jquery.inputmask.bundle.js"></script>
 <script src="~/js/inputmask.date.extensions.js"></script>
 <script type="text/javascript">
-                                $(document).ready(function () {
-                                    $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
-                                });
-</script>
-<script>
-                                $(".viewsectn").click(function () {
-                                    var selectedname = $(this).data('name');
-                                    var selectedunid = $(this).data('unid');
-                                    var selectedprofileid = $(this).data('profileid');
-                                    var selectedcid = $(this).data('cid');
-                                    var selectedTrId = $(this).data('trid');
-                                    var unitid = $(this).data('unitid');
-                                    var PcId = $(this).data('pcid');
-                                    var policyStatus = $(this).data('policystatus');
-                                    // var prId = $(this).data('prId');
-                                    var prId = 1029;
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/ViewSection",
-                                        data: {
-                                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": policyStatus, "prId": prId, "unitid": unitid
-                                        },
-                                        success: function (responce) {
-                                            if (responce.Status == false) {
-                                                $(".error").css("color", "red").html("Failed to view section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                                            } else {
-                                                window.location.href = responce;
-                                            }
-                                        }
-                                    });
-                                });
-                                $(".policy-edit-wrap").click(function () {
-                                    var selectedname = $(this).data('name');
-                                    var selectedunid = $(this).data('unid');
-                                    var selectedprofileid = $(this).data('profileid');
-                                    var selectedcid = $(this).data('cid');
-                                    var selectedTrId = $(this).data('trid');
-                                    var PcId = $(this).data('pcid');
-                                    var policyStatus = $(this).data('policystatus');
-                                    // var prId = $(this).data('prId');
-                                    var prId = 1029;
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/EndorsePolicy",
-                                        data: {
-                                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": null, "effcdate": null
-                                        },
-                                        success: function (responce) {
-                                            if (responce.Status == false) {
-                                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                                            } else {
-                                                window.location.href = responce;
-                                            }
-                                        }
-                                    });
-                                });
-                                $(".policy-delet-wrap").click(function () {
-                                    var r = confirm("Are you sure you want to delete this section?");
-                                    if (r == true) {
-                                        var PcId = $("#pcidd").val();
-                                        var selectedunid = $(this).data('unid');
-                                        var selectedcid = $(this).data('cid');
-                                        var PcId = $(this).data('pcid');
-                                        var selectedname = $(this).data('name');
-                                        var selectedprofileid = $(this).data('profileid');
-                                        var selectedTrId = $(this).data('trid');
-                                        var policyStatus = $(this).data('policystatus');
-                                        var selectedunitid = $(this).data('unitid');
-                                        var currId = $(this).attr("id");
-                                        $.ajax({
-                                            type: "POST",
-                                            url: "/Customer/DeleteUnit",
-                                            data: {
-                                                "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus, "unitid": selectedunitid
-                                            },
-                                            success: function (responce) {
-                                                if (responce.Status == true) {
-                                                    var prentId = $('#' + currId).parent().parent().attr("id");
-                                                    $('#' + prentId).remove();
-                                                }
-                                            }
-                                        });
-                                    }
-                                });
-                                $("#bindcover").click(function () {
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/BindCover",
-                                        data: {},
-                                        success: function (responce) {
-                                        }
-                                    });
-                                });
-</script>
-<script>
-                                $("#cancelpo").click(function () {
-                                    var PcId = $("#pcidd").val();
-                                    var selectedcid = $("#ciid").val();
-                                    var selectedTrId = $("#tridd").val();
-                                    var reson = $(".cancelpol").val();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/CancelPolicy",
-                                        data: {
-                                            "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson
-                                        },
-                                        success: function (responce) {
-                                        }
-                                    });
+    $(document).ready(function () {
+        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+    });
+    $(".viewsectn").click(function () {
+        var selectedname = $(this).data('name');
+        var selectedunid = $(this).data('unid');
+        var selectedprofileid = $(this).data('profileid');
+        var selectedcid = $(this).data('cid');
+        var selectedTrId = $(this).data('trid');
+        var unitid = $(this).data('unitid');
+        var PcId = $(this).data('pcid');
+        var policyStatus = $(this).data('policystatus');
+        // var prId = $(this).data('prId');
+        var prId = 1029;
+        $.ajax({
+            type: "POST",
+            url: "/Customer/ViewSection",
+            data: {
+                "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": policyStatus, "prId": prId, "unitid": unitid
+            },
+            success: function (responce) {
+                if (responce.Status == false) {
+                    $(".error").css("color", "red").html("Failed to view section, there is a problem in core system.").show().delay(100000).fadeOut();
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                } else {
+                    window.location.href = responce;
+                }
+            }
+        });
+    });
+    $(".policy-edit-wrap").click(function () {
+        var selectedname = $(this).data('name');
+        var selectedunid = $(this).data('unid');
+        var selectedprofileid = $(this).data('profileid');
+        var selectedcid = $(this).data('cid');
+        var selectedTrId = $(this).data('trid');
+        var PcId = $(this).data('pcid');
+        var policyStatus = $(this).data('policystatus');
+        // var prId = $(this).data('prId');
+        var prId = 1029;
+        $.ajax({
+            type: "POST",
+            url: "/Customer/EndorsePolicy",
+            data: {
+                "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": null, "effcdate": null
+            },
+            success: function (responce) {
+                if (responce.Status == false) {
+                    $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                } else {
+                    window.location.href = responce;
+                }
+            }
+        });
+    });
+    $(".policy-delet-wrap").click(function () {
+        var r = confirm("Are you sure you want to delete this section?");
+        if (r == true) {
+            var PcId = $("#pcidd").val();
+            var selectedunid = $(this).data('unid');
+            var selectedcid = $(this).data('cid');
+            var PcId = $(this).data('pcid');
+            var selectedname = $(this).data('name');
+            var selectedprofileid = $(this).data('profileid');
+            var selectedTrId = $(this).data('trid');
+            var policyStatus = $(this).data('policystatus');
+            var selectedunitid = $(this).data('unitid');
+            var currId = $(this).attr("id");
+            $.ajax({
+                type: "POST",
+                url: "/Customer/DeleteUnit",
+                data: {
+                    "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus, "unitid": selectedunitid
+                },
+                success: function (responce) {
+                    if (responce.Status == true) {
+                        var prentId = $('#' + currId).parent().parent().attr("id");
+                        $('#' + prentId).remove();
+                    }
+                }
+            });
+        }
+    });
+    $("#bindcover").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/BindCover",
+            data: {},
+            success: function (responce) {
+            }
+        });
+    });
+    $("#cancelpo").click(function () {
+        var PcId = $("#pcidd").val();
+        var selectedcid = $("#ciid").val();
+        var selectedTrId = $("#tridd").val();
+        var reson = $(".cancelpol").val();
+        var date = $("#pCanDate").val();
+        var PSDate = $("#pStartDate").text();
+        var PEDate = $("#pEndDate").text();
+        var valid = 1;
+        var TextMsg = '';
+        var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+        var diffDateCalculatePets = true;
+        var diffDateCalculatePets1 = true;
+        if (PSDate != '' && regex.test(PSDate) && PEDate != '' && regex.test(PEDate) && date != '' && regex.test(date)) {
+            var PSDaterVal = PSDate.split('/');
+            var PSDaterValN = PSDaterVal[1] + '/' + PSDaterVal[0] + '/' + PSDaterVal[2];
+            var PEDaterVal = PEDate.split('/');
+            var PEDaterValN = PEDaterVal[1] + '/' + PEDaterVal[0] + '/' + PEDaterVal[2];
+            var daterVal = date.split('/');
+            var daterValN = daterVal[1] + '/' + daterVal[0] + '/' + daterVal[2];
+            diffDateCalculatePets = diffDateCalculateE(daterValN, PSDaterValN);
+            diffDateCalculatePets1 = diffDateCalculateE(PEDaterValN, daterValN);
+            if (diffDateCalculatePets == false || diffDateCalculatePets1 == false) {
+                valid = 0;
+                TextMsg = 'Cancellation date should not be less then start date and geter then end date';
+            }
+        } else {
+            valid = 0;
+            TextMsg = 'Date format not valid';
+        }
+        if (valid == 0) {
+            $("label[for='pCanDate']").text(TextMsg).css({ "display": "block" });
+        } else {
+            $("label[for='pCanDate']").text("").css({ "display": "none" });
+            $.ajax({
+                type: "POST",
+                url: "/Customer/CancelPolicy",
+                data: {
+                    "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson, "cdate": date
+                },
+                success: function (responce) {
+                }
+            });
+        }
 
-                                });
-
-</script>
-
-<script>
-                                $(".vwdoc").mouseover(function () {
-                                    $(".dropdown ul").html('');
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/ViewDocument",
-                                        data: {
-                                        }, success: function (data) {
-                                            if (!$.isEmptyObject(data.dt) && data.dt.length > 0) {
-                                                var valuedata = data.dt;
-                                                if (valuedata != '' && valuedata != null) {
-                                                    $.each(valuedata, function (index, value) {
-                                                        $(".dropdown ul").append('<li><a href="/Customer/PrintDocument?PrintId=' + value.PrintId + '" onclick="return !window.open(this.href)">' + value.Name + '</a></li>');
-                                                        ////$(".repalcedoc").html(replaceText);
-                                                    });
-                                                }
-                                            }
-                                        }
-                                    });
-                                });
-                                $("#endorsecover").click(function () {
-                                    var selectedname = $(this).data('name');
-                                    var selectedunid = $(this).data('unid');
-                                    var selectedprofileid = $(this).data('profileid');
-                                    var selectedTrId = $(this).data('trid');
-                                    var selectedcid = $("#ciid").val();
-                                    var PcId = $("#pcidd").val();
-                                    var policyStatus = $(".policystus").val();
-                                    var effcdate = $("#effectivedate").val();
-                                    var prId = 1029;
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/EndorsePolicy",
-                                        data: {
-                                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": null, "effcdate": effcdate
-                                        },
-                                        success: function (responce) {
-                                            if (responce.Status == false) {
-                                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                                            } else {
-                                                window.location.href = responce;
-                                            }
-                                        }
-                                    });
-                                });
-
-
+    });
+    $(".vwdoc").mouseover(function () {
+        $(".dropdown ul").html('');
+        $.ajax({
+            type: "POST",
+            url: "/Customer/ViewDocument",
+            data: {
+            }, success: function (data) {
+                if (!$.isEmptyObject(data.dt) && data.dt.length > 0) {
+                    var valuedata = data.dt;
+                    if (valuedata != '' && valuedata != null) {
+                        $.each(valuedata, function (index, value) {
+                            $(".dropdown ul").append('<li><a href="/Customer/PrintDocument?PrintId=' + value.PrintId + '" onclick="return !window.open(this.href)">' + value.Name + '</a></li>');
+                            ////$(".repalcedoc").html(replaceText);
+                        });
+                    }
+                }
+            }
+        });
+    });
+    $("#endorsecover").click(function () {
+        var selectedname = $(this).data('name');
+        var selectedunid = $(this).data('unid');
+        var selectedprofileid = $(this).data('profileid');
+        var selectedTrId = $(this).data('trid');
+        var selectedcid = $("#ciid").val();
+        var PcId = $("#pcidd").val();
+        var policyStatus = $(".policystus").val();
+        var effcdate = $("#effectivedate").val();
+        var prId = 1029;
+        $.ajax({
+            type: "POST",
+            url: "/Customer/EndorsePolicy",
+            data: {
+                "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": null, "effcdate": effcdate
+            },
+            success: function (responce) {
+                if (responce.Status == false) {
+                    $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                    $("html, body").animate({ scrollTop: 0 }, "slow");
+                } else {
+                    window.location.href = responce;
+                }
+            }
+        });
+    });
 </script>

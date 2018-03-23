@@ -9,9 +9,30 @@ namespace InsureThatAPI.Models
     public class MotorCover
     {
     }
+    public class Driver
+    {
+        public string DriverNumber { get; set; }
+
+        public string Name { get; set; }
+
+        public string Dob { get; set; }
+
+        public string Gender { get; set; }
+
+        public int? YearLicensed { get; set; }
+
+        public string AccidentsAndConvictions { get; set; }
+    }
+    public class DriverList
+    {
+        public string ApiKey { get; set; }
+        public List<Driver> DriverData { get; set; }
+    }
     public class MCVehicleDescription
     {
+        public List<string> NewSections { get; set; }
         public List<SelectListItem> MCOPTList { get; set; }
+        public DriverList DriverDatas { get; set; }
         public List<string> Referels { get; set; }
         public string ReferralList { get; set; }
         public int? PcId { get; set; }
@@ -68,6 +89,10 @@ namespace InsureThatAPI.Models
         public SumInsuredCD SumnsuredObj { get; set; }
         public List<ValueDatas> SumnsuredObjList { get; set; }
         public string tCAitems { get; set; }
+        public CaravanItemDescription ItemdescriptionObj { get; set; }
+        public List<ValueDatas> ItemdescriptionObjList { get; set; }
+        public CaravanItemSumInsured ItemsumnsuredObj { get; set; }
+        public List<ValueDatas> ItemsumnsuredObjList { get; set; }
         public LimitOfIndemnityDC LimitindemnityObj { get; set; }
         public RatingDC RatingObj { get; set; }
         public NoClaimBonus NoclaimbonusObj { get; set; }
@@ -76,11 +101,53 @@ namespace InsureThatAPI.Models
         public MCInterestedPartyLocation MCPartyLocationObj { get; set; }
         public List<ValueDatas> MCPartyLocationObjList { get; set; }
         public HireCarOption CaroptionObj { get; set; }
+        public HireCarOption WindscreenObj { get; set; }
+        public HireCarOption NoClaimBonusOptionObj { get; set; }
         public BasicExcess ExcessObj { get; set; }
         public bool MCOEimposed { get; set; }
         public EstimatedRetailValue EstimatedValueObj { get; set; }
         public Excess21UnderPEE Excess21UnderObj { get; set; }
         public Excess25UnderPEE Excess25UnderObj { get; set; }
+        public AlarmInstalled AlarmObj { get; set; }
+        public EngineImmobiliserInstalled EngineImmobiliserObj { get; set; }
+        public FarmUse FarmUseObj { get; set; }
+        public PrivateUse PrivateUseObj { get; set; }
+        public BusinessUse BusinessUseObj { get; set; }
+    }
+    public class AlarmInstalled
+    {
+        public bool Alarm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class EngineImmobiliserInstalled
+    {
+        public bool Engineimmobiliser { get; set; }
+        public int EiId { get; set; }
+    }
+    public class FarmUse
+    {
+        public bool Farm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class PrivateUse
+    {
+        public bool Private { get; set; }
+        public int EiId { get; set; }
+    }
+    public class BusinessUse
+    {
+        public bool Business { get; set; }
+        public int EiId { get; set; }
+    }
+    public class CaravanItemDescription
+    {
+        public string Itemdescription { get; set; }
+        public int EiId { get; set; }
+    }
+    public class CaravanItemSumInsured
+    {
+        public string Itemsuminsured { get; set; }
+        public int EiId { get; set; }
     }
     public class Excess21UnderPEE
     {
@@ -353,7 +420,7 @@ namespace InsureThatAPI.Models
     }
     public class HireCarOption
     {
-        public string Caroption { get; set; }
+        public bool Caroption { get; set; }
         public int EiId { get; set; }
     }
     public class BasicExcess

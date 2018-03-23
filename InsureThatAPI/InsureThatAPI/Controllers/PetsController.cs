@@ -36,11 +36,14 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            Pets.NewSections = new List<string>();
             if (Session["Policyinclustions"] != null)
             {
                 Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
                 Pets.PolicyInclusions = new List<SessionModel>();
                 Pets.PolicyInclusions = Policyincllist;
+                Pets.NewSections = cmn.NewSectionHome(Pets.PolicyInclusions);
                 if (Policyincllist != null)
                 {
                     if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
@@ -122,15 +125,19 @@ namespace InsureThatAPI.Controllers
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
             int profileid = 0;
-            if (Session["unId"] != null && Session["profileId"] != null)
+            if (Session["unId"] != null)
             {
-                unid = Convert.ToInt32(Session["unId"]);
-                profileid = Convert.ToInt32(Session["profileId"]);
+                unid = Convert.ToInt32(Session["unId"]);              
+            }
+            if(Session["profileId"] != null)
+            {
+                profileid = Convert.ToInt32(Session["profileId"]);              
             }
             if ( PcId != null && PcId.HasValue)
             {
                 Pets.PolicyInclusion = policyinclusions;
                 Pets.ExistingPolicyInclustions = policyinclusions;
+                Pets.NewSections = cmn.NewSectionP(policyinclusions);
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -142,15 +149,29 @@ namespace InsureThatAPI.Controllers
             }
             else
             {
-                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                if (PcId == null && Session["unId"] == null && (Session["profileId"] == null || profileid == 0))
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Pets&SectionUnId=&ProfileUnId=");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Pets&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                         if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
                         {
+                            bool exists = Pets.PolicyInclusions.Exists(p => p.name == "Pet");
+                            if (exists == true)
+                            {
+                                List<SessionModel> values = new List<SessionModel>();
+                                values = (List<SessionModel>)Session["Policyinclustions"];
+                                for (int k = 0; k < values.Count(); k++)
+                                {
+                                    if (values[k].name == "Pet" && values[k].UnitId == null && values[k].ProfileId == null)
+                                    {
+                                        values.RemoveAt(k);
+                                    }
+                                }
+                                Session["Policyinclustions"] = values;
+                            }
                             var errormessage = "First please provide cover for Home Buildings.";
                             if (unitdetails.ErrorMessage.Contains(errormessage))
                             {
@@ -284,6 +305,16 @@ namespace InsureThatAPI.Controllers
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == Pets.SpeciesObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == Pets.SpeciesObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "2")
+                        {
+                            petsBreedslist = petsmodel.breedListCat();
+                            Pets.BreedObj.BreedList = petsBreedslist;
+                        }
+                        else
+                        {
+                            petsBreedslist = petsmodel.breedListDog();
+                            Pets.BreedObj.BreedList = petsBreedslist;
+                        }
                         Pets.SpeciesObj.Species = val;
                     }
                 }
@@ -360,11 +391,13 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
+            Session["profileId"] = null;
+            Session["UnId"] = null;
             //if (actionname != null && controllername != null)
             //{
             //    return RedirectToAction(actionname, controllername, new { cid = Pets.CustomerId, PcId = Pets.PcId });
             //}
-            return RedirectToAction("TravelCover", "Travel", new { cid = Pets.CustomerId });
+            return RedirectToAction("TravelCover", "Travel", new { cid = Pets.CustomerId, PcId = Pets.PcId });
         }
         [HttpPost]
         public ActionResult PetsCoverAjax(string Species, int SpeciesV)

@@ -38,12 +38,15 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AgentLogin", "Login");
             }
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            LiabilityCover.NewSections = new List<string>();
             if (Session["Policyinclustions"] != null)
             {
                 List<SessionModel> PolicyInclustions = new List<SessionModel>();
             
                 LiabilityCover.PolicyInclusions = new List<SessionModel>();
                 LiabilityCover.PolicyInclusions = Policyincllist;
+                LiabilityCover.NewSections = cmn.NewSectionHome(LiabilityCover.PolicyInclusions);
                 if (Policyincllist != null)
                 {
                     //var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
@@ -104,6 +107,10 @@ namespace InsureThatAPI.Controllers
             LiabilityCover.FarmliabiltyObj.EiId = 60691;
             LiabilityCover.LimitindemnityObj = new LimitofIndemnity();
             LiabilityCover.LimitindemnityObj.EiId = 60671;
+            LiabilityCover.FarmingactivitiesObj = new Farmingactivities();
+            LiabilityCover.FarmingactivitiesObj.EiId = 60673;
+            LiabilityCover.FarmProduceObj = new ProductsCoveredFP();
+            LiabilityCover.FarmProduceObj.EiId = 60675;
             LiabilityCover.ExcessLCObj = new ExcessLC();
             LiabilityCover.ExcessLCObj.EiId = 60681;
             List<SelectListItem> ExcList = new List<SelectListItem>();
@@ -138,7 +145,7 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid , PcId = PcId });
                     }
                 }
-
+                LiabilityCover.NewSections = cmn.NewSectionP(policyinclusions);
                 if (unid == null || unid == 0)
                 {
                     unid = unitdetails.SectionData.UnId;
@@ -224,21 +231,21 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null && unitdetails.ProfileData.ValueData!=null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.ExcessLCObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.ExcessLCObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == LiabilityCover.ExcessLCObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == LiabilityCover.ExcessLCObj.EiId).Select(p => p.Value).FirstOrDefault();
                         LiabilityCover.ExcessLCObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.FarmliabiltyObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.FarmliabiltyObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == LiabilityCover.FarmliabiltyObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == LiabilityCover.FarmliabiltyObj.EiId).Select(p => p.Value).FirstOrDefault();
                         LiabilityCover.FarmliabiltyObj.Farmliabilty = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.LimitindemnityObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.LimitindemnityObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == LiabilityCover.LimitindemnityObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == LiabilityCover.LimitindemnityObj.EiId).Select(p => p.Value).FirstOrDefault();
                         LiabilityCover.LimitindemnityObj.Limitindemnity = Convert.ToInt32(val);
                     }
                     else
@@ -247,6 +254,35 @@ namespace InsureThatAPI.Controllers
                         //{
                             LiabilityCover.LimitindemnityObj.Limitindemnity =3000000;
                         //}
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.FarmingactivitiesObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == LiabilityCover.FarmingactivitiesObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        LiabilityCover.FarmingactivitiesObj.Activities = val;
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == LiabilityCover.FarmProduceObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == LiabilityCover.FarmProduceObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val == "1")
+                        {
+                            LiabilityCover.FarmProduceObj.Farmproduce = true;
+                            LiabilityCover.allproducts = "1";
+                        }
+                        else if (val == "2")
+                        {
+                            LiabilityCover.FarmProduceObj.Farmproduce = true;
+                            LiabilityCover.allproducts = "2";
+                        }
+                        else if (val == "1,2")
+                        {
+                            LiabilityCover.FarmProduceObj.Farmproduce = true;
+                            LiabilityCover.allproducts = "1,2";
+                        }
+                        else if (val == "0")
+                        {
+                            LiabilityCover.FarmProduceObj.Farmproduce = false;
+                            LiabilityCover.allproducts = "0";
+                        }
                     }
                 }
             }
@@ -304,7 +340,7 @@ namespace InsureThatAPI.Controllers
             //{
             //    return RedirectToAction(actionname, controllername, new { cid = LiabilityCover.CustomerId, PcId = LiabilityCover.PcId });
             //}
-            return RedirectToAction("VehicleDescription", "MotorCover", new { cid = LiabilityCover.CustomerId });
+            return RedirectToAction("VehicleDescription", "MotorCover", new { cid = LiabilityCover.CustomerId, PcId = LiabilityCover.PcId });
         }
     }
 

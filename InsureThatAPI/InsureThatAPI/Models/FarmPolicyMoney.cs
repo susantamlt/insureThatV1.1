@@ -27,7 +27,12 @@ namespace InsureThatAPI.Models
         public LockedSafeAtLocation LockedSafeAtLocationObj { get; set; }
         public BankorOtherFinanInst BankorOtherFinanInstObj { get; set; }
         public ExcessFPMoney ExcessFPMoneyObj { get; set; }
-
+        public AddressMnAddress AddressObj { get; set; }
+    }
+    public class AddressMnAddress
+    {
+        public string Address { get; set; }
+        public int EiId { get; set; }
     }
     public class AtTheLocation
     {

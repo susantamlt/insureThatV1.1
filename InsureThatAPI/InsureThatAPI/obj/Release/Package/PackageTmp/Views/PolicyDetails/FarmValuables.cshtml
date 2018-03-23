@@ -63,7 +63,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
                                 Policy Type: @if (Model.PolicyData.PrId == 1029 || Model.PolicyData.PrId == 1009)
                                 {
-                                    <lable>Rural Lifestyle</lable>
+                                    <lable>RuralLifestyle</lable>
                                 }
                                 else
                                 { <label>Farm</label>
@@ -98,7 +98,7 @@
             <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                 @if (Model.SectionData != null)
                 {
-                    using (Ajax.BeginForm("FixedFarmProperty", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId, step = 2 }, new AjaxOptions()
+                    using (Ajax.BeginForm("ActionNameFarm", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }, new AjaxOptions()
                     {
                         HttpMethod = "GET"
 
@@ -140,7 +140,7 @@
                                         <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Valuables</strong></p>
                                     </div>
                                     <div class="row">
-                                        <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
+                                        <p class="col-md-8 col-sm-8 col-xs-12">Address:</p>
                                         <p class="col-md-4 col-sm-4 col-xs-12 text-right">
                                             @if (Model.AddressData != null && Model.AddressData.Count > 0)
                                             {
@@ -169,6 +169,7 @@
                                         <p class="col-md-12 col-sm-12 col-xs-12"><strong>If you wish to specify any items that are valued greater than $10,000 per item please describe them here</strong></p>
                                     </div>
                                     <div class="row">
+                                        <p class="col-md-12 col-sm-12 col-xs-12"><strong>Specified Contents</strong></p>
                                         <p class="col-md-6 col-sm-6 col-xs-12 text-left">Description</p>
                                         <p class="col-md-6 col-sm-6 col-xs-12 text-right">Sum Insured</p>
                                     </div>
@@ -239,14 +240,14 @@
                                                 {
                                                     if (Model.ProfileData.ValueData[j].Element.ElId == 63735 && Model.ProfileData.ValueData[j].Value != "")
                                                     {
-                                                        <span>@Model.ProfileData.ValueData[j].Value</span><br /><br />
+                                                        <span>$@Model.ProfileData.ValueData[j].Value</span><br /><br />
                                                     }
                                                 }
                                             }
                                         </p>
                                     </div>
                                     <div class="row">
-                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
+                                        <p class="col-md-10 col-sm-10 col-xs-10">Excess:</p>
                                         <p class="col-md-2 col-sm-2 col-xs-2 text-right">
                                             @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 63741) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 63741).Value != ""))
                                             {
@@ -264,7 +265,7 @@
                 }
                 else
                 {
-                    using (Ajax.BeginForm("FixedFarmProperty", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId, step = 2 }, new AjaxOptions()
+                    using (Ajax.BeginForm("ActionNameFarm", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId}, new AjaxOptions()
                     {
                         HttpMethod = "GET"
 

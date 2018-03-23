@@ -1,6 +1,6 @@
 ﻿@model InsureThatAPI.Models.CustomerSearch
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml"; ;
+    Layout = "~/Views/Shared/_viewlayout.cshtml";
 }
 <div style="margin-top:40px;"></div>
 <div class="col-md-9  mt-120 mb-120">
@@ -49,6 +49,10 @@
         </div>
     </div>
     <div class="clearfix"></div>
+    @*@if (Model.ErrorMessage != null)
+    {
+        <div class="col-md-9 col-sm-6 col-xs-12" style="color:red;" >@Model.ErrorMessage</div>
+    }*@
     @if (TempData["ErrorMsg"] != null)
     {
         <div class="col-md-9 col-sm-6 col-xs-12 error">@TempData["ErrorMsg"]</div>
@@ -57,6 +61,7 @@
         @using (Html.BeginForm("AdvCustomerSearch", "Customer", FormMethod.Post, new { CustomerId = 1, enctype = "multipart/form-data", id = "advancedSearch", name = "advancedSearch" }))
         {
             @Html.AntiForgeryToken()
+            @Html.HiddenFor(o => o.Actntype)
             <div class="row">
                 <div class="col-md-2 col-sm-2 col-xs-12 mt-10">INSURED NAME</div>
                 <div class="col-md-4 col-sm-4 col-xs-12" id="insuredName-div">
@@ -85,7 +90,7 @@
 
                     @Html.HiddenFor(model => model.InsuredId, new { @class = "form-control form-border-bottom", @id = "insuredid" })
 
-
+                    @Html.HiddenFor(model => model.Actntype)
                 </div>
             </div>
             <div class="row">
@@ -101,9 +106,15 @@
             <div class="row">
                 <div class="col-md-6 col-sm-6 col-xs-12"></div>
                 <div class="col-md-6 col-sm-6 col-xs-12 text-right">
-
-                    @*<a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>*@
-                    <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn" disabled="disabled">Search</button>
+                    @if (Model.Actntype != null && Model.Actntype == "Attach")
+                    {
+                        <button type="button" name="submit-search" class="form-control form-border-bottom btn search-btn attachpolicy">Attach</button>
+                    }
+                    else
+                    {
+                        @*<a class="form-control form-border-bottom btn" role="button" data-target="#addnewcust" data-toggle="modal" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">New Customer</a>*@
+                        <button type="submit" name="submit-search" class="form-control form-border-bottom btn search-btn" disabled="disabled">Continue</button>
+                    }
                 </div>
             </div>
             <div id="show"></div>
@@ -111,14 +122,18 @@
         @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Get, new { enctype = "multipart/form-data" }))
         {
             @Html.AntiForgeryToken()
-            <div class="row">
-                <div class="col-md-6 col-sm-6 col-xs-12"></div>
-                <div class="col-md-6 col-sm-6 col-xs-12 text-right">
-                    <button type="submit" class="form-control form-border-bottom btn newcut text-right" role="button" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:5px;line-height:22px;">
-                        New Insurer
-                    </button>
+            if (Model.Actntype == null || Model.Actntype != "Attach")
+            {
+                <div class="row">
+                    <div class="col-md-6 col-sm-6 col-xs-12"></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                        <button type="submit" class="form-control form-border-bottom btn newcut text-right" role="button" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:5px;line-height:22px;">
+                            New Customer
+                        </button>
+                    </div>
                 </div>
-            </div>}
+            }
+        }
     </div>
 </div>
 <style type="text/css">
@@ -131,19 +146,15 @@
     }
 
     #wrapper {
-        background: url(../images/bg-pattern.png), url(../images/yellow-overlay.png) no-repeat right top;
+        background: url(../images/yellow-overlay.png) no-repeat right top;
     }
 
     .error {
         color: #FF0000;
     }
 </style>
-            <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-            <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
-@*<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>*@
-@*<script src="https://select2.org/data-sources/ajax"></script>*@
-@*<script src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/select2.min.js"></script>*@
+<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
+<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 <link href="~/css/select2.min.css" rel="stylesheet" />
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
@@ -157,6 +168,17 @@
     //        }
     //    });
     //});
+    $(".attachpolicy").click(function () {
+        $.ajax({
+            url: '/customer/Attach',
+            type: 'Post',
+            data: {},
+            success: function (responce) {
+                window.location.href = responce;
+            }
+        });
+    });
+
     $("#newcust").click(function () {
         var phonenu = $("#newphoneno").val();
         var name = $("#newname").val();
@@ -231,19 +253,19 @@
             },
             messages: {
                 insuredName: {
-                    required: "Please enter Insured name",
+                    required: "Please enter insured name",
                     regex: "Special character not allowed"
                 },
                 emailId: {
-                    required: "Please enter a Email address.",
+                    required: "Please enter a email address.",
                     email: "Please enter a valid email address."
                 },
                 policyNo: {
-                    required: "Please enter a Policy number.",
+                    required: "Please enter a policy number.",
                     regex: "Special character not allowed"
                 },
                 phoneNo: {
-                    required: "Please enter a Phone number.",
+                    required: "Please enter a phone number.",
                     number: "Please enter a valid phone number."
                 },
             },
@@ -300,16 +322,16 @@
                 url: "/customer/AdvCustomerSearch",
                 data: { "InsuredName": name },
                 success: function (responce) {
-                    if (responce.results[0].MobileNo != null && responce.results[0].MobileNo != '') {
+                    if (responce != null && responce.results!=null && responce.results[0]!=null && responce.results[0].MobileNo != null && responce.results[0].MobileNo != '') {
                         var mNumber1 = responce.results[0].MobileNo;
                         var mNumber = mNumber1.replace(' ', '');
                         $('#phonenu').val(mNumber.replace(' ', ''));
-                    } else if (responce.results[0].PhoneNo != '') {
+                    } else if (responce != null && responce.results != null &&  responce.results[0] != null && responce.results[0].PhoneNo != '') {
                         var pNumber1 = responce.results[0].PhoneNo;
                         var pNumber = pNumber1.replace(' ', '');
                         $('#phonenu').val(pNumber.replace(' ', ''));
                     }
-                    else if (responce.results[0].InsuredID != '') {
+                    else if (responce != null && responce.results != null &&  responce.results[0] != null && responce.results[0].InsuredID != '') {
                         var insuredid1 = responce.results[0].InsuredID;
                         $('#insuredid').val(insuredid1);
                         //if (insuredid1 != '' && insuredid1 != null && insuredid1.contains(' ')) {
@@ -321,7 +343,7 @@
                         $('#phonenu').val('');
                         $('#insuredid').val('');
                     }
-                    if (responce.results[0].PolicyNumbers != '') {
+                    if (responce != null && responce.results != null && responce.results[0]!=null &&  responce.results[0].PolicyNumbers != '') {
                         $.each(responce.results[0].PolicyNumbers, function (key, value) {
                             $('#policyno').empty().append($('<option></option>').val(key).html(value));
                         });
@@ -330,7 +352,9 @@
 
                         $('.search-btn').prop("disabled", false);
                     }
-                    $('#email').val(responce.results[0].EmailID);
+                    if (responce != null && responce.results != null && responce.results[0] != null && responce.results[0].EmailID!=null) {
+                        $('#email').val(responce.results[0].EmailID);
+                    }
 
                 }
             });

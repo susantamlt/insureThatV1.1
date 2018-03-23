@@ -30,9 +30,14 @@ namespace InsureThatAPI.Models
         public DescriptionOfAccommodationFP DescriptionOfAccommodationFPObj { get; set; }
         public OptAccomComplyRegulationFP OptAccomComplyRegulationFPObj { get; set; }
         public OptHolidayFarmsFP OptHolidayFarmsFPObj { get; set; }
-        public ExcessFPFarmLiability ExcessFPFarmLiabilityObj { get; set; }               
+        public ExcessFPFarmLiability ExcessFPFarmLiabilityObj { get; set; }
+        public AddressFLAddress AddressObj { get; set; }
     }
-
+    public class AddressFLAddress
+    {
+        public string Address { get; set; }
+        public int EiId { get; set; }
+    }
     public class GenLiabilityLimitOfIndemnityFP
     {
         public IEnumerable<SelectListItem> GLLimitOfIndemnityFPList { get; set; }
@@ -48,7 +53,7 @@ namespace InsureThatAPI.Models
 
     public class ListOfProductsSoldFP
     {
-        public string ListOfProductsSold { get; set; }
+        public bool ListOfProductsSold { get; set; }
         public int EiId { get; set; }
     }
     public class OptPayingGuestFP

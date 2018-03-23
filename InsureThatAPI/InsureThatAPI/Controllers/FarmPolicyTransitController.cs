@@ -71,34 +71,29 @@ namespace InsureThatAPI.Controllers
                     {
                        
                     }
-                    else{
-                        if (Policyincllist.Exists(p => p.name == "Valuables"))
-                    {
-                        return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
-                    }
                     else if (Policyincllist.Exists(p => p.name == "LiveStock"))
                     {
                         return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                    {
+                        return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Home Contents"))
+                    {
+                        return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                     }
                     else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
                     {
                         return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Home Building"))
+                    else if (Policyincllist.Exists(p => p.name == "Valuables"))
                     {
-                        return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
-                    }
-                    else if (Policyincllist.Exists(p => p.name == "Home Content"))
-                    {
-                        return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                    }
-                    else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                    {
-                        return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                        return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
                     }
                     else if (Policyincllist.Exists(p => p.name == "Motor"))
                     {
-                        return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
+                        return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
                     }
                     if (Policyincllist.Exists(p => p.name == "Transit"))
                     {
@@ -112,7 +107,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
                     }
-                }
+                
                 }
                 #endregion
             }
@@ -125,6 +120,8 @@ namespace InsureThatAPI.Controllers
             FPTransit.ExcessFPTransitObj = new ExcessFPTransit();
             FPTransit.ExcessFPTransitObj.ExcessList = TransitExcessToPay;
             FPTransit.ExcessFPTransitObj.EiId = 63257;
+            FPTransit.AddressObj = new AddressTsAddress();
+            FPTransit.AddressObj.EiId = 0;
 
             HttpClient hclient = new HttpClient();
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
@@ -176,22 +173,29 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPTransit.ExcessFPTransitObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.ExcessFPTransitObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPTransit.ExcessFPTransitObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.ExcessFPTransitObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPTransit.ExcessFPTransitObj.Excess = val;
+                    }
+                }
+                if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
+                {
+                    if (unitdetails.SectionData.AddressData != null)
+                    {
+                        FPTransit.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
                     }
                 }
             }            
@@ -228,28 +232,10 @@ namespace InsureThatAPI.Controllers
             FPTransit.ExcessFPTransitObj.ExcessList = TransitExcessToPay;
             var db = new MasterDataEntities();
             string policyid = null;
-            //if (cid.HasValue && cid > 0)
-            //{
-            //    if (FPTransit.LivestockMaxValOneLoadObj != null && FPTransit.LivestockMaxValOneLoadObj.EiId > 0 && FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload != null)
-            //    {
-            //        db.IT_InsertCustomerQnsData(FPTransit.CustomerId, Convert.ToInt32(FarmPolicySection.Transit), FPTransit.LivestockMaxValOneLoadObj.EiId, FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-            //    }
-
-            //    if (FPTransit.FarmProduceMaxValOneLoadObj != null && FPTransit.FarmProduceMaxValOneLoadObj.EiId > 0 && FPTransit.FarmProduceMaxValOneLoadObj.farmproduceMaxValoneload != null)
-            //    {
-            //        db.IT_InsertCustomerQnsData(FPTransit.CustomerId, Convert.ToInt32(FarmPolicySection.Transit), FPTransit.LivestockMaxValOneLoadObj.EiId, FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-            //    }
-
-            //    if (FPTransit.ExcessFPTransitObj != null && FPTransit.ExcessFPTransitObj.EiId > 0 && FPTransit.ExcessFPTransitObj.Excess != null)
-            //    {
-            //        db.IT_InsertCustomerQnsData(FPTransit.CustomerId, Convert.ToInt32(FarmPolicySection.Transit), FPTransit.ExcessFPTransitObj.EiId, FPTransit.ExcessFPTransitObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-            //    }
-
-            //}
+    
             Session["unId"] = null;
             Session["profileId"] = null;
-
-            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid ,PcId=FPTransit.PcId});
+            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = FPTransit.CustomerId, PcId = FPTransit.PcId });
         }
     }
 }

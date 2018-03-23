@@ -12,6 +12,7 @@ namespace InsureThatAPI.Models
     public class FPBurglary
     {
         public List<string> Referels { get; set; }
+        public AddressAddress AddressObj { get; set; }
         public string ReferralList { get; set; }
         public int? PcId { get; set; }
         public int CustomerId { get; set; }
@@ -35,6 +36,11 @@ namespace InsureThatAPI.Models
         public FPCoverTheftFSAndFC OptFPCoverTheftFSAndFCObj { get; set; }
         public FPCoverTheftFarmMachinery OptFPCoverTheftFarmMachineryObj { get; set; }
         public FPPortalableItemsOpt OptFPPortalableItemsOptObj { get; set; }
+    }
+    public class AddressAddress
+    {
+        public string Address { get; set; }
+        public int EiId { get; set; }
     }
     public class CoverYourPropOptionFP
     {

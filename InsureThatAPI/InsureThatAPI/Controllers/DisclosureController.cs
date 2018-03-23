@@ -64,7 +64,7 @@ namespace InsureThatAPI.Controllers
 
         }
         [HttpPost]
-        public async System.Threading.Tasks.Task<ActionResult>  DisclosureDetails (DisclosureDetails DisclosureDetails)
+        public async System.Threading.Tasks.Task<ActionResult> DisclosureDetails(DisclosureDetails DisclosureDetails)
         {
             HttpClient hclient = new HttpClient();
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
@@ -73,7 +73,7 @@ namespace InsureThatAPI.Controllers
             AddressData ad = new AddressData();
             string apikey = null;
             ValueData vd = new ValueData();
-            if(Session["Apikey"]!=null)
+            if (Session["Apikey"] != null)
             {
                 apikey = Session["Apikey"].ToString();
             }
@@ -81,10 +81,10 @@ namespace InsureThatAPI.Controllers
             vd.Element = new Elements();
             DisclosureDetails.ApiKey = apikey;
             DisclosureDetails.ValueData = new List<ValueData>();
-            if (DisclosureDetails!=null)
+            if (DisclosureDetails != null)
             {
-                if(DisclosureDetails.PreviousinsurerObj.EiId!=null && DisclosureDetails.PreviousinsurerObj.Pinsurer!= null)
-                {                  
+                if (DisclosureDetails.PreviousinsurerObj.EiId != null && DisclosureDetails.PreviousinsurerObj.Pinsurer != null)
+                {
                     vd.Element.ElId = DisclosureDetails.PreviousinsurerObj.EiId;
                     vd.Element.ItId = 0;
                     vd.Value = DisclosureDetails.PreviousinsurerObj.Pinsurer;
@@ -117,15 +117,15 @@ namespace InsureThatAPI.Controllers
                     vdssss.Value = DisclosureDetails.PrisonsentenceObj.Sentence;
                     lstvd.Add(vdssss);
                 }
-                if (DisclosureDetails.UndischargedObj.EiId != null && DisclosureDetails.UndischargedObj.Undischarge != null)
-                {
-                    ValueData vdssy = new ValueData();
-                    vdssy.Element = new Elements();
-                    vdssy.Element.ElId = DisclosureDetails.UndischargedObj.EiId;
-                    vdssy.Element.ItId = 0;
-                    vdssy.Value = DisclosureDetails.UndischargedObj.Undischarge;
-                    lstvd.Add(vdssy);
-                }
+                //if (DisclosureDetails.UndischargedObj.EiId != null && DisclosureDetails.UndischargedObj.Undischarge != null)
+                //{
+                //    ValueData vdssy = new ValueData();
+                //    vdssy.Element = new Elements();
+                //    vdssy.Element.ElId = DisclosureDetails.UndischargedObj.EiId;
+                //    vdssy.Element.ItId = 0;
+                //    vdssy.Value = DisclosureDetails.UndischargedObj.Undischarge;
+                //    lstvd.Add(vdssy);
+                //}
                 if (DisclosureDetails.BankruptObj.EiId != null && DisclosureDetails.BankruptObj.Bankrupt != null)
                 {
                     ValueData vdsy = new ValueData();
@@ -135,15 +135,15 @@ namespace InsureThatAPI.Controllers
                     vdsy.Value = DisclosureDetails.BankruptObj.Bankrupt;
                     lstvd.Add(vdsy);
                 }
-                if (DisclosureDetails.DateObj.EiId != null && DisclosureDetails.DateObj.Date != null)
-                {
-                    ValueData vdsa = new ValueData();
-                    vdsa.Element = new Elements();
-                    vdsa.Element.ElId = DisclosureDetails.DateObj.EiId;
-                    vdsa.Element.ItId = 0;
-                    vdsa.Value = DisclosureDetails.DateObj.Date;
-                    lstvd.Add(vdsa);
-                }
+                //if (DisclosureDetails.DateObj.EiId != null && DisclosureDetails.DateObj.Date != null)
+                //{
+                //    ValueData vdsa = new ValueData();
+                //    vdsa.Element = new Elements();
+                //    vdsa.Element.ElId = DisclosureDetails.DateObj.EiId;
+                //    vdsa.Element.ItId = 0;
+                //    vdsa.Value = DisclosureDetails.DateObj.Date;
+                //    lstvd.Add(vdsa);
+                //}
                 if (DisclosureDetails.ImmediatedangerObj.EiId != null && DisclosureDetails.ImmediatedangerObj.Danger != null)
                 {
                     ValueData vdsaa = new ValueData();
@@ -173,14 +173,14 @@ namespace InsureThatAPI.Controllers
                 }
             }
             DisclosureDetails.ValueData = lstvd;
-           // model.AddressData = model.suburb + model.state + model.postcode;
-           StringContent content = new StringContent(JsonConvert.SerializeObject(DisclosureDetails), Encoding.UTF8, "application/json");
+            // model.AddressData = model.suburb + model.state + model.postcode;
+            StringContent content = new StringContent(JsonConvert.SerializeObject(DisclosureDetails), Encoding.UTF8, "application/json");
             var responses = await hclient.PostAsync("DisclosureDetails", content);
             var result = await responses.Content.ReadAsStringAsync();
             if (result != null)
             {
             }
-             return RedirectToAction("ClaimsQ", "Customer",new { cid = DisclosureDetails.CustomerId });
+            return RedirectToAction("ClaimsQ", "Customer", new { cid = DisclosureDetails.CustomerId });
             return View(DisclosureDetails);
         }
     }

@@ -17,5 +17,10 @@ namespace InsureThatAPI.Controllers
 
             return RedirectToAction("AgentLogin","Login");
         }
+        public ActionResult Index1()
+        {
+           ViewBag.Title = "Home Page";
+            return View();
+        }
     }
 }

@@ -4,11 +4,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="col-xs-12 endorsment-overview">
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 policy-full-head">
+    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 policy-full-head">
         <h2>QUOTATION</h2>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 text-right">
-        <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("CustomerRegistration", "Customer")">Add Insurer</a>
+    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-right">
+        <a class="btn color-bk-btn col-md-3 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("CustomerRegistration", "Customer",new { cid = @ViewBag.cid ,type=1029,actions="attach"})">Add Insured</a>
+        <a class="btn color-bk-btn col-md-3 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("AdvancedCustomerSearch", "Customer",new { actions="attach"})">Attach Insured</a>
+
+        <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         @*<a name="edit-again" class="agree-btn btn color-bk-btn">Edit Again</a>*@
         @*<a name="accept-pay" class="agree-btn btn color-bk-btn">Accept &amp; Pay</a>*@
         @*<a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle",new {cid=ViewBag.cid, PcId=Model.PolicyData.PolicyNumber})">View Policy History</a>
@@ -18,12 +21,9 @@
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsment-overview">
     <div class="clearfix"></div>
-    @using (Ajax.BeginForm("BindCover", "Customer", new { cid = @ViewBag.cid }, new AjaxOptions()
+    @using (Html.BeginForm("BindCover", "Customer", FormMethod.Get, new { enctype = "multipart/form-data", cid = @ViewBag.cid, @id = "premium", @name = "premiumDec" }))
     {
-        HttpMethod = "GET"
 
-    }, new { @id = "premium", @name = "premiumDec" }))
-    {
         <div class="col-md-12 quotation-wrapper">
             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
             @Html.HiddenFor(p => p.PcId, new { @id = "pcidd" })
@@ -39,47 +39,63 @@
                     <td class="row_space">Stamp<br>Duty</td>
                     <td class="row_space">Gross<br>Premium</td>
                 </tr>
-                @for (int i = 0; i < Model.PremiumData.Count(); i++)
+                @if (Model.PremiumData != null)
                 {
-                    <tr>
-                        <td class="value">@Model.PremiumData[i].SectionName</td>
-                        <td>$@Model.PremiumData[i].Base</td>
-                        <td>$@Model.PremiumData[i].Fsl</td>
-                        <td>$@Model.PremiumData[i].Gst</td>
-                        <td>$@Model.PremiumData[i].StampDuty</td>
-                        <td>$@Model.PremiumData[i].Gross</td>
-                    </tr>
+                    for (int i = 0; i < Model.PremiumData.Count(); i++)
+                    {
+                        <tr>
+                            <td class="value">@Model.PremiumData[i].SectionName</td>
+                            <td>$@String.Format("{0:n}", Model.PremiumData[i].Base)</td>
+                            <td>$@String.Format("{0:n}", Model.PremiumData[i].Fsl)</td>
+                            <td>$@String.Format("{0:n}", Model.PremiumData[i].Gst)</td>
+                            <td>$@String.Format("{0:n}", Model.PremiumData[i].StampDuty)</td>
+                            <td>$@String.Format("{0:n}", Model.PremiumData[i].Gross)</td>
+                        </tr>
+                    }
                 }
                 <tr></tr>
                 <tr>
                     <td class="value" colspan="3" rowspan="3" id="row_span">&nbsp;</td>
                     <td colspan="2" class="text-right fee">Underwriter Fee</td>
-                    <td>@Model.UnderWritterFee</td>
+                    <td>$@String.Format("{0:n}", Model.UnderWritterFee)</td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-right fee">GST on Fee</td>
-                    <td>@Model.GSTonFee</td>
+                    <td>$@String.Format("{0:n}", Model.GSTonFee)</td>
                 </tr>
                 <tr>
                     <td colspan="2" class="text-right" id="invoice">Invoice Amount</td>
-                    <td>@Model.InvoiceAmount</td>
+                    <td>$@String.Format("{0:n}", Model.InvoiceAmount)</td>
                 </tr>
             </table>
         </div>
-        <div><button type="submit" class="button-3d nomargin tab-linker quot-btn">Bind Quotation</button>
-            <button type="submit" class="button-3d nomargin tab-linker">Insurer Registration</button></div>
+        <div class="col-md-12 quotation-wrapper">
+            <div class="col-md-8">
+                <p>
+                    Please note that your quotation will be reviewed by our underwriter to ensure that all is in order before completion. This process may take up to 12 hours (Monday to Friday) once you have accepted our quote and requested us to proceed.
+                    Cover will not be in place until this quotation has been reviewed and accepted by us.
+                    Would you like to save and submit  for our review now?
+                </p>
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="form-control button-3d nomargin tab-linker quot-btn leftmargin-sm pull-right" style="margin-right:20%;">Save and Proceed</button>
+            </div>
+        </div>
+        @*<div><button type="submit" class="button-3d nomargin tab-linker quot-btn">Bind Quotation</button>
+            <button type="submit" class="button-3d nomargin tab-linker">Insurer Registration</button></div>*@
     }
 
 </div>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
+        <h3 style="font-size: 11px;margin-bottom: 2px;">Edit or delete previous sections here</h3>
         @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
         {
             for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
             {
                 <div class="policy-loc-row">
-                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
+                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
                     <script type="text/javascript">
                         $(document).ready(function () {
                             $('.inclusions').click(function () {
@@ -92,8 +108,8 @@
                         });
                     </script>
                     <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                        <a class="btn color-bk-btn policy-delet-wrap" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" href="javascript:void(0);">Delete</a>
+                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
                     </div>
                 </div>
             }
@@ -112,22 +128,42 @@
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
                         data: {
-                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "effcdate": null
                         },
                         success: function (responce) {
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
                         }
                     });
                 });
                 $(".policy-delet-wrap").click(function () {
-                    var selectedunid = $(this).data('unid');
-                    var selectedcid = $(this).data('cid');
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/Deleteunit",
-                        data: { "cid": selectedcid, "unid": selectedunid },
-                        success: function (responce) {
-                        }
-                    });
+                    var r = confirm("Are you sure you want to delete this section?");
+                    if (r == true) {
+                        var PcId = $("#pcidd").val();
+                        var selectedunid = $(this).data('unid');
+                        var selectedcid = $(this).data('cid');
+                        var PcId = $(this).data('pcid');
+                        var selectedname = $(this).data('name');
+                        var selectedprofileid = $(this).data('profileid');
+                        var selectedTrId = $(this).data('trid');
+                        var policyStatus = $(this).data('policystatus');
+                        var currId = $(this).attr("id");
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/DeleteUnit",
+                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                            success: function (responce) {
+                                if (responce.Status == true) {
+                                    var prentId = $('#' + currId).parent().parent().attr("id");
+                                    $('#' + prentId).remove();
+                                }
+                            }
+                        });
+                    }
                 });
                 $("#bindcover").click(function () {
                     $.ajax({
@@ -147,7 +183,7 @@
                 for (int i = 0; i < Model.PolicyInc.Count(); i++)
                 {
                     <div class="policy-loc-row">
-                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @disabled = "disabled" })<label for="radio1"><span><span></span></span>@Model.PolicyInc[i]</label>
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInc[i].name</label>
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $('.inclusions').click(function () {
@@ -160,25 +196,80 @@
                             });
                         </script>
                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInc[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-name="@Model.PolicyInc[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Delete</a>
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInc[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInc[i].UnitId" data-profileid="@Model.PolicyInc[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInc[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInc[i].UnitId" data-profileid="@Model.PolicyInc[i].ProfileId" href="javascript:void(0);">Delete</a>
                         </div>
                     </div>
+                    <script>
+                            $(".policy-edit-wrap").click(function () {
+
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1, "effcdate": null
+                                    },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
+
+                            $(".policy-delet-wrap").click(function () {
+                                var r = confirm("Are you sure you want to delete this section?");
+                                if (r == true) {
+                                    var PcId = $("#pcidd").val();
+                                    var selectedunid = $(this).data('unid');
+                                    var selectedcid = $(this).data('cid');
+                                    var PcId = $(this).data('pcid');
+                                    var selectedname = $(this).data('name');
+                                    var selectedprofileid = $(this).data('profileid');
+                                    var selectedTrId = $(this).data('trid');
+                                    var policyStatus = $(this).data('policystatus');
+                                    var currId = $(this).attr("id");
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/DeleteUnit",
+                                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                        success: function (responce) {
+                                            if (responce.Status == true) {
+                                                var prentId = $('#' + currId).parent().parent().attr("id");
+                                                $('#' + prentId).remove();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                    </script>
                 }
             }
 
         }
         <div class="clearfix"></div>
         <div class="dropdown pc pc-in">
-            <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
+            <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Home Contents">+  Home Content</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
-                <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
+                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
+
                 <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
                 <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
             </ul>
@@ -187,14 +278,47 @@
                                 var unitname = $(this).children("a").attr("class");
                                 var cid = $("#ciid").val();
                                 var pcid = $("#pcidd").val();
-
+                                var prid = 1029;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/AddUnit",
-                                    data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                    data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
                                     success: function (responce) {
-
-                                        window.location.href = responce;
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
+            </script>
+            <script>
+                            $(".viewsectn").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var unitid = $(this).data('unitid');
+                                var PcId = $(this).data('pcid');
+                                //var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/ViewSection",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": null, "prId": prId, "unitid": unitid
+                                    },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to view section, there is a problem in core system.").delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
                                     }
                                 });
                             });

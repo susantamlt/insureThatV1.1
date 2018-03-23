@@ -10,7 +10,7 @@
     listsExcess.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
-    <h4><span>FARM PROTECTION POLICY</span> / BURGLARY</h4>
+    <h4><span>FARM POLICY</span> / BURGLARY</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
@@ -33,7 +33,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save your policy till now and continue later.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -86,8 +86,8 @@
                             <tr>
                                 <th class="space_left">Section Name</th>
                                 <th class="space_left">Base</th>
-                                <th class="space_left">Fsl</th>
-                                <th class="space_left">Gst</th>
+                                <th class="space_left">FSL</th>
+                                <th class="space_left">GST</th>
                                 <th class="space_left">Stamp Duty</th>
                                 <th class="space_right">Gross</th>
                             </tr>
@@ -118,36 +118,53 @@
     }, new { @id = "burglary", @name = "burglary" }))
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(p => p.CustomerId)
+        @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+        @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         <div class="clearfix mb-md-30 mt-10 mb-10">
+            <h5 class="col-md-12"><a href="#burglaryCoverModal" role="button" data-target="#burglaryCoverModal" data-toggle="modal">Click here for the definition of Burglary.</a></h5>
             <div class="col-md-4"><p>Location</p></div>
             <div class="col-md-8">
                 <div class="col-md-10 col-sm-10 col-xs-10">
-                    <input type="text" name="location" class="form-control form-border-bottom">
-                </div><div class="col-md-2 col-sm-2 col-xs-2"></div>
+                    @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "form-control form-border-bottom vlidationInsure", @id = "addressBug", @data_eiid = @Model.AddressObj.EiId, @readonly = "readonly" })
+                    @Html.HiddenFor(p => p.AddressObj.EiId)
+                    <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
+                </div>
             </div>
         </div>
         <h5 class="col-md-12 mt-10">Cover Option</h5>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover your property against loss or accidental damage caused by <a href="#burglaryCoverModal" role="button" data-target="#burglaryCoverModal" data-toggle="modal">burglary?</a></p>
+            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover your property against loss or accidental damage caused by <a href="#burglaryCoverModal" role="button" data-target="#burglaryCoverModal" data-toggle="modal">Burglary?</a></p>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "buildingtype1", @data_eiid = @Model.CoverYourPropOptionFPObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "buildingtype2", @checked = "checked", @data_eiid = @Model.CoverYourPropOptionFPObj.EiId })<label for="radio1"><span><span></span></span>No</label>
-                    </div>
+                <div class="policy-loc-row">
+                    @if (Model.CoverYourPropOptionFPObj.Cover == "1")
+                    {
+                         <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "buildingtype1", @checked = "checked", @data_eiid = @Model.CoverYourPropOptionFPObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "buildingtype2",@data_eiid = @Model.CoverYourPropOptionFPObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "buildingtype1", @data_eiid = @Model.CoverYourPropOptionFPObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.CoverYourPropOptionFPObj.Cover, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "buildingtype2", @checked = "checked", @data_eiid = @Model.CoverYourPropOptionFPObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }
+                    @Html.HiddenFor(p => p.CoverYourPropOptionFPObj.EiId)
                 </div>
                 <label id="CoverYourPropOptionFPObj.Cover-error" class="error" for="CoverYourPropOptionFPObj.Cover"></label>
             </div>
         </div>
-        <p class="col-md-12 mb-md-30 mt-10 mb-10">If you select burglary cover, the amounts you have selected under fixed farm property and mobile farm property are incorporated into the burglary section.   </p>
+        <p class="col-md-12 mb-md-30 mt-10 mb-10 mini-text">If you select Burglary cover, the amounts you have selected under Fixed Farm Property and Mobile Farm Property are incorporated into the burglary section.   </p>
         <h5 class=" mt-10 col-md-12">Details of Cover</h5>
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Buildings (excluding coolrooms)</p></div>
             <div class="col-md-6">
-                @Html.TextBoxFor(p => p.FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms, new { @class = "form-control form-border-bottom commondatatest vlidationInsure", @id = "CoverFB", @data_eiid = @Model.FarmBuildingExCoolRoomsFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms, new { @style = "display: inline-block;width: 97%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice vlidationInsure", @id = "CoverFB", @data_eiid = @Model.FarmBuildingExCoolRoomsFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.FarmBuildingExCoolRoomsFPObj.EiId)
                 <label id="FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms-error" class="error" for="FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms"></label>
             </div>
@@ -155,7 +172,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Coolrooms</p></div>
             <div class="col-md-6">
-                @Html.TextBoxFor(p => p.CoolRoomsFPObj.CoolRooms, new { @class = "form-control form-border-bottom commondatatest vlidationInsure", @id = "FPCoolRooms", @data_eiid = @Model.CoolRoomsFPObj.EiId, @data_regex = "N", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.CoolRoomsFPObj.CoolRooms, new { @style = "display: inline-block;width: 97%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice vlidationInsure", @id = "FPCoolRooms", @data_eiid = @Model.CoolRoomsFPObj.EiId, @data_regex = "N", @data_itid = "0" })
                 @Html.HiddenFor(p => p.CoolRoomsFPObj.EiId)
                 <label id="CoolRoomsFPObj.CoolRooms-error" class="error" for="CoolRoomsFPObj.CoolRooms"></label>
             </div>
@@ -163,7 +180,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Fencing</p></div>
             <div class="col-md-6">
-                @Html.TextBoxFor(p => p.FarmFencingFPObj.FarmFencing, new { @class = "form-control form-border-bottom commondatatest vlidationInsure", @id = "FPFarmFencing", @data_eiid = @Model.FarmFencingFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.FarmFencingFPObj.FarmFencing, new { @style = "display: inline-block;width: 97%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice vlidationInsure", @id = "FPFarmFencing", @data_eiid = @Model.FarmFencingFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.FarmFencingFPObj.EiId)
                 <label id="FarmFencingFPObj.FarmFencing-error" class="error" for="FarmFencingFPObj.FarmFencing"></label>
             </div>
@@ -171,16 +188,16 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Other Farm Structures</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                @Html.TextBoxFor(p => p.OtherFarmStructuresFPObj.OtherFarmStructures, new { @class = "form-control form-border-bottom commondatatest vlidationInsure", @id = "FPOtherFarm", @data_eiid = @Model.OtherFarmStructuresFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.OtherFarmStructuresFPObj.OtherFarmStructures, new { @style = "display: inline-block;width: 97%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice vlidationInsure", @id = "FPOtherFarm", @data_eiid = @Model.OtherFarmStructuresFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.OtherFarmStructuresFPObj.EiId)
                 <label id="OtherFarmStructuresFPObj.OtherFarmStructures-error" class="error" for="OtherFarmStructuresFPObj.OtherFarmStructures"></label>
                 <p class="mini-text">(Includes covered ways, exterior light fittings, irrigation systems, pens, sheep dips, stockyards, pipes, cables, power and telephone poles, silos, solar power units, tanks and windmills.)</p>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Contents	</p></div>
+            <div class="col-md-6 col-sm-6 col-xs-12"><p>Farm Contents</p></div>
             <div class="col-md-6">
-                @Html.TextBoxFor(p => p.FarmContentsFPObj.FarmContents, new { @class = "form-control form-border-bottom commondatatest vlidationInsure", @id = "FPFarmContents", @data_eiid = @Model.FarmContentsFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.FarmContentsFPObj.FarmContents, new { @style = "display: inline-block;width: 97%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice vlidationInsure", @id = "FPFarmContents", @data_eiid = @Model.FarmContentsFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.FarmContentsFPObj.EiId)
                 <label id="FarmContentsFPObj.FarmContents-error" class="error" for="FarmContentsFPObj.FarmContents"></label>
             </div>
@@ -188,14 +205,14 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>Hail netting stored in a Farm Structure</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                @Html.TextBoxFor(p => p.HailNettingStoredFPObj.HailNettingStored, new { @class = "form-control form-border-bottom commondatatest vlidationInsure", @id = "FPHailNetting", @data_eiid = @Model.HailNettingStoredFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.HailNettingStoredFPObj.HailNettingStored, new { @style = "display: inline-block;width: 97%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice vlidationInsure", @id = "FPHailNetting", @data_eiid = @Model.HailNettingStoredFPObj.EiId, @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.HailNettingStoredFPObj.EiId)
                 <label id="HailNettingStoredFPObj.HailNettingStored-error" class="error" for="HailNettingStoredFPObj.HailNettingStored"></label>
                 <p class="mini-text">with roof and walls (fire only)</p>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6 col-sm-6 col-xs-12"><p>Unspecified machinery	</p></div>
+            <div class="col-md-6 col-sm-6 col-xs-12"><p>Unspecified machinery</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 $@Html.TextBoxFor(p => p.UnspecifiedMachineryFPObj.UnspecifiedMachinery, new { @style = "width:95%; display:inline-block;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @id = "FPUnspecMach", @data_eiid = @Model.UnspecifiedMachineryFPObj.EiId, @data_regex = 'N', @data_itid = "0" })
                 @Html.HiddenFor(p => p.UnspecifiedMachineryFPObj.EiId)
@@ -219,11 +236,11 @@
                 <label id="ExcessFPBurglaryObj.Excess-error" class="error" for="ExcessFPBurglaryObj.Excess"></label>
             </div>
             @*<div class="col-md-3">
-                    <div class="policy-loc-row">
-                        <input type="checkbox" name="ImposedBuglaryObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                        <label id="ImposedBuglaryObj.Imposed-error" class="error" for="ImposedBuglaryObj.Imposed"></label>
-                    </div>
-                </div>*@
+                <div class="policy-loc-row">
+                    <input type="checkbox" name="ImposedBuglaryObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                    <label id="ImposedBuglaryObj.Imposed-error" class="error" for="ImposedBuglaryObj.Imposed"></label>
+                </div>
+            </div>*@
         </div>
         <div id="ExcesshomeBuildingModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ExcesshomeBuildingModel" aria-hidden="false">
             <div class="modal-dialog">
@@ -243,46 +260,104 @@
                 </div>
             </div>
         </div>
+        <div id="theftModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="theftModel" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="pull-left">Theft</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <img src="~/images/close-icon.png" />
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>(1) Theft from You that is not accompanied by intimidation or violence to a person; or</p>
+                        <p>(2) Theft without violent and forceful entry into or exit from a building</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <h5 class="col-md-12 mt-10">Optional Extras</h5>
-        <p class="col-md-12">You can extend this cover to include cover by theft (without forcible or violent entry) at each listed location and in transit between all the locations you have listed on your policy.</p>
+        <p class="col-md-12">You can extend this cover to include cover by <a href="#theftModel" role="button" data-target="#theftModel" data-toggle="modal">Theft</a> (without forcible or violent entry) at each listed location and in transit between all the locations you have listed on your policy.</p>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover theft of your farm structures and <a href="#burglarycontentsModal" role="button" data-target="#burglarycontentsModal" data-toggle="modal">farm contents?</a></p>
+            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover theft of your farm structures and <a href="#burglarycontentsModal" role="button" data-target="#burglarycontentsModal" data-toggle="modal">Farm Contents?</a></p>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFSandFC1", @data_eiid = @Model.OptFPCoverTheftFSAndFCObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFSandFC2", @checked = "checked", @data_eiid = @Model.OptFPCoverTheftFSAndFCObj.EiId })<label for="radio1"><span><span></span></span>No</label>
-                    </div>
+                <div class="policy-loc-row">
+                    @if (Model.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC == "1")
+                    {
+                         <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFSandFC1", @checked = "checked", @data_eiid = @Model.OptFPCoverTheftFSAndFCObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFSandFC2",@data_eiid = @Model.OptFPCoverTheftFSAndFCObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFSandFC1", @data_eiid = @Model.OptFPCoverTheftFSAndFCObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFSandFC2", @checked = "checked", @data_eiid = @Model.OptFPCoverTheftFSAndFCObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }
+                    @Html.HiddenFor(p => p.OptFPCoverTheftFSAndFCObj.EiId)
                 </div>
                 <label id="OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC-error" class="error" for="OptFPCoverTheftFSAndFCObj.CoverTheftFSandFC"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover theft of your farm machinery?</p>
+            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover <a href="#theftModel" role="button" data-target="#theftModel" data-toggle="modal">Theft</a> of your Farm Machinery?</p>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFarmMachinery1", @data_eiid = @Model.OptFPCoverTheftFarmMachineryObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFarmMachinery2", @checked = "checked", @data_eiid = @Model.OptFPCoverTheftFarmMachineryObj.EiId })<label for="radio1"><span><span></span></span>No</label>
-                    </div>
+                <div class="policy-loc-row">
+                    @if (Model.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery == "1")
+                    {
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFarmMachinery1", @checked = "checked", @data_eiid = @Model.OptFPCoverTheftFarmMachineryObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFarmMachinery2",@data_eiid = @Model.OptFPCoverTheftFarmMachineryObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFarmMachinery1", @data_eiid = @Model.OptFPCoverTheftFarmMachineryObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery, '0', new { @class = "buildingtype vlidationInsure commondataradio", @id = "CoverTheftFarmMachinery2", @checked = "checked", @data_eiid = @Model.OptFPCoverTheftFarmMachineryObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }                    
+                    @Html.HiddenFor(p => p.OptFPCoverTheftFarmMachineryObj.EiId)
                 </div>
                 <label id="OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery-error" class="error" for="OptFPCoverTheftFarmMachineryObj.CoverTheftFarmMachinery"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover your farm contents for theft Australia wide?</p>
+            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to cover your Farm Contents for <a href="#theftModel" role="button" data-target="#theftModel" data-toggle="modal">Theft</a> Australia wide?</p>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                <div class="col-md-12 col-sm-12 col-xs-12">
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "PortalbleItemsOpt1", @data_eiid = @Model.OptFPPortalableItemsOptObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
-                    </div>
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
-                        @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '0', new { @class = "buildingtype vlidationInsure", @id = "PortalbleItemsOpt2", @checked = "checked", @data_eiid = @Model.OptFPPortalableItemsOptObj.EiId })<label for="radio1"><span><span></span></span>No</label>
-                    </div>
+                <div class="policy-loc-row">
+                    @if (Model.OptFPPortalableItemsOptObj.PortalbleItemsOpt == "1")
+                    {
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '1', new { @class = "buildingtype vlidationInsure commondataradio", @checked = "checked", @id = "PortalbleItemsOpt1", @data_eiid = @Model.OptFPPortalableItemsOptObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '0', new { @class = "buildingtype vlidationInsure", @id = "PortalbleItemsOpt2",@data_eiid = @Model.OptFPPortalableItemsOptObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '1', new { @class = "buildingtype vlidationInsure commondataradio", @id = "PortalbleItemsOpt1", @data_eiid = @Model.OptFPPortalableItemsOptObj.EiId })<label for="radio1"><span><span></span></span>Yes</label>
+                        </div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
+                            @Html.RadioButtonFor(m => m.OptFPPortalableItemsOptObj.PortalbleItemsOpt, '0', new { @class = "buildingtype vlidationInsure", @id = "PortalbleItemsOpt2", @checked = "checked", @data_eiid = @Model.OptFPPortalableItemsOptObj.EiId })<label for="radio1"><span><span></span></span>No</label>
+                        </div>
+                    }                    
+                    @Html.HiddenFor(p => p.OptFPPortalableItemsOptObj.EiId)
                 </div>
                 <label id="OptFPPortalableItemsOptObj.PortalbleItemsOpt-error" class="error" for="OptFPPortalableItemsOptObj.PortalbleItemsOpt"></label>
             </div>
@@ -399,7 +474,7 @@
                     var PcId = $(this).data('pcid');
                     var policyStatus = $(this).data('policystatus');
                     // var prId = $(this).data('prId');
-                    var prId = 1029;
+                    var prId = 1021;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
@@ -487,7 +562,7 @@
                             var PcId = $(this).data('pcid');
                             var policyStatus = $(this).data('policystatus');
                             // var prId = $(this).data('prId');
-                            var prId = 1029;
+                            var prId = 1021;
                             $.ajax({
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
@@ -540,17 +615,19 @@
             <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
+                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruptions</a></li>
                 <li><a href="javascript:void(0);" class="Farm Liability">+  Farm Liability</a></li>
                 <li><a href="javascript:void(0);" class="Burglary">+  Burglary</a></li>
+                <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
                 <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
                 <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
-                <li><a href="javascript:void(0);" class="Liability">+  Liability</a></li>
-                <li><a href="javascript:void(0);" class="Home Building">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Personal Liabilities Farm">+  Person Liability</a></li>
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
                 <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motors</a></li>
+                <li><a href="javascript:void(0);" class="Motor">+  Motors</a></li>
+                <li><a href="javascript:void(0);" class="Machinery">+  Machinery</a></li>
             </ul>
             <script type="text/javascript">
                 $(document).on('click', 'ul.unit > li', function () {
@@ -596,14 +673,15 @@
                     }
                 }
                 if (nameAttr == "FarmBuildingExCoolRoomsFPObj.FarmBuildingExcCoolRooms") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Please enter farm buildings').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -612,11 +690,12 @@
                 }
                 if (nameAttr == "CoolRoomsFPObj.CoolRooms") {
                     var regex = /^[0-9]*$/;
-                    if (newval == '') {
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Please enter coolrooms').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
@@ -626,14 +705,15 @@
                     }
                 }
                 if (nameAttr == "FarmFencingFPObj.FarmFencing") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Please enter farm fencing').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -641,14 +721,15 @@
                     }
                 }
                 if (nameAttr == "OtherFarmStructuresFPObj.OtherFarmStructures") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Please enter other farm structures').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -656,14 +737,15 @@
                     }
                 }
                 if (nameAttr == "FarmContentsFPObj.FarmContents") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter farm contents').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -671,14 +753,15 @@
                     }
                 }
                 if (nameAttr == "HailNettingStoredFPObj.HailNettingStored") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Please enter hail netting').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
+                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
                         $('#' + id).css({ "border": "" });
@@ -756,13 +839,13 @@
                         $('#' + id).css({ "border": "" });
                         $("label[for='" + nameAttr + "']").text('');
                     }
-                            }
-                        });
-                        if (valid == 1) {
-                            $("form[name='burglary']").submit();
-                        }
-                    });
-                });
+                }
+            });
+            if (valid == 1) {
+                $("form[name='burglary']").submit();
+            }
+        });
+    });
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
@@ -828,7 +911,7 @@
                                                 $('#' + StateIdNew).attr('disabled', 'disabled');
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Read Only') {
                                                 $('#' + StateIdNew).attr('readonly', 'readonly');
@@ -843,7 +926,7 @@
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Required') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).removeAttr('disabled');
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
@@ -861,17 +944,49 @@
                             });
                         }
                     }
-                    //if (data.referrallist != null || data.referrallist != "") {
-                    //    $('#referralList-p').html('No Referral List');
-                    //} else {
-                    //    $('#referralList-p').html(data.referrallist);
-                    //}
+                    if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
+                        var rowsorcedata = data.rowsorcedata;
+                        if (rowsorcedata != '' && rowsorcedata != null) {
+                            $.each(rowsorcedata, function (index, value) {
+                                var rowsorcedataIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                var rowsorcedataType = $("[data-eiid=" + value.Element.ElId + "]").attr('type');
+                                var rowsorcedataName = $("[data-eiid=" + value.Element.ElId + "]").attr('name');
+                                var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
+                                var rowsorcedataOption = value.Options;
+                                if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
+                                    var html = '<option value="">--Select--</option>';
+                                    $.each(rowsorcedataOption, function (index1, value1) {
+                                        if (value1.DataValue == 0) {
+                                        } else {
+                                            html += '<option value="' + value1.DataValue + '">' + value1.DataText + '</option>';
+                                        }
+                                    });
+                                    if (rowsorcedataType == undefined) {
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    } else {
+                                        var NewHtml = '<select class="form-control vlidationInsure form-border-bottom commondataselection" data-eiid="' + rowsorcedataEIID + '" id="' + rowsorcedataIdNewOne + '" name="' + rowsorcedataName + '"></select>';
+                                        $('#' + rowsorcedataIdNewOne).replaceWith(NewHtml);
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.status == "Decline") {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('Decline');
+                    } else {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('');
+                    }
                     if (data.referrallists == "") {
                         $('#referralList-p').html('No Referral List');
                     } else {
                         $('#referralList-p').html(data.referrallists);
                     }
-                    if (data.usermessage == "") {
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {

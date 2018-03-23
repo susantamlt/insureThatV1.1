@@ -47,10 +47,9 @@
                     </div><!-- #logo end -->
                     <!-- Primary Navigation -->
                     <nav id="primary-menu">
-                        <a style="padding: 5px 15px;" class="btn color-bk-btn col-md-4  leftmargin-sm" href="@Url.Action("AdvancedCustomerSearch", "Customer")">ADVANCED SEARCH</a>
-
-                       &nbsp;&nbsp; <a class="changepsswrd text-right btn color-bk-btn" href="/Customer/ChangePassword" type="button">Change Password</a>
-                        <button class="logoutfun text-right btn color-bk-btn" type="button">Logout</button>
+                        <a style="" class=" btn color-bk-btn col-md-4 leftmargin-sm" href="@Url.Action("AdvancedCustomerSearch", "Customer")">Close This Policy</a>
+                        <a class="changepsswrd btn color-bk-btn col-md-4 leftmargin-sm" href="@Url.Action("ChangePassword", "Customer")" type="button">Change Password</a>
+                        <button class="logoutfun btn color-bk-btn col-md-4 leftmargin-sm" type="button">Logout</button>
                     </nav><!-- #primary-menu end -->
                 </div>
             </div>
@@ -113,7 +112,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN = $(this).attr('data-itid');
             var minm = $(this).data('min');
             var id = $(this).attr('id');
             var newval = $(this).val();
@@ -126,16 +125,21 @@
             if (newval == 'none' || newval == 'nil' || newval == '0') {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
                 $("label[id='" + name + "-error']").text('Please enter text').css({ "display": "block" });
-            } else if (rVal != "") {
+            } else if (newval != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
-                elementAjaxCall(rVal, EIId, ItId);
+                elementAjaxCall(newval, EIId, ItId);
             }
         });
         $(document).on('keyup', '.commondatatestComma', function (event) {
             // skip for arrow keys
             //if (event.which >= 37 && event.which <= 40) return;
             // format number
+            var currentVal = $(this).val();
+            if (currentVal.substring(0, 1) === '0' && (event.which == 48 || event.which == 96)) {
+                currentVal = currentVal.substring(1);
+            }
+            $(this).val(currentVal);
             $(this).val(function (index, value) {
                 return value
                     .replace(/\D/g, "")
@@ -159,7 +163,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             var minm = $(this).data('min');
             var id = $(this).attr('id');
             var newval = $(this).val();
@@ -194,7 +198,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             var maxm = $(this).data('max');
             var id = $(this).attr('id');
             var newval = $(this).val();
@@ -229,7 +233,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             var id = $(this).attr('id');
             var newval = $(this).val();
             if (ItIdN == undefined || ItIdN == "") {
@@ -254,7 +258,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             var minm = $(this).data('min');
             var id = $(this).attr('id');
             var newval = $(this).val();
@@ -293,7 +297,7 @@
         $(document).on('change', '.commondataselection', function () {
             var Value = $(this).val();
             var EIId = $(this).data('eiid');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
             } else {
@@ -307,7 +311,7 @@
         $(document).on('change', '.commondataradio', function () {
             var Value = $(this).val();
             var EIId = $(this).data('eiid');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
             } else {
@@ -322,7 +326,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             var id = $(this).attr('id');
             var newval = $(this).val();
             if (ItIdN == undefined || ItIdN == "") {
@@ -354,7 +358,7 @@
             var EIId = $(this).data('eiid');
             var Nregex = $(this).data('regex');
             var name = $(this).attr('name');
-            var ItIdN = $(this).data('itid');
+            var ItIdN =  $(this).attr('data-itid');
             var id = $(this).attr('id');
             var newval = $(this).val();
             if (ItIdN == undefined || ItIdN == "") {
@@ -368,13 +372,13 @@
             var currentYear = new Date().getFullYear();
             if (Value != '' && !regex.test(Value)) {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
-                $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
             } else if (Value != '' && rVal[2] != '' && rVal[2].length != 4) {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
-                $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
             } else if (rVal[2] != '' && rVal[2] > currentYear) {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
-                $("label[for='" + name + "']").text('You can not provide future date').css({ "display": "block" });
+                $("label[for='" + name + "']").text('You cannot provide a date in the future').css({ "display": "block" });
             } else if (Value != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
@@ -589,10 +593,10 @@
             }
             if (Value != '' && !regex.test(Value)) {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
-                $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
             } else if (Value != '' && rVal[2] != '' && rVal[2].length != 4) {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
-                $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
             } else if (diff == false) {
                 $('#' + id).css({ "border": "1px solid #ff0000" });
                 $("label[for='" + name + "']").text('You can not provide past date than start date').css({ "display": "block" });
@@ -601,6 +605,45 @@
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
             }
         });
+        $(document).on('click', '.commondatacheckbox', function () {
+            var Value = '';
+            if ($(this).is(':checked') != false) {
+                Value = 1;
+            } else {
+                Value = 0;
+            }
+            var EIId = $(this).data('eiid');
+            var ItIdN =  $(this).attr('data-itid');
+            if (ItIdN == undefined || ItIdN == "") {
+                var ItId = "0";
+            } else {
+                var ItId = ItIdN;
+            }
+            if (Value != '') {
+                elementAjaxCall(Value, EIId, ItId);
+            }
+        });
     </script>
+    <script type="text/javascript" src="~/js/jquery.backDetect.js"></script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $('body').backDetect(function () {
+                //if (confirm('Look forward to the future, not the past!')) {
+                history.pushState(null, null, null);
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/Logout",
+                    data: {},
+                    success: function (responce) {
+                        window.location.href = responce;
+                    }
+                });
+                //} else {
+                //    history.pushState(null, null, null);
+                //}
+            });
+        });
+    </script>
+
 </body>
 </html>

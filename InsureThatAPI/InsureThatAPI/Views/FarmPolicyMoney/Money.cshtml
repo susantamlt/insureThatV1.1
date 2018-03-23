@@ -10,7 +10,7 @@
 }
 
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
-    <h4><span>FARM PROTECTION POLICY</span> / MONEY</h4>
+    <h4><span>FARM POLICY</span> / MONEY</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
@@ -33,7 +33,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save your policy till now and continue later.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -125,16 +125,36 @@
             <div class="col-md-4"><p>Location is</p></div>
             <div class="col-md-8">
                 <div class="col-md-10 col-sm-10 col-xs-10">
-                    <input type="text" name="location" class="form-control form-border-bottom" data-eiid="" id="location" />
+                    @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "form-control form-border-bottom vlidationInsure", @id = "addressBug", @data_eiid = @Model.AddressObj.EiId, @readonly = "readonly" })
+                    @Html.HiddenFor(p => p.AddressObj.EiId)
+                    <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-2"></div>
             </div>
         </div>
-        <p class="col-md-12 mb-md-30 mt-10 mb-10">How much do you need to cover your money against accidental loss that takes place</p>
+        <p class="col-md-12 mb-md-30 mt-10 mb-10">How much do you need to cover your <a href="#moneyModelCDN" role="button" data-target="#moneyModelCDN" data-toggle="modal">Money</a> against accidental loss that takes place</p>
+        <div id="moneyModelCDN" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="moneyModelCDN" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="pull-left">What is money?</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <img src="~/images/close-icon.png" />
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Cash, cheques, credit card vouchers, franking machine credits, money orders, postal notes and stamps if You are legally responsible for them.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-md-6 col-sm-6 col-xs-12"><p>At the Location?</p></div>
+            <div class="col-md-6 col-sm-6 col-xs-12"><p>at the location?</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                @Html.TextBoxFor(p => p.AtTheLocationObj.atLocation, new { @data_eiid = @Model.AtTheLocationObj.EiId, @class = "commondatatest vlidationInsure form-control form-border-bottom", @id = "atLocation",@data_regex="AN",@data_itid="0" })
+                $@Html.TextBoxFor(p => p.AtTheLocationObj.atLocation, new { @style = "display: inline-block;width: 97%;", @data_eiid = @Model.AtTheLocationObj.EiId, @class = "commondatatestComma commondatatestPrice vlidationInsure form-control form-border-bottom", @id = "atLocation", @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.AtTheLocationObj.EiId)
                 <label id="AtTheLocationObj.atLocation-error" class="error" for="AtTheLocationObj.atLocation"></label>
             </div>
@@ -142,7 +162,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>In a locked safe or strongroom at the location?</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                @Html.TextBoxFor(p => p.LockedSafeAtLocationObj.lockedsafeatlocation, new { @data_eiid = @Model.LockedSafeAtLocationObj.EiId, @class = "commondatatest vlidationInsure form-control form-border-bottom", @id = "lockedsafeatlocation",@data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.LockedSafeAtLocationObj.lockedsafeatlocation, new { @style = "display: inline-block;width: 97%;", @data_eiid = @Model.LockedSafeAtLocationObj.EiId, @class = "commondatatestComma commondatatestPrice vlidationInsure form-control form-border-bottom", @id = "lockedsafeatlocation", @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.LockedSafeAtLocationObj.EiId)
                 <label id="LockedSafeAtLocationObj.lockedsafeatlocation-error" class="error" for="LockedSafeAtLocationObj.lockedsafeatlocation"></label>
             </div>
@@ -150,7 +170,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6 col-sm-6 col-xs-12"><p>In direct transit between the location, a bank or other financial institution, market or saleyard?</p></div>
             <div class="col-md-6 col-sm-6 col-xs-12">
-                @Html.TextBoxFor(p => p.BankorOtherFinanInstObj.bankorotherFinanInst, new { @data_eiid = @Model.BankorOtherFinanInstObj.EiId, @class = "commondatatest vlidationInsure form-control form-border-bottom", @id = "bankorotherFinanInst", @data_regex = "AN", @data_itid = "0" })
+                $@Html.TextBoxFor(p => p.BankorOtherFinanInstObj.bankorotherFinanInst, new { @style = "display: inline-block;width: 97%;", @data_eiid = @Model.BankorOtherFinanInstObj.EiId, @class = "commondatatestComma commondatatestPrice vlidationInsure form-control form-border-bottom", @id = "bankorotherFinanInst", @data_regex = "AN", @data_itid = "0" })
                 @Html.HiddenFor(p => p.BankorOtherFinanInstObj.EiId)
                 <label id="BankorOtherFinanInstObj.bankorotherFinanInst-error" class="error" for="BankorOtherFinanInstObj.bankorotherFinanInst"></label>
             </div>
@@ -158,7 +178,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for money</p></div>
             <div class="col-md-3">
-                @Html.DropDownListFor(Model => Model.ExcessFPMoneyObj.Excess, listsExcess, new { @data_eiid = @Model.ExcessFPMoneyObj.EiId, @class = "commondataselection vlidationInsure form-control form-border-bottom description", @id = "excess",data_itid = "0" })
+                @Html.DropDownListFor(Model => Model.ExcessFPMoneyObj.Excess, listsExcess, new { @data_eiid = @Model.ExcessFPMoneyObj.EiId, @class = "commondataselection vlidationInsure form-control form-border-bottom description", @id = "excess", data_itid = "0" })
                 @Html.HiddenFor(p => p.ExcessFPMoneyObj.EiId)
                 <label id="ExcessFPMoneyObj.Excess-error" class="error" for="ExcessFPMoneyObj.Excess"></label>
             </div>
@@ -229,7 +249,7 @@
                     var PcId = $(this).data('pcid');
                     var policyStatus = $(this).data('policystatus');
                     // var prId = $(this).data('prId');
-                    var prId = 1029;
+                    var prId = 1021;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
@@ -317,7 +337,7 @@
                             var PcId = $(this).data('pcid');
                             var policyStatus = $(this).data('policystatus');
                             // var prId = $(this).data('prId');
-                            var prId = 1029;
+                            var prId = 1021;
                             $.ajax({
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
@@ -370,17 +390,19 @@
             <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
+                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruptions</a></li>
                 <li><a href="javascript:void(0);" class="Farm Liability">+  Farm Liability</a></li>
                 <li><a href="javascript:void(0);" class="Burglary">+  Burglary</a></li>
+                <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
                 <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
                 <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
-                <li><a href="javascript:void(0);" class="Liability">+  Liability</a></li>
-                <li><a href="javascript:void(0);" class="Home Building">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Personal Liabilities Farm">+  Person Liability</a></li>
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
                 <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motors</a></li>
+                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
+                <li><a href="javascript:void(0);" class="Machinery">+  Machinery</a></li>
             </ul>
             <script type="text/javascript">
                 $(document).on('click', 'ul.unit > li', function () {
@@ -416,48 +438,39 @@
                 var lastChar = id.substr(id.length - 1);
                 var newval = $(this).val();
                 if (nameAttr == "AtTheLocationObj.atLocation") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter money against accidental loss that takes place at the location').css({ "display": "block" });
-                        valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
-                        $('#ptab4 #' + id).css({ "border": "" });
-                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text('');
                     }
                 }
                 if (nameAttr == "LockedSafeAtLocationObj.lockedsafeatlocation") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter locked safe or strongroom at the location').css({ "display": "block" });
-                        valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
-                        $('#ptab4 #' + id).css({ "border": "" });
-                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text('');
                     }
                 }
                 if (nameAttr == "BankorOtherFinanInstObj.bankorotherFinanInst") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval == '') {
+                    var regex = /^[0-9]*$/;
+                    var newValValuablesS = newval.replace(/,/g, '');
+                    if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter direct transit between the location, a bank or other financial institution, market or saleyard').css({ "display": "block" });
-                        valid = 0;
-                    } else if (newval != '' && !regex.test(newval)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
                     } else {
-                        $('#ptab4 #' + id).css({ "border": "" });
-                        $("#ptab4 label[for='" + nameAttr + "']").text('');
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text('');
                     }
                 }
                 if (nameAttr == "ExcessFPMoneyObj.Excess") {
@@ -556,7 +569,7 @@
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Required') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).removeAttr('disabled');
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });

@@ -9,7 +9,7 @@
     listsExcess.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
-    <h4><span>FARM PROTECTION POLICY</span> / TRANSIT</h4>
+    <h4><span>FARM POLICY</span> / TRANSIT</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-sm-7 col-xs-12 policy-full-head">
@@ -32,7 +32,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save your policy till now and continue later.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -121,7 +121,7 @@
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         <div class="clearfix"></div>
         <div class="col-md-12 mb-md-30 mt-10 mb-10">
-            <h5>We can cover your livestock or farm produce and machinery during transit in Australia. <a href="#ShearingDelaysModal2" role="button" data-target="#ShearingDelaysModal2" data-toggle="modal">Click here </a> for further information. </h5>
+            <h5>We can cover your Livestock or Farm Produce and Machinery during Transit in Australia. <a href="#ShearingDelaysModal2" role="button" data-target="#ShearingDelaysModal2" data-toggle="modal">Click here </a> for further information. </h5>
         </div>
         <div id="ShearingDelaysModal2" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ShearingDelaysModal2" aria-hidden="false">
             <div class="modal-dialog">
@@ -146,8 +146,9 @@
             <div class="col-md-6 col-sm-4 col-xs-12"><p>Locations covered</p></div>
             <div class="col-md-6 col-sm-8 col-xs-12">
                 <div class="col-md-10 col-sm-10 col-xs-10">
-                    <input type="text" name="location" class="form-control form-border-bottom commondatatest" data-eiid="" id="locationts" />
-                    <label id="location-error" class="error" for="location"></label>
+                    @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "form-control form-border-bottom vlidationInsure", @id = "addressBug", @data_eiid = @Model.AddressObj.EiId, @readonly = "readonly" })
+                    @Html.HiddenFor(p => p.AddressObj.EiId)
+                    <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
                 </div>
                 <div class="col-md-2 col-sm-2 col-xs-2"></div>
             </div>
@@ -248,7 +249,7 @@
                     var PcId = $(this).data('pcid');
                     var policyStatus = $(this).data('policystatus');
                     // var prId = $(this).data('prId');
-                    var prId = 1029;
+                    var prId = 1021;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
@@ -336,7 +337,7 @@
                             var PcId = $(this).data('pcid');
                             var policyStatus = $(this).data('policystatus');
                             // var prId = $(this).data('prId');
-                            var prId = 1029;
+                            var prId = 1021;
                             $.ajax({
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
@@ -389,17 +390,19 @@
             <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
                 <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
+                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Inturruptions</a></li>
                 <li><a href="javascript:void(0);" class="Farm Liability">+  Farm Liability</a></li>
                 <li><a href="javascript:void(0);" class="Burglary">+  Burglary</a></li>
+                <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
                 <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
                 <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
-                <li><a href="javascript:void(0);" class="Liability">+  Liability</a></li>
-                <li><a href="javascript:void(0);" class="Home Building">+  Home Building</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
+                <li><a href="javascript:void(0);" class="Personal Liabilities Farm">+  Person Liability</a></li>
+                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
                 <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
                 <li><a href="javascript:void(0);" class="Motors">+  Motors</a></li>
+                <li><a href="javascript:void(0);" class="Machinery">+  Machinery</a></li>
             </ul>
             <script type="text/javascript">
                 $(document).on('click', 'ul.unit > li', function () {
@@ -437,11 +440,7 @@
                 if (nameAttr == "LivestockMaxValOneLoadObj.livestockMaxValoneload") {
                     var regex = /^[0-9]*$/;
                     var newValValuablesS = newval.replace(/,/g, '');
-                    if (newValValuablesS == '') {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter the maximum value for any one load').css({ "display": "block" });
-                        valid = 0;
-                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
+                    if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
@@ -453,11 +452,7 @@
                 if (nameAttr == "FarmProduceMaxValOneLoadObj.farmproduceMaxValoneload") {
                     var regex = /^[0-9]*$/;
                     var newValValuablesS = newval.replace(/,/g, '');
-                    if (newValValuablesS == '') {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter the maximum value for any one load').css({ "display": "block" });
-                        valid = 0;
-                    } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
+                    if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                         valid = 0;
@@ -562,7 +557,7 @@
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Required') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).removeAttr('disabled');
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });

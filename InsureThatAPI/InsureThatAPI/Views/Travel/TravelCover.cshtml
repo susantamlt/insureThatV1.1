@@ -13,10 +13,6 @@
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
         <h2>TRAVEL</h2>
-        <p>
-            The travel section provides a multi trip travel insurance cover over the period of the policy.
-            It covers you, your children and grandchildren if they are under 25 and not working full time.  They must be listed on the insurance certificate.
-        </p>
     </div>
     <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
         <div class="pull-right">
@@ -25,6 +21,15 @@
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
         </div>
     </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div id="errorContainer"></div>
+    <div class="clearfix"></div>
+    <p>
+        The travel section provides a multi trip travel insurance cover over the period of the policy.
+        It covers you, your children and grandchildren if they are under 25 and not working full time.  They must be listed on the insurance certificate.
+    </p> 
+    <div class="clearfix"></div>
+    <br />
     <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -64,7 +69,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Do you wish to save and exit.</p>
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -113,8 +118,7 @@
         </div>
     </div>
     <div class="clearfix"></div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
-    <div id="errorContainer"></div>
+ 
     @using (Ajax.BeginForm("TravelCover", "Travel", new { cid = @ViewBag.cid }, new AjaxOptions()
     {
         HttpMethod = "POST"
@@ -127,7 +131,7 @@
         <div class="error"></div>
         <div class="row feild-table">
             <div class="col-md-12 table-8">
-                <table>
+                <table class="table">
                     <thead>
                         <tr>
                             <th class="space_left">Travellers to be covered </th>
@@ -143,20 +147,28 @@
                             {
                                 jCount = i + 1;
                                 <tr id="tname-tr-@jCount">
-                                    <td class="no-border">
-                                        @Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, Model.TravellerscoveredObjList[i].Value, new { @class = "form-control form-border-bottom travelName vlidationInsure commondatatest", @data_eiid = @Model.TravellerscoveredObj.EiId, @data_itid = i, @id = "travellerscovered", @placeholder = "Name", @data_regex = "AN" })
-                                        @Html.HiddenFor(p => p.TravellerscoveredObj.EiId)
-                                    </td>
-                                    <td class="no-border">
-                                        @Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, Model.DataofbirthObjList[i].Value, new { @class = "form-control form-border-bottom format datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DataofbirthObj.EiId, @data_itid = i, @id = "dataofbirth", @data_regex = "NS", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
-                                        @Html.HiddenFor(p => p.DataofbirthObj.EiId)
-                                    </td>
                                     @if (jCount == CountTotal)
                                     {
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, Model.TravellerscoveredObjList[i].Value, new { @class = "form-control form-border-bottom travelName vlidationInsure commondatatest", @data_eiid = @Model.TravellerscoveredObj.EiId, @data_itid = '0', @id = "travellerscovered", @placeholder = "Name", @data_regex = "AN" })
+                                            @Html.HiddenFor(p => p.TravellerscoveredObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, Model.DataofbirthObjList[i].Value, new { @class = "form-control form-border-bottom format datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DataofbirthObj.EiId, @data_itid = '0', @id = "dataofbirth", @data_regex = "NS", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                                            @Html.HiddenFor(p => p.DataofbirthObj.EiId)
+                                        </td>
                                         <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameAdd(@jCount)" class="button-3d">+</a></td>
                                     }
                                     else
                                     {
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, Model.TravellerscoveredObjList[i].Value, new { @class = "form-control form-border-bottom travelName vlidationInsure commondatatest", @data_eiid = @Model.TravellerscoveredObj.EiId, @data_itid = jCount, @id = "travellerscovered", @placeholder = "Name", @data_regex = "AN" })
+                                            @Html.HiddenFor(p => p.TravellerscoveredObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, Model.DataofbirthObjList[i].Value, new { @class = "form-control form-border-bottom format datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DataofbirthObj.EiId, @data_itid = jCount, @id = "dataofbirth", @data_regex = "NS", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                                            @Html.HiddenFor(p => p.DataofbirthObj.EiId)
+                                        </td>
                                         <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameRemove(@jCount)" class="button-3d">-</a></td>
                                     }
                                 </tr>
@@ -205,7 +217,7 @@
             </div>
         </div>
         <div class="mt-10 mb-10 clearfix">
-            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to take the <a href="#ExcesshomeSkiMode" role="button" data-target="#ExcesshomeSkiMode" data-toggle="modal">Ski and Winter</a> Sports option?</p>
+            <p class="col-md-6 col-sm-6 col-xs-12">Do you wish to take the <a href="#ExcesshomeSkiMode" role="button" data-target="#ExcesshomeSkiMode" data-toggle="modal">Ski and Winter Sports</a> option?</p>
             <div class="col-md-6 col-sm-6 col-xs-12">
                 <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WintersportObj.Wintersport, '1', new { @class = "wintersport commondataradio vlidationInsure", @id = "radio3", @data_eiid = @Model.WintersportObj.EiId })<label for="radio3"><span><span></span></span>Yes</label></div>
                 <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(m => m.WintersportObj.Wintersport, '0', new { @class = "wintersport commondataradio vlidationInsure", @id = "radio4", @data_eiid = @Model.WintersportObj.EiId })<label for="radio4"><span><span></span></span>No</label></div>
@@ -217,7 +229,7 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="pull-left">Ski and Winter</h3>
+                        <h3 class="pull-left">Ski and Winter Sports</h3>
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             <img src="~/images/close-icon.png" />
                         </button>
@@ -235,7 +247,7 @@
             </div>
         </div>
         <div class="mt-10 mb-10 clearfix">
-            <p class="col-md-6 col-sm-6 col-xs-12">Please select <a href="#ExcesshomeBuildingMode" role="button" data-target="#ExcesshomeBuildingMode" data-toggle="modal">Excess</a></p>
+            <p class="col-md-6 col-sm-6 col-xs-12">Please select the <a href="#ExcesshomeBuildingMode" role="button" data-target="#ExcesshomeBuildingMode" data-toggle="modal">Excess</a></p>
             <div class="col-md-3">
                 @Html.DropDownListFor(model => model.ExcessObj.Excess, listsExcessTR, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection vlidationInsure", @id = "excess", @data_eiid = @Model.ExcessObj.EiId })
                 @Html.HiddenFor(p => p.ExcessObj.EiId)
@@ -252,7 +264,12 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>When you make a claim, you pay the first part of the cost and we pay the rest. Your part is called the <b>excess</b>.  You can reduce the cost of your insurance by choosing a higher excess.</p>
+                        <p>The amount that We will deduct from a claims settlement. This amount is shown in the Certificate.</p>
+                        <p>Please Note</p>
+                        <ul style="list-style:none">
+                            <li>(A) If more than one claim arises out of the same event We will only apply the largest Excess.</li>
+                            <li>(B) We will not deduct a young driver's Excess if the event that caused the claim happened when Your Vehicle was with a business for service, repair or parking.</li>
+                        </ul>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -440,15 +457,45 @@
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
-                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
+                @if (Model.NewSections != null && Model.NewSections.Count() > 0)
+                {
+                    for (int i = 0; i < Model.NewSections.Count(); i++)
+                    {
+                        if (Model.NewSections[i] == "HomeBuildings")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Buildings
+                                </a>
+                            </li>
+                        }
+                        else if (Model.NewSections[i] == "HomeContents")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Contents
+                                </a>
+                            </li>
 
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+                        }
+                        else if (Model.NewSections[i] == "FarmProperty")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Farm Property
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + @Model.NewSections[i]
+                                </a>
+                            </li>
+                        }
+                    }
+                }
             </ul>
             <script type="text/javascript">
                         $(document).on('click', 'ul.unit > li', function () {
@@ -494,19 +541,37 @@
 <script type="text/javascript">
     function tnameAdd(id) {
         var countId = id + 1;
+        var i = 0;
+        $(".table tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            $("#" + RowId + " .form-control").removeAttr("data-itid");
+            $("#" + RowId + " .form-control").attr("data-itid", i);
+            i++;
+        });
         $('#tname-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
         var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.TravellerscoveredObj.Travellerscovered, new { @class = "form-control form-border-bottom travelName commondatatest", @data_eiid = @Model.TravellerscoveredObj.EiId, @data_itid = "", @id = "travellerscovered", @placeholder = "Name",@data_regex= "AN" })@Html.HiddenFor(p => p.TravellerscoveredObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DataofbirthObj.Dataofbirth, new { @class = "form-control form-border-bottom format datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DataofbirthObj.EiId, @data_itid = "", @id = "dataofbirth",@data_regex="NS", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })@Html.HiddenFor(p => p.DataofbirthObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
         $("#tname-" + id).html(replaceA);
         $("#tname-tr-" + id).after(html);
-        $("#tname-tr-" + countId + " .form-control").attr("data-itid", id);
+        $("#tname-tr-" + countId + " .form-control").attr("data-itid", 0);
         $("#tname-tr-" + countId + ' #travellerscovered').attr('id', "travellerscovered" + countId).val('');
         $("#tname-tr-" + countId + ' #dataofbirth').attr('id', "dataofbirth" + countId).val('');
         $("tr > td > .datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
     }
     function tnameRemove(id) {
         $("#tname-tr-" + id).remove();
-            var sum = 0;
+        var rowCount = $('.table tbody tr').length;
+        var i = 0;
+        $(".table tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            if (i != (rowCount - 1)) {
+                $("#" + RowId + " .form-control").attr("data-itid", i);
+            } else {
+                $("#" + RowId + " .form-control").attr("data-itid", 0);
+            }
+            i++;
+        });
+        var sum = 0;
         $(".travelName").each(function () {
                 if ($(this).val() != '') {
                     sum = sum + 1;
@@ -561,26 +626,32 @@
                 if (nameAttr == "DataofbirthObj.Dataofbirth") {
                     var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
                     var rVal = newval.split('/');
-                    var currentYearNew = new Date().getFullYear();
-                    if ($('#travellerscovered' + lastChar).val() != '' && newval == '') {
+                    var uptoYears = 0;
+                    var diffDateCalculatePets = true;
+                    if (regex.test(newval)) {
+                        uptoYears = CalculateDiff(newval);
+                        var newDatePets = rVal[1] + '/' + rVal[0] + '/' + rVal[2];
+                        diffDateCalculatePets = diffDateCalculateER(newDatePets);
+                    }
+                    if ($("#travellerscovered" + lastChar).val() != '' && newval == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter date of birth').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Please enter Date of Birth').css({ "display": "block" });
                         valid = 0;
                     } else if (newval != '' && !regex.test(newval)) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Please enter an appropriate year').css({ "display": "block" });
                         valid = 0;
                     } else if (newval != '' && rVal[2] != '' && rVal[2].length != 4) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + name + "']").text('Date is not proper. Please check').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('Please enter an appropriate year').css({ "display": "block" });
                         valid = 0;
-                    } else if (newval != '' && rVal[2] != '' && rVal[2] > currentYearNew) {
+                    } else if (diffDateCalculatePets == false) {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + name + "']").text('You can not provide future year').css({ "display": "block" });
+                        $("label[for='" + nameAttr + "']").text('You cannot provide a date in the future').css({ "display": "block" });
                         valid = 0;
-                    } else if (rVal != "") {
+                    } else{
                         $('#' + id).css({ "border": "" });
-                        $("label[for='" + name + "']").text('').css({ "display": "none" });
+                        $("label[for='" + nameAttr + "']").text('').css({ "display": "none" });
                     }
                 }
                 if (nameAttr == "YourtripObj.Yourtrip") {
@@ -622,7 +693,7 @@
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
-        var ItIdN = $(this).data('itid');
+        var ItIdN = $(this).attr('data-itid');
         var Nregex = $(this).data('regex');
         var name = $(this).attr('name');
         var id = $(this).attr('id');
@@ -731,8 +802,9 @@
                     } else {
                         $('#referralList-p').html(data.referrallists);
                     }
-                    if (data.usermessage == "") {
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -741,10 +813,16 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html('');
-                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html('');
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "none" });
+                        } else {
+                            $("label[for='" + labelid + "']").html('');
+                            $("label[for='" + labelid + "']").css({ "display": "none" });
+                        }
                     } else {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -753,8 +831,13 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html(data.usermessage);
-                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html(data.usermessage);
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "block" });
+                        } else {
+                            $("label[for='" + labelid + "']").html(data.usermessage);
+                            $("label[for='" + labelid + "']").css({ "display": "block" });
+                        }
                     }
                 }
             });
@@ -768,10 +851,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html);
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html('');
+                    $('#savepolicyresult').html('html').delay(10000).fadeOut();
                 }
             }
         });

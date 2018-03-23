@@ -16,7 +16,6 @@ namespace InsureThatAPI.CommonMethods
 {
     public class LogInDetailsClass
     {
-
         #region 
         public static bool Validate(string mainresponse, string privatekey)
         {
@@ -50,6 +49,7 @@ namespace InsureThatAPI.CommonMethods
             public List<string> errorcodes { get; set; }
         }
         #endregion
+
         #region Fields
 
         //salt value - any string
@@ -66,6 +66,7 @@ namespace InsureThatAPI.CommonMethods
         private static PaddingMode padMode = PaddingMode.ISO10126;
 
         #endregion
+
         #region Public Methods
 
         public string APIkeyEncrypt(string Plaintext, string EncryptedKey)
@@ -166,6 +167,7 @@ namespace InsureThatAPI.CommonMethods
         }
 
         #endregion
+
         #region Get Customer/Call Center Login details from database
         public async Task<LoginDetailsRef> GetLogInDetailsPage(string UserName, string Password)
         {
@@ -175,7 +177,7 @@ namespace InsureThatAPI.CommonMethods
             string loginKey = string.Empty;
             int IyId = 9262;
             string EncrptForLogin = String.Format("{0:ddddyyyyMMdd}", DateTime.UtcNow);
-        //  EncrptForLogin = "Friday20180302";
+            //EncrptForLogin = "Wednesday20180321";
             PlainTextEncrpted = IyId + "|" + UserName + "|InsureThatDirect";
             loginKey = Encrypt(PlainTextEncrpted, EncrptForLogin);
             LoginDetailsRef loginDetailsref = new LoginDetailsRef();
@@ -235,7 +237,6 @@ namespace InsureThatAPI.CommonMethods
             }
             return loginDetailsref;
         }
-
         #endregion
     }
 }

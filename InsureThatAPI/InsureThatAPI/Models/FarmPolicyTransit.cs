@@ -26,6 +26,12 @@ namespace InsureThatAPI.Models
         public LivestockMaximumValOfOneload LivestockMaxValOneLoadObj{ get; set; }
         public FarmProduceMaxValOfOneLoad FarmProduceMaxValOneLoadObj{ get; set; }
         public ExcessFPTransit ExcessFPTransitObj { get; set; }
+        public AddressTsAddress AddressObj { get; set; }
+    }
+    public class AddressTsAddress
+    {
+        public string Address { get; set; }
+        public int EiId { get; set; }
     }
 
     public class LivestockMaximumValOfOneload

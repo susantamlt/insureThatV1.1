@@ -67,14 +67,18 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AgentLogin", "Login");
             }
             string policyid = null;
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            BoatDetails.NewSections = new List<string>();
             if (PcId != null && PcId.HasValue && PcId > 0)
             {
                 policyid = PcId.ToString();
+                BoatDetails.PcId = PcId.Value;
                 var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
                 BoatDetails.PolicyId = policyid;
-                policyinclusion = policyinclusions.Exists(p => p.Name == "Boat");
+                policyinclusion = policyinclusions.Exists(p => p.Name == "Boat");          
                 BoatDetails.PolicyInclusion = new List<usp_GetUnit_Result>();
                 BoatDetails.PolicyInclusion = policyinclusions;
+                BoatDetails.NewSections = cmn.NewSectionP(policyinclusions);
             }
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
             if (Session["Policyinclustions"] != null)
@@ -84,6 +88,7 @@ namespace InsureThatAPI.Controllers
                 BoatDetails.PolicyInclusions = new List<SessionModel>();
 
                 BoatDetails.PolicyInclusions = Policyincllist;
+                BoatDetails.NewSections = cmn.NewSectionHome(BoatDetails.PolicyInclusions);
                 if (Policyincllist != null)
                 {
                     if (Policyincllist != null)
@@ -220,7 +225,13 @@ namespace InsureThatAPI.Controllers
             if (Session["unId"] != null && Session["profileId"] != null)
             {
                 unid = Convert.ToInt32(Session["unId"]);
+                Session["unId"] = unid;
+              
+            }
+            if(Session["profileId"] != null)
+            {               
                 profileid = Convert.ToInt32(Session["profileId"]);
+                Session["profileId"] = profileid;
             }
             HttpClient hclient = new HttpClient();
             string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
@@ -246,9 +257,9 @@ namespace InsureThatAPI.Controllers
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
                 }
-               else if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+               else if (PcId == null && Session["unId"] == null && (Session["profileId"] == null || profileid == 0))
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Boat&SectionUnId=&ProfileUnId=");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Boat&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -256,6 +267,20 @@ namespace InsureThatAPI.Controllers
                       
                         if (unitdetails != null && unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
                         {
+                            bool exists = BoatDetails.PolicyInclusions.Exists(p => p.name == "Boat");
+                            if (exists == true)
+                            {
+                                List<SessionModel> values = new List<SessionModel>();
+                                values = (List<SessionModel>)Session["Policyinclustions"];
+                                for (int k = 0; k < values.Count(); k++)
+                                {
+                                    if (values[k].name == "Boat" && values[k].UnitId == null && values[k].ProfileId == null)
+                                    {
+                                        values.RemoveAt(k);
+                                    }
+                                }
+                                Session["Policyinclustions"] = values;
+                            }
                             var errormessage = "First please provide cover for Home Buildings.";
                             if (unitdetails.ErrorMessage.Contains(errormessage))
                             {
@@ -654,7 +679,7 @@ namespace InsureThatAPI.Controllers
                 //{
                 //    return RedirectToAction(actionname, controllername, new { cid = BoatDetails.CustomerId, PcId = BoatDetails.PcId });
                 //}
-                return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
+                return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId, PcId = BoatDetails.PcId });
                // return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });
             
             return RedirectToAction("PetsCover", "Pets", new { cid = BoatDetails.CustomerId });

@@ -2,18 +2,42 @@
 @{
     ViewBag.Title = "Liability Cover";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    List<SelectListItem> listsExcessLIB = new List<SelectListItem>();
+    listsExcessLIB.Add(new SelectListItem { Value = "500", Text = "$500" });
+    listsExcessLIB.Add(new SelectListItem { Value = "1000", Text = "$1,000" });
+    listsExcessLIB.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>RURAL LIFESTYLE POLICY</span> / LIABILITY</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
-    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
+    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
         <h2>LIABILITY</h2>
-    </div>
-    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
+    </div>    
+    <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
         <div class="pull-right">
+            <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+        </div>
+    </div>
+    <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Save Policy</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Do you wish to save the answers you have completed and continue later?</p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    <button class="btn btn-default no-border savepolicyP" data-dismiss="modal" aria-hidden="true"> Save </button>
+                </div>
+            </div>
         </div>
     </div>
     <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
@@ -26,7 +50,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p id="referralList-p">No Referral List</p>
+                    @if (Model.Referels != null && Model.Referels.Count() > 0)
+                    {
+                        for (int j = 0; j < Model.Referels.Count(); j++)
+                        {
+                            @Model.Referels[j]<br />
+                        }
+                    }
+                    else
+                    {
+                        <p>No Referral List</p>
+                    }
+                    <p id="referralList-p"></p>
                 </div>
                 <div class="modal-footer">
                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -49,8 +84,8 @@
                             <tr>
                                 <th class="space_left">Section Name</th>
                                 <th class="space_left">Base</th>
-                                <th class="space_left">Fsl</th>
-                                <th class="space_left">Gst</th>
+                                <th class="space_left">FSL</th>
+                                <th class="space_left">GST</th>
                                 <th class="space_left">Stamp Duty</th>
                                 <th class="space_right">Gross</th>
                             </tr>
@@ -73,6 +108,9 @@
             </div>
         </div>
     </div>
+    <div class="mt-40 mb-40 row"></div>
+    <div class="clearfix"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     <div class="clearfix"></div>
     <div id="errorContainer"></div>
     @using (Ajax.BeginForm("LiabilityCover", "Liabilities", new { cid = @ViewBag.cid }, new AjaxOptions()
@@ -82,55 +120,163 @@
     }, new { @id = "liabilityCover", @name = "liabilityCover" }))
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.CustomerId)
+        @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+        @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+        <div class="error"></div>
         <div class="form">
-            <div class="mt-10 mb-10 col-md-12">
-                <p>Personal and Farm liability are combined on this policy.</p>
-                <p>This policy automatically offers and extends the personal liability to cover any liability in relation to your farming activities eg if you have a dam on the property, a sheep that may escape onto the road etc.</p>
-                <p>If you do not want to take this cover then you can un-select it. Please be aware however that if you unselect this cover, we will be providing no cover for personal or general or farming liability.</p>
+            <div class="clearfix mt-10 mb-10 col-md-12">
+                <p class="col-md-10 col-sm-10 col-xs-12"><a href="#liabilitymodel" role="button" data-target="#liabilitymodel" data-toggle="modal"><strong>Click here to see definition of liability.</strong></a></p>
+                <p class="col-md-10 col-sm-10 col-xs-12">Personal Liability and Farm Liability are combined on this policy.</p>
+                <p class="col-md-10 col-sm-10 col-xs-12">This policy automatically offers and extends the personal Liability to cover any Liability in relation to your farming activities eg if you have a dam on the property, a sheep that may escape onto the road etc.</p>
+                @*<p class="col-md-10 col-sm-10 col-xs-12">If you do not want to take this cover then you can un-select it. Please be aware however that if you unselect this cover, we will be providing no cover for personal or general or farming Liability.</p>*@
             </div>
-            <div class="mt-10 mb-10 col-md-12">
+            <div id="liabilitymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="liabilitypolicy" aria-hidden="false">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding: 15px 26px 0px;">
+                            <h3 class="pull-left">Liability</h3>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                <img src="~/images/close-icon.png" />
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>We will indemnify You, if You are legally liable for causing:</p>
+                            <ul style="list-style:none">
+                                <li>(1) Bodily injury to or death of another person; or</li>
+                                <li>(2) Loss of, loss of use of, or damage to tangible property owned by another person.</li>
+                            </ul>
+                            <p>The injury, death, loss or damage must happen during the period of cover and be caused by an Occurrence, if:</p>
+                            <ul style="list-style:none">
+                                <li>(A) The claim arises as a result of You being the owner or the occupier of Your Home Building and/or farm if Your Home Building and/or Farm Structures are insured under this policy.Under this section, We will extend the definition of Home Building to include land, trees, shrubs and other plant life at the Location. Home Buildings do not include any commercial pontoons, jetties, wharves or moorings.</li>
+                                <li>(B) If Your Home Contents are insured under this policy and Your Home Building is Your primary residence, We will indemnify You against any claim for compensation or expenses caused by an Occurrence anywhere in Australia, or anywhere in the world for a maximum period of 90 consecutive days starting from the time You leave Australia.</li>
+                            </ul>
+                            <p>Regardless of how many Occurrences take place during any one period of cover We will not pay more than:</p>
+                            <ul style="list-style:none">
+                                <li>(1) The Limit of Indemnity in total; and</li>
+                                <li>(2) Other costs that We agree to pay in writing.</li>
+                            </ul>
+                            <p>Property in Physical and Legal Control</p>
+                            <p>We will indemnify You, if You are legally liable for causing damage to property not owned by You but temporarily in Your care, custody or control, subject to Our maximum liability for such property damage being $100,000 for each and every Occurrence provided this limit does not increase Our limit of liability for this section shown in Your Certificate.</p>
+                            <p>Products Liability</p>
+                            <p>We will indemnify You, if You are legally liable for causing:</p>
+                            <ul style="list-style:none">
+                                <li>(1) Bodily injury to or death of another person; or</li>
+                                <li>(2) Loss of, loss of use of, or damage to tangible property owned by another person;</li>
+                            </ul>
+                            <p>happening during the period of cover and resulting from an Occurrence that is caused by Farm Produce or a Manufactured Farm Product or its container from Your Farm that is covered by this policy. The product must be supplied by You in or from Australia</p>
+                            <p>*Please refer to the policy wording for full details</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @*<div class="clearfix mt-10 mb-10 col-md-12">
                 <p class="col-md-7 col-sm-7 col-xs-12">Do you want cover for Personal and Farm Liabilty</p>
-                <div class="col-md-5 col-sm-5 col-xs-12">
+                <p class="col-md-5 col-sm-5 col-xs-12">
                     <span class="checkboxes">
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '0', new { @class = "farmliabilty commondataradio", @data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty1" })
+                            @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '0', new { @class = "farmliabilty commondataradio", @readonly = "readonly", @data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty1", @checked = "checked" })
                             <label for="radio1"><span><span></span></span>No</label>
                         </span>
                         <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '1', new { @class = "farmliabilty commondataradio", @data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty2" })
+                            @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '1', new { @class = "farmliabilty commondataradio", @readonly = "readonly",@data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty2", @disabled = "disabled" })
                             <label for="radio1"><span><span></span></span>Yes</label>
                         </span>
                         @Html.HiddenFor(p => p.FarmliabiltyObj.EiId)
                         <label id="FarmliabiltyObj.Farmliabilty-error" class="error" for="FarmliabiltyObj.Farmliabilty"></label>
                     </span>
-                </div>
-            </div>
-            <div class="mt-10 mb-10 col-md-12">
-                <p class="col-md-5 col-sm-5 col-xs-12">Limit of indemnity</p>
-                <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.LimitindemnityObj.Limitindemnity, new { @class = "form-control form-border-bottom LimitindemnityObj commondatatest", @data_eiid = @Model.LimitindemnityObj.EiId, @id = "limitindemnity" })
+                </p>
+            </div>*@
+            <div class="clearfix mt-10 mb-10 col-md-12">
+                <p class="col-md-6 col-sm-6 col-xs-12">Limit of indemnity</p>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    $@Html.TextBoxFor(p => p.LimitindemnityObj.Limitindemnity, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @readonly = "readonly", @class = "form-control form-border-bottom LimitindemnityObj commondatatestComma commondatatestPrice readonly", @data_eiid = @Model.LimitindemnityObj.EiId, @id = "limitindemnity", @data_regex = "N" })
                     @Html.HiddenFor(p => p.LimitindemnityObj.EiId)
                     <label id="LimitindemnityObj.Limitindemnity-error" class="error" for="LimitindemnityObj.Limitindemnity"></label>
                 </div>
             </div>
-            <div class="mt-10 mb-10 col-md-12 ">
-                <p class="col-md-5">Excess</p>
-                <div class="col-md-4">
-                    @Html.DropDownListFor(model => model.ExcessLCObj.Excess, @Model.ExcessLCObj.ExcessList, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessLCObj.EiId, @id = "excess" })
+            <div class="clearfix mt-10 mb-10 col-md-12">
+                <p class="col-md-6 col-sm-6 col-xs-12">Turnover from Your Farming activities</p>
+                <div class="col-md-6 col-sm-6 col-xs-12">
+                    $@Html.TextBoxFor(p => p.FarmingactivitiesObj.Activities, new { @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.FarmingactivitiesObj.EiId, @id = "activities", @data_regex = "N" })
+                    @Html.HiddenFor(p => p.FarmingactivitiesObj.EiId)
+                    <label id="FarmingactivitiesObj.Activities-error" class="error" for="FarmingactivitiesObj.Activities"></label>
+                </div>
+            </div>
+            <div class="clearfix mt-10 mb-10 col-md-12">
+                <div class="col-md-6"><p>Products covered</p></div>
+                <div class="col-md-6">
+                    <div class="policy-loc-row">
+                        <div class="policy-loc-row" style="padding: 0px;">@Html.CheckBoxFor(p => p.FarmProduceObj.Farmproduce, new { @class = "commondatacheckboxL vlidationInsure checkboxpro", @id = "FarmProduce1", @data_eiid = Model.FarmProduceObj.EiId })<label for="checkbox1" style="font-weight:400;"><span><span></span></span>Farm Produce</label></div>
+                        <div class="policy-loc-row" style="padding: 0px;">@Html.CheckBoxFor(p => p.FarmProduceObj.Farmproduce, new { @class = "commondatacheckboxL vlidationInsure checkboxpro", @id = "FarmProduce2", @data_eiid = Model.FarmProduceObj.EiId })<label for="checkbox1" style="font-weight:400;"><span><span></span></span>Manufactured Farm Products</label></div>
+                    </div>
+                    <input type="hidden" name="farmmanufactory" id="farmman" value="@Model.allproducts" />
+                    <label id="FarmProduceObj.Farmproduce-error" class="error" for="FarmProduceObj.Farmproduce"></label>
+                </div>
+            </div>
+            @*<div class="clearfix mt-10 mb-10 col-md-12">
+            <div class="col-md-6"><p>Do You wish to cover other products?</p></div>
+            <div class="col-md-6">
+                <div class="policy-loc-row">
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="CoverotherObj.Other" class="Vmodified commondataradio vlidationInsure" id="Other1" data-eiid="" value="1" /><label for="radio1"><span><span></span></span>Yes</label></div>
+                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="CoverotherObj.Other" class="Vmodified commondataradio vlidationInsure" id="Other2" data-eiid="" checked="checked" value="0" /><label for="radio1"><span><span></span></span>No</label></div>
+                    <input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="CoverotherObj" name="CoverotherObj.EiId" value="" type="hidden">
+                </div>
+                <label id="CoverotherObj.Vmodified-error" class="error" for="CoverotherObj.Vmodified"></label>
+            </div>
+        </div>
+        <div class="clearfix mt-10 mb-10 col-md-12" id="dOtherPro">
+            <div class="col-md-6"><p>Description of products</p></div>
+            <div class="col-md-6">
+                <input name="DesProductObj.Description" type="text" class="form-control form-border-bottom vlidationInsure commondatatest" id="describeProduct" data-eiid="" data-regex="A" />
+                <input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="DesProductObj" name="DesProductObj.EiId" value="" type="hidden">
+                <label id="DesProductObj.Description-error" class="error" for="DesProductObj.Description"></label>
+            </div>
+        </div>*@
+            <div class="clearfix mt-10 mb-10 col-md-12 ">
+                <div class="col-md-6"><p>Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
+                <div class="col-md-3">
+                    @Html.DropDownListFor(model => model.ExcessLCObj.Excess, listsExcessLIB, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessLCObj.EiId, @id = "excess" })
                     @Html.HiddenFor(p => p.ExcessLCObj.EiId)
                     <label id="ExcessLCObj.Excess-error" class="error" for="ExcessLCObj.Excess"></label>
                 </div>
             </div>
         </div>
+        <div id="ExcesshomeBuildingModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ExcesshomeBuildingModel" aria-hidden="false">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="pull-left">Excess</h3>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                            <img src="~/images/close-icon.png" />
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>The amount that We will deduct from a claims settlement. This amount is shown in the Certificate.</p>
+                        <p>Please Note</p>
+                        <ul style="list-style:none">
+                            <li>(A) If more than one claim arises out of the same event We will only apply the largest Excess.</li>
+                            <li>(B) We will not deduct a young driver's Excess if the event that caused the claim happened when Your Vehicle was with a business for service, repair or parking.</li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="col-md-6 pull-right text-right">
-            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Submit</button>
+            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Save & Continue</button>
         </div>
     }
 </div>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
     <div class="well">
+        <h3 style="font-size: 11px;margin-bottom: 2px;">Edit or delete previous sections here</h3>
         @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
         {
             for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
@@ -149,8 +295,8 @@
                         });
                     </script>
                     <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                        <a class="btn color-bk-btn policy-delet-wrap" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" href="javascript:void(0);">Delete</a>
+                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
                     </div>
                 </div>
             }
@@ -169,22 +315,42 @@
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
                         data: {
-                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "effcdate": null
                         },
                         success: function (responce) {
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
                         }
                     });
                 });
                 $(".policy-delet-wrap").click(function () {
-                    var selectedunid = $(this).data('unid');
-                    var selectedcid = $(this).data('cid');
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/Deleteunit",
-                        data: { "cid": selectedcid, "unid": selectedunid },
-                        success: function (responce) {
-                        }
-                    });
+                    var r = confirm("Are you sure you want to delete this section?");
+                    if (r == true) {
+                        var PcId = $("#pcidd").val();
+                        var selectedunid = $(this).data('unid');
+                        var selectedcid = $(this).data('cid');
+                        var PcId = $(this).data('pcid');
+                        var selectedname = $(this).data('name');
+                        var selectedprofileid = $(this).data('profileid');
+                        var selectedTrId = $(this).data('trid');
+                        var policyStatus = $(this).data('policystatus');
+                        var currId = $(this).attr("id");
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/DeleteUnit",
+                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                            success: function (responce) {
+                                if (responce.Status == true) {
+                                    var prentId = $('#' + currId).parent().parent().attr("id");
+                                    $('#' + prentId).remove();
+                                }
+                            }
+                        });
+                    }
                 });
                 $("#bindcover").click(function () {
                     $.ajax({
@@ -204,7 +370,7 @@
                 for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
                 {
                     <div class="policy-loc-row">
-                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @disabled = "disabled" })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i]</label>
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
                         <script type="text/javascript">
                             $(document).ready(function () {
                                 $('.inclusions').click(function () {
@@ -217,223 +383,432 @@
                             });
                         </script>
                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-name="@Model.PolicyInclusions[i]" data-cid="@Model.CustomerId" href="javascript:void(0);">Delete</a>
+                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
                         </div>
                     </div>
-                }
-            }
+                    <script>
+                            $(".policy-edit-wrap").click(function () {
 
-        }
-        <div class="clearfix"></div>
-        <div class="dropdown pc pc-in">
-            <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
-            <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
-                <li><a href="javascript:void(0);" class="Home Content">+  Home Content</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
-                <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
-            </ul>
-            <script type="text/javascript">
-                            $(document).on('click', 'ul.unit > li', function () {
-                                var unitname = $(this).children("a").attr("class");
-                                var cid = $("#ciid").val();
-                                var pcid = $("#pcidd").val();
-
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
                                 $.ajax({
                                     type: "POST",
-                                    url: "/Customer/AddUnit",
-                                    data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1, "effcdate": null
+                                    },
                                     success: function (responce) {
-
-                                        window.location.href = responce;
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
                                     }
                                 });
                             });
+                            $(".policy-delet-wrap").click(function () {
+                                var r = confirm("Are you sure you want to delete this section?");
+                                if (r == true) {
+                                    var PcId = $("#pcidd").val();
+                                    var selectedunid = $(this).data('unid');
+                                    var selectedcid = $(this).data('cid');
+                                    var PcId = $(this).data('pcid');
+                                    var selectedname = $(this).data('name');
+                                    var selectedprofileid = $(this).data('profileid');
+                                    var selectedTrId = $(this).data('trid');
+                                    var policyStatus = $(this).data('policystatus');
+                                    var currId = $(this).attr("id");
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/DeleteUnit",
+                                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                        success: function (responce) {
+                                            if (responce.Status == true) {
+                                                var prentId = $('#' + currId).parent().parent().attr("id");
+                                                $('#' + prentId).remove();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                    </script>
+                }
+            }
+        }
+        <div class="clearfix"></div>
+        <div class="dropdown pc pc-in">
+            <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
+            <ul class="dropdown-menu col-md-12 unit">
+                @if (Model.NewSections != null && Model.NewSections.Count() > 0)
+                {
+                    for (int i = 0; i < Model.NewSections.Count(); i++)
+                    {
+                        if (Model.NewSections[i] == "HomeBuildings")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Buildings
+                                </a>
+                            </li>
+                        }
+                        else if (Model.NewSections[i] == "HomeContents")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Home Contents
+                                </a>
+                            </li>
+
+                        }
+                        else if (Model.NewSections[i] == "FarmProperty")
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + Farm Property
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a href="javascript:void(0);" class=@Model.NewSections[i]>
+                                    + @Model.NewSections[i]
+                                </a>
+                            </li>
+                        }
+                    }
+                }
+            </ul>
+            <script type="text/javascript">
+                $(document).on('click', 'ul.unit > li', function () {
+                    var unitname = $(this).children("a").attr("class");
+                    var cid = $("#ciid").val();
+                    var pcid = $("#pcidd").val();
+                    var prid = 1029;
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/AddUnit",
+                        data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
+                        success: function (responce) {
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
+                        }
+                    });
+                });
             </script>
         </div>
     </div>
 </div>
-
-
-
 <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
 <script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
 <script type="text/javascript">
-                $(document).ready(function () {
-                    $.validator.addMethod("regex", function (value, element, regexp) {
-                        if (regexp.constructor != RegExp)
-                            regexp = new RegExp(regexp);
-                        else if (regexp.global)
-                            regexp.lastIndex = 0;
-                        return this.optional(element) || regexp.test(value);
-                    }, "Please check your input.");
-                    $("form[name='liabilityCover']").validate({
-                        rules: {
-                            "LimitindemnityObj.Limitindemnity": {
-                                required: function (element) {
-                                    if ($(".farmliabilty:checked").val() == '1') {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                },
-                                regex: /^[0-9]*$/,
-                            },
-                            "ExcessLCObj.Excess": {
-                                required: function (element) {
-                                    if ($(".farmliabilty:checked").val() == '1') {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                },
-                            },
-                        },
-                        messages: {
-                            "LimitindemnityObj.Limitindemnity": {
-                                required: "Please enter limit of indemnity",
-                                regex: "Only numeric is allowed"
-                            },
-                            "ExcessLCObj.Excess": {
-                                required: "Please select farm liabilty"
-                            },
-                        },
-                        onfocusout: function (element) {
-                            this.element(element);
-                        },
-                        submitHandler: function (form) {
-                            form.submit();
-                        }
-                    });
-                    $(document).on('change', '.commondataselection', function () {
-                        var Value = $(this).val();
-                        var EIId = $(this).data('eiid');
-                        elementAjaxCall(Value, EIId);
-                    });
-                    $(document).on('change', '.commondataradio', function () {
-                        var Value = $(this).val();
-                        var EIId = $(this).data('eiid');
-                        elementAjaxCall(Value, EIId);
-                    });
-                    $('.commondatatest').focusout(function () {
-                        var Value = $(this).val();
-                        var EIId = $(this).data('eiid');
-                        if (Value != "") {
-                            elementAjaxCall(Value, EIId);
-                        }
-                    });
-                    $("#premium").click(function () {
-                        $.ajax({
-                            url: '/Customer/PremiumDetails',
-                            type: "POST",
-                            crossOrigin: true,
-                            data: {},
-                            success: function (data) {
-                                if (data.Status == true) {
-                                    var html1 = "";
-                                    if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
-                                        var html = "";
-                                        $.each(data.Premium, function (index, value) {
-                                            html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
-                                        });
-                                        if (html != '') {
-                                            $('#premiumModel-p-b').html(html);
-                                        }
-                                    }
-                                    if (data.UnderwriterFee != null) {
-                                        html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
-                                    }
-                                    if (data.FeeGst != null) {
-                                        html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
-                                    }
-                                    if (data.InvoiceTotal != null) {
-                                        html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
-                                    }
-                                    if (html1 != '') {
-                                        $('#premiumModel-p-f').html(html1);
-                                    }
-                                }
-                            }
-                        });
-
-                    });
-                });
-                function elementAjaxCall(Value, EIId) {
-                    if (Value != '' && EIId != '') {
-                        $.ajax({
-                            url: '/Customer/ElementDetails',
-                            type: "POST",
-                            crossOrigin: true,
-                            data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": "0" },
-                            success: function (data) {
-                                if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
-                                    var valuedata = data.valuedata;
-                                    if (valuedata != '' && valuedata != null) {
-                                        $.each(valuedata, function (index, value) {
-                                            var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                            //$('#' + StateIdNewOne).val(value.Value);
-                                            if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
-                                                var statedata = data.stateData;
-                                                if (statedata != '' && statedata != null) {
-                                                    $.each(statedata, function (index1, value1) {
-                                                        var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
-                                                        if (value1.Value == 'Invisible') {
-                                                            $('#' + StateIdNew).removeAttr('readonly');
-                                                            $('#' + StateIdNew).removeAttr('disabled');
-                                                            $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
-                                                            $('#' + StateIdNew).removeAttr('required', 'required');
-                                                        } else if (value1.Value == 'Disabled') {
-                                                            $('#' + StateIdNew).attr('disabled', 'disabled');
-                                                            $('#' + StateIdNew).removeAttr('readonly');
-                                                            $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                            $('#' + StateIdNew).removeAttr('required', 'required');
-                                                        } else if (value1.Value == 'Read Only') {
-                                                            $('#' + StateIdNew).attr('readonly', 'readonly');
-                                                            $('#' + StateIdNew).removeAttr('disabled');
-                                                            $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                            $('#' + StateIdNew).removeAttr('required', 'required');
-                                                        } else if (value1.Value == 'Strike Through') {
-                                                            $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
-                                                            $('#' + StateIdNew).removeAttr('readonly');
-                                                            $('#' + StateIdNew).removeAttr('disabled');
-                                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                            $('#' + StateIdNew).removeAttr('required', 'required');
-                                                        } else if (value1.Value == 'Required') {
-                                                            $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
-                                                            $('#' + StateIdNew).removeAttr('readonly');
-                                                            $('#' + StateIdNew).removeAttr('disabled');
-                                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                            $('#' + StateIdNew).attr('required', 'required');
-                                                        } else if (value1.Value == '"Not Rendered') {
-                                                            $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                            $('#' + StateIdNew).removeAttr('readonly');
-                                                            $('#' + StateIdNew).removeAttr('disabled');
-                                                            $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                            $('#' + StateIdNew).removeAttr('required', 'required');
-                                                        }
-
-                                                    });
-                                                }
+    $(document).ready(function () {
+        $.validator.addMethod("regex", function (value, element, regexp) {
+            if (regexp.constructor != RegExp)
+                regexp = new RegExp(regexp);
+            else if (regexp.global)
+                regexp.lastIndex = 0;
+            return this.optional(element) || regexp.test(value);
+        }, "Please check your input.");
+        $("form[name='liabilityCover']").validate({
+            rules: {
+                "LimitindemnityObj.Limitindemnity": {
+                    required: true,
+                    regex: /^[0-9,]*$/,
+                },
+                "ExcessLCObj.Excess": {
+                    required: true,
+                },
+            },
+            messages: {
+                "LimitindemnityObj.Limitindemnity": {
+                    required: "Please enter limit of indemnity",
+                    regex: "Only numeric is allowed"
+                },
+                "ExcessLCObj.Excess": {
+                    required: "Please select farm liabilty"
+                },
+            },
+            onfocusout: function (element) {
+                this.element(element);
+            },
+            submitHandler: function (form) {
+                form.submit();
+            }
+        });
+        var valuelimitindemnity = '30000000';;
+        var newvalLSMV = commaReplace(valuelimitindemnity);
+        $("#limitindemnity").val(newvalLSMV);
+    });
+    $(document).on('focusout', ".commondatatest", function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        var ItIdN = $(this).data('itid');
+        var Nregex = $(this).data('regex');
+        var name = $(this).attr('name');
+        var id = $(this).attr('id');
+        var regex = "";
+        var text = "";
+        if (Nregex == 'N') {
+            regex = /^[0-9]*$/;
+            text = "Only numeric are allowed";
+        } else if (Nregex == 'A') {
+            regex = /^[a-zA-Z ]*$/;
+            text = "Special character & numeric are not allowed";
+        } else if (Nregex == 'AN') {
+            regex = /^[a-zA-Z0-9 ]*$/;
+            text = "Special character are not allowed";
+        } else if (Nregex == 'AS') {
+            regex = /^[a-zA-Z/ ]*$/;
+            text = "Numeric are not allowed";
+        }
+        if (ItIdN == 'undefined' || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
+        if (regex != '' && !regex.test(Value)) {
+            $('#' + id).css({ "border": "1px solid #ff0000" });
+            $("label[for='" + name + "']").text(text).css({ "display": "block" });
+        } else if (Value != "") {
+            $('#' + id).css({ "border": "" });
+            $("label[for='" + name + "']").text().css({ "display": "none" });
+            elementAjaxCall(Value, EIId, ItId);
+        }
+    });
+    function elementAjaxCall(Value, EIId, ItId) {
+        if (Value != '' && EIId != '') {
+            $.ajax({
+                url: '/Customer/ElementDetails',
+                type: "POST",
+                crossOrigin: true,
+                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                success: function (data) {
+                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
+                        var valuedata = data.valuedata;
+                        if (valuedata != '' && valuedata != null) {
+                            $.each(valuedata, function (index, value) {
+                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                //$('#' + StateIdNewOne).val(value.Value);
+                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
+                                    var statedata = data.stateData;
+                                    if (statedata != '' && statedata != null) {
+                                        $.each(statedata, function (index1, value1) {
+                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (value1.Value == 'Invisible') {
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Disabled') {
+                                                $('#' + StateIdNew).attr('disabled', 'disabled');
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Read Only') {
+                                                $('#' + StateIdNew).attr('readonly', 'readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Strike Through') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
+                                            } else if (value1.Value == 'Required') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).attr('required', 'required');
+                                            } else if (value1.Value == '"Not Rendered') {
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
+                                                $('#' + StateIdNew).removeAttr('readonly');
+                                                $('#' + StateIdNew).removeAttr('disabled');
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('#' + StateIdNew).removeAttr('required', 'required');
                                             }
                                         });
                                     }
                                 }
-                                if (data.referrallist != null || data.referrallist != "") {
-                                    $('#referralList-p').html('No Referral List');
-                                } else {
-                                    $('#referralList-p').html(data.referrallist);
+                            });
+                        }
+                    }
+                    if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
+                        var rowsorcedata = data.rowsorcedata;
+                        if (rowsorcedata != '' && rowsorcedata != null) {
+                            $.each(rowsorcedata, function (index, value) {
+                                var rowsorcedataIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                var rowsorcedataType = $("[data-eiid=" + value.Element.ElId + "]").attr('type');
+                                var rowsorcedataName = $("[data-eiid=" + value.Element.ElId + "]").attr('name');
+                                var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
+                                var rowsorcedataOption = value.Options;
+                                if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
+                                    var html = '<option value="">--Select--</option>';
+                                    $.each(rowsorcedataOption, function (index1, value1) {
+                                        if (value1.DataValue == 0) {
+                                        } else {
+                                            html += '<option value="' + value1.DataValue + '">' + value1.DataText + '</option>';
+                                        }
+                                    });
+                                    if (rowsorcedataType == undefined) {
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    } else {
+                                        var NewHtml = '<select class="form-control vlidationInsure form-border-bottom commondataselection" data-eiid="' + rowsorcedataEIID + '" id="' + rowsorcedataIdNewOne + '" name="' + rowsorcedataName + '"></select>';
+                                        $('#' + rowsorcedataIdNewOne).replaceWith(NewHtml);
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    }
                                 }
-                            }
-                        });
+                            });
+                        }
+                    }
+                    if (data.status == "Decline") {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('Decline');
+                    } else {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('');
+                    }
+                    if (data.referrallists == "") {
+                        $('#referralList-p').html('No Referral List');
+                    } else {
+                        $('#referralList-p').html(data.referrallists);
+                    }
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html('');
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "none" });
+                        } else {
+                            $("label[for='" + labelid + "']").html('');
+                            $("label[for='" + labelid + "']").css({ "display": "none" });
+                        }
+                    } else {
+                        var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
+                        var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
+                        if (newIDforCurrentElementTypes == 'radio') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else if (newIDforCurrentElementTypes == 'checkbox') {
+                            var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
+                        } else {
+                            var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
+                        }
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html(data.usermessage);
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "block" });
+                        } else {
+                            $("label[for='" + labelid + "']").html(data.usermessage);
+                            $("label[for='" + labelid + "']").css({ "display": "block" });
+                        }
                     }
                 }
+            });
+        }
+    }
+    $(document).on('click', '.savepolicyP', function () {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/SavePolicy",
+            data: { "PrId": 1029 },
+            success: function (res) {
+                if (res.status == true) {
+                    var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                } else {
+                    var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
+                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                }
+            }
+        });
+    });
+    $(document).on('click', 'input[name="CoverotherObj.Other"]', function () {
+        var isb = $("input[name='CoverotherObj.Other']:checked").val();
+        if (isb == 1) {
+            $('#describeProduct').css({ 'display': 'block' });
+        } else {
+            $('#describeProduct').css({ 'display': 'none' });
+        }
+    });
+    $(document).ready(function () {
+        var isb = $("input[name='CoverotherObj.Other']:checked").val();
+        if (isb == 1) {
+            $('#describeProduct').css({ 'display': 'block' });
+        } else {
+            $('#describeProduct').css({ 'display': 'none' });
+        }
+
+        var product = $('#farmman').val();
+        if (product == '1,2') {
+            $('#FarmProduce1').attr('checked', 'checked');
+            $('#FarmProduce2').attr('checked', 'checked');
+        } else if (product == '1') {
+            $('#FarmProduce1').attr('checked', 'checked');
+            $('#FarmProduce2').removeAttr('checked');
+        } else if (product == '2') {
+            $('#FarmProduce1').removeAttr('checked');
+            $('#FarmProduce2').attr('checked', 'checked');
+        } else {
+            $('#FarmProduce1').removeAttr('checked');
+            $('#FarmProduce2').removeAttr('checked');
+        }
+    });
+    $(document).on('click', '.commondatacheckboxL', function () {
+        var Value1 = '';
+        $(".commondatacheckboxL").each(function () {
+            if ($(this).is(':checked') == true) {
+                var ppp = $("input[name='FarmProduceObj.Farmproduce']:checked").val();
+                if (Value1 != '') {
+                    Value1 = Value1 + ',' + ppp;
+                } else {
+                    Value1 = ppp;
+                }
+            }
+        });
+        var Value = '';
+        if (Value1 == 'true,true') {
+            Value = '1,2';
+        } else if (Value1 == 'true') {
+            Value = '1';
+        } else {
+        }
+        var EIId = $(this).data('eiid');
+        var ItIdN = $(this).data('itid');
+        if (ItIdN == undefined || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
+        if (Value != '') {
+            elementAjaxCall(Value, EIId, ItId);
+        }
+    });
 </script>

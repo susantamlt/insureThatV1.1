@@ -8,6 +8,8 @@ namespace InsureThatAPI.Models
 {
     public class LiabilityCover
     {
+        public string allproducts { get; set; }
+        public List<string> NewSections { get; set; }
         public List<string> Referels { get; set; }
         public string ReferralList { get; set; }
         public int? PcId { get; set; }
@@ -20,6 +22,24 @@ namespace InsureThatAPI.Models
         public FarmLiabiltys FarmliabiltyObj { get; set; }
         public LimitofIndemnity LimitindemnityObj { get; set; }
         public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public Farmingactivities FarmingactivitiesObj { get; set; }
+        public ProductsCoveredFP FarmProduceObj { get; set; }
+        public ProductsCoveredMFP ManufacturedFarmProductsObj { get; set; }
+    }
+    public class ProductsCoveredMFP
+    {
+        public bool ManufacturedFarmProducts { get; set; }
+        public int EiId { get; set; }
+    }
+    public class ProductsCoveredFP
+    {
+        public bool Farmproduce { get; set; }
+        public int EiId { get; set; }
+    }
+    public class Farmingactivities
+    {
+        public string Activities { get; set; }
+        public int EiId { get; set; }
     }
     public class LimitofIndemnity
     {

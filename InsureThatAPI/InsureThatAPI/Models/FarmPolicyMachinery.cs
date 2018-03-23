@@ -35,6 +35,11 @@ namespace InsureThatAPI.Models
         public ShearingSumInsuredFP ShearingSumInsuredFPObj { get; set; }
         public ShearingTotalSumInsuredFP ShearingTotalSumInsuredFPObj { get; set; }
         public ExcessMachineryFP ExcessMachineryFPObj { get; set; }
+        public SpecifiedMachineryType SMTypeObj { get; set; }
+        public SpecifiedMachineryRatedpower SMRatedpowerObj { get; set; }
+        public SpecifiedMachineryNumberOfUnits SMNumberOfUnitsObj { get; set; }
+        public SpecifiedMachinerySumInsuredPerUnit SMSumInsuredPerUnitObj { get; set; }
+        public SpecifiedMachineryTotalSumInsured SMTotalSumInsuredObj { get; set; }
         public BolierTypeOfUnitFP BolierTypeOfUnitFPObj { get; set; }
         public BolierMakeAndModelFP BolierMakeAndModelFPObj { get; set; }
         public BolierRatedPowerFP BolierRatedPowerFPObj { get; set; }
@@ -46,6 +51,33 @@ namespace InsureThatAPI.Models
         public CoverMilkInVatsFP CoverMilkInVatsFPObj { get; set; }
         public CoverAllOtherProduceFP CoverAllOtherProduceFPObj { get; set; }
         public ExcessCoverFP ExcessCoverFPObj { get; set; }
+        public AddressMAddress AddressObj { get; set; }
+    }
+    public class SpecifiedMachineryType
+    {
+        public IEnumerable<SelectListItem> TypeSMList { get; set; }
+        public string Typesm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class SpecifiedMachineryRatedpower
+    {
+        public string Ratedpowersm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class SpecifiedMachineryNumberOfUnits
+    {
+        public string Numberunitssm { get; set; }
+        public int EiId { get; set; }
+    }
+    public class SpecifiedMachinerySumInsuredPerUnit
+    {
+        public string SumInsuredperunit { get; set; }
+        public int EiId { get; set; }
+    }
+    public class SpecifiedMachineryTotalSumInsured
+    {
+        public string SumInsured { get; set; }
+        public int EiId { get; set; }
     }
     public class UnSpecTypeOfMachineryFP
     {
@@ -62,6 +94,11 @@ namespace InsureThatAPI.Models
     public class UnSpecMachNoOfUnitsFP
     {
         public string NoOfUnits { get; set; }
+        public int EiId { get; set; }
+    }
+    public class AddressMAddress
+    {
+        public string Address { get; set; }
         public int EiId { get; set; }
     }
     public class UnSpecMachSumInsuredFP

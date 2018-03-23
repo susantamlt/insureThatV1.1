@@ -32,8 +32,13 @@ namespace InsureThatAPI.Models
         public ExcessExtraCostFP ExcessExtraCostFPObj { get; set; }
         public SumInsuredShearingDelayFP SumInsuredShearingDelayFPObj { get; set; }
         public ExcessShearingDelayFP ExcessShearingDelayFPObj { get; set; }
+        public AddressINAddress AddressObj { get; set; }
     }
-
+    public class AddressINAddress
+    {
+        public string Address { get; set; }
+        public int EiId { get; set; }
+    }
     public class ExpFarmIncomeNextYearFP
     {
         public string FarmIncomeNextYear { get; set; }

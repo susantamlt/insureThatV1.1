@@ -104,64 +104,65 @@ namespace InsureThatAPI.Controllers
                         {
 
                         }
-                        else
-                        {
-                            if (Policyincllist.Exists(p => p.name == "Mobile Farm Property"))
+                       
+                          else  if (Policyincllist.Exists(p => p.name == "Mobile Farm Property"))
                             {
                                 return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
-                            {
-                                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
-                            {
-                                return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
                             }
                             else if (Policyincllist.Exists(p => p.name == "Burglary"))
                             {
                                 return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                            else if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
                             {
-                                return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
                             }
                             else if (Policyincllist.Exists(p => p.name == "Money"))
                             {
                                 return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
                             }
+                            else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
+                            {
+                                return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                            {
+                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                            }
+
+                            else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                            {
+                                return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                            }
+
                             else if (Policyincllist.Exists(p => p.name == "Transit"))
                             {
                                 return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Valuables"))
-                            {
-                                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
                             }
                             else if (Policyincllist.Exists(p => p.name == "LiveStock"))
                             {
                                 return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
                             }
+                            else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                            {
+                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Contents"))
+                            {
+                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                            }
                             else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
                             {
                                 return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "Home Building"))
+                            else if (Policyincllist.Exists(p => p.name == "Valuables"))
                             {
-                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Home Content"))
-                            {
-                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                            {
-                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
                             }
                             else if (Policyincllist.Exists(p => p.name == "Motor"))
                             {
-                                return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
+                                return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
                             }
                             if (Policyincllist.Exists(p => p.name == "Fixed Farm Property"))
                             {
@@ -175,7 +176,7 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
                             }
-                        }
+                        
                     }
                 }
             }

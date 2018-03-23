@@ -16,6 +16,8 @@
 
     }, new { @id = "claimsDetails", @name = "claimsDetails" }))
     {
+        @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+        @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         @Html.AntiForgeryToken()
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <p class="col-md-4 col-sm-4 col-xs-12">Claim Type</p>
@@ -36,7 +38,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <p class="col-md-4 col-sm-4 col-xs-12">Claim Value</p>
             <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue" })
+                $@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure commondatatest", @style = "width: 94%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue" })
                 @Html.HiddenFor(p => p.ClaimvalueObj.EiId)
                 <label id="ClaimvalueObj.Cvalue-error" class="error" for="ClaimvalueObj.Cvalue"></label>
             </div>
@@ -44,9 +46,9 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <p class="col-md-4 col-sm-4 col-xs-12">Claim Year</p>
             <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure year commondatatest", @data_eiid = @Model.YearObj.EiId, @id = "year", @readonly = "readonly", @style = "background:none;" })
+                @Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;" })
                 @Html.HiddenFor(p => p.YearObj.EiId)
-                <label id="YearObj.Date-error" class="error" for="YearObj.Date"></label>
+                <label id="YearObj.Year-error" class="error" for="YearObj.Year"></label>
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
@@ -66,192 +68,140 @@
             </div>
         </div>        
         <div class="col-md-6 pull-right text-right mt-30">
-            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn">Submit</button>
+            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtnFHC">Submit</button>
         </div>
     }
 </div>
-<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
-    <h3>Policy Sections</h3>
-    <div class="well">
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location1" /><label for="radio1"><span><span></span></span>Home Building Location 1</label>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#location1').click(function () {
-                        $("#policy-ed-del-wrap1").fadeIn('slow');
-                        $("#policy-ed-del-wrap2").fadeOut('slow');
-                    });
-                });
-            </script>
-            <div id="policy-ed-del-wrap1" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
-        <div class="policy-loc-row">
-            <input type="radio" name="location1" id="location2" /><label for="radio1"><span><span></span></span>Valuables</label>
-            <script type="text/javascript">
-                $(document).ready(function () {
-                    $('#location2').click(function () {
-                        $("#policy-ed-del-wrap2").fadeIn('slow');
-                        $("#policy-ed-del-wrap1").fadeOut('slow');
-                    });
-                });
-            </script>
-            <div id="policy-ed-del-wrap2" class="policy-ed-del-wrapper" style="display: none;">
-                <a class="btn color-bk-btn policy-edit-wrap" href="#">Edit</a>&nbsp; <a class="btn color-bk-btn policy-delet-wrap" href="#">Delete</a>
-            </div>
-        </div>
-        <div class="clearfix"></div>
-        <div class="dropdown pc pc-in">
-            <a class="new-cover-policy" href="#">New Cover</a>
-            <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="HomeBuilding">+  Home Buildings</a></li>
-                <li><a href="javascript:void(0);" class="HomeContent">+  Home Content</a></li>
-                <li><a href="javascript:void(0);" class="FarmProperty">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pets">+  Pets</a></li>
-                <li><a href="javascript:void(0);" class="Liabilities">+  Liabilities </a></li>
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
-            </ul>
-            <script type="text/javascript">
-                $(document).on('click', 'ul.unit > li', function () {
-                    var nClass = $(this).children("a").attr("class");
-                    alert(nClass);
-                });
-            </script>
-        </div>
-    </div>
-</div>
-<script src="~/js/datepicker.min.js"></script>
-<script type="text/javascript">
-    $(function () {
-        $(".year").datepicker({
-            minViewMode: 2,
-            format: 'yyyy'
-        });
-    });
-</script>
-<script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
-<script type="text/javascript" src="~/Scripts/additional-methods.js"></script>
+<script src="~/js/jquery.inputmask.bundle.js"></script>
+<script src="~/js/inputmask.date.extensions.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $.validator.addMethod("regex", function (value, element, regexp) {
-            if (regexp.constructor != RegExp)
-                regexp = new RegExp(regexp);
-            else if (regexp.global)
-                regexp.lastIndex = 0;
-            return this.optional(element) || regexp.test(value);
-        }, "Please check your input.");
-        $("form[name='claimsDetails']").validate({
-            rules: {                
-                "ClaimtypeObj.Type": "required",
-                "DetailsclaimObj.Details": {
-                    required: true,
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "ClaimvalueObj.Cvalue": {
-                    required: true,
-                    regex: /^[0-9]*$/,
-                },
-                "YearObj.Year": "required",
-                "InsurerObj.Insurer": {
-                    required: true,
-                    regex: /^[a-zA-Z ]*$/,
-                },
-                "DriverObj.Driver": {
-                    required: true,
-                    regex: /^[a-zA-Z ]*$/,
-                },
-            },
-            messages: {
-                "ClaimtypeObj.Type": "Please select claim type",
-                "DetailsclaimObj.Details": {
-                    required: "Please enter details of claim",
-                    regex: "Special character & numeric not allowed",
-                },                
-                "ClaimvalueObj.Cvalue": {
-                    required: "Please enter claim value",
-                    regex: "Only numeric are allowed",
-                },
-                "YearObj.Year": "Please select year",
-                "InsurerObj.Insurer": {
-                    required: "Please enter insurer",
-                    regex: "Special character & numeric not allowed",
-                },
-                "DriverObj.Driver": {
-                    required: "Please enter driver",
-                    regex: "Special character & numeric not allowed",
-                },
-            },
-            onfocusout: function (element) {
-                this.element(element);
-            },
-            submitHandler: function (form) {
-                form.submit();
-            }
-        });
-        $(document).on('change', '.commondataselection', function () {
-            var Value = $(this).val();
-            var EIId = $(this).data('eiid');
-            var ItId = "0";
-            elementAjaxCall(Value, EIId, ItId);
-        });
-        $(document).on('change', '.commondataradio', function () {
-            var Value = $(this).val();
-            var EIId = $(this).data('eiid');
-            var ItId = "0";
-            elementAjaxCall(Value, EIId, ItId);
-        });
-        $(document).on('focusout', ".commondatatest", function () {
-            var Value = $(this).val();
-            var EIId = $(this).data('eiid');
-            var ItIdN = $(this).data('itid');
-            if (ItIdN == 'undefined' || ItIdN == "") {
-                var ItId = "0";
-            } else {
-                var ItId = ItIdN;
-            }
-            if (Value != "") {
-                elementAjaxCall(Value, EIId, ItId);
-            }
-        });
-        $("#premium").click(function () {
-            $.ajax({
-                url: '/Customer/PremiumDetails',
-                type: "POST",
-                crossOrigin: true,
-                data: {},
-                success: function (data) {
-                    if (data.Status == true) {
-                        var html1 = "";
-                        if (!$.isEmptyObject(data.Premium) && data.Premium.length > 0) {
-                            var html = "";
-                            $.each(data.Premium, function (index, value) {
-                                html += '<tr><td>' + value.SectionName + '</td><td>$' + value.Base + '</td><td>$' + value.Fsl + '</td><td>$' + value.Gst + '</td><td>$' + value.StampDuty + '</td><td>$' + value.Gross + '</td></tr>';
-                            });
-                            if (html != '') {
-                                $('#premiumModel-p-b').html(html);
-                            }
-                        }
-                        if (data.UnderwriterFee != null) {
-                            html1 += '<tr><td colspan="5">Under Writer Fee</td><td>$' + data.UnderwriterFee + '<td></tr>';
-                        }
-                        if (data.FeeGst != null) {
-                            html1 += '<tr><td colspan="5">Fee Gst</td><td>$' + data.FeeGst + '<td></tr>';
-                        }
-                        if (data.InvoiceTotal != null) {
-                            html1 += '<tr><td colspan="5">Invoice Total</td><td>$' + data.InvoiceTotal + '<td></tr>';
-                        }
-                        if (html1 != '') {
-                            $('#premiumModel-p-f').html(html1);
-                        }
+        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var currentYearNew = new Date().getFullYear();
+        $("#ptabbtnFHC").click(function (e) {
+            e.preventDefault();
+            var valid = 1;
+            $(".vlidationInsure").each(function () {
+                var id = $(this).attr('id');
+                var nameAttr = $(this).attr('name');
+                var lastChar = id.substr(id.length - 1);
+                var newval = $(this).val();
+                var NewValidValue = $("input[name='LscategoryObj.Category']:checked").val();
+                if (nameAttr == "ClaimtypeObj.Type") {
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please select claim type").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "DetailsclaimObj.Details") {
+                    var regex = /^[a-zA-Z ]*$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please enter details of claim").css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Special character & numeric not allowed").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "ClaimvalueObj.Cvalue") {
+                    var regex = /^[0-9]*$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please enter claim value").css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Only numeric are allowed").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "YearObj.Year") {
+                    var regex = /^[0-9]*$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please select year").css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval) && newval != '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Only numeric are allowed").css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval.length != 4 && newval != '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Year is not proper. Please check").css({ "display": "block" });
+                        valid = 0;
+                    } else if (newval > currentYearNew && newval != '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("You can not provide future year").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='#" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "InsurerObj.Insurer") {
+                    var regex = /^[a-zA-Z ]*$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please enter insurer").css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Special character & numeric not allowed").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
+                    }
+                }
+                if (nameAttr == "DriverObj.Driver") {
+                    var regex = /^[a-zA-Z ]*$/;
+                    if (newval == '') {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Please enter driver").css({ "display": "block" });
+                        valid = 0;
+                    } else if (!regex.test(newval)) {
+                        $('#' + id).css({ "border": "1px solid #ff0000" });
+                        $("label[for='" + nameAttr + "']").text("Special character & numeric not allowed").css({ "display": "block" });
+                        valid = 0;
+                    } else {
+                        $('#' + id).css({ "border": "" });
+                        $("label[for='" + nameAttr + "']").text("");
                     }
                 }
             });
-
+            if (valid == 1) {
+                $("form[name='claimsDetails']").submit();
+            }
         });
+    });
+    $(document).on('focusout', ".commondatatest", function () {
+        var Value = $(this).val();
+        var EIId = $(this).data('eiid');
+        var ItIdN = $(this).data('itid');
+        if (ItIdN == undefined || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
+        if (Value != "") {
+            elementAjaxCall(Value, EIId, ItId);
+        }
     });
     function elementAjaxCall(Value, EIId, ItId) {
         if (Value != '' && EIId != '') {
@@ -297,7 +247,7 @@
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Required') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
+                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).removeAttr('disabled');
                                                 $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });

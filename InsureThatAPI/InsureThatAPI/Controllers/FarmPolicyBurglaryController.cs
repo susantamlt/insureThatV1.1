@@ -48,59 +48,69 @@ namespace InsureThatAPI.Controllers
                         {
 
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Electronics"))
-                        {
-                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Money"))
-                        {
-                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Transit"))
-                        {
-                            return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Valuables"))
-                        {
-                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
-                        {
-                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
-
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
-                        {
-                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Home Building"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Home Content"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                        {
-                            return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Motor"))
-                        {
-                            return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
-                        }
-                        if (Policyincllist.Exists(p => p.name == "Burglary"))
-                        {
-                            if (Session["unId"] == null && Session["profileId"] == null)
+                        else if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
                             {
-                                Session["unId"] = Policyincllist.Where(p => p.name == "Burglary").Select(p => p.UnitId).First();
-                                Session["profileId"] = Policyincllist.Where(p => p.name == "Burglary").Select(p => p.ProfileId).First();
+                                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
                             }
-                        }
-                        else
-                        {
-                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
-                        }
+                            else if (Policyincllist.Exists(p => p.name == "Money"))
+                            {
+                                return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
+                            {
+                                return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                            {
+                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                            }
+
+                            else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                            {
+                                return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                            }
+
+                            else if (Policyincllist.Exists(p => p.name == "Transit"))
+                            {
+                                return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                            {
+                                return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                            {
+                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Home Contents"))
+                            {
+                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                            {
+                                return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                            {
+                                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                            }
+                            else if (Policyincllist.Exists(p => p.name == "Motor"))
+                            {
+                                return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
+                            }
+                            if (Policyincllist.Exists(p => p.name == "Burglary"))
+                            {
+                                if (Session["unId"] == null && Session["profileId"] == null)
+                                {
+                                    Session["unId"] = Policyincllist.Where(p => p.name == "Burglary").Select(p => p.UnitId).First();
+                                    Session["profileId"] = Policyincllist.Where(p => p.name == "Burglary").Select(p => p.ProfileId).First();
+                                }
+                            }
+                            else
+                            {
+                                return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                            }
                     }
                 }
             }
@@ -151,6 +161,8 @@ namespace InsureThatAPI.Controllers
 
             FPBurglary.OptFPPortalableItemsOptObj = new FPPortalableItemsOpt();
             FPBurglary.OptFPPortalableItemsOptObj.EiId = 62623;
+            FPBurglary.AddressObj = new AddressAddress();
+            FPBurglary.AddressObj.EiId = 0;
 
             var db = new MasterDataEntities();
             string policyid = null;
@@ -334,8 +346,14 @@ namespace InsureThatAPI.Controllers
                     }
                    
                 }
+                if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
+                {
+                    if (unitdetails.SectionData.AddressData != null)
+                    {
+                        FPBurglary.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;                        
+                    }
+                }                
             }
-
             return View(FPBurglary);
         }
 
@@ -361,7 +379,7 @@ namespace InsureThatAPI.Controllers
             Session["unId"] = null;
             Session["profileId"] = null;
 
-            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid });
+            return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = FPBurglary.CustomerId, PcId = FPBurglary.PcId });
         }
     }
 }

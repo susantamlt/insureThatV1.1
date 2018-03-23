@@ -12,14 +12,51 @@ namespace InsureThatAPI.Models
 
     public class MobileFarmContents
     {
-
+        public List<string> Referels { get; set; }
+        public string ReferralList { get; set; }
+        public int? PcId { get; set; }
         public int CustomerId { get; set; }
-        public int? PolicyId { get; set; }
+        public bool SelectedInclusion { get; set; }
+        public string PolicyStatus { get; set; }
+        public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
+        public List<SessionModel> PolicyInclusions { get; set; }
+        public string ApiKey { get; set; }
+        public string PolicyId { get; set; }
         public string CompletionTrackFPC { get; set; }
-        public string PolicyInclusions { get; set; }
-        public FarmContentsSumInsuredFP FarmContentsSumInsuredFPObj { get; set; }        
+        public FarmContentsSumInsuredFP FarmContentsSumInsuredFPObj { get; set; }
         public OptPortableItemsFarmContentFP OptPortableItemsFarmContentFPObj { get; set; }
-         public ExcessFarmContentFP ExcessFarmContentFPObj { get; set; }
+        public ExcessFarmContentFP ExcessFarmContentFPObj { get; set; }
+        public FPUnspecifiedMachineryFM FPUnspecifiedMachineryFMObj { get; set; }
+        public FPExcessforUMFM FPExcessforUMFMObj { get; set; }
+        public FPDescriptionsFM FPDescriptionsFMObj { get; set; }
+        public List<ValueDatas> FPDescriptionsFMList { get; set; }
+        public FPYearFM FPYearFMObj { get; set; }
+        public List<ValueDatas> FPYearFMList { get; set; }
+        public FPSerialNumberFM FPSerialNumberFMObj { get; set; }
+        public List<ValueDatas> FPSerialNumberFMList { get; set; }
+        public FPExcessFM FPExcessFMObj { get; set; }
+        public List<ValueDatas> FPExcessFMList { get; set; }
+        public FPSumOfInsuredFM FPSumOfInsuredFMObj { get; set; }
+        public List<ValueDatas> FPSumOfInsuredFMList { get; set; }
+        public FPTotalSpecifiedItemsFM FPTotalSpecifiedItemsFMObj { get; set; }
+        public FPDescriptionLivestock FPDescriptionLivestockObj { get; set; }
+        public List<ValueDatas> FPDescriptionLivestockList { get; set; }
+        public FPNumberOfAnimalsLivestock FPNumberOfAnimalsLivestockObj { get; set; }
+        public List<ValueDatas> FPNumberOfAnimalsLivestockList { get; set; }
+        public FPSumInsuredPerAnimalsLivestock FPSumInsuredPerAnimalsLivestockObj { get; set; }
+        public List<ValueDatas> FPSumInsuredPerAnimalsLivestockList { get; set; }
+        public FPTotalSumOfInsuredLivestock FPTotalSumOfInsuredLivestockObj { get; set; }
+        public List<ValueDatas> FPTotalSumOfInsuredLivestockList { get; set; }
+        public OptDogAttackLivestock OptDogAttackLivestockObj { get; set; }
+        public FPExcessLivestock FPExcessLivestockObj { get; set; }
+        public FPSumOfInsuredPerDog FPSumOfInsuredPerDogObj { get; set; }
+        public FPNoOfWorkingDogs FPNoOfWorkingDogsObj { get; set; }
+        public FPTotalSumInsuredWDB FPTotalSumInsuredWDBObj { get; set; }
+        public FPExcessWorkingDogs FPExcessWorkingDogsObj { get; set; }
+        public FPBeehivesSumInsured FPBeehivesSumInsuredObj { get; set; }
+        public FPNumberOfHives FPNumberOfHivesObj { get; set; }
+        public FPExcessBeehives FPExcessBeehivesObj { get; set; }
 
     }
 

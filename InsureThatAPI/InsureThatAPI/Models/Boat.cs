@@ -11,6 +11,7 @@ namespace InsureThatAPI.Models
     }
     public class BoatDetails
     {
+        public List<string> NewSections { get; set; }
         public List<string> Referels { get; set; }
         public string ReferralList { get; set; }
         public int? PcId { get; set; }

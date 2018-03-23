@@ -9,6 +9,7 @@ using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
+using System.Data.Entity;
 
 namespace InsureThatAPI.Controllers
 {
@@ -59,6 +60,8 @@ namespace InsureThatAPI.Controllers
             HomeContent.ImposedObj = new Imposednew();
             string policyid = null;
             List<SessionModel> PolicyInclustions = new List<SessionModel>();
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            HomeContent.NewSections = new List<string>();
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
             if (Session["Policyinclustions"] != null)
             {
@@ -68,7 +71,7 @@ namespace InsureThatAPI.Controllers
                 // List<SelectListItem> listItems = new List<SelectListItem>();
                 HomeContent.PolicyInclusions = new List<SessionModel>();
                 HomeContent.PolicyInclusions = Policyincllist;
-
+                HomeContent.NewSections = cmn.NewSectionHome(HomeContent.PolicyInclusions);
                 if (Policyincllist != null)
                 {
                     if (Policyincllist.Exists(p => p.name == "Home Content" || p.name == "Home Contents"))
@@ -162,7 +165,7 @@ namespace InsureThatAPI.Controllers
             if (PcId != null && PcId.HasValue)
             {
                 HomeContent.ExistingPolicyInclustions = policyinclusions;
-
+                HomeContent.NewSections = cmn.NewSectionP(policyinclusions);
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -192,13 +195,25 @@ namespace InsureThatAPI.Controllers
                 }
                 HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Home Contents&SectionUnId=&ProfileUnId=" + HprofileId);
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
-
                 if (EmpResponse != null)
                 {
-
                     unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
                     {
+                        bool exists = HomeContent.PolicyInclusions.Exists(p => p.name == "Home Contents");
+                        if (exists == true)
+                        {
+                            List<SessionModel> values = new List<SessionModel>();
+                            values = (List<SessionModel>)Session["Policyinclustions"];
+                            for (int k = 0; k < values.Count(); k++)
+                            {
+                                if (values[k].name == "Home Contents" && values[k].UnitId == null && values[k].ProfileId == null)
+                                {
+                                    values.RemoveAt(k);
+                                }
+                            }
+                            Session["Policyinclustions"] = values;
+                        }
                         var errormessage = "First please provide cover for Home Buildings.";
                         if (unitdetails.ErrorMessage.Contains(errormessage))
                         {
@@ -379,13 +394,15 @@ namespace InsureThatAPI.Controllers
             //{
             //    return RedirectToAction(actionname, controllername, new { cid = HomeContent.CustomerId, PcId = HomeContent.PcId });
             //}
-            return RedirectToAction("Valuables", new { cid = HomeContent.CustomerId });
+            return RedirectToAction("Valuables", new { cid = HomeContent.CustomerId, PcId = HomeContent.PcId });
         }
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> Valuables(int? cid, int? PcId)
         {
             string apikey = null;
             ValuablesHC ValuablesHC = new ValuablesHC();
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            ValuablesHC.NewSections = new List<string>();
             if (Session["ApiKey"] != null)
             {
                 apikey = Session["ApiKey"].ToString();
@@ -405,7 +422,7 @@ namespace InsureThatAPI.Controllers
                     //var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
                     // var Suburb = new List<KeyValuePair<string, string>>();
                     // List<SelectListItem> listItems = new List<SelectListItem>();               
-
+                    ValuablesHC.NewSections = cmn.NewSectionHome(ValuablesHC.PolicyInclusions);
                     if (Policyincllist != null)
                     {
 
@@ -511,6 +528,8 @@ namespace InsureThatAPI.Controllers
                 {
                     unid = Convert.ToInt32(Session["unId"]);
                     profileid = Convert.ToInt32(Session["profileId"]);
+                    Session["unId"] = unid;
+                    Session["profileId"] = profileid;
                 }
                 else
                 {
@@ -525,7 +544,7 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
                     }
                 }
-              
+                ValuablesHC.NewSections = cmn.NewSectionP(policyinclusions);
                 if (unid == null || unid == 0)
                 {
                     unid = unitdetails.SectionData.UnId;
@@ -560,14 +579,27 @@ namespace InsureThatAPI.Controllers
                 {
                     HprofileId = Convert.ToInt32(Session["HprofileId"]);
                 }
-
                 HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Valuables&SectionUnId=&ProfileUnId=" + HprofileId);
                 var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                 if (EmpResponse != null)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);             
                     if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
                     {
+                        bool exists = ValuablesHC.PolicyInclusions.Exists(p => p.name == "Valuables");
+                        if (exists == true)
+                        {
+                            List<SessionModel> values = new List<SessionModel>();
+                            values = (List<SessionModel>)Session["Policyinclustions"];
+                            for (int k = 0; k < values.Count(); k++)
+                            {
+                                if (values[k].name == "Valuables" && values[k].UnitId == null && values[k].ProfileId == null)
+                                {
+                                    values.RemoveAt(k);
+                                }
+                            }
+                            Session["Policyinclustions"] = values;
+                        }
                         var errormessage = "First please provide cover for Home Buildings.";
                         if (unitdetails.ErrorMessage.Contains(errormessage))
                         {

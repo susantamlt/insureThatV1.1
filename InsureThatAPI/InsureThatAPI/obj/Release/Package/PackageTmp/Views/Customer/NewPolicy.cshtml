@@ -4,8 +4,10 @@
 }
 
 <div class="row content">
+
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 main-head"> <h2>NEW POLICY</h2><span class="subhead1"></span></div>
-    <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 main-head">Please select the best policy suits your needs.</p>
+    <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 main-head">Please select the policy that best suits your needs</p>
+    <p class="col-lg-12 col-md-12 col-sm-12 col-xs-12 main-head error-mg" style="color:red;"></p>
     @using (Html.BeginForm("NewPolicy", "Customer", FormMethod.Post, new { cid = @Model.cid, enctype = "multipart/form-data" }))
     {
         @Html.AntiForgeryToken()
@@ -16,9 +18,16 @@
             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
                 <div class="policy-wrapprer">
                     @*<a href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId,insureId=Model.InsureId })" class="ptype 1021">*@
-                    <img src="~/images/farm-icon.png" class="ptype 1021" />FARM PROPERTY
+                    <img src="~/images/farm-icon.png" class="ptype 1021" />FARM
 
-                    <br>Farm Policy-with a farm income over $25,000
+                    <br>
+                    <p class="col-sm-12">For Farm properties that meet all of the following criteria:</p>
+                    <ul class="col-sm-12" style="list-style:circle;">
+                        <li>No restriction on  farm size</li>
+                        <li>No restriction on Farm Income</li>
+                        <li>Option to insure multiple farm locations</li>
+                        <li>Can include additional covers such as Transit, Farm Interruption, Machinery Breakdown etc.</li>
+                    </ul>
 
                 </div>
             </div>
@@ -27,16 +36,20 @@
                     @*<a href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId,insureId=Model.InsureId })" class="ptype 1029">*@
                     <img src="~/images/rural-icon.png" class="ptypeR 1029" />RURAL LIFESTYLE
                     <br>
-                    <p class="col-sm-10">
-                        For lifestyle properties between 2 and 40 hectares/98 acres
-                        Home buildings with a replacement value greater than $500,000
-                        Home contents with a replacement value greater than $150,000
-                        Farm Income less than $25,000
-                    </p>
+                    <p class="col-sm-12">For Rural Lifestyle properties that meet all of the following criteria:</p>
+                    <ul class="col-sm-12" style="list-style:circle;">
+                        <li>Property size up to 25 hectares (40 acres)</li>
+                        <li>Home Buildings with a replacement value greater than $500,000</li>
+                        <li>Home Contents with a replacement value greater than $100,000</li>
+                        <li>Farm Income less than $25,000 per annum</li>
+                    </ul>
                 </div>
             </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <p>Please note that home buildings within 100 metres of uncleared natural bushland cannot be insured under either of these policies.</p>
+            </div>
             <div class="col-md-6 mt-50 pull-right text-right">
-                <input type="submit" class="btn btn-primary color-bk-btn" name="next" value="Continue">
+                <input type="submit" class="btn btn-primary color-bk-btn newpp" name="next" value="Continue">
             </div>
         </div>
     }
@@ -52,5 +65,12 @@
         $(".Pt").val("1021");
         $(".ptype").css({ 'background': '#000000', 'opacity': '0.3', 'border-bottom': '0px solid #acacac' });
         $(".ptypeR").css({ 'background': '', 'opacity': '' });
+    })
+    $(".newpp").click(function () {
+        var ptt = $(".Pt").val();
+        if (ptt == '' || ptt == 0) {
+            $(".error-mg").text("Please select a policy to proceed.").delay(100000).fadeOut();
+            return false;
+        }
     })
 </script>

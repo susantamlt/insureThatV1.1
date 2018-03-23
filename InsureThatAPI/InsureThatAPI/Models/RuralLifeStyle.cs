@@ -12,6 +12,7 @@ namespace InsureThatAPI.Models
     }
     public class HB2HomeDescription
     {
+      
         public int? Home2 { get; set; }
         public string addressCom { get; set; }
         public List<string> Referels { get; set; }
@@ -34,6 +35,7 @@ namespace InsureThatAPI.Models
         public IEnumerable<SelectListItem> QList { get; set; }
         public SectionD SectionDatas { get; set; }
         public List<SessionModel> PolicyInclusions { get; set; }
+        public List<string> NewSections { get; set; }
         public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
         public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public string PolicyId { get; set; }
@@ -74,6 +76,13 @@ namespace InsureThatAPI.Models
         public UnrepairedDamage UnrepaireddamageObj { get; set; }
         public WindowCoverings WindowCoveringsObj { get; set; }
         public MortgageeProtectionCover ProtectionCoverObj { get; set; }
+        public RustDamage RustDamageObj { get; set; }
+    }
+    public class RustDamage
+    {
+        public int? RustDamages { get; set; }
+        public int EiId { get; set; }
+
     }
     public class NameOfInstitutionsRls
     {

@@ -45,8 +45,7 @@ namespace InsureThatAPI.Controllers
                         int? SessionunitId = Convert.ToInt32(Session["UnitId"]);
                         int unitid = 0;
                         string unitname = null;
-                        int matched = 0;
-                        
+                        int matched = 0;                        
                         for (int i = 0; i < policyinclu.Count(); i++)
                         {
                             if (unitid != null && unitid > 0 && unitname != null)
@@ -74,55 +73,46 @@ namespace InsureThatAPI.Controllers
                                 if (unitname == "Home Buildings")
                                 {
                                     Session["UnitId"] = unitid;
-
                                     return RedirectToAction("HomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     // return RedirectToAction("HomeDescription", "RuralLifeStyle", new { cid = cid, PcId = pcid });
                                 }
                                 else if (unitname == "Home Content" || unitname == "Home Contents")
                                 {
-
                                     return RedirectToAction("HomeContents", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("HomeContent", "HomeContentValuable", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Valuables")
                                 {
-
                                     return RedirectToAction("Valuables", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("Valuables", "HomeContentValuable", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Farm Property")
                                 {
-
                                     return RedirectToAction("FarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("FarmContents", "Farm", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Liability")
                                 {
-
                                     return RedirectToAction("Liability", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Pets")
                                 {
-
                                     return RedirectToAction("Pets", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("PetsCover", "Pets", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Motor")
                                 {
-
                                     return RedirectToAction("Motors", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Boat")
                                 {
-
                                     return RedirectToAction("Boat", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Travel")
                                 {
-
                                     return RedirectToAction("Travels", "PolicyDetails", new { cid = cid, PcId = PcId });
                                     return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
                                 }
@@ -139,6 +129,134 @@ namespace InsureThatAPI.Controllers
          
             return RedirectToAction("PremiumDetails", "Customer", new { cid = cid, PcId = PcId });
         }
+
+        [HttpGet]
+        public ActionResult ActionNameFarm(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
+            var db = new MasterDataEntities();
+            if (Session["ApiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
+                if (Session["cid"] != null)
+                {
+                    cid = Convert.ToInt32(Session["cid"]);
+                }
+                if (policyinclu != null && policyinclu.Count() > 0)
+                {
+                    if (Session["UnitId"] != null)
+                    {
+                        int? SessionunitId = Convert.ToInt32(Session["UnitId"]);
+                        int unitid = 0;
+                        string unitname = null;
+                        int matched = 0;
+
+                        for (int i = 0; i < policyinclu.Count(); i++)
+                        {
+                            if (unitid != null && unitid > 0 && unitname != null)
+                            {
+                                unitname = policyinclu[i].Name;
+                                unitid = policyinclu[i].UnitId;
+                                matched = 2;
+                            }
+                            if (policyinclu[i].UnitId == SessionunitId)
+                            {
+                                unitid = policyinclu[i].UnitId;
+                                unitname = policyinclu[i].Name;
+                                matched = 1;
+                            }
+                            if (unitid != null && unitid > 0 && unitname != null && matched == 2)
+                            {
+                                Session["UnitId"] = unitid;
+                                Session["controller"] = "PolicyDetails";
+                                if (unitname == "Fixed Farm Property")
+                                {
+                                    return RedirectToAction("FixedFarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Mobile Farm Property")
+                                {
+                                    return RedirectToAction("MobileFarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Farm Interuption")
+                                {
+                                        return RedirectToAction("FarmInterruption", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Farm Liability")
+                                {
+                                    return RedirectToAction("FarmLiability", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Burglary")
+                                {
+                                    return RedirectToAction("Burglary", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Electronics")
+                                {
+                                    return RedirectToAction("FarmElectronics", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Money")
+                                {
+                                    return RedirectToAction("FarmMoney", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Transit")
+                                {
+                                    return RedirectToAction("FarmTransit", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Valuables")
+                                {
+                                    return RedirectToAction("FarmValuables", "PolicyDetails", new { cid = cid, PcId = PcId });
+
+                                }
+                                else if (unitname == "LiveStock")
+                                {
+                                    return RedirectToAction("FarmLivestock", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Personal Liabilities Farm")
+                                {
+                                    return RedirectToAction("PersonalLiabilit", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Home Buildings")
+                                {
+                                    return RedirectToAction("FarmHomeBilding", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Home Contents")
+                                {
+                                    return RedirectToAction("FarmHomeContents", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Machinery")
+                                {
+                                    return RedirectToAction("FarmMachinery", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else if (unitname == "Motor")
+                                {
+                                    return RedirectToAction("FarmMotors", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                }
+                                else return RedirectToAction("PremiumDetails", "Customer", new { cid = cid, PcId = PcId });
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
+
+            return RedirectToAction("PremiumDetails", "Customer", new { cid = cid, PcId = PcId });
+        }
+       
+   
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> HomeBilding(int? cid, int PcId)
         {
@@ -552,6 +670,33 @@ namespace InsureThatAPI.Controllers
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    if(model.Status== "Failure")
+                    {
+                        if (cid != null)
+                        {
+                            ViewBag.cid = cid;
+                            model.CustomerId = cid.Value;
+                        }
+                        if (PcId != null)
+                        {
+                            model.PcId = PcId.ToString();
+                            ViewBag.PcId = PcId;
+                            model.PolicyInclusion = policyinclu;
+                            model.PolicyInclusion = policyinclu;
+                            if (policydetails != null)
+                            {
+                                model.PolicyData = new PolicyDetails();
+                                model.PolicyData.PolicyStatus = policydetails.PolicyStatus;
+                                model.PolicyData.InsuredName = policydetails.InsuredName;
+                                model.PolicyData.PolicyNumber = policydetails.PolicyNumber;
+                                model.PolicyData.PrId = policydetails.PrId;
+                                model.PolicyData.PcId = policydetails.PcId;
+                                model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
+                                model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                            }
+                        }
+                        return View(model);
+                    }
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
                     {
@@ -1095,7 +1240,7 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=0" );
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
 
@@ -1284,7 +1429,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
@@ -2306,7 +2450,7 @@ namespace InsureThatAPI.Controllers
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
                 model.PolicyInclusion = policyinclu;
-                var units = policyinclu.Where(o => o.Name == "Fixed Farm Property").SingleOrDefault();
+                var units = policyinclu.Where(o => o.Name == "Fixed Farm Property").FirstOrDefault();
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
@@ -2329,6 +2473,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.PcId = policydetails.PcId;
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
+                        model.PolicyInclusion = policyinclu;
                     }
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
@@ -3918,7 +4063,6 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.PcId = PcId;
             }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {

@@ -25,6 +25,7 @@
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -67,8 +68,8 @@
     <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.4\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="reCaptcha, Version=1.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\reCaptcha.AspNet.Mvc.1.2.3.0\lib\net451\reCaptcha.dll</HintPath>
@@ -85,6 +86,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Abstractions" />
@@ -222,7 +224,6 @@
     <Compile Include="Controllers\FarmPolicyLivestockController.cs" />
     <Compile Include="Controllers\FarmPolicyMachineryController.cs" />
     <Compile Include="Controllers\FarmPolicyMoneyController.cs" />
-    <Compile Include="Controllers\FarmPolicyMotorController.cs" />
     <Compile Include="Controllers\FarmPolicyPersonalLiabilityController.cs" />
     <Compile Include="Controllers\FarmPolicyPropertyController.cs" />
     <Compile Include="Controllers\FarmPolicyTransitController.cs" />
@@ -415,6 +416,7 @@
     <Content Include="css\fonts\Simple-Line-Icons.svg" />
     <Content Include="css\form.css" />
     <Content Include="css\insuredthatsolution.css" />
+    <Content Include="css\jquery-ui.css" />
     <Content Include="css\layout.css" />
     <Content Include="css\magnific-popup.css" />
     <Content Include="css\main_styles.css" />
@@ -510,6 +512,8 @@
     <Content Include="js\datepicker1.js" />
     <Content Include="js\functions.js" />
     <Content Include="js\inputmask.date.extensions.js" />
+    <Content Include="js\jquery-ui.min.js" />
+    <Content Include="js\jquery.backDetect.js" />
     <Content Include="js\jquery.inputmask.bundle.js" />
     <Content Include="js\jquery.js" />
     <Content Include="js\load.js" />
@@ -614,11 +618,7 @@
     <Content Include="Views\Customer\PolicyList.cshtml" />
     <Content Include="Views\Boat\BoatDetails.cshtml" />
     <Content Include="Views\FarmPolicyProperty\FarmDetails.cshtml" />
-    <Content Include="Views\FarmPolicyHome\ConstructionDetails.cshtml" />
-    <Content Include="Views\FarmPolicyHome\HomeBuilding.cshtml" />
-    <Content Include="Views\FarmPolicyHome\InterestedParty.cshtml" />
     <Content Include="Views\FarmPolicyHome\MainDetails.cshtml" />
-    <Content Include="Views\FarmPolicyHome\OccupancyDetails.cshtml" />
     <Content Include="Views\Liabilities\LiabilityCover.cshtml" />
     <Content Include="Views\MotorCover\VehicleDescription.cshtml" />
     <Content Include="Views\FarmPolicyBurglary\Burglary.cshtml" />
@@ -632,21 +632,12 @@
     <Content Include="Views\FarmPolicyValuables\Valuables.cshtml" />
     <Content Include="Views\FarmPolicyFarmInterruption\FarmInterruption.cshtml" />
     <Content Include="Views\MobileFarm\FarmContents.cshtml" />
-    <Content Include="Views\MobileFarm\FarmMachinery.cshtml" />
-    <Content Include="Views\MobileFarm\Livestock.cshtml" />
-    <Content Include="Views\MobileFarm\WorkingDogsBeehives.cshtml" />
     <Content Include="Views\PolicyDetails\HomeBilding.cshtml" />
     <Content Include="Views\FarmPolicyMachinery\Machinery.cshtml" />
     <Content Include="Views\PolicyDetails\FarmProperty.cshtml" />
     <Content Include="Views\PolicyDetails\HomeContents.cshtml" />
     <Content Include="Views\PolicyDetails\Valuables.cshtml" />
-    <Content Include="Views\FarmMotors\AdditionalDetails.cshtml" />
-    <Content Include="Views\FarmMotors\CoverDetails.cshtml" />
-    <Content Include="Views\FarmMotors\Drivers.cshtml" />
-    <Content Include="Views\FarmMotors\InterestedParties.cshtml" />
-    <Content Include="Views\FarmMotors\OptionalExtrasExcesses.cshtml" />
     <Content Include="Views\FarmMotors\VehicleDescription.cshtml" />
-    <Content Include="Views\MobileFarm\Machinery.cshtml" />
     <Content Include="Views\PolicyDetails\Boat.cshtml" />
     <Content Include="Views\PolicyDetails\Burglary.cshtml" />
     <Content Include="Views\PolicyDetails\FarmElectronics.cshtml" />
@@ -676,10 +667,12 @@
     <Content Include="Views\Claims\ClaimsDetails.cshtml" />
     <Content Include="Views\Customer\ClaimsQ.cshtml" />
     <Content Include="Views\Customer\PolicySuccess.cshtml" />
+    <Content Include="Views\Shared\_viewlayout.cshtml" />
+    <Content Include="Views\Shared\_view.cshtml" />
+    <Content Include="Views\Home\Index1.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Home\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

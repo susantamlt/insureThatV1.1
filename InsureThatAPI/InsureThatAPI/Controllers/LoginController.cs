@@ -42,6 +42,7 @@ namespace InsureThatAPI.Controllers
                 Session["Actname"] = null;
                 Session["Policylocal"] = null;
                 Session["InsuredName"] = null;
+                Session["MprofileId"] = null;
 
             }
             catch (Exception ex)

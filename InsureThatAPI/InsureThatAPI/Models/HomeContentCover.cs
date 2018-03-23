@@ -8,6 +8,7 @@ namespace InsureThatAPI.Models
 {
     public class HomeContent
     {
+        public List<string> NewSections { get; set; }
         public int? Pincode { get; set; }
         public string Sub { get; set; }
         public string Address { get; set; }
@@ -37,6 +38,7 @@ namespace InsureThatAPI.Models
     }
     public class ValuablesHC
     {
+        public List<string> NewSections { get; set; }
         public List<string> Referels { get; set; }
         public string ReferralList { get; set; }
         public bool SelectedInclusion { get; set; }

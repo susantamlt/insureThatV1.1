@@ -246,15 +246,6 @@
                                 <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Pets</strong></p>
                             </div>
                             <div class="row">
-                                <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
-                                <p class="col-md-4 col-sm-4 col-xs-12 text-right">
-                                    @if (Model.SectionData.AddressData != null)
-                                    {
-                                        <span>@Model.SectionData.AddressData.AddressLine1,&nbsp;@Model.SectionData.AddressData.Suburb,&nbsp;@Model.SectionData.AddressData.State,&nbsp;@Model.SectionData.AddressData.Postcode</span>
-                                    }
-                                </p>
-                            </div>
-                            <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10">Do you wish to insure a</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61331) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61331).Value != null))
@@ -1351,6 +1342,15 @@
                                 </p>
                             </div>
                             <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">What is your pet name</p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61339) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61339).Value != null))
+                                    {
+                                        <span>@Model.SectionData.ValueData.Find(p => p.Element.ElId == 61339).Value</span>
+                                    }
+                                </p>
+                            </div>
+                            <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10">What is your pet date of birth</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61341) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61341).Value != null))
@@ -1375,22 +1375,22 @@
                                     }
                                 </p>
                             </div>
-                            <div class="row">
-                                <p class="col-md-10 col-sm-10 col-xs-10">Do you wish to take the Ski and Winter Sports option? </p>
-                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61441) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61441).Value != null))
-                                    {
-                                        if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61441).Value == "1")
+                            @*<div class="row">
+                                    <p class="col-md-10 col-sm-10 col-xs-10">Do you wish to take the Ski and Winter Sports option? </p>
+                                    <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                        @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61441) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61441).Value != null))
                                         {
-                                            <span>Yes</span>
+                                            if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61441).Value == "1")
+                                            {
+                                                <span>Yes</span>
+                                            }
+                                            else
+                                            {
+                                                <span>No</span>
+                                            }
                                         }
-                                        else
-                                        {
-                                            <span>No</span>
-                                        }
-                                    }
-                                </p>
-                            </div>
+                                    </p>
+                                </div>*@
                             @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61441) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61441).Value != null))
                             {
                                 if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61441).Value == "1")
@@ -1404,17 +1404,19 @@
                                             }
                                         </p>
                                     </div>
-                                    <div class="row">
-                                        <p class="col-md-10 col-sm-10 col-xs-10">An annual cover limit</p>
-                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
-                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61347) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61347).Value != ""))
-                                            {
-                                                <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61347).Value))</span>
-                                            }
-                                        </p>
-                                    </div>
+
                                 }
                             }
+                            <div class="row">
+                                <p class="col-md-10 col-sm-10 col-xs-10">An annual cover limit</p>
+                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                    @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61347) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61347).Value != ""))
+                                    {
+                                        <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61347).Value))</span>
+                                    }
+                                </p>
+                            </div>
+
                             <div class="row">
                                 <p class="col-md-10 col-sm-10 col-xs-10">Excess</p>
                                 <p class="col-md-2 col-sm-2 col-xs-2 text-right">
@@ -1428,16 +1430,20 @@
                                 <p class="col-md-12 col-sm-12 col-xs-12"><strong>Would you like to include following</strong></p>
                             </div>
                             <div class="row">
-                                <p class="col-md-10 col-sm-10 col-xs-10">Boarding fees</p>
-                                <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                <p class="col-md-6 col-sm-6 col-xs-6">Boarding fees</p>
+                                <p class="col-md-6 col-sm-6 col-xs-6 text-right">
                                     @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61365) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61365).Value != null))
                                     {
                                         if (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61365).Value == "1")
                                         {
                                             if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61367) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61367).Value != ""))
                                             {
-                                                <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61367).Value))</span>
+                                                <span>Yes,  @Model.SectionData.ValueData.Find(p => p.Element.ElId == 61367).Value</span>
                                             }
+                                        }
+                                        else
+                                        {
+                                            <span>No</span>
                                         }
                                     }
                                 </p>
@@ -1451,8 +1457,12 @@
                                         {
                                             if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61371) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61371).Value != ""))
                                             {
-                                                <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61371).Value))</span>
+                                                <span>Yes, $@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61371).Value))</span>
                                             }
+                                        }
+                                        else
+                                        {
+                                            <span>No</span>
                                         }
                                     }
                                 </p>
@@ -1466,8 +1476,12 @@
                                         {
                                             if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 61375) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 61375).Value != ""))
                                             {
-                                                <span>$@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61375).Value))</span>
+                                                <span>Yes, $@String.Format("{0:n}", Double.Parse(Model.SectionData.ValueData.Find(p => p.Element.ElId == 61375).Value))</span>
                                             }
+                                        }
+                                        else
+                                        {
+                                            <span>No</span>
                                         }
                                     }
                                 </p>
@@ -1509,27 +1523,42 @@
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
                     <div class="well">
                         <h3>Policy Sections</h3>
-                        @if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
-                {
-                    for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
-                    {
-                                <div class="policy-loc-row">
-                                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
-                                    <script type="text/javascript">
-                                        $(document).ready(function () {
-                                            $('.inclusions').click(function () {
-                                                var name = $(this).attr('data-name');
-                                                var nid = $(this).attr('data-nid');
-                                                $('.policy-ed-del-wrapper').hide();
-                                                $("#policy-ed-del-wrap-" + nid).show();
-                                            });
-                                        });
-                                    </script>
-                                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                        @if (Model.PolicyData.PolicyStatus == "CQ" || Model.PolicyData.PolicyStatus == "CP")
+                        {
+                            if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                            {
+                                for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                                {
+                                    <div class="policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
                                     </div>
-                                </div>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (Model.PolicyInclusion != null && Model.PolicyInclusion.Count() > 0)
+                            {
+                                for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
+                                {
+                                    <div class="policy-loc-row">
+                                        @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
+                                        <script type="text/javascript">
+                                            $(document).ready(function () {
+                                                $('.inclusions').click(function () {
+                                                    var name = $(this).attr('data-name');
+                                                    var nid = $(this).attr('data-nid');
+                                                    $('.policy-ed-del-wrapper').hide();
+                                                    $("#policy-ed-del-wrap-" + nid).show();
+                                                });
+                                            });
+                                        </script>
+                                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                                        </div>
+                                    </div>
+                                }
                             }
                         }
                         <div class="clearfix"></div>

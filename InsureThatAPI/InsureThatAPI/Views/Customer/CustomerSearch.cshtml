@@ -67,56 +67,7 @@
                     </div><!-- #logo end -->
                     <!-- Primary Navigation -->
                     <nav id="primary-menu">
-                        @*<ul>
-                                <li class="current"><a href="#"><div>Menu 1</div></a> </li>
-                                <li><a href="#"><div>Menu 2</div></a> </li>
-                                <li><a href="#"><div>Menu 3</div></a> </li>
-                            </ul>*@
-
-                        <!-- Top Cart -->
-                        @*<div id="top-cart">
-                                <a href="#" id="top-cart-trigger"><i class="icon-th-large"></i></a>
-                                <div class="top-cart-content">
-                                    <div class="top-cart-title">
-                                        <h4>Overview</h4>
-                                    </div>
-                                    <div class="top-cart-items">
-                                        <div class="top-cart-item clearfix">
-                                            <div class="top-cart-item-image">
-                                                <a href="#"><img src="~/images/1.png" alt="Home Property" /></a>
-                                            </div>
-                                            <div class="top-cart-item-desc">
-                                                <a href="#">Home property</a>
-                                                <span class="top-cart-item-price">$1990.99</span>
-                                                <span class="top-cart-item-quantity">x 1</span>
-                                            </div>
-                                        </div>
-                                        <div class="top-cart-item clearfix">
-                                            <div class="top-cart-item-image">
-                                                <a href="#"><img src="~/images/2.png" alt="Valuables" /></a>
-                                            </div>
-                                            <div class="top-cart-item-desc">
-                                                <a href="#">Valuables</a>
-                                                <span class="top-cart-item-price">$240.99</span>
-                                                <span class="top-cart-item-quantity">x 3</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="top-cart-action clearfix">
-                                        <span class="fleft top-checkout-price">$2231.98</span>
-                                        <button class="button button-3d button-small nomargin fright">Proceed Quote</button>
-                                    </div>
-                                </div>
-                            </div>*@
-                        <!-- #top-cart end -->
-                        <!-- Top Search -->
-                        @*<div id="top-search">
-                                <a href="#" id="top-search-trigger"><i class="icon-search3"></i><i class="icon-line-cross"></i></a>
-                                <form action="#" method="get">
-                                    <input type="text" name="q" class="form-control" value="" placeholder="Type &amp; Hit Enter..">
-                                </form>
-                            </div>*@<!-- #top-search end -->
-                        <button class="logoutfun text-right btn color-bk-btn" type="button">Logout</button>
+                        <button class="logoutfun btn color-bk-btn col-md-4 leftmargin-sm" type="button">Logout</button>
                     </nav><!-- #primary-menu end -->
                 </div>
             </div>
@@ -127,7 +78,7 @@
                 <div class="container clearfix">
                     <div class="col-md-9">
                         <div class="col-md-9 col-sm-6 col-xs-12"><h3 class="header-title">CUSTOMER SEARCH</h3></div>
-                        <div class="col-md-3 col-sm-6 col-xs-12"><a href="@Url.Action("AdvancedCustomerSearch", "Customer")" class="btn-primary btn">ADVANCED SEARCH</a></div>
+                        <div class="col-md-3 col-sm-6 col-xs-12"><a href="@Url.Action("AdvancedCustomerSearch", "Customer")" class="btn-primary btn" style="padding:5px;">ADVANCED SEARCH</a></div>
                         <div class="col-md-12 mt-50 mb-50">
                             <ul id="errormessages" style="list-style: none;" class="col-md-12">
                                 @if (ViewBag.Status != null)
@@ -138,18 +89,16 @@
                             @using (Ajax.BeginForm("CustomerSearch", "Customer", null, new AjaxOptions() { HttpMethod = "POST" }, new { @name = "customerSearch", @id = "customerSearch" }))
                             {
                                 @Html.AntiForgeryToken()
-                                <div class="col-md-3 col-sm-3 col-xs-12">Email Address</div>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                <div class="col-md-3 col-sm-3 col-xs-12" style="font-size:14px;">Email Address</div>
+                                <div class="col-md-9 col-sm-9 col-xs-12">
                                     @Html.TextBoxFor(model => model.emailId, new { @class = "form-control form-border-bottom", @id = "email" })
-                                    @*<input type="text" name="email-search" class="form-control form-border-bottom">*@
-                                    <br /><p class="mini-text">* To proceed, please provide customer Email Address</p>
-                                </div>
-                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                    <br />
+                                    <p class="mini-text">* To proceed, please provide customer Email Address</p>
                                 </div>
                                 <div class="clearfix"></div>
-                                    <div class="col-md-2 pull-right">
-                                        <button type="submit" class="form-control form-border-bottom btn search-btn" id="customersearch" value="SEARCH">Search</button>
-                                    </div>
+                                <div class="col-md-2 pull-right">
+                                    <button type="submit" class="form-control form-border-bottom btn search-btn" id="customersearch" value="SEARCH">Search</button>
+                                </div>
                             }
                         </div>
                         <div class="col-md-12 mb-50">
@@ -198,7 +147,7 @@
     <div id="gotoTop" class="icon-angle-up"></div>
     <!-- External JavaScripts -->
     <script type="text/javascript" src="~/js/jquery.js"></script>
-    <script type="text/javascript" src="js/plugins.js"></script>
+    <script type="text/javascript" src="~/js/plugins.js"></script>
 
     <script type="text/javascript" src="~/js/functions.js"></script>
     <script type="text/javascript" src="~/Scripts/jquery.validate.js"></script>
@@ -253,6 +202,28 @@
             });
         });
     </script>
+    <script type="text/javascript" src="~/js/jquery.backDetect.js"></script>
+    <script type="text/javascript">
+        $(window).load(function () {
+            $('body').backDetect(function () {
+                //if (confirm('Look forward to the future, not the past!')) {
+                history.pushState(null, null, null);
+                $.ajax({
+                    type: "POST",
+                    url: "/Customer/Logout",
+                    data: {},
+                    success: function (responce) {
+                        window.location.href = responce;
+                    }
+                });
+                //} else {
+                //    history.pushState(null, null, null);
+                //}
+            });
+        });
+    </script>
+
+
 
 </body>
 </html>

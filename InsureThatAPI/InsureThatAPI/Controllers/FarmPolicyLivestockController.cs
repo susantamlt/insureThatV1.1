@@ -87,25 +87,25 @@ namespace InsureThatAPI.Controllers
                           
 
                         }
+                        else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                        {
+                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Home Contents"))
+                        {
+                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                        }
                         else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Home Building"))
+                        else if (Policyincllist.Exists(p => p.name == "Valuables"))
                         {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Home Content"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                        }
-                        else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                        {
-                            return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
                         }
                         else if (Policyincllist.Exists(p => p.name == "Motor"))
                         {
-                            return RedirectToAction("VehicleDescription", "FarmPolicyMotor", new { cid = cid, PcId = PcId });
+                            return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
                         }
                         if (Policyincllist.Exists(p => p.name == "LiveStock"))
                         {
@@ -228,7 +228,7 @@ namespace InsureThatAPI.Controllers
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=LiveStockFarm&SectionUnId=&ProfileUnId=");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=LiveStockFarm&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -431,7 +431,7 @@ namespace InsureThatAPI.Controllers
             string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
-            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid });
+            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = FPLivestock.CustomerId, PcId = FPLivestock.PcId });
         }
     }
 }

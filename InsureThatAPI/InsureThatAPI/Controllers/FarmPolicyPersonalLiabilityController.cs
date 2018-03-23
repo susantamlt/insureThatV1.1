@@ -6,6 +6,9 @@ using System.Web.Mvc;
 using InsureThatAPI.Models;//append model
 using InsureThatAPI.CommonMethods;//append Common Methods
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using Newtonsoft.Json;
 
 namespace InsureThatAPI.Controllers
 {
@@ -17,78 +20,150 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult PersonalLiability(int? cid)
+        public async System.Threading.Tasks.Task<ActionResult> PersonalLiability(int? cid, int? PcId)
         {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
-
             List<SelectListItem> PersonalLiabilityexcessToPay = new List<SelectListItem>();
-            PersonalLiabilityexcessToPay = commonModel.excessRate();
-
             PersonalLiability PersonalLiability = new PersonalLiability();
-            if (Session["Policyinclustions"] != null)
+            var db = new MasterDataEntities();
+            if (cid != null)
             {
-                List<string> PolicyInclustions = new List<string>();
-                var Policyincllist = Session["Policyinclustions"] as List<string>;
-                if (Policyincllist != null)
-                {
-                        if (Policyincllist.Contains("PersonalLiabilitiesFarm"))
-                        {
-                           
-                        }
-                        else{ if (Policyincllist.Contains("HomeBuildingFarm"))
-                        {
-                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("HomeContent"))
-                        {
-                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("Machinery"))
-                        {
-                            //  return RedirectToAction("", "", new { cid = cid });
-                        }
-                        else if (Policyincllist.Contains("MotorFarm"))
-                        {
-                            // return RedirectToAction("", "", new { cid = cid });
-                        }
-                    }
-                }
+                ViewBag.cid = cid;
+                PersonalLiability.CustomerId = cid.Value;
             }
             else
             {
-                RedirectToAction("PolicyInclustions", "Customer", new { CustomerId = cid, type = 2 });
+                ViewBag.cid = PersonalLiability.CustomerId;
             }
-            ViewBag.cid = cid;
-            if (cid != null)
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+            NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
+            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+            string apikey = null;
+            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Personal Liabilities Farm");
+            if (Session["apiKey"] != null)
             {
-                PersonalLiability.CustomerId = cid.Value;
+                apikey = Session["apiKey"].ToString();
+                PersonalLiability.ApiKey = Session["apiKey"].ToString();
+            }
+            else
+            {
+                return RedirectToAction("AgentLogin", "Login");
+            }
+            string policyid = null;
+            List<SessionModel> PolicyInclustions = new List<SessionModel>();
+            if (PcId != null && PcId.HasValue && PcId > 0)
+            {
+                policyid = PcId.ToString();
+                PersonalLiability.PolicyId = policyid;
+            }
+            else if (Session["Policyinclustions"] != null)
+            {
+                #region Policy Selected or not testing
+                PersonalLiability.PolicyInclusions = new List<SessionModel>();
+                var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
+                PersonalLiability.PolicyInclusions = Policyincllist;
+                if (Policyincllist != null)
+                {
+                    if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                    {
+
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                    {
+                        return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                    }
+                    else if (Policyincllist.Exists(p => p.name == "Motor"))
+                    {
+                        return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
+                    }
+                    if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        {
+                            if (Session["unId"] == null && Session["profileId"] == null)
+                            {
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Personal Liabilities Farm").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Personal Liabilities Farm").Select(p => p.ProfileId).First();
+                            }
+                        }
+                        else
+                        {
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                        }
+                    
+                }
+                #endregion
             }
             PersonalLiability.LimitindemnityObj = new LimitOfIndemnity();
             PersonalLiability.LimitindemnityObj.EiId = 63663;
-
             PersonalLiability.ExcessplObj = new ExcessPL();
             PersonalLiability.ExcessplObj.ExcessList = PersonalLiabilityexcessToPay;
             PersonalLiability.ExcessplObj.EiId = 63667;
 
-            var db = new MasterDataEntities();
-            string policyid = null;
-            var details = db.IT_GetCustomerQnsDetails(cid, Convert.ToInt32(FarmPolicySection.PersonalLiabilitiesFarm) , Convert.ToInt32(PolicyType.FarmPolicy), policyid).ToList();
-            if (details != null && details.Any())
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            int unid = Convert.ToInt32(Session["unId"]);
+            int profileid = Convert.ToInt32(Session["profileId"]);
+            if (policyinclusion == true && PcId != null && PcId.HasValue)
             {
-                if (details.Exists(q => q.QuestionId == PersonalLiability.LimitindemnityObj.EiId))
-                {
-                    PersonalLiability.LimitindemnityObj.Limitindemnity = Convert.ToString(details.Where(q => q.QuestionId == PersonalLiability.LimitindemnityObj.EiId).FirstOrDefault().Answer);
-                }
-                if (details.Exists(q => q.QuestionId == PersonalLiability.ExcessplObj.EiId))
-                {
-                    var loc = details.Where(q => q.QuestionId == PersonalLiability.ExcessplObj.EiId).FirstOrDefault();
-                    PersonalLiability.ExcessplObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
-                }
+                PersonalLiability.ExistingPolicyInclustions = policyinclusions;
 
+                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                if (EmpResponse != null)
+                {
+                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                }
+            }
+            else
+            {
+                if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
+                {
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Personal Liabilities Farm&SectionUnId=&ProfileUnId=");
+                    var EmpResponse = Res.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                        }
+                    }
+                }
+                else if (PcId == null && Session["unId"] != null && Session["profileId"] != null)
+                {
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                        if (unitdetails != null && unitdetails.SectionData != null)
+                        {
+                            Session["unId"] = unitdetails.SectionData.UnId;
+                            Session["profileId"] = unitdetails.SectionData.ProfileUnId;
+                        }
+                    }
+                }
+            }
+            if (unitdetails != null)
+            {
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
+                {
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == PersonalLiability.LimitindemnityObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == PersonalLiability.LimitindemnityObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        PersonalLiability.LimitindemnityObj.Limitindemnity = val;
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == PersonalLiability.ExcessplObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == PersonalLiability.ExcessplObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        PersonalLiability.ExcessplObj.Excess = val;
+                    }
+                }
             }
             return View(PersonalLiability);
         }
-
         [HttpPost]
         public ActionResult PersonalLiability(int? cid, PersonalLiability PersonalLiability)
         {
@@ -108,18 +183,10 @@ namespace InsureThatAPI.Controllers
             }
             var db = new MasterDataEntities();
             string policyid = null;
-            if (cid.HasValue && cid > 0)
-            {
-                if (PersonalLiability.LimitindemnityObj != null && PersonalLiability.LimitindemnityObj.EiId > 0 && PersonalLiability.LimitindemnityObj.Limitindemnity != null)
-                {
-                    db.IT_InsertCustomerQnsData(PersonalLiability.CustomerId, Convert.ToInt32(FarmPolicySection.PersonalLiabilitiesFarm), PersonalLiability.LimitindemnityObj.EiId, PersonalLiability.LimitindemnityObj.Limitindemnity.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-                if (PersonalLiability.ExcessplObj != null && PersonalLiability.ExcessplObj.EiId > 0 && PersonalLiability.ExcessplObj.Excess != null)
-                {
-                    db.IT_InsertCustomerQnsData(PersonalLiability.CustomerId, Convert.ToInt32(FarmPolicySection.PersonalLiabilitiesFarm), PersonalLiability.ExcessplObj.EiId, PersonalLiability.ExcessplObj.Excess.ToString(), Convert.ToInt32(PolicyType.FarmPolicy), policyid);
-                }
-            }
-            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid });
+           
+            Session["unId"] = null;
+            Session["profileId"] = null;
+            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = PersonalLiability.CustomerId, PcId = PersonalLiability.PcId });
         }
     }
 }

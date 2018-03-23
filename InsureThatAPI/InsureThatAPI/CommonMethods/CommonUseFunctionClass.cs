@@ -21,6 +21,70 @@ namespace InsureThatAPI.CommonMethods
 {
     public class CommonUseFunctionClass
     {
+        public List<string> NewSectionHome(List<SessionModel> modelList)
+        {
+            List<string> newsec = new List<string>();
+            if (modelList != null && modelList.Count() > 0)
+            {              
+                bool policyinclusion = modelList.Exists(p => p.name == "Farm Property");
+                newsec.Add("HomeBuildings");
+                newsec.Add("HomeContents");
+                newsec.Add("Valuables");
+                newsec.Add("Motor");
+                newsec.Add("Boat");
+                newsec.Add("Pet");
+                if (policyinclusion == true)
+                {
+
+                }
+                else
+                {
+                    newsec.Add("FarmProperty");
+                }
+                bool travel = modelList.Exists(p => p.name == "Travel");
+                if (travel == true)
+                {
+
+                }
+                else
+                {
+                    newsec.Add("Travel");
+                }
+            }
+            return newsec;
+        }
+        public List<string> NewSectionP(List<usp_GetUnit_Result> modelList)
+        {
+            List<string> newsec = new List<string>();
+            if (modelList != null && modelList.Count() > 0)
+            {
+                bool policyinclusion = modelList.Exists(p => p.Name == "Farm Property");
+                newsec.Add("Home Buildings");
+                newsec.Add("Home Contents");
+                newsec.Add("Valuables");
+                newsec.Add("Motor");
+                newsec.Add("Boat");
+                newsec.Add("Pet");
+                if (policyinclusion == true)
+                {
+
+                }
+                else
+                {
+                    newsec.Add("Farm Property");
+                }
+                bool travel = modelList.Exists(p => p.Name == "Travel");
+                if (travel == true)
+                {
+
+                }
+                else
+                {
+                    newsec.Add("Travel");
+                }
+            }
+            return newsec;
+        }
 
         private const string Secret = "db3OIsj+BXE9NZDy0t8W3TcNekrF+2d/1sFnWG4HnV8TZY30iTOdtVWJG8abWvB1GlOgJuQZdcF2Luqm/hccMw==";
         public static string GenerateToken(string username, int expireMinutes = 20)
@@ -180,4 +244,5 @@ namespace InsureThatAPI.CommonMethods
 
        
     }
+   
 }

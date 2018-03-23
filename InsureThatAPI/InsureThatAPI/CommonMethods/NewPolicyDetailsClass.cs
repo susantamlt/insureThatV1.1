@@ -416,15 +416,18 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> constructionType()
         {
             List<SelectListItem> constructionList = new List<SelectListItem>();
-            constructionList.Add(new SelectListItem { Value = "4", Text = "Metal walls on Metal Frame" });
-            constructionList.Add(new SelectListItem { Value = "3", Text = "Metal walls on Timber Frame" });
-            constructionList.Add(new SelectListItem { Value = "1", Text = "Timber walls on Timber Frame" });
-            ////constructionList.Add(new SelectListItem { Value = "4", Text = "Timber walls on Iron Frame" });
+          
+            constructionList.Add(new SelectListItem { Value = "5", Text = "Brick/masonry/concrete" });
+            constructionList.Add(new SelectListItem { Value = "6", Text = "Metal" });
+            constructionList.Add(new SelectListItem { Value = "9", Text = "Open, metal frame" });
+            constructionList.Add(new SelectListItem { Value = "10", Text = "Open, Timber frame" });
+            constructionList.Add(new SelectListItem { Value = "8", Text = "Timber, Timber Frame" });
+            constructionList.Add(new SelectListItem { Value = "7", Text = "Timber/fibre cement" });
             ////constructionList.Add(new SelectListItem { Value = "5", Text = "Sandwich panel – EPS" });
             ////constructionList.Add(new SelectListItem { Value = "6", Text = "Open sides – Metal Frame" });
             ////constructionList.Add(new SelectListItem { Value = "7", Text = "Open sides – Timber Frame" });
             ////constructionList.Add(new SelectListItem { Value = "8", Text = "Brick" });
-            constructionList.Add(new SelectListItem { Value = "2", Text = "Timber walls on Metal Frame" });
+            //constructionList.Add(new SelectListItem { Value = "2", Text = "Timber walls on Metal Frame" });
             return constructionList;
         }
         #endregion
@@ -508,8 +511,8 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> FuelTypeList = new List<SelectListItem>();
             FuelTypeList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            FuelTypeList.Add(new SelectListItem { Value = "Diesel", Text = "Diesel" });
-            FuelTypeList.Add(new SelectListItem { Value = "Petrol", Text = "Petrol" });
+            FuelTypeList.Add(new SelectListItem { Value = "2", Text = "Diesel" });
+            FuelTypeList.Add(new SelectListItem { Value = "1", Text = "Petrol" });
             return FuelTypeList;
         }
         #endregion
@@ -598,7 +601,7 @@ namespace InsureThatAPI.CommonMethods
         public List<SelectListItem> ElectronicTypeOfUnit()
         {
             List<SelectListItem> TypeofUnitList = new List<SelectListItem>();
-            TypeofUnitList.Add(new SelectListItem { Value = "1", Text = "Audio visual" });
+            TypeofUnitList.Add(new SelectListItem { Value = "1", Text = "Audio Visual Equipment" });
             TypeofUnitList.Add(new SelectListItem { Value = "2", Text = "Computer Peripheral" });
             TypeofUnitList.Add(new SelectListItem { Value = "3", Text = "Desktop Computer" });
             TypeofUnitList.Add(new SelectListItem { Value = "4", Text = "Electronic Cash Register" });
@@ -947,9 +950,9 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> VolumeOfVatList = new List<SelectListItem>();
             VolumeOfVatList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            VolumeOfVatList.Add(new SelectListItem { Value = "1", Text = "Up to 2000" });
-            VolumeOfVatList.Add(new SelectListItem { Value = "2", Text = "2000 to 5000" });
-            VolumeOfVatList.Add(new SelectListItem { Value = "3", Text = "5000 to 10000" });
+            VolumeOfVatList.Add(new SelectListItem { Value = "1", Text = "Up to 2,000" });
+            VolumeOfVatList.Add(new SelectListItem { Value = "2", Text = "2,000 to 4,000" });
+            VolumeOfVatList.Add(new SelectListItem { Value = "3", Text = "Over 4,000" });
 
             return VolumeOfVatList;
         }
@@ -959,13 +962,30 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> MachineryTypeOfUnitList = new List<SelectListItem>();
             MachineryTypeOfUnitList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "1", Text = "Hot water" });
-            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "2", Text = "Boiler" });
-            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "3", Text = "Pipe Systems" });
-            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "2", Text = "Steam Boiler" });
-            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "3", Text = "Steam Generator" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "1", Text = "Hot water Boiler" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "2", Text = "Pipe Systems" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "3", Text = "Steam Boiler" });
+            MachineryTypeOfUnitList.Add(new SelectListItem { Value = "4", Text = "Steam Generator" });
 
             return MachineryTypeOfUnitList;
+        }
+        #endregion
+        #region Type Of Specific Machinery
+        public List<SelectListItem> MachineryTypeOfUnitSpefic()
+        {
+            List<SelectListItem> MachineryTypeOfUnitListSI = new List<SelectListItem>();
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "1", Text = "Air conditioner" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "2", Text = "Compressor" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "3", Text = "Cool room" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "4", Text = "Electric motor" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "5", Text = "Evaporator cooler" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "6", Text = "Generator" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "7", Text = "Pump - above ground" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "8", Text = "Pump - submersible" });
+            MachineryTypeOfUnitListSI.Add(new SelectListItem { Value = "9", Text = "Refrigeration unit" });
+            
+            return MachineryTypeOfUnitListSI;
         }
         #endregion
         #region Claim Type Farm

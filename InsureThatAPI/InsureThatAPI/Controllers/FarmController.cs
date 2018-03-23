@@ -20,8 +20,8 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public async System.Threading.Tasks.Task<ActionResult> FarmContents (int? cid, int? PcId)
-        {  
+        public async System.Threading.Tasks.Task<ActionResult> FarmContents(int? cid, int? PcId)
+        {
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> DescriptionListFContent = new List<SelectListItem>();
             DescriptionListFContent = commonModel.descriptionListFC();
@@ -47,6 +47,8 @@ namespace InsureThatAPI.Controllers
             var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
             bool policyinclusion = policyinclusions.Exists(p => p.Name == "Farm Property");
+            CommonUseFunctionClass cmn = new CommonUseFunctionClass();
+            FarmContents.NewSections = new List<string>();
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -67,20 +69,21 @@ namespace InsureThatAPI.Controllers
             {
                 #region Policy Selected or not testing
                 List<SessionModel> PolicyInclustions = new List<SessionModel>();
-                FarmContents.PolicyInclusions = new List<SessionModel>();              
+                FarmContents.PolicyInclusions = new List<SessionModel>();
                 FarmContents.PolicyInclusions = Policyincllist;
+                FarmContents.NewSections = cmn.NewSectionHome(FarmContents.PolicyInclusions);
                 if (Policyincllist != null)
                 {
 
                     if (Policyincllist.Exists(p => p.name == "Farm Property"))
                     {
-                       
-                    }                  
+
+                    }
                     else if (Policyincllist.Exists(p => p.name == "Liability"))
                     {
                         return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Motor" || p.name=="Motors"))
+                    else if (Policyincllist.Exists(p => p.name == "Motor" || p.name == "Motors"))
                     {
                         return RedirectToAction("VehicleDescription", "MotorCover", new { cid = cid });
                     }
@@ -89,7 +92,7 @@ namespace InsureThatAPI.Controllers
                         return RedirectToAction("BoatDetails", "Boat", new { cid = cid });
                     }
 
-                    else if (Policyincllist.Exists(p => p.name == "Pet" || p.name=="Pets"))
+                    else if (Policyincllist.Exists(p => p.name == "Pet" || p.name == "Pets"))
                     {
                         return RedirectToAction("PetsCover", "Pets", new { cid = cid });
                     }
@@ -191,7 +194,7 @@ namespace InsureThatAPI.Controllers
             FarmContents.NumberhiveObj.EiId = 60603;
             FarmContents.ExcessBObj = new ExcessesBeehives();
             FarmContents.ExcessBObj.ExcessBList = excessToPay;
-            FarmContents.ExcessBObj.EiId = 60595;
+            FarmContents.ExcessBObj.EiId = 60605;
             #endregion
 
             HttpClient hclient = new HttpClient();
@@ -205,33 +208,37 @@ namespace InsureThatAPI.Controllers
                 unid = Convert.ToInt32(Session["unId"]);
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-                if (PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
+            {
+                FarmContents.NewSections = cmn.NewSectionP(policyinclusions);
+                if (Session["unId"] != null && Session["profileId"] != null)
                 {
-                    if (Session["unId"] != null && Session["profileId"] != null)
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+                  
+                }
+                else
+                {
+                    if (policyinclusions.Exists(p => p.Name == "Farm Property"))
                     {
-                        unid = Convert.ToInt32(Session["unId"]);
-                        profileid = Convert.ToInt32(Session["profileId"]);
+                        unid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
+                        profileid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
+
                     }
                     else
                     {
-                        if (policyinclusions.Exists(p => p.Name == "Farm Property"))
-                        {
-                            unid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
-                            profileid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
-
-                        }
-                        else
-                        {
-                            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
-                        }
+                        return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
                     }
+                }
 
-                    if (unid == null || unid == 0)
-                    {
-                        unid = unitdetails.SectionData.UnId;
-                        profileid = unitdetails.SectionData.ProfileUnId;
-                    }
-                    FarmContents.ExistingPolicyInclustions = policyinclusions;
+                if (unid == null || unid == 0)
+                {
+                    unid = unitdetails.SectionData.UnId;
+                    profileid = unitdetails.SectionData.ProfileUnId;
+                    Session["unId"] = unid;
+                    Session["profileId"] = profileid;
+                }
+                FarmContents.ExistingPolicyInclustions = policyinclusions;
                 FarmContents.PolicyInclusion = new List<usp_GetUnit_Result>();
                 FarmContents.PolicyInclusion = policyinclusions;
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -250,13 +257,27 @@ namespace InsureThatAPI.Controllers
                     {
                         HProfileId = Convert.ToInt32(Session["HprofileId"]);
                     }
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Farm Property&SectionUnId=&ProfileUnId="+HProfileId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Farm Property&SectionUnId=&ProfileUnId=" + HProfileId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                         if (unitdetails.ErrorMessage != null && unitdetails.ErrorMessage.Count() > 0)
                         {
+                            bool exists = FarmContents.PolicyInclusions.Exists(p => p.name == "Farm Property");
+                            if (exists == true)
+                            {
+                                List<SessionModel> values = new List<SessionModel>();
+                                values = (List<SessionModel>)Session["Policyinclustions"];
+                                for (int k = 0; k < values.Count(); k++)
+                                {
+                                    if (values[k].name == "Farm Property" && values[k].UnitId == null && values[k].ProfileId == null)
+                                    {
+                                        values.RemoveAt(k);
+                                    }
+                                }
+                                Session["Policyinclustions"] = values;
+                            }
                             var errormessage = "First please provide cover for Home Buildings.";
                             if (unitdetails.ErrorMessage.Contains(errormessage))
                             {
@@ -305,7 +326,7 @@ namespace InsureThatAPI.Controllers
                         {
                             Session["unId"] = unitdetails.SectionData.UnId;
                             Session["profileId"] = unitdetails.SectionData.ProfileUnId;
-                           
+
                         }
                     }
                 }
@@ -708,7 +729,7 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-            if (unitdetails!=null && unitdetails.ReferralList != null)
+            if (unitdetails != null && unitdetails.ReferralList != null)
             {
                 FarmContents.ReferralList = unitdetails.ReferralList;
                 FarmContents.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
@@ -759,28 +780,28 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FarmContents.CustomerId;
             }
             string policyid = null;
-     
-                Session["profileId"] = null;
-                Session["UnId"] = null;
-                string actionname = null;
-                string controllername = null;
+
+            Session["profileId"] = null;
+            Session["UnId"] = null;
+            string actionname = null;
+            string controllername = null;
             if (Session["Actname"] != null)
             {
                 actionname = Session["Actname"].ToString();
             }
             if (Session["controller"] != null)
-                {
-                    controllername = Session["controller"].ToString();
-                }
-                //if (actionname != null && controllername != null)
-                //{
-                //    return RedirectToAction(actionname, controllername, new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
-                //}
-                return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId,PcId=FarmContents.PcId });
-          
+            {
+                controllername = Session["controller"].ToString();
+            }
+            //if (actionname != null && controllername != null)
+            //{
+            //    return RedirectToAction(actionname, controllername, new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
+            //}
+            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
+
             return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
         }
-        
+
         [HttpPost]
         public ActionResult FarmAjaxcontent(int id, string content)
         {
@@ -812,12 +833,9 @@ namespace InsureThatAPI.Controllers
                 }
                 else if (content == "liveStock")
                 {
-                    List<SelectListItem> desList = new List<SelectListItem>();
                     List<SelectListItem> desListB = new List<SelectListItem>();
-                    desList.Add(new SelectListItem { Value = "", Text = "--Select--" });
                     desListB = commonModel.descriptionLS();
-                    desList.AddRange(desListB);
-                    return Json(new { status = true, des = desList });
+                    return Json(new { status = true, des = desListB });
                 }
                 else if (content == "farmDetails")
                 {
@@ -860,10 +878,22 @@ namespace InsureThatAPI.Controllers
                     desList = commonModel.VolumeOfVat();
                     return Json(new { status = true, des = desList });
                 }
+                else if (content == "liveStockFP")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    desList = commonModel.descriptionLS();
+                    return Json(new { status = true, des = desList });
+                }
                 else if (content == "FarmMachineryTU")
                 {
                     List<SelectListItem> desList = new List<SelectListItem>();
                     desList = commonModel.MachineryTypeOfUnit();
+                    return Json(new { status = true, des = desList });
+                }
+                else if (content == "FarmMachinerySM")
+                {
+                    List<SelectListItem> desList = new List<SelectListItem>();
+                    desList = commonModel.MachineryTypeOfUnitSpefic();
                     return Json(new { status = true, des = desList });
                 }
                 else
