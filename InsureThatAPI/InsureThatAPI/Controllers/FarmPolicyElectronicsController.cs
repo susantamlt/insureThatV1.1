@@ -175,7 +175,7 @@ namespace InsureThatAPI.Controllers
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Electronics&SectionUnId=&ProfileUnId=");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Electronics&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {

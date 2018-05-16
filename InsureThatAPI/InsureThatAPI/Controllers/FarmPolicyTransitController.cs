@@ -190,6 +190,12 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.ExcessFPTransitObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPTransit.ExcessFPTransitObj.Excess = val;
                     }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.FarmProduceMaxValOneLoadObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.FarmProduceMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FPTransit.FarmProduceMaxValOneLoadObj.farmproduceMaxValoneload = val;
+                    }
+                    
                 }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
                 {

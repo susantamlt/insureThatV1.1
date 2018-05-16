@@ -54,6 +54,11 @@ namespace InsureThatAPI.Controllers
                     {
                         model.ApiKey = Session["ApiKey"].ToString();
                     }
+                    if(model.Periodofcover!=null)
+                    {
+                        string period =model.Periodofcover.Substring(0,2);
+                        model.Periodofcover = period;
+                    }
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     StringContent content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
                     var responses = await hclient.PostAsync("PolicyDetails", content);
@@ -67,7 +72,6 @@ namespace InsureThatAPI.Controllers
                 {
                     ViewBag.error = "Sorry we do not offer flood cover at this time. Click No to continue without flood cover.";
                 }
-
             }
             return View(model);
         }

@@ -183,12 +183,12 @@ namespace InsureThatAPI.Controllers
             int unid = 0;
             int profileid = 0;
             int Fprofileid = 0;
-            if (Session["unId"] != null && Session["ProfileId"] != null)
+            if (Session["unId"] != null && Session["profileId"] != null)
             {
                 unid = Convert.ToInt32(Session["unId"]);
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-            if (Session["FProfileId"] != null)
+            if (Session["FprofileId"] != null)
             {
                 Fprofileid = Convert.ToInt32(Session["FprofileId"]);
             }

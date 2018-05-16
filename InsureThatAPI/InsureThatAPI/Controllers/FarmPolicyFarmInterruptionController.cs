@@ -232,7 +232,7 @@ namespace InsureThatAPI.Controllers
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Interuption&SectionUnId=&ProfileUnId=0");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Farm Interruption&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -322,15 +322,27 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod = val;
                     }
+                    else
+                    {
+                        FPFarmInterruption.OptAgistIncomeIndemnityPerFPObj.OptIndemnityPeriod = "12";
+                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.OptExtraCostIndemnityPerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPFarmInterruption.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod = val;
                     }
+                    else
+                    {
+                        FPFarmInterruption.OptExtraCostIndemnityPerFPObj.OptIndemnityPeriod = "12";
+                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod = val;
+                    }
+                    else
+                    {
+                        FPFarmInterruption.OptFarmIncomeIndemnityPerFPObj.OptIndemnityPeriod = "12";
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPFarmInterruption.SumInsuredAgistIncomeFPObj.EiId))
                     {

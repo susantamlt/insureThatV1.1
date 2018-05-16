@@ -23,30 +23,54 @@ namespace InsureThatAPI.Models
         public string ApiKey { get; set; }
         public string PolicyId { get; set; }
         public UnSpecTypeOfMachineryFP UnSpecTypeOfMachineryFPObj { get; set; }
+        public List<ValueDatas> UnSpecTypeOfMachineryFPList { get; set; }
         public UnSpecPowerFP UnSpecPowerFPObj { get; set; }
+        public List<ValueDatas> UnSpecPowerFPList { get; set; }
         public UnSpecMachNoOfUnitsFP UnSpecMachNoOfUnitsFPObj { get; set; }
+        public List<ValueDatas> UnSpecMachNoOfUnitsFPList { get; set; }
         public UnSpecMachSumInsuredFP UnSpecMachSumInsuredFPObj { get; set; }
+        public List<ValueDatas> UnSpecMachSumInsuredFPList { get; set; }
         public UnSpecMachTotalSumInsuredFP UnSpecMachTotalSumInsuredFPObj { get; set; }
+        public List<ValueDatas> UnSpecMachTotalSumInsuredFPList { get; set; }
         public MilkingVolumeOfVatFP MilkingVolumeOfVatFPObj { get; set; }
+        public List<ValueDatas> MilkingVolumeOfVatFPList { get; set; }
         public MilkingNoOfVatsFP MilkingNoOfVatsFPObj { get; set; }
+        public List<ValueDatas> MilkingNoOfVatsFPList { get; set; }
         public MilkingSumInsuredFP MilkingSumInsuredFPObj { get; set; }
+        public List<ValueDatas> MilkingSumInsuredFPList { get; set; }
         public MilkingTotalSumInsuredFP MilkingTotalSumInsuredFPObj { get; set; }
+        public List<ValueDatas> MilkingTotalSumInsuredFPList { get; set; }
         public ShearingNoOfStandsFP ShearingNoOfStandsFPObj { get; set; }
+        public List<ValueDatas> ShearingNoOfStandsFPList { get; set; }
         public ShearingSumInsuredFP ShearingSumInsuredFPObj { get; set; }
+        public List<ValueDatas> ShearingSumInsuredFPList { get; set; }
         public ShearingTotalSumInsuredFP ShearingTotalSumInsuredFPObj { get; set; }
+        public List<ValueDatas> ShearingTotalSumInsuredFPList { get; set; }
         public ExcessMachineryFP ExcessMachineryFPObj { get; set; }
         public SpecifiedMachineryType SMTypeObj { get; set; }
+        public List<ValueDatas> SMTypeList { get; set; }
         public SpecifiedMachineryRatedpower SMRatedpowerObj { get; set; }
+        public List<ValueDatas> SMRatedpowerList { get; set; }
         public SpecifiedMachineryNumberOfUnits SMNumberOfUnitsObj { get; set; }
+        public List<ValueDatas> SMNumberOfUnitsList { get; set; }
         public SpecifiedMachinerySumInsuredPerUnit SMSumInsuredPerUnitObj { get; set; }
+        public List<ValueDatas> SMSumInsuredPerUnitList { get; set; }
         public SpecifiedMachineryTotalSumInsured SMTotalSumInsuredObj { get; set; }
+        public List<ValueDatas> SMTotalSumInsuredList { get; set; }
         public BolierTypeOfUnitFP BolierTypeOfUnitFPObj { get; set; }
+        public List<ValueDatas> BolierTypeOfUnitFPList { get; set; }
         public BolierMakeAndModelFP BolierMakeAndModelFPObj { get; set; }
+        public List<ValueDatas> BolierMakeAndModelFPList { get; set; }
         public BolierRatedPowerFP BolierRatedPowerFPObj { get; set; }
+        public List<ValueDatas> BolierRatedPowerFPList { get; set; }
         public BolierPipeLengthFP BolierPipeLengthFPObj { get; set; }
+        public List<ValueDatas> BolierPipeLengthFPList { get; set; }
         public BolierNoOfUnitsFP BolierNoOfUnitsFPObj { get; set; }
+        public List<ValueDatas> BolierNoOfUnitsFPList { get; set; }
         public BolierSpecMachSumInsuredFP BolierSumInsuredFPObj { get; set; }
+        public List<ValueDatas> BolierSumInsuredFPList { get; set; }
         public BolierTotalSumInsuredFP BolierTotalSumInsuredFPObj { get; set; }
+        public List<ValueDatas> BolierTotalSumInsuredFPList { get; set; }
         public ExcessBolierFP ExcessBolierFPObj { get; set; }
         public CoverMilkInVatsFP CoverMilkInVatsFPObj { get; set; }
         public CoverAllOtherProduceFP CoverAllOtherProduceFPObj { get; set; }

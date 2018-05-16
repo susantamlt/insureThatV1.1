@@ -58,6 +58,7 @@ namespace InsureThatAPI.Models
         public FMOwnersManual OwnersmanualObj { get; set; }
         public MCADKeptAtNight KeptnightObj { get; set; }
         public MCADAddress AdaddressObj { get; set; }
+        public List<SelectListItem> AdaddressList { get; set; }
         public MCADVehicleRegistered VregisterObj { get; set; }
         public MCADRegistrationNumber RnumberObj { get; set; }
         public MCADVinNumber VnumberObj { get; set; }
@@ -227,6 +228,7 @@ namespace InsureThatAPI.Models
     public class GLVYear
     {
         public string Year { get; set; }
+        public IEnumerable<SelectListItem> YearList { get; set; }
         public int EiId { get; set; }
     }
     public class GLVFamily
@@ -254,6 +256,7 @@ namespace InsureThatAPI.Models
     public class FMMCType
     {
         public IEnumerable<SelectListItem> FmFamilyList { get; set; }
+        public List<SelectListItem> FmFamilyLists { get; set; }
         public string FmFamily { get; set; }
         public int EiId { get; set; }
     }
@@ -275,7 +278,7 @@ namespace InsureThatAPI.Models
     }
     public class MCADAddress
     {
-        public IEnumerable<SelectListItem> AddressList { get; set; }
+        public List<AddressData> AddressList { get; set; }
         public string Address { get; set; }
         public int EiId { get; set; }
     }

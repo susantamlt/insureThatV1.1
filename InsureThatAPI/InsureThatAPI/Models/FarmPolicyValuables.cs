@@ -23,9 +23,11 @@ namespace InsureThatAPI.Models
         public List<SessionModel> PolicyInclusions { get; set; }
         public string ApiKey { get; set; }
         public string PolicyId { get; set; }
-        public CoverForUnspecifiedValuables CoverUnspecifiedValuablesObj { get; set; }        
-        public SpecifiedItemDescription SpecifiedItemDescriptionObj { get; set; }        
+        public CoverForUnspecifiedValuables CoverUnspecifiedValuablesObj { get; set; }
+        public SpecifiedItemDescription SpecifiedItemDescriptionObj { get; set; }
+        public List<ValueDatas> SpecifiedItemDescriptionList { get; set; }
         public SpecifiedItemSumInsured SpecifiedItemSumInsuredObj { get; set; }
+        public List<ValueDatas> SpecifiedItemSumInsuredList { get; set; }
         public ExcessValuables ExcessValuablesObj { get; set; }
 
     }

@@ -298,6 +298,8 @@ namespace InsureThatAPI.Controllers
             {
                 TravelCover.PcId = PcId;
             }
+            Session["Controller"] = "Travel";
+            Session["ActionName"] = "TravelCover";
             return View(TravelCover);
         }
         [HttpPost]

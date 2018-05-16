@@ -19,6 +19,8 @@ namespace InsureThatAPI.Models
         public bool SelectedInclusion { get; set; }
         public string PolicyStatus { get; set; }
         public List<usp_GetUnit_Result> PolicyInclusion { get; set; }
+        public MCADAddress AdaddressObj { get; set; }
+        public List<SelectListItem> AdaddressList { get; set; }
         public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public List<SessionModel> PolicyInclusions { get; set; }
         public string ApiKey { get; set; }

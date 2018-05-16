@@ -57,6 +57,8 @@ namespace InsureThatAPI.Models
         public FPBeehivesSumInsured FPBeehivesSumInsuredObj { get; set; }
         public FPNumberOfHives FPNumberOfHivesObj { get; set; }
         public FPExcessBeehives FPExcessBeehivesObj { get; set; }
+        public LocatioForFP LocationObj { get; set; }
+        public AddressForFP AddressObj { get; set; }
 
     }
 

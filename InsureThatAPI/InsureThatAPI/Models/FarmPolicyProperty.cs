@@ -31,10 +31,15 @@ namespace InsureThatAPI.Models
         [DataType(DataType.MultilineText)]
         public string  Aboutfarmstructures { get; set; }
         public DetailedDescription DescriptionFBObj { get; set; }
+        public List<ValueDatas> DescriptionFBObjList { get; set; }
         public YearConstructedFB YearconstructedFBObj { get; set; }
+        public List<ValueDatas> YearconstructedFBObjList { get; set; }
         public ConstructionFB ConstructionFBObj { get; set; }
+        public List<ValueDatas> ConstructionFBObjList { get; set; }
         public ContainCoolroomFB ContaincoolroomObj { get; set; }
+        public List<ValueDatas> ContaincoolroomFBObjList { get; set; }
         public SumInsuredsFB SuminsuredFBObj { get; set; }
+        public List<ValueDatas> SuminsuredFBObjList { get; set; }
         public UnrepairedDamageFS UnrepaireddamageObj { get; set; }
         public SubLimitFarmFencing SublimitObj { get; set; }
         public TotalCoverFarmFencing TotalcoverObj { get; set; }
@@ -48,7 +53,9 @@ namespace InsureThatAPI.Models
         public HarvestedCropsExcess ExcesshcObjH { get; set; }
         public int? ImposedH { get; set; }
         public InterestedPartyName PartynameObj { get; set; }
+        public List<ValueDatas> PartynameObjList { get; set; }
         public InterestedPartyLocation PartylocationObj { get; set; }
+        public List<ValueDatas> PartylocationObjList { get; set; }
         public InterestedTotalSumInsured TotalsuminsuredObj { get; set; }
         public LocatioForFP LocationObj { get; set; }
         public AddressForFP AddressObj { get; set; }
@@ -62,6 +69,7 @@ namespace InsureThatAPI.Models
     }
     public class farmsizeInFP
     {
+        public int EiId { get; set; }
         public string Farmsize{ get; set; }
     }
     public class LocatioForFP

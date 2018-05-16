@@ -320,6 +320,10 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HomeContent.ExcesspayObj.EiId).Select(p => p.Value).FirstOrDefault();
                         HomeContent.ExcesspayObj.Excess = val;
                     }
+                    if (Session["hombud"]!=null)
+                    {
+                        HomeContent.ExcesspayObj.Excess ="2200";
+                    }
                 }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
                 {
@@ -357,6 +361,8 @@ namespace InsureThatAPI.Controllers
             {
                 HomeContent.PcId = PcId;
             }
+            Session["Controller"] = "HomeContentValuable";
+            Session["ActionName"] = "HomeContent";
             return View(HomeContent);
         }
         [HttpPost]
@@ -382,6 +388,7 @@ namespace InsureThatAPI.Controllers
             Session["UnId"] = null;
             string actionname = null;
             string controllername = null;
+            Session["hombud"] = null;
             if (Session["Actname"] != null)
             {
                 actionname = Session["Actname"].ToString();
@@ -745,6 +752,8 @@ namespace InsureThatAPI.Controllers
             {
                 ValuablesHC.PcId = PcId;
             }
+            Session["Controller"] = "HomeContentValuable";
+            Session["ActionName"] = "Valuables";
             return View(ValuablesHC);
         }
         [HttpPost]

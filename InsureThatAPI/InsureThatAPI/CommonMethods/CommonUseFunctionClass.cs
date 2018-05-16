@@ -53,6 +53,38 @@ namespace InsureThatAPI.CommonMethods
             }
             return newsec;
         }
+        public List<string> NewSectionFarm(List<SessionModel> modelList)
+        {
+            List<string> newsec = new List<string>();
+            if (modelList != null && modelList.Count() > 0)
+            {
+                bool policyinclusion = modelList.Exists(p => p.name == "Farm Property");
+                newsec.Add("HomeBuildings");
+                newsec.Add("HomeContents");
+                newsec.Add("Valuables");
+                newsec.Add("Motor");
+                newsec.Add("Boat");
+                newsec.Add("Pet");
+                if (policyinclusion == true)
+                {
+
+                }
+                else
+                {
+                    newsec.Add("FarmProperty");
+                }
+                bool travel = modelList.Exists(p => p.name == "Travel");
+                if (travel == true)
+                {
+
+                }
+                else
+                {
+                    newsec.Add("Travel");
+                }
+            }
+            return newsec;
+        }
         public List<string> NewSectionP(List<usp_GetUnit_Result> modelList)
         {
             List<string> newsec = new List<string>();

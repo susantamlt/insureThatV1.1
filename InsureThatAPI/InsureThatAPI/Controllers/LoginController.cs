@@ -11,6 +11,8 @@ using System.Text;
 using InsureThatAPI.CommonMethods;
 using System.Text.RegularExpressions;
 using System.Net;
+using System.Net.Mail;
+using System.Configuration;
 
 namespace InsureThatAPI.Controllers
 {
@@ -24,6 +26,7 @@ namespace InsureThatAPI.Controllers
             loginmodel.Errors = new List<string>();
             try
             {
+                Session["newattach"] = null;
                 Session["UnId"] = null;
                 Session["ProfileId"] = null;
                 Session["Email"] = null;
@@ -43,7 +46,10 @@ namespace InsureThatAPI.Controllers
                 Session["Policylocal"] = null;
                 Session["InsuredName"] = null;
                 Session["MprofileId"] = null;
-
+                Session["hombud"] = null;
+                Session["PolicyNo"] = null;
+                Session["PrId"] = null;
+                Session["cid"] = null;
             }
             catch (Exception ex)
             {
@@ -273,6 +279,7 @@ namespace InsureThatAPI.Controllers
             }
             return View();
         }
+
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> ForgetPassword(ForgotPasswordDetails frwd)
         {
@@ -280,13 +287,76 @@ namespace InsureThatAPI.Controllers
             {
                 MasterDataEntities db = new MasterDataEntities();
                 Guid guid = Guid.NewGuid();
-
+                ChangePasswordDetails cpsd = new ChangePasswordDetails();
                 string confirmationLink = HttpContext.Request.Url.Scheme + "://" + HttpContext.Request.Url.Authority + Url.Action("ResetPassword", "Account", new { key = guid });
-                ForgotPasswordClass fpd = new ForgotPasswordClass();
-                fpd.SendEmail(frwd.Email, confirmationLink);
-                int? result = db.IT_InsertForgetPasswordCode(guid.ToString(), 1).SingleOrDefault();
-                Session["Email"] = frwd.Email;
+                //ForgotPasswordClass fpd = new ForgotPasswordClass();
+                //fpd.SendEmail(frwd.Email, confirmationLink);
+                //int? result = db.IT_InsertForgetPasswordCode(guid.ToString(), 1).SingleOrDefault();
+                string recepientEmail = frwd.Email;
+                using (MailMessage mailMessage = new MailMessage())
+                {
+                    mailMessage.From = new MailAddress(ConfigurationManager.AppSettings["UName"]);
+                    mailMessage.Subject = "Forget Password";
+                    mailMessage.Body = confirmationLink;
+                    mailMessage.IsBodyHtml = true;
+                    mailMessage.To.Add(new MailAddress(recepientEmail));
+                    SmtpClient smtpp = new SmtpClient();
+                    smtpp.Host = ConfigurationManager.AppSettings["Host"];
+                    smtpp.EnableSsl = Convert.ToBoolean(ConfigurationManager.AppSettings["EnableSsl"]);
+                    System.Net.NetworkCredential NetworkCreda = new System.Net.NetworkCredential();
+                    NetworkCreda.UserName = ConfigurationManager.AppSettings["UserName"];
+                    NetworkCreda.Password = ConfigurationManager.AppSettings["Password"];
+                    smtpp.UseDefaultCredentials = true;
+                    smtpp.Credentials = NetworkCreda;
+                    smtpp.Port = int.Parse(ConfigurationManager.AppSettings["Port"]);
+                    smtpp.Send(mailMessage);
+                }
 
+                //using (MailMessage mm = new MailMessage("prashanthireddy.eda@gmail.com","nreddy472@gmail.com"))
+                //{
+                //    mm.Subject = "FP";
+                //    mm.Body = confirmationLink;                   
+                //    mm.IsBodyHtml = false;
+                //    SmtpClient smtps = new SmtpClient("smtp.gmail.com", 587);
+                //    //smtps.Host = "smtp.gmail.com";
+                //    //smtps.Host = "smtp.pacific.net.au";
+                //    smtps.EnableSsl = true;
+                //    NetworkCredential NetworkCreda = new NetworkCredential("prashanthireddy.eda@gmail.com", "sarkar23");
+                //    smtps.UseDefaultCredentials = true;
+                //    smtps.Credentials = NetworkCreda;
+                //    smtps.Port = 587;
+                //    smtps.Send(mm);
+                //   // ClientScript.RegisterStartupScript(GetType(), "alert", "alert('Email sent.');", true);
+                //}
+                //MailMessage mail = new MailMessage();
+
+
+                //mail.IsBodyHtml = false;
+                //SmtpClient smtp = new SmtpClient();
+                //smtp.Host = "smtp.gmail.com";
+                //smtp.EnableSsl = true;
+                //NetworkCredential NetworkCred = new NetworkCredential("prashanthireddy.eda@gmail.com", "sarkar23");
+                //mail.Subject = "Forget Password";
+                //mail.Body = confirmationLink;
+                //mail.From =new MailAddress("prashanthireddy.eda@gmail.com");
+                //mail.To.Add("prashanthi@mindtechlabs.com");
+                //smtp.UseDefaultCredentials = true;
+                //smtp.Credentials = NetworkCred;
+                //smtp.Port = 587;
+                //smtp.Send(mail);
+
+
+
+                //SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+                //mail.From = new MailAddress("helpdesk@insurethat.com.au");
+                //mail.To.Add("prashanthireddy.eda@gmail.com");
+                //mail.Subject = "Test Mail";
+                //mail.Body = "This is for testing SMTP mail from GMAIL";
+                //SmtpServer.Port = 587;
+                //SmtpServer.Credentials = new System.Net.NetworkCredential("outbound@SAU-EE237-OR.servercontrol.com.au", "$#5U09sfrdtyj34wqy");
+                //SmtpServer.EnableSsl = true;
+                //SmtpServer.Send(mail);
+                Session["Email"] = frwd.Email;
                 ViewBag.SuccessMessage = "Email is been send successfully.";
                 return View();
 
@@ -294,11 +364,9 @@ namespace InsureThatAPI.Controllers
             catch (Exception ex)
             {
                 ViewBag.ErrorMessage = "Failed to sent email.";
-
                 return View();
-
             }
-
         }
+
     }
 }

@@ -167,7 +167,7 @@ namespace InsureThatAPI.Controllers
             FPMachinery.BolierMakeAndModelFPObj = new BolierMakeAndModelFP();
             FPMachinery.BolierMakeAndModelFPObj.EiId = 63069;
             FPMachinery.BolierRatedPowerFPObj = new BolierRatedPowerFP();
-            FPMachinery.BolierMakeAndModelFPObj.EiId = 63071;
+            FPMachinery.BolierRatedPowerFPObj.EiId = 63071;
             FPMachinery.BolierPipeLengthFPObj = new BolierPipeLengthFP();
             FPMachinery.BolierPipeLengthFPObj.EiId = 63073;
             FPMachinery.BolierNoOfUnitsFPObj = new BolierNoOfUnitsFP();
@@ -266,7 +266,7 @@ namespace InsureThatAPI.Controllers
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Machinery&SectionUnId=&ProfileUnId=" + Fprofileid);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=New&SectionName=Machinery&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -317,66 +317,563 @@ namespace InsureThatAPI.Controllers
             {
                 if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
                 {
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.UnSpecTypeOfMachineryFPObj.TypeofMachinery = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var UnSpecTypeOfMachineryList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < UnSpecTypeOfMachineryList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62967;
+                                vds.Element.ItId = UnSpecTypeOfMachineryList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId && p.Element.ItId == UnSpecTypeOfMachineryList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.UnSpecTypeOfMachineryFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.UnSpecPowerFPObj.Power = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var UnSpecPowerList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < UnSpecPowerList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62969;
+                                vds.Element.ItId = UnSpecPowerList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId && p.Element.ItId == UnSpecPowerList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.UnSpecPowerFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.UnSpecMachNoOfUnitsFPObj.NoOfUnits = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var UnSpecMachNoOfUnitList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < UnSpecMachNoOfUnitList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62971;
+                                vds.Element.ItId = UnSpecMachNoOfUnitList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId && p.Element.ItId == UnSpecMachNoOfUnitList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.UnSpecMachNoOfUnitsFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.UnSpecMachSumInsuredFPObj.SumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var UnSpecMachSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < UnSpecMachSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62973;
+                                vds.Element.ItId = UnSpecMachSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId && p.Element.ItId == UnSpecMachSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.UnSpecMachSumInsuredFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.UnSpecMachTotalSumInsuredFPObj.TotalSumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var UnSpecMachTotalSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < UnSpecMachTotalSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62975;
+                                vds.Element.ItId = UnSpecMachTotalSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId && p.Element.ItId == UnSpecMachTotalSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.UnSpecMachTotalSumInsuredFPList = elmnts;
+                        }
+                    }
+
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.MilkingVolumeOfVatFPObj.VolumeOfVat = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var MilkingVolumeOfVatList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < MilkingVolumeOfVatList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62995;
+                                vds.Element.ItId = MilkingVolumeOfVatList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId && p.Element.ItId == MilkingVolumeOfVatList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.MilkingVolumeOfVatFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.MilkingNoOfVatsFPObj.NoOfVats = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var MilkingNoOfVatsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < MilkingNoOfVatsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62997;
+                                vds.Element.ItId = MilkingNoOfVatsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId && p.Element.ItId == MilkingNoOfVatsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.MilkingNoOfVatsFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.MilkingSumInsuredFPObj.SumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var MilkingSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < MilkingSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62999;
+                                vds.Element.ItId = MilkingSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId && p.Element.ItId == MilkingSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.MilkingSumInsuredFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var MilkingTotalSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < MilkingTotalSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63001;
+                                vds.Element.ItId = MilkingTotalSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId && p.Element.ItId == MilkingTotalSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.MilkingTotalSumInsuredFPList = elmnts;
+                        }
+                    }
+
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.SMTypeObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMTypeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.SMTypeObj.Typesm = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.SMTypeObj.Typesm = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.SMTypeObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SMTypeList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMTypeObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SMTypeList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63039;
+                                vds.Element.ItId = SMTypeList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMTypeObj.EiId && p.Element.ItId == SMTypeList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.SMTypeList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.SMRatedpowerObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMRatedpowerObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.SMRatedpowerObj.Ratedpowersm = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.SMRatedpowerObj.Ratedpowersm = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.SMRatedpowerObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SMRatedpowerList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMRatedpowerObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SMRatedpowerList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63041;
+                                vds.Element.ItId = SMRatedpowerList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMRatedpowerObj.EiId && p.Element.ItId == SMRatedpowerList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.SMRatedpowerList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.SMNumberOfUnitsObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMNumberOfUnitsObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.SMNumberOfUnitsObj.Numberunitssm = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.SMNumberOfUnitsObj.Numberunitssm = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.SMNumberOfUnitsObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SMNumberOfUnitsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMNumberOfUnitsObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SMNumberOfUnitsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63043;
+                                vds.Element.ItId = SMNumberOfUnitsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMNumberOfUnitsObj.EiId && p.Element.ItId == SMNumberOfUnitsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.SMNumberOfUnitsList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.SMSumInsuredPerUnitObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMSumInsuredPerUnitObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.SMSumInsuredPerUnitObj.SumInsuredperunit = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.SMSumInsuredPerUnitObj.SumInsuredperunit = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.SMSumInsuredPerUnitObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SMSumInsuredPerUnitList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMSumInsuredPerUnitObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SMSumInsuredPerUnitList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63045;
+                                vds.Element.ItId = SMSumInsuredPerUnitList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMSumInsuredPerUnitObj.EiId && p.Element.ItId == SMSumInsuredPerUnitList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.SMSumInsuredPerUnitList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.SMTotalSumInsuredObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMTotalSumInsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.SMTotalSumInsuredObj.SumInsured = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.SMTotalSumInsuredObj.SumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.SMTotalSumInsuredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SMTotalSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMTotalSumInsuredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SMTotalSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63047;
+                                vds.Element.ItId = SMTotalSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.SMTotalSumInsuredObj.EiId && p.Element.ItId == SMTotalSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.SMTotalSumInsuredList = elmnts;
+                        }
+                    }
+
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.ShearingNoOfStandsFPObj.NoOfStands = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ShearingNoOfStandsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ShearingNoOfStandsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63021;
+                                vds.Element.ItId = ShearingNoOfStandsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId && p.Element.ItId == ShearingNoOfStandsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.ShearingNoOfStandsFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.ShearingSumInsuredFPObj.SumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ShearingSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ShearingSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63023;
+                                vds.Element.ItId = ShearingSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId && p.Element.ItId == ShearingSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.ShearingSumInsuredFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.ShearingTotalSumInsuredFPObj.TotalSumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ShearingTotalSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ShearingTotalSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63025;
+                                vds.Element.ItId = ShearingTotalSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId && p.Element.ItId == ShearingTotalSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.ShearingTotalSumInsuredFPList = elmnts;
+                        }
+                    }
+
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierTypeOfUnitFPObj.TypeofUnit = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierTypeOfUnitList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierTypeOfUnitList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63067;
+                                vds.Element.ItId = BolierTypeOfUnitList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId && p.Element.ItId == BolierTypeOfUnitList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierTypeOfUnitFPList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierMakeAndModelFPObj.MakeAndModel = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierNoOfUnitsFPObj.NoOfUnits = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierPipeLengthFPObj.PipeLength = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierMakeAndModelFPObj.MakeAndModel = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierMakeAndModelList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierMakeAndModelList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63069;
+                                vds.Element.ItId = BolierMakeAndModelList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierMakeAndModelFPObj.EiId && p.Element.ItId == BolierMakeAndModelList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierMakeAndModelFPList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierRatedPowerFPObj.RatedPower = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierRatedPowerFPObj.RatedPower = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierRatedPowerList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierRatedPowerList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63071;
+                                vds.Element.ItId = BolierRatedPowerList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierRatedPowerFPObj.EiId && p.Element.ItId == BolierRatedPowerList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierRatedPowerFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierPipeLengthFPObj.PipeLength = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierPipeLengthList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierPipeLengthList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63073;
+                                vds.Element.ItId = BolierPipeLengthList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierPipeLengthFPObj.EiId && p.Element.ItId == BolierPipeLengthList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierPipeLengthFPList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierNoOfUnitsFPObj.NoOfUnits = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierNoOfUnitsList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierNoOfUnitsList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63075;
+                                vds.Element.ItId = BolierNoOfUnitsList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierNoOfUnitsFPObj.EiId && p.Element.ItId == BolierNoOfUnitsList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierNoOfUnitsFPList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierSumInsuredFPObj.SumInsured = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierSumInsuredFPObj.SumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63077;
+                                vds.Element.ItId = BolierSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierSumInsuredFPObj.EiId && p.Element.ItId == BolierSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierSumInsuredFPList = elmnts;
+                        }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierTotalSumInsuredFPObj.TotalSumInsured = val;
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPMachinery.BolierTotalSumInsuredFPObj.TotalSumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var BolierTotalSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < BolierTotalSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63079;
+                                vds.Element.ItId = BolierTotalSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTotalSumInsuredFPObj.EiId && p.Element.ItId == BolierTotalSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPMachinery.BolierTotalSumInsuredFPList = elmnts;
+                        }
                     }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.BolierTypeOfUnitFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.BolierTypeOfUnitFPObj.TypeofUnit = val;
-                    }
+
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.CoverAllOtherProduceFPObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.CoverAllOtherProduceFPObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -401,66 +898,6 @@ namespace InsureThatAPI.Controllers
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ExcessMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPMachinery.ExcessMachineryFPObj.Excess = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingNoOfVatsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.MilkingNoOfVatsFPObj.NoOfVats = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.MilkingSumInsuredFPObj.SumInsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.MilkingTotalSumInsuredFPObj.TotalSumInsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.MilkingVolumeOfVatFPObj.VolumeOfVat = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingNoOfStandsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.ShearingNoOfStandsFPObj.NoOfStands = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.ShearingSumInsuredFPObj.SumInsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.ShearingTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.ShearingTotalSumInsuredFPObj.TotalSumInsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachNoOfUnitsFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.UnSpecMachNoOfUnitsFPObj.NoOfUnits = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.UnSpecMachSumInsuredFPObj.SumInsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecMachTotalSumInsuredFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.UnSpecMachTotalSumInsuredFPObj.TotalSumInsured = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecPowerFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.UnSpecPowerFPObj.Power = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.UnSpecTypeOfMachineryFPObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPMachinery.UnSpecTypeOfMachineryFPObj.TypeofMachinery = val;
                     }
                 }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)

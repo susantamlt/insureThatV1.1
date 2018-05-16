@@ -13,12 +13,17 @@
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
         <h2>LIABILITY</h2>
+        @if (Session["PolicyNo"] != null)
+        {
+            <h5>Policy Number: @Session["PolicyNo"].ToString()</h5>
+        }
     </div>    
     <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
         <div class="pull-right">
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -70,7 +75,7 @@
         </div>
     </div>
     <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding: 15px 26px 0px;">
                     <h3 class="pull-left">Premium Details</h3>
@@ -125,7 +130,7 @@
         <div class="error"></div>
         <div class="form">
             <div class="clearfix mt-10 mb-10 col-md-12">
-                <p class="col-md-10 col-sm-10 col-xs-12"><a href="#liabilitymodel" role="button" data-target="#liabilitymodel" data-toggle="modal"><strong>Click here to see definition of liability.</strong></a></p>
+                <p class="col-md-10 col-sm-10 col-xs-12"><a href="#liabilitymodel" role="button" data-target="#liabilitymodel" data-toggle="modal"><strong>Click here to see definition of Liability.</strong></a></p>
                 <p class="col-md-10 col-sm-10 col-xs-12">Personal Liability and Farm Liability are combined on this policy.</p>
                 <p class="col-md-10 col-sm-10 col-xs-12">This policy automatically offers and extends the personal Liability to cover any Liability in relation to your farming activities eg if you have a dam on the property, a sheep that may escape onto the road etc.</p>
                 @*<p class="col-md-10 col-sm-10 col-xs-12">If you do not want to take this cover then you can un-select it. Please be aware however that if you unselect this cover, we will be providing no cover for personal or general or farming Liability.</p>*@
@@ -174,22 +179,22 @@
                 </div>
             </div>
             @*<div class="clearfix mt-10 mb-10 col-md-12">
-                <p class="col-md-7 col-sm-7 col-xs-12">Do you want cover for Personal and Farm Liabilty</p>
-                <p class="col-md-5 col-sm-5 col-xs-12">
-                    <span class="checkboxes">
-                        <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '0', new { @class = "farmliabilty commondataradio", @readonly = "readonly", @data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty1", @checked = "checked" })
-                            <label for="radio1"><span><span></span></span>No</label>
-                        </span>
-                        <span class="policy-loc-row">
-                            @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '1', new { @class = "farmliabilty commondataradio", @readonly = "readonly",@data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty2", @disabled = "disabled" })
-                            <label for="radio1"><span><span></span></span>Yes</label>
-                        </span>
-                        @Html.HiddenFor(p => p.FarmliabiltyObj.EiId)
-                        <label id="FarmliabiltyObj.Farmliabilty-error" class="error" for="FarmliabiltyObj.Farmliabilty"></label>
+            <p class="col-md-7 col-sm-7 col-xs-12">Do you want cover for Personal and Farm Liabilty</p>
+            <p class="col-md-5 col-sm-5 col-xs-12">
+                <span class="checkboxes">
+                    <span class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '0', new { @class = "farmliabilty commondataradio", @readonly = "readonly", @data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty1", @checked = "checked" })
+                        <label for="radio1"><span><span></span></span>No</label>
                     </span>
-                </p>
-            </div>*@
+                    <span class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.FarmliabiltyObj.Farmliabilty, '1', new { @class = "farmliabilty commondataradio", @readonly = "readonly",@data_eiid = @Model.FarmliabiltyObj.EiId, @id = "Farmliabilty2", @disabled = "disabled" })
+                        <label for="radio1"><span><span></span></span>Yes</label>
+                    </span>
+                    @Html.HiddenFor(p => p.FarmliabiltyObj.EiId)
+                    <label id="FarmliabiltyObj.Farmliabilty-error" class="error" for="FarmliabiltyObj.Farmliabilty"></label>
+                </span>
+            </p>
+        </div>*@
             <div class="clearfix mt-10 mb-10 col-md-12">
                 <p class="col-md-6 col-sm-6 col-xs-12">Limit of indemnity</p>
                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -218,28 +223,28 @@
                 </div>
             </div>
             @*<div class="clearfix mt-10 mb-10 col-md-12">
-            <div class="col-md-6"><p>Do You wish to cover other products?</p></div>
-            <div class="col-md-6">
-                <div class="policy-loc-row">
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="CoverotherObj.Other" class="Vmodified commondataradio vlidationInsure" id="Other1" data-eiid="" value="1" /><label for="radio1"><span><span></span></span>Yes</label></div>
-                    <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="CoverotherObj.Other" class="Vmodified commondataradio vlidationInsure" id="Other2" data-eiid="" checked="checked" value="0" /><label for="radio1"><span><span></span></span>No</label></div>
-                    <input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="CoverotherObj" name="CoverotherObj.EiId" value="" type="hidden">
+                <div class="col-md-6"><p>Do You wish to cover other products?</p></div>
+                <div class="col-md-6">
+                    <div class="policy-loc-row">
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="CoverotherObj.Other" class="Vmodified commondataradio vlidationInsure" id="Other1" data-eiid="" value="1" /><label for="radio1"><span><span></span></span>Yes</label></div>
+                        <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" name="CoverotherObj.Other" class="Vmodified commondataradio vlidationInsure" id="Other2" data-eiid="" checked="checked" value="0" /><label for="radio1"><span><span></span></span>No</label></div>
+                        <input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="CoverotherObj" name="CoverotherObj.EiId" value="" type="hidden">
+                    </div>
+                    <label id="CoverotherObj.Vmodified-error" class="error" for="CoverotherObj.Vmodified"></label>
                 </div>
-                <label id="CoverotherObj.Vmodified-error" class="error" for="CoverotherObj.Vmodified"></label>
             </div>
-        </div>
-        <div class="clearfix mt-10 mb-10 col-md-12" id="dOtherPro">
-            <div class="col-md-6"><p>Description of products</p></div>
-            <div class="col-md-6">
-                <input name="DesProductObj.Description" type="text" class="form-control form-border-bottom vlidationInsure commondatatest" id="describeProduct" data-eiid="" data-regex="A" />
-                <input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="DesProductObj" name="DesProductObj.EiId" value="" type="hidden">
-                <label id="DesProductObj.Description-error" class="error" for="DesProductObj.Description"></label>
-            </div>
-        </div>*@
+            <div class="clearfix mt-10 mb-10 col-md-12" id="dOtherPro">
+                <div class="col-md-6"><p>Description of products</p></div>
+                <div class="col-md-6">
+                    <input name="DesProductObj.Description" type="text" class="form-control form-border-bottom vlidationInsure commondatatest" id="describeProduct" data-eiid="" data-regex="A" />
+                    <input data-val="true" data-val-number="The field EiId must be a number." data-val-required="The EiId field is required." id="DesProductObj" name="DesProductObj.EiId" value="" type="hidden">
+                    <label id="DesProductObj.Description-error" class="error" for="DesProductObj.Description"></label>
+                </div>
+            </div>*@
             <div class="clearfix mt-10 mb-10 col-md-12 ">
                 <div class="col-md-6"><p>Please select the <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a></p></div>
                 <div class="col-md-3">
-                    @Html.DropDownListFor(model => model.ExcessLCObj.Excess, listsExcessLIB, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessLCObj.EiId, @id = "excess" })
+                    @Html.DropDownListFor(p => p.ExcessLCObj.Excess, listsExcessLIB, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm commondataselection", @data_eiid = @Model.ExcessLCObj.EiId, @id = "excess" })
                     @Html.HiddenFor(p => p.ExcessLCObj.EiId)
                     <label id="ExcessLCObj.Excess-error" class="error" for="ExcessLCObj.Excess"></label>
                 </div>
@@ -281,7 +286,7 @@
         {
             for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
             {
-                <div class="policy-loc-row">
+                <div class="policy-loc-row" id="rightPannel-@i">
                     @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -295,8 +300,8 @@
                         });
                     </script>
                     <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                        <a id="RPEdit-@i" class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a id="RPDelete-@i" class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
                     </div>
                 </div>
             }

@@ -7,12 +7,35 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
+using System.Net.Mail;
+using System.ComponentModel;
 
 namespace InsureThatAPI.CommonMethods
 {
     public class ChangePasswordDetailsClass
     {
+        #region  Forget Password
+        public static void SendEmail(MailMessage emailMessage, int emId)
+        {
+            SmtpClient client = new SmtpClient();
+            // Set the method that is called back when the send operation ends.
+            client.SendCompleted += new SendCompletedEventHandler(SendCompletedCallback);
+            client.SendAsync(emailMessage, emId);
+        }
+        private static void SendCompletedCallback(object sender, AsyncCompletedEventArgs e)
+        {
+            // Get the unique identifier for this asynchronous operation.
+            int emId = Convert.ToInt32(e.UserState);
+            string serverResponse = (e.Error != null ? e.Error.ToString() : "Send OK");
 
+           // EmailBo.UpdateStore(emId, serverResponse);
+        }
+
+        private static void UpdateStore(int emId, string serverResponse)
+        {
+           // EmailDb.UpdateStore(emId, serverResponse);
+        }
+        #endregion
         #region Update change password details 
 
         public async Task<int?> UpdatePasswordDetails(ChangePasswordDetails values)

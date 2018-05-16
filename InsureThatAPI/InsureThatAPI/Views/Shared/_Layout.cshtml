@@ -4,7 +4,7 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <meta name="author" content="SemiColonWeb" />
     <!-- Stylesheets -->
-    <link href="http://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Raleway:300,400,500,600,700" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700|Raleway:300,400,500,600,700" rel="stylesheet" type="text/css" />
     <link rel="stylesheet" href="~/css/bootstrap.css" type="text/css" />
     <link rel="stylesheet" href="~/css/layout.css" type="text/css" />
     <link rel="stylesheet" href="~/css/content.css" type="text/css" />
@@ -115,6 +115,7 @@
             var ItIdN = $(this).attr('data-itid');
             var minm = $(this).data('min');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             var text = '';
             if (ItIdN == undefined || ItIdN == "") {
@@ -128,7 +129,7 @@
             } else if (newval != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
-                elementAjaxCall(newval, EIId, ItId);
+                elementAjaxCall(newval, EIId, ItId, strID);
             }
         });
         $(document).on('keyup', '.commondatatestComma', function (event) {
@@ -166,6 +167,7 @@
             var ItIdN =  $(this).attr('data-itid');
             var minm = $(this).data('min');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             var text = '';
             if (ItIdN == undefined || ItIdN == "") {
@@ -190,7 +192,7 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
-                elementAjaxCall(rVal, EIId, ItId);
+                elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
         $(document).on('focusout', ".commondatatestMax", function () {
@@ -201,6 +203,7 @@
             var ItIdN =  $(this).attr('data-itid');
             var maxm = $(this).data('max');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             var text = '';
             if (ItIdN == undefined || ItIdN == "") {
@@ -225,7 +228,7 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
-                elementAjaxCall(rVal, EIId, ItId);
+                elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
         $(document).on('focusout', ".commondatatestPrice", function () {
@@ -235,6 +238,7 @@
             var name = $(this).attr('name');
             var ItIdN =  $(this).attr('data-itid');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
@@ -250,7 +254,7 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
-                elementAjaxCall(rVal, EIId, ItId);
+                elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
         $(document).on('focusout', ".commondatatestPriceChange", function () {
@@ -261,6 +265,7 @@
             var ItIdN =  $(this).attr('data-itid');
             var minm = $(this).data('min');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             var rVal = newval.replace(/,/g, '');
             var text = '';
@@ -291,13 +296,15 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
-                elementAjaxCall(rVal, EIId, ItId);
+                elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
         $(document).on('change', '.commondataselection', function () {
             var Value = $(this).val();
             var EIId = $(this).data('eiid');
-            var ItIdN =  $(this).attr('data-itid');
+            var ItIdN = $(this).attr('data-itid');
+            var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
             } else {
@@ -305,20 +312,22 @@
             }
 
             if (Value != '') {
-                elementAjaxCall(Value, EIId, ItId);
+                elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
         $(document).on('change', '.commondataradio', function () {
             var Value = $(this).val();
             var EIId = $(this).data('eiid');
-            var ItIdN =  $(this).attr('data-itid');
+            var ItIdN = $(this).attr('data-itid');
+            var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
             } else {
                 var ItId = ItIdN;
             }
             if (Value != '') {
-                elementAjaxCall(Value, EIId, ItId);
+                elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
         $(document).on('focusout', ".commondatatestYearHome", function () {
@@ -328,6 +337,7 @@
             var name = $(this).attr('name');
             var ItIdN =  $(this).attr('data-itid');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
@@ -350,7 +360,7 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
-                elementAjaxCall(rVal, EIId, ItId);
+                elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
         $(document).on('focusout', ".commondataDDMMYYY", function () {
@@ -360,6 +370,7 @@
             var name = $(this).attr('name');
             var ItIdN =  $(this).attr('data-itid');
             var id = $(this).attr('id');
+            var strID = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (ItIdN == undefined || ItIdN == "") {
                 var ItId = "0";
@@ -382,7 +393,7 @@
             } else if (Value != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
-                elementAjaxCall(Value, EIId, ItId);
+                elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
         $(document).on('click', '#premium', function () {
@@ -425,7 +436,7 @@
         function CalculateDiff(FromDate) {
             var d = new Date();
             var newFromDate = FromDate.split('/');
-            var ToDate = (d.getMonth() + 1) + '/' + d.getDate() + "/" + d.getFullYear();
+            var ToDate = (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + "/" + d.getUTCFullYear();
             var FromDateConvert = newFromDate[1] + '/' + newFromDate[0] + '/' + newFromDate[2];
             if (FromDateConvert != "" && ToDate != "") {
                 var From_date = new Date(FromDateConvert);
@@ -442,7 +453,7 @@
         function CalculateMonthDayYear(FromDate) {
             var d = new Date();
             var newFromDate = FromDate.split('/');
-            var ToDate = (d.getMonth() + 1) + '/' + d.getDate() + "/" + d.getFullYear();
+            var ToDate = (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + "/" + d.getUTCFullYear();
             var FromDateConvert = newFromDate[1] + '/' + newFromDate[0] + '/' + newFromDate[2];
             if (FromDateConvert != "" && ToDate != "") {
                 var From_date = new Date(FromDateConvert);
@@ -483,7 +494,9 @@
         }
         function diffDateCalculate(date) {
             var date1 = new Date(date);
-            var date2 = new Date();
+            var d = new Date();
+            var ToDate = (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + "/" + d.getUTCFullYear();
+            var date2 = new Date(ToDate);
             if (date1 < date2) {
                 return false;
             } else {
@@ -492,7 +505,9 @@
         }
         function diffDateCalculateER(date) {
             var date1 = new Date(date);
-            var date2 = new Date();
+            var d = new Date();
+            var ToDate = (d.getUTCMonth() + 1) + '/' + d.getUTCDate() + "/" + d.getUTCFullYear();
+            var date2 = new Date(ToDate);  
             if (date1 > date2) {
                 return false;
             } else {

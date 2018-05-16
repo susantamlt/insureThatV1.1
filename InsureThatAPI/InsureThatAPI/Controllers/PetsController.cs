@@ -345,6 +345,8 @@ namespace InsureThatAPI.Controllers
             {
                 Pets.PcId = PcId;
             }
+            Session["Controller"] = "Pets";
+            Session["ActionName"] = "PetsCover";
             return View(Pets);
         }
         [HttpPost]

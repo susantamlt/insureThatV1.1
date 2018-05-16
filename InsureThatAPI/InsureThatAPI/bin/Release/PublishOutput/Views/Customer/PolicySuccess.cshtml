@@ -7,11 +7,37 @@
         <h2>Policy Success</h2>
     </div>
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-right">
-        <a style="padding: 5px 15px;" class="btn color-bk-btn col-md-3 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("AdvancedCustomerSearch", "Customer")">ADVANCED SEARCH</a>
+        @*<a style="padding: 5px 15px;" class="btn color-bk-btn col-md-3 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("AdvancedCustomerSearch", "Customer")">ADVANCED SEARCH</a>*@
         <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
     </div>
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 endorsment-overview">
     <div class="clearfix"></div>
     <h3 class="col-md-12" style="color:green" ;>Thank you for your quotation request, our underwriters will now review your application and will contact you if they have any questions.   We will advise you whether or not your quotation has been accepted.  </h3>
+    <button type="button" class="col-md-3  pull-right btn-primary btn col-md-12 width-480-100" id="referunder">Bind Cover</button>
 </div>
+<script>
+    $("#referunder").click(function () {
+        $.ajax({
+            type: "POST",
+            url: "/Customer/Reffer",
+            data: {},
+            success: function (responce) {              
+                if (responce != '')
+                {
+                    if (responce.Status == true)
+                    {
+
+                    }
+                    else if (responce.Status == false)
+                    {
+                       
+                    }
+                    else {
+                        window.location.href = responce;
+                    }
+                }
+            }
+        });
+    });
+</script>

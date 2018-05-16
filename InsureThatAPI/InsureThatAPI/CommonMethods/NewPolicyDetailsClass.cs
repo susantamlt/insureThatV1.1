@@ -897,10 +897,10 @@ namespace InsureThatAPI.CommonMethods
         }
         #endregion
         #region Address for Motor Cover
-        public List<SelectListItem> MCADAddress()
+        public List<AddressData> MCADAddress()
         {
-            List<SelectListItem> AddressList = new List<SelectListItem>();
-            AddressList.Add(new SelectListItem { Value = "", Text = "--Select--" });
+            List<AddressData> AddressList = new List<AddressData>();
+           
             return AddressList;
         }
         #endregion

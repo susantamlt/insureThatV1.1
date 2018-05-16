@@ -105,78 +105,77 @@ namespace InsureThatAPI.Controllers
 
                         }
                        
-                          else  if (Policyincllist.Exists(p => p.name == "Mobile Farm Property"))
-                            {
-                                return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Burglary"))
-                            {
-                                return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
-                            {
-                                return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Money"))
-                            {
-                                return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
-                            {
-                                return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Machinery"))
-                            {
-                                return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
-                            }
+                        else  if (Policyincllist.Exists(p => p.name == "Mobile Farm Property"))
+                        {
+                            return RedirectToAction("FarmContents", "MobileFarm", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Burglary"))
+                        {
+                            return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Farm Interuption"))
+                        {
+                            return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Money"))
+                        {
+                            return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Farm Liability"))
+                        {
+                            return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Machinery"))
+                        {
+                            return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
+                        }
 
-                            else if (Policyincllist.Exists(p => p.name == "Electronics"))
-                            {
-                                return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
-                            }
+                        else if (Policyincllist.Exists(p => p.name == "Electronics"))
+                        {
+                            return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
+                        }
 
-                            else if (Policyincllist.Exists(p => p.name == "Transit"))
-                            {
-                                return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
-                            {
-                                return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
+                        else if (Policyincllist.Exists(p => p.name == "Transit"))
+                        {
+                            return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        {
+                            return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
+                        {
+                            return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Home Contents"))
+                        {
+                            return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        {
+                            return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Valuables"))
+                        {
+                            return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
+                        }
+                        else if (Policyincllist.Exists(p => p.name == "Motor"))
+                        {
+                            return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
+                        }
+                        if (Policyincllist.Exists(p => p.name == "Fixed Farm Property"))
+                        {
+                            if (Session["unId"] == null && Session["profileId"] == null)
                             {
-                                return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Fixed Farm Property").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Fixed Farm Property").Select(p => p.ProfileId).First();
                             }
-                            else if (Policyincllist.Exists(p => p.name == "Home Contents"))
-                            {
-                                return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
-                            {
-                                return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Valuables"))
-                            {
-                                return RedirectToAction("Valuables", "FarmPolicyValuables", new { cid = cid, PcId = PcId });
-                            }
-                            else if (Policyincllist.Exists(p => p.name == "Motor"))
-                            {
-                                return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
-                            }
-                            if (Policyincllist.Exists(p => p.name == "Fixed Farm Property"))
-                            {
-                                if (Session["unId"] == null && Session["profileId"] == null)
-                                {
-                                    Session["unId"] = Policyincllist.Where(p => p.name == "Fixed Farm Property").Select(p => p.UnitId).First();
-                                    Session["profileId"] = Policyincllist.Where(p => p.name == "Fixed Farm Property").Select(p => p.ProfileId).First();
-                                }
-                            }
-                            else
-                            {
-                                return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
-                            }
-                        
+                        }
+                        else
+                        {
+                            return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                        }                        
                     }
                 }
             }
@@ -209,6 +208,10 @@ namespace InsureThatAPI.Controllers
             FarmDetails.UnrepaireddamageObj.EiId = 62309;
             FarmDetails.ExcessFBObj = new HarvestedCropsExcess();
             FarmDetails.ExcessFBObj.EiId = 62315;
+            FarmDetails.TypeoffarmObj = new typeoffarmInFP();
+            FarmDetails.TypeoffarmObj.EiId = 62005;
+            FarmDetails.FarmsizeObj = new farmsizeInFP();
+            FarmDetails.FarmsizeObj.EiId = 62007;
             #endregion
             #region Farm Structures
             List<SelectListItem> ExcessRateList = new List<SelectListItem>();
@@ -253,7 +256,6 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = FarmDetails.CustomerId;
             }
-
             var db = new MasterDataEntities();
             string policyid = null;
             HttpClient hclient = new HttpClient();
@@ -361,36 +363,170 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
-                if (unitdetails.ProfileData != null)
+                if (unitdetails.SectionData.AddressData != null)
                 {
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId))
+                    FarmDetails.AddressObj = new AddressForFP();
+                    FarmDetails.LocationObj = new LocatioForFP();
+                    FarmDetails.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1;
+                    FarmDetails.LocationObj.Location = unitdetails.SectionData.AddressData.State+", "+ unitdetails.SectionData.AddressData.Suburb+", "+ unitdetails.SectionData.AddressData.Postcode;
+                    //homebuilding.Postcode = unitdetails.AddressData.Select(p => p.Postcode).First();
+                   // FarmDetails.Suburb = unitdetails.AddressData.Select(p => p.Suburb).First();
+                    //for (int add = 0; add <= unitdetails.AddressData.Count(); add++)
+                    //{
+                    //    if(unitdetails.AddressData[add].Suburb=="LAMBTON")
+                    //    {
+                    //        homebuilding.Sub = "WA";
+                    //    }
+                    //  //  homebuilding.Sub = unitdetails.AddressData[add].Suburb;
+                    //    homebuilding.LocationObj.Location = unitdetails.AddressData[add].AddressLine1;
+                    //    homebuilding.Pincode = unitdetails.AddressData[add].Postcode;
+                    //    break;
+                    //}
+                }
+                if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData!=null)
+                {
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.ConstructionFBObj.Construction = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmDetails.DescriptionFBObj.Description = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DescriptionFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DescriptionFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62255;
+                                vds.Element.ItId = DescriptionFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId && p.Element.ItId == DescriptionFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.DescriptionFBObjList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.ContaincoolroomObj.Coolroom = true;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmDetails.YearconstructedFBObj.Year = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var YearconstructedFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < YearconstructedFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62257;
+                                vds.Element.ItId = YearconstructedFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId && p.Element.ItId == YearconstructedFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.YearconstructedFBObjList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.DescriptionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.DescriptionFBObj.Description = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmDetails.ConstructionFBObj.Construction = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ConstructionFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ConstructionFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62259;
+                                vds.Element.ItId = ConstructionFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ConstructionFBObj.EiId && p.Element.ItId == ConstructionFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.ConstructionFBObjList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcessFBObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcessFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null)
+                        {
+                            FarmDetails.ContaincoolroomObj.Coolroom = true;
+                        }
+                        else
+                        {
+                            FarmDetails.ContaincoolroomObj.Coolroom = false;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ContaincoolroomFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ContaincoolroomFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62261;
+                                vds.Element.ItId = ContaincoolroomFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ContaincoolroomObj.EiId && p.Element.ItId == ContaincoolroomFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.ContaincoolroomFBObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmDetails.SuminsuredFBObj.Suminsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var SuminsuredFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < SuminsuredFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62263;
+                                vds.Element.ItId = SuminsuredFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId && p.Element.ItId == SuminsuredFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.SuminsuredFBObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcessFBObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcessFBObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.ExcessFBObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcFSObj.EiId))
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.FarmsizeObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcFSObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.FarmsizeObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.FarmsizeObj.Farmsize = val;
+                    }
+                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.TypeoffarmObj.EiId))
+                    {
+                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.TypeoffarmObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        FarmDetails.TypeoffarmObj.typeoffarm = val;
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcFSObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcFSObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.ExcesshcFSObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcHCObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcHCObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcHCObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcHCObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.ExcesshcHCObj.Excess = val;
                     }
                     //if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.ExcesshcObjH.EiId))
@@ -398,65 +534,81 @@ namespace InsureThatAPI.Controllers
                     //    string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.ExcesshcObjH.EiId).Select(p => p.Value).FirstOrDefault();
                     //    FarmDetails.ExcesshcObjH.Excess = val;
                     //}
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.OtherstructurefcObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.OtherstructurefcObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.OtherstructurefcObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.OtherstructurefcObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.OtherstructurefcObj.Otherstructure = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.PartynameObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.PartylocationObj.Location = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartynameObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmDetails.PartynameObj.Name = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.PartynameObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var PartynameFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartynameObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < PartynameFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62345;
+                                vds.Element.ItId = PartynameFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartynameObj.EiId && p.Element.ItId == PartynameFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.PartynameObjList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.PartynameObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartynameObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.PartynameObj.Name = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FarmDetails.PartylocationObj.Location = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var PartylocationFBList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < PartylocationFBList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 62347;
+                                vds.Element.ItId = PartylocationFBList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.PartylocationObj.EiId && p.Element.ItId == PartylocationFBList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FarmDetails.PartylocationObjList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.RoofwallsObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.RoofwallsObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.RoofwallsObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.RoofwallsObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.RoofwallsObj.Roofwalls = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SublimitObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SublimitObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SublimitObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.SublimitObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.SublimitObj.Sublimit = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredhcObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.SuminsuredFBObj.Suminsured = val;
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.SuminsuredFBObj.Suminsured = val;
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredFBObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.SuminsuredFBObj.Suminsured = val;
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.SuminsuredhcObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredhcObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.SuminsuredhcObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.SuminsuredhcObj.Suminsured = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.TotalcoverObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.TotalcoverObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.TotalcoverObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.TotalcoverObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.TotalcoverObj.Totalcover = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.UnrepaireddamageObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FarmDetails.UnrepaireddamageObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.UnrepaireddamageObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FarmDetails.UnrepaireddamageObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FarmDetails.UnrepaireddamageObj.Unrepaireddamage = val;
-                    }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId))
-                    {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FarmDetails.YearconstructedFBObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FarmDetails.YearconstructedFBObj.Year = val;
                     }
                 }
             }

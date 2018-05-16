@@ -22,7 +22,7 @@ namespace InsureThatAPI.Models
         //public List<string> PolicyInclusions { get; set; }
         public string ApiKey { get; set; }
         public string PolicyId { get; set; }
-
+        public int? PrId { get; set; }
         public List<ValueData> ValueData { get; set; }
         public PreviousInsurer PreviousinsurerObj { get; set; }
         public RenewPolicy RenewpolicyObj { get; set; }

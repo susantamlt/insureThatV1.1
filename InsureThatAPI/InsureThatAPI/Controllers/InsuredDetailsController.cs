@@ -329,12 +329,6 @@ namespace InsureThatAPI.Controllers
                     {
                         Errors.Add("Client Type is required, allows only numeric value.");
                     }
-
-                    //if (value.Title == null || value.Title == string.Empty || string.IsNullOrWhiteSpace(value.Title.Trim()))
-                    //{
-                    //    Errors.Add("Title is required");
-                    //}
-                    //else
                     if (value.Title != null && value.Title != string.Empty)
                     {
                         if (value.ClientType==2 && value.Title != null && value.Title != string.Empty)
@@ -354,7 +348,6 @@ namespace InsureThatAPI.Controllers
                         if (!regexItem.IsMatch(value.Title.Trim()))
                         {
                             Errors.Add("Special characters are not allowed in Title");
-
                         }
                         if (value.Title.Length > 20)
                         {
@@ -412,22 +405,14 @@ namespace InsureThatAPI.Controllers
                         if (!regexItem.IsMatch(value.LastName.Trim()))
                         {
                             Errors.Add("Special characters are not allowed in Last Name");
-
                         }
-
                         if (justNumber != null && justNumber != string.Empty)
                         {
                             Errors.Add("Last Name does not allow numerc values.");
                         }
                     }
-                    //if (value.MiddleName == null || value.MiddleName == string.Empty || string.IsNullOrWhiteSpace(value.MiddleName.Trim()))
-                    //{
-                    //    Errors.Add("Middle Name is required");
-                    //}
-                    //else
                     if (value.MiddleName != null && value.MiddleName != string.Empty && (value.CompanyBusinessName == null && value.CompanyBusinessName == string.Empty && value.ClientType == 1))
                     {
-
                         string justNumber = new String(value.MiddleName.Trim().Where(Char.IsDigit).ToArray());
                         // string justStrings = new String(value.Title.Trim().Where(Char.IsLetter).ToArray());
                         if (value.MiddleName.Length > 20)
@@ -449,8 +434,6 @@ namespace InsureThatAPI.Controllers
                     {
                         Errors.Add("Company should not have middle name.");
                     }
-
-
                     if ((value.CompanyBusinessName == null || value.CompanyBusinessName == string.Empty || string.IsNullOrWhiteSpace(value.CompanyBusinessName.Trim())) && (value.ClientType == 2))
                     {
                         Errors.Add("Company Business Name is required");
@@ -503,19 +486,17 @@ namespace InsureThatAPI.Controllers
                     }
                     else
                     {
-
                         if (!regexItem.IsMatch(value.AddressID.ToString()))
                         {
                             Errors.Add("Special characters are not allowed in AddressID ");
                         }
                     }
-                    if ((value.PostalAddressID == null || value.PostalAddressID <= 0) && value.AddressID == null)
+                    if (value.PostalAddressID == null && value.AddressID == null)
                     {
                         Errors.Add("Postal AddressID is required");
                     }
                     else
                     {
-
                         if (!regexItem.IsMatch(value.PostalAddressID.ToString()))
                         {
                             Errors.Add("Special characters are not allowed in Postal AddressID ");
@@ -524,11 +505,9 @@ namespace InsureThatAPI.Controllers
                     if ((value.PhoneNo == null || value.PhoneNo == string.Empty || string.IsNullOrWhiteSpace(value.PhoneNo.Trim())) && (value.MobileNo == null || value.MobileNo == string.Empty))
                     {
                         Errors.Add("Phone Number is required");
-
                     }
                     else if (value.PhoneNo != null && value.PhoneNo != string.Empty)
                     {
-
                         var regexSpace = new Regex(@"\s");
                         if (regexSpace.IsMatch(value.PhoneNo))
                         {
@@ -540,7 +519,6 @@ namespace InsureThatAPI.Controllers
                         {
                             Errors.Add("Phone number allows only numerc values, must not be more than 10 digits and less than 10 digits.");
                         }
-
                         if (!regexItem.IsMatch(value.PhoneNo.Trim()))
                         {
                             Errors.Add("Special characters are not allowed in Phone number");
@@ -549,20 +527,14 @@ namespace InsureThatAPI.Controllers
                         {
                             Errors.Add("Phone number allows only numerc values.");
                         }
-
                         if (value.PhoneNo.Count() > (int)InsuredResult.PhoneNumberLength || value.PhoneNo.Count() < (int)InsuredResult.PhoneNumberLength)
                         {
                             Errors.Add("Phone Number is required, must not be more than 10 digits and less than 10 digits.");
                         }
                     }
-
-
                     if ((value.MobileNo == null || value.MobileNo == string.Empty || string.IsNullOrWhiteSpace(value.MobileNo.Trim())) && (value.PhoneNo == null || value.PhoneNo == string.Empty))
                     {
-
                         Errors.Add("Mobile Number is required");
-
-
                     }
                     else if (value.MobileNo != null && value.MobileNo != string.Empty)
                     {
@@ -577,7 +549,6 @@ namespace InsureThatAPI.Controllers
                         {
                             Errors.Add("Mobile number allows only numerc values, must not be more than 10 digits and less than 10 digits.");
                         }
-
                         if (!regexItem.IsMatch(value.MobileNo.Trim()))
                         {
                             Errors.Add("Special characters are not allowed in Mobile number");
@@ -634,62 +605,46 @@ namespace InsureThatAPI.Controllers
                         insuredref.Status = "Failure";
                         insuredref.ErrorMessage = Errors;
                         return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.BadRequest, insuredref);
-
                     }
                     else
                     {
                         int? result = insureddetails.InsertUpdateInsuredDetails(null, value);
                         if (result.HasValue && result > 0)
                         {
-
                             insuredref.Status = "Success";
                             insuredref.InsuredID = result.Value;
                             return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.OK, insuredref);
-
                         }
                         if (result.HasValue && result == 2)
                         {
-
                             insuredref.Status = "Success";
                             insuredref.InsuredID = value.InsuredID;
                             return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.OK, insuredref);
-
                         }
                         else if (result.HasValue && result == -4)
                         {
-
                             insuredref.Status = "Failure";
                             insuredref.ErrorMessage.Add("Email Id and Phone number already exist.");
                             return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.NotAcceptable, insuredref);
-
                         }
-
                         else if (result.HasValue && result == (int)InsuredResult.Exception)
                         {
-
                             insuredref.Status = "Failure";
                             insuredref.ErrorMessage.Add("Failed to insert.");
                             return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.NotImplemented, insuredref);
-
                         }
-
                         else if (result.HasValue && result == (int)InsuredResult.EmailAlreadyExists)
                         {
-
                             insuredref.Status = "Failure";
                             insuredref.ErrorMessage.Add("Email Id already exists.");
                             return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.NotAcceptable, insuredref);
-
                         }
                     }
-
                 }
-
                 else
                 {
                     insuredref.Status = "Failure";
                     return Request.CreateResponse<InsuredDetailsRef>(HttpStatusCode.NotFound, insuredref);
-
                 }
             }
             catch (Exception ex)
@@ -1045,13 +1000,12 @@ namespace InsureThatAPI.Controllers
                         Errors.Add("Special characters are not allowed in AddressID ");
                     }
                 }
-                if ((value.PostalAddressID == null || value.PostalAddressID <= 0) && value.AddressID == null)
+                if (value.PostalAddressID == null && value.AddressID == null)
                 {
                     Errors.Add("Postal AddressID is required");
                 }
                 else
                 {
-
                     if (!regexItem.IsMatch(value.AddressID.ToString()))
                     {
                         Errors.Add("Special characters are not allowed in Postal AddressID ");
@@ -1060,7 +1014,6 @@ namespace InsureThatAPI.Controllers
                 if ((value.PhoneNo == null || value.PhoneNo == string.Empty || string.IsNullOrWhiteSpace(value.PhoneNo.Trim())) && (value.MobileNo == null || value.MobileNo == string.Empty))
                 {
                     Errors.Add("Phone Number is required");
-
                 }
                 else if (value.PhoneNo != null && value.PhoneNo != string.Empty)
                 {

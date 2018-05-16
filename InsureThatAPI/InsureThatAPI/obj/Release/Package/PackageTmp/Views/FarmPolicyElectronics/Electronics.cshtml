@@ -73,7 +73,7 @@
         </div>
     </div>
     <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding: 15px 26px 0px;">
                     <h3 class="pull-left">Premium Details</h3>
@@ -157,7 +157,7 @@
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10" id="processTabs">
             <div class="col-md-12 table-8">
-                <table class="table" style=" width: 100%; ">
+                <table class="table eleTable" style="width:100%;">
                     <tbody>
                         <tr>
                             <th class="space_left">Type of unit</th>
@@ -175,43 +175,73 @@
                             for (int i = 0; i < Model.TypeOfUnitFPList.Count(); i++)
                             {
                                 jCount = i + 1;
-                                <tr id="tname-tr-@jCount">
-                                    <td class="no-border">
-                                        @Html.DropDownListFor(p => p.TypeOfUnitFPObj.TypeofUnit, @Model.TypeOfUnitFPObj.ElectronicsTypeofUnitList, "-- Select --", new { @class = "commondataselection form-control form-border-bottom description vlidationInsure", @id = "typeofunits", @data_itid = i, @data_eiid = @Model.TypeOfUnitFPObj.EiId })
-                                        @Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)
-                                    </td>
-                                    <td class="no-border">
-                                        @Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "makeandmodel", @data_itid = i, @data_regex = "ANS", @data_eiid = @Model.MakeAndModelFPObj.EiId })
-                                        @Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)
-                                    </td>
-                                    <td class="no-border">
-                                        @Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = i, @data_regex = "AN", @data_eiid = @Model.SerialNumberFPObj.EiId })
-                                        @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)
-                                    </td>
-                                    <td class="no-border">
-                                        @Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom commondatatest autocalculateFE vlidationInsure", @id = "NoofUnits", @data_itid = "0", @data_regex = i, @data_eiid = @Model.NoOfUnitsFPObj.EiId })
-                                        @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)
-                                    </td>
-                                    <td class="no-border">
-                                        <div class="policy-loc-row">
-                                            @Html.CheckBoxFor(p => p.OptPortableItemsFPObj.PortableItemsOption, new { @class = "vlidationInsure commondatacheckbox", @id = "portableitems", @data_itid = i, @data_eiid = @Model.OptPortableItemsFPObj.EiId })<label for="checkbox1"><span><span></span></span></label>
-                                            @Html.HiddenFor(p => p.OptPortableItemsFPObj.EiId)
-                                        </div>
-                                    </td>
-                                    <td class="no-border">
-                                        $@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @style = "display:inline-block;width:89%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = i, @data_regex = "N", @data_eiid = @Model.SumInsuredPerUnitFPObj.EiId })
-                                        @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)
-                                    </td>
-                                    <td class="no-border">
-                                        $@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @readonly = "readonly", @style = "display:inline-block;width:89%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = i, @data_regex = "N", @data_eiid = @Model.TotalSumInsuredFPObj.EiId })
-                                        @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)
-                                    </td>
+                                <tr id="tname-tr-@jCount">                                    
                                     @if (jCount == CountTotal)
                                     {
+                                        <td class="no-border width-220">
+                                            @Html.DropDownListFor(p => p.TypeOfUnitFPObj.TypeofUnit, @Model.TypeOfUnitFPObj.ElectronicsTypeofUnitList, "-- Select --", new { @class = "commondataselection form-control form-border-bottom description vlidationInsure", @id = "typeofunits", @data_itid = jCount, @data_eiid = @Model.TypeOfUnitFPObj.EiId, @data_actval = Model.TypeOfUnitFPList[i].Value, })
+                                            @Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, @Model.MakeAndModelFPList[i].Value, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "makeandmodel", @data_itid = jCount, @data_regex = "ANS", @data_eiid = @Model.MakeAndModelFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, @Model.SerialNumberFPList[i].Value, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = jCount, @data_regex = "AN", @data_eiid = @Model.SerialNumberFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, @Model.NoOfUnitsFPList[i].Value, new { @class = "form-control form-border-bottom commondatatest autocalculateFE vlidationInsure", @id = "NoofUnits", @data_itid = "0", @data_regex = jCount, @data_eiid = @Model.NoOfUnitsFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            <div class="policy-loc-row">
+                                                @Html.CheckBoxFor(p => p.OptPortableItemsFPObj.PortableItemsOption, new { @class = "vlidationInsure commondatacheckbox", @id = "portableitems", @data_itid = jCount, @data_eiid = @Model.OptPortableItemsFPObj.EiId })<label for="checkbox1"><span><span></span></span></label>
+                                                @Html.HiddenFor(p => p.OptPortableItemsFPObj.EiId)
+                                            </div>
+                                        </td>
+                                        <td class="no-border">
+                                            $@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, @Model.SumInsuredPerUnitFPList[i].Value, new { @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = jCount, @data_regex = "N", @data_eiid = @Model.SumInsuredPerUnitFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            $@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, @Model.TotalSumInsuredFPList[i].Value, new { @readonly = "readonly", @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = jCount, @data_regex = "N", @data_eiid = @Model.TotalSumInsuredFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)
+                                        </td>
                                         <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameAdd(@jCount)" class="button-3d">+</a></td>
                                     }
                                     else
                                     {
+                                        <td class="no-border width-220">
+                                            @Html.DropDownListFor(p => p.TypeOfUnitFPObj.TypeofUnit, @Model.TypeOfUnitFPObj.ElectronicsTypeofUnitList, "-- Select --", new { @class = "commondataselection form-control form-border-bottom description vlidationInsure", @id = "typeofunits", @data_itid = jCount, @data_eiid = @Model.TypeOfUnitFPObj.EiId, @data_actval = Model.TypeOfUnitFPList[i].Value })
+                                            @Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, @Model.MakeAndModelFPList[i].Value, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "makeandmodel", @data_itid = jCount, @data_regex = "ANS", @data_eiid = @Model.MakeAndModelFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, @Model.SerialNumberFPList[i].Value, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = jCount, @data_regex = "AN", @data_eiid = @Model.SerialNumberFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, @Model.NoOfUnitsFPList[i].Value, new { @class = "form-control form-border-bottom commondatatest autocalculateFE vlidationInsure", @id = "NoofUnits", @data_itid = "0", @data_regex = jCount, @data_eiid = @Model.NoOfUnitsFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            <div class="policy-loc-row">
+                                                @Html.CheckBoxFor(p => p.OptPortableItemsFPObj.PortableItemsOption, new { @class = "vlidationInsure commondatacheckbox", @id = "portableitems", @data_itid = jCount, @data_eiid = @Model.OptPortableItemsFPObj.EiId })<label for="checkbox1"><span><span></span></span></label>
+                                                @Html.HiddenFor(p => p.OptPortableItemsFPObj.EiId)
+                                            </div>
+                                        </td>
+                                        <td class="no-border">
+                                            $@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, @Model.SumInsuredPerUnitFPList[i].Value, new { @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = jCount, @data_regex = "N", @data_eiid = @Model.SumInsuredPerUnitFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            $@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, @Model.TotalSumInsuredFPList[i].Value, new { @readonly = "readonly", @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = jCount, @data_regex = "N", @data_eiid = @Model.TotalSumInsuredFPObj.EiId, @autocomplete = "off" })
+                                            @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)
+                                        </td>
                                         <td class="no-border" id="tname-@jCount"><a href="javascript:void(0)" onclick="tnameRemove(@jCount)" class="button-3d">-</a></td>
                                     }
                                 </tr>
@@ -220,20 +250,20 @@
                         else
                         {
                             <tr id="tname-tr-1">
-                                <td class="no-border">
+                                <td class="no-border width-220">
                                     @Html.DropDownListFor(p => p.TypeOfUnitFPObj.TypeofUnit, @Model.TypeOfUnitFPObj.ElectronicsTypeofUnitList, "-- Select --", new { @class = "commondataselection form-control form-border-bottom description vlidationInsure", @id = "typeofunits", @data_itid = "0", @data_eiid = @Model.TypeOfUnitFPObj.EiId })
                                     @Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)
                                 </td>
                                 <td class="no-border">
-                                    @Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "makeandmodel", @data_itid = "0", @data_regex = "ANS", @data_eiid = @Model.MakeAndModelFPObj.EiId })
+                                    @Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "makeandmodel", @data_itid = "0", @data_regex = "ANS", @data_eiid = @Model.MakeAndModelFPObj.EiId, @autocomplete = "off" })
                                     @Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)
                                 </td>
                                 <td class="no-border">
-                                    @Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = "0", @data_regex = "AN", @data_eiid = @Model.SerialNumberFPObj.EiId })
+                                    @Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = "0", @data_regex = "AN", @data_eiid = @Model.SerialNumberFPObj.EiId, @autocomplete = "off" })
                                     @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)
                                 </td>
                                 <td class="no-border">
-                                    @Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom commondatatest autocalculateFE vlidationInsure", @id = "NoofUnits", @data_itid = "0", @data_regex = "N", @data_eiid = @Model.NoOfUnitsFPObj.EiId })
+                                    @Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom commondatatest autocalculateFE vlidationInsure", @id = "NoofUnits", @data_itid = "0", @data_regex = "N", @data_eiid = @Model.NoOfUnitsFPObj.EiId, @autocomplete = "off" })
                                     @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)
                                 </td>
                                 <td class="no-border">
@@ -243,11 +273,11 @@
                                     </div>
                                 </td>
                                 <td class="no-border">
-                                    $@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @style = "display:inline-block;width:89%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = "0", @data_regex = "N", @data_eiid = @Model.SumInsuredPerUnitFPObj.EiId })
+                                    $@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = "0", @data_regex = "N", @data_eiid = @Model.SumInsuredPerUnitFPObj.EiId, @autocomplete = "off" })
                                     @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)
                                 </td>
                                 <td class="no-border">
-                                    $@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @readonly = "readonly", @style = "display:inline-block;width:89%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = "0", @data_regex = "N", @data_eiid = @Model.TotalSumInsuredFPObj.EiId })
+                                    $@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @readonly = "readonly", @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = "0", @data_regex = "N", @data_eiid = @Model.TotalSumInsuredFPObj.EiId, @autocomplete = "off" })
                                     @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)
                                 </td>
                                 <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
@@ -281,11 +311,11 @@
                 <label id="ExcessElectronicsFPObj.Excess-error" class="error" for="ExcessElectronicsFPObj.Excess"></label>
             </div>
             @*<div class="col-md-3">
-                    <div class="policy-loc-row">
-                        <input type="checkbox" name="ImposedelectronicsObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                        <label id="ImposedelectronicsObj.Imposed-error" class="error" for="ImposedelectronicsObj.Imposed"></label>
-                    </div>
-                </div>*@
+                <div class="policy-loc-row">
+                    <input type="checkbox" name="ImposedelectronicsObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                    <label id="ImposedelectronicsObj.Imposed-error" class="error" for="ImposedelectronicsObj.Imposed"></label>
+                </div>
+            </div>*@
         </div>
         <div id="ExcesshomeBuildingModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="ExcesshomeBuildingModel" aria-hidden="false">
             <div class="modal-dialog">
@@ -330,7 +360,7 @@
             </div>
             <div class="col-md-6"><p>How much do you wish to cover for loss of data? </p></div>
             <div class="col-md-6">
-                $@Html.TextBoxFor(p => p.CoverLossOfDataFPObj.CoverLossofData, new { @style = "width:95%; display:inline-block;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @id = "coverlossdata", @data_regex = 'N', @data_eiid = @Model.CoverLossOfDataFPObj.EiId })
+                $@Html.TextBoxFor(p => p.CoverLossOfDataFPObj.CoverLossofData, new { @style = "width:95%; display:inline-block;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @id = "coverlossdata", @data_regex = 'N', @data_eiid = @Model.CoverLossOfDataFPObj.EiId, @autocomplete = "off" })
                 @Html.HiddenFor(p => p.CoverLossOfDataFPObj.EiId)
                 <label id="CoverLossOfDataFPObj.CoverLossofData-error" class="error" for="CoverLossOfDataFPObj.CoverLossofData"></label>
             </div>
@@ -343,11 +373,11 @@
                 <label id="ExcessCoverLossOfDataFPObj.Excess-error" class="error" for="ExcessCoverLossOfDataFPObj.Excess"></label>
             </div>
             @*<div class="col-md-3">
-                    <div class="policy-loc-row">
-                        <input type="checkbox" name="ImposedlossofdataObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
-                        <label id="ImposedlossofdataObj.Imposed-error" class="error" for="ImposedlossofdataObj.Imposed"></label>
-                    </div>
-                </div>*@
+                <div class="policy-loc-row">
+                    <input type="checkbox" name="ImposedlossofdataObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label>
+                    <label id="ImposedlossofdataObj.Imposed-error" class="error" for="ImposedlossofdataObj.Imposed"></label>
+                </div>
+            </div>*@
         </div>
         <div class="mt-40">
             <div class="col-md-8"></div>
@@ -374,7 +404,6 @@
                                 var nid = $(this).attr('data-nid');
                                 $('.policy-ed-del-wrapper').hide();
                                 $("#policy-ed-del-wrap-" + nid).show();
-
                             });
                         });
                     </script>
@@ -385,6 +414,94 @@
                 </div>
             }
             <script type="text/javascript">
+                $(".policy-edit-wrap").click(function () {
+                    var selectedname = $(this).data('name');
+                    var selectedunid = $(this).data('unid');
+                    var selectedprofileid = $(this).data('profileid');
+                    var selectedcid = $(this).data('cid');
+                    var selectedTrId = $(this).data('trid');
+                    var PcId = $(this).data('pcid');
+                    var policyStatus = $(this).data('policystatus');
+                    // var prId = $(this).data('prId');
+                    var prId = 1021;
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/EndorsePolicy",
+                        data: {
+                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                        },
+                        success: function (responce) {
+                            if (responce.Status == false) {
+                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                            } else {
+                                window.location.href = responce;
+                            }
+                        }
+                    });
+                });
+                $(".policy-delet-wrap").click(function () {
+                    var r = confirm("Are you sure you want to delete this section?");
+                    if (r == true) {
+                        var PcId = $("#pcidd").val();
+                        var selectedunid = $(this).data('unid');
+                        var selectedcid = $(this).data('cid');
+                        var PcId = $(this).data('pcid');
+                        var selectedname = $(this).data('name');
+                        var selectedprofileid = $(this).data('profileid');
+                        var selectedTrId = $(this).data('trid');
+                        var policyStatus = $(this).data('policystatus');
+                        var currId = $(this).attr("id");
+                        $.ajax({
+                            type: "POST",
+                            url: "/Customer/DeleteUnit",
+                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                            success: function (responce) {
+                                if (responce.Status == true) {
+                                    var prentId = $('#' + currId).parent().parent().attr("id");
+                                    $('#' + prentId).remove();
+                                }
+                            }
+                        });
+                    }
+                });
+                $("#bindcover").click(function () {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/BindCover",
+                        data: {},
+                        success: function (responce) {
+                        }
+                    });
+                });
+            </script>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
+
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>                    
+                }
+                    <script type="text/javascript">
                         $(".policy-edit-wrap").click(function () {
                             var selectedname = $(this).data('name');
                             var selectedunid = $(this).data('unid');
@@ -399,7 +516,7 @@
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
                                 data: {
-                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
                                 },
                                 success: function (responce) {
                                     if (responce.Status == false) {
@@ -436,106 +553,15 @@
                                 });
                             }
                         });
-                        $("#bindcover").click(function () {
-                            $.ajax({
-                                type: "POST",
-                                url: "/Customer/BindCover",
-                                data: {},
-                                success: function (responce) {
-                                }
-                            });
-                        });
-            </script>
-        }
-        else
-        {
-            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
-            {
-                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
-                {
-                    <div class="policy-loc-row">
-                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @disabled = "disabled", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('.inclusions').click(function () {
-                                    var name = $(this).attr('data-name');
-                                    var nid = $(this).attr('data-nid');
-                                    $('.policy-ed-del-wrapper').hide();
-                                    $("#policy-ed-del-wrap-" + nid).show();
-
-                                });
-                            });
-                        </script>
-                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
-                        </div>
-                    </div>
-                    <script type="text/javascript">
-                            $(".policy-edit-wrap").click(function () {
-
-                                var selectedname = $(this).data('name');
-                                var selectedunid = $(this).data('unid');
-                                var selectedprofileid = $(this).data('profileid');
-                                var selectedcid = $(this).data('cid');
-                                var selectedTrId = $(this).data('trid');
-                                var PcId = $(this).data('pcid');
-                                var policyStatus = $(this).data('policystatus');
-                                // var prId = $(this).data('prId');
-                                var prId = 1021;
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/Customer/EndorsePolicy",
-                                    data: {
-                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
-                                    },
-                                    success: function (responce) {
-                                        if (responce.Status == false) {
-                                            $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                            $("html, body").animate({ scrollTop: 0 }, "slow");
-                                        } else {
-                                            window.location.href = responce;
-                                        }
-                                    }
-                                });
-                            });
-                            $(".policy-delet-wrap").click(function () {
-                                var r = confirm("Are you sure you want to delete this section?");
-                                if (r == true) {
-                                    var PcId = $("#pcidd").val();
-                                    var selectedunid = $(this).data('unid');
-                                    var selectedcid = $(this).data('cid');
-                                    var PcId = $(this).data('pcid');
-                                    var selectedname = $(this).data('name');
-                                    var selectedprofileid = $(this).data('profileid');
-                                    var selectedTrId = $(this).data('trid');
-                                    var policyStatus = $(this).data('policystatus');
-                                    var currId = $(this).attr("id");
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/Customer/DeleteUnit",
-                                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
-                                        success: function (responce) {
-                                            if (responce.Status == true) {
-                                                var prentId = $('#' + currId).parent().parent().attr("id");
-                                                $('#' + prentId).remove();
-                                            }
-                                        }
-                                    });
-                                }
-                            });
                     </script>
-                }
             }
-
         }
         <div class="clearfix"></div>
         <div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="#">New Section</a>
             <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
+                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Inturruptions</a></li>
                 <li><a href="javascript:void(0);" class="Farm Liability">+  Farm Liability</a></li>
                 <li><a href="javascript:void(0);" class="Burglary">+  Burglary</a></li>
                 <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
@@ -546,7 +572,7 @@
                 <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
                 <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
-                <li><a href="javascript:void(0);" class="Motors">+  Motors</a></li>
+                <li><a href="javascript:void(0);" class="Motor">+  Motors</a></li>
                 <li><a href="javascript:void(0);" class="Machinery">+  Machinery</a></li>
             </ul>
             <script type="text/javascript">
@@ -554,13 +580,14 @@
                     var unitname = $(this).children("a").attr("class");
                     var cid = $("#ciid").val();
                     var pcid = $("#pcidd").val();
+                    var prid = 1021;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/AddUnit",
-                        data: { "unit": unitname, "cid": cid, "pcid": pcid },
+                        data: { "unit": unitname, "cid": cid, "pcid": pcid, "Prid": prid },
                         success: function (responce) {
                             if (responce.Status == false) {
-                                $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $(".errors").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
                             } else {
                                 window.location.href = responce;
@@ -577,15 +604,26 @@
         $("tr td .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var itid = $(this).data('itid');
-            var nItid = itid + 1;
+            if (itid==0) {
+                var nItid = itid+1;
+            } else {
+                var nItid = itid;
+            }            
             $(this).attr('id', id + '' + nItid);;
         });
     });
     function tnameAdd(id) {
         var countId = id + 1;
+        var i = 0;
+        //$(".eleTable tbody tr").each(function () {
+        //    var RowId = $(this).attr('id');
+        //    $("#" + RowId + " .form-control").removeAttr("data-itid");
+        //    $("#" + RowId + " .form-control").attr("data-itid", i);
+        //    i++;
+        //});
         $('#tname-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.DropDownListFor(Model => Model.TypeOfUnitFPObj.TypeofUnit, Enumerable.Empty<SelectListItem>(), new { @class = "commondataselection form-control form-border-bottom description  vlidationInsure", @id = "typeofunits", @data_itid = "" })@Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "commondatatestUpperCase form-control form-border-bottom MakeAndModel commondatatest vlidationInsure", @id = "MakeAndModel", @data_itid = "", @data_regex = "AN" })@Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = "", @data_regex = "AN" }) @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom commondatatest vlidationInsure autocalculateFE", @id = "NoofUnits", @data_itid = "", @data_regex = "N" }) @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)</td><td class="no-border"><div class="policy-loc-row">@Html.CheckBoxFor(p => p.OptPortableItemsFPObj.PortableItemsOption, new { @class = "vlidationInsure commondatacheckbox", @id = "portableitems", @data_itid = "", @data_eiid = @Model.OptPortableItemsFPObj.EiId })<label for="checkbox1"><span><span></span></span></label>@Html.HiddenFor(p => p.OptPortableItemsFPObj.EiId)</div></td><td class="no-border">$@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @style = "display:inline-block;width:89%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = "", @data_regex = "N" }) @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @readonly = "readonly", @style = "display:inline-block;width:89%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = "", @data_regex = "N" }) @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.DropDownListFor(Model => Model.TypeOfUnitFPObj.TypeofUnit, Enumerable.Empty<SelectListItem>(), new { @class = "commondataselection form-control form-border-bottom description  vlidationInsure", @id = "typeofunits", @data_itid = "" })@Html.HiddenFor(p => p.TypeOfUnitFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.MakeAndModelFPObj.MakeandModel, new { @class = "commondatatestUpperCase form-control form-border-bottom MakeAndModel commondatatest vlidationInsure", @id = "MakeAndModel", @data_itid = "", @data_regex = "AN", @autocomplete = "off" })@Html.HiddenFor(p => p.MakeAndModelFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.SerialNumberFPObj.SerialNumber, new { @class = "commondatatestUpperCase form-control form-border-bottom commondatatest vlidationInsure", @id = "serialnumber", @data_itid = "", @data_regex = "AN", @autocomplete = "off" }) @Html.HiddenFor(p => p.SerialNumberFPObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.NoOfUnitsFPObj.NoOfUnits, new { @class = "form-control form-border-bottom commondatatest vlidationInsure autocalculateFE", @id = "NoofUnits", @data_itid = "", @data_regex = "N", @autocomplete = "off" }) @Html.HiddenFor(p => p.NoOfUnitsFPObj.EiId)</td><td class="no-border"><div class="policy-loc-row">@Html.CheckBoxFor(p => p.OptPortableItemsFPObj.PortableItemsOption, new { @class = "vlidationInsure commondatacheckbox", @id = "portableitems", @data_itid = "", @data_eiid = @Model.OptPortableItemsFPObj.EiId })<label for="checkbox1"><span><span></span></span></label>@Html.HiddenFor(p => p.OptPortableItemsFPObj.EiId)</div></td><td class="no-border">$@Html.TextBoxFor(p => p.SumInsuredPerUnitFPObj.SumInsuredPerUnit, new { @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice autocalculateFE", @id = "suminsured", @data_itid = "", @data_regex = "N", @autocomplete = "off" }) @Html.HiddenFor(p => p.SumInsuredPerUnitFPObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.TotalSumInsuredFPObj.TotalSumInsured, new { @readonly = "readonly", @style = "display:inline-block;width:85%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice TotalcalculateFE", @id = "totalsuminsured", @data_itid = "", @data_regex = "N", @autocomplete = "off" }) @Html.HiddenFor(p => p.TotalSumInsuredFPObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
@@ -599,7 +637,7 @@
                     $("#tname-" + id).html(replaceA);
                     $("#tname-tr-" + id).after(html);
                     $("#tname-tr-" + countId + ' #typeofunits').html(html1);
-                    $("#tname-tr-" + countId + " .form-control").attr("data-itid", id);
+                    $("#tname-tr-" + countId + " .form-control").attr("data-itid", 0);
                     $("#tname-tr-" + countId + " .form-control").val('');
                     $("#tname-tr-" + countId + ' #typeofunits').attr('id', "typeofunits" + countId);
                     $("#tname-tr-" + countId + ' #makeandmodel').attr('id', "makeandmodel" + countId);
@@ -615,7 +653,42 @@
         });
     }
     function tnameRemove(id) {
-        $("#tname-tr-" + id).remove();
+        if (confirm('Are you sure? You want to delete this row?')) {
+            var elidAll = new Array();
+            var itid = '';
+            $("#tname-tr-" + id + " td .vlidationInsure").each(function () {
+                elidAll.push($(this).attr('data-eiid'));
+                itid = $(this).attr('data-itid');
+            });
+            $.ajax({
+                url: '/Customer/DeleteRow',
+                type: "POST",
+                crossOrigin: true,
+                data: { "profileid": "1021", "ElId": elidAll, "unid": '@Session["UnitId"]', "ItId": itid },
+                success: function (response) {
+                    if (response.status == true) {
+                        $("#tname-tr-" + id).remove();
+                        var rowCount = $('.eleTable tbody tr').length;
+                        var i = 1;
+                            if (response.identifiers != '') {
+                                $.each(response.identifiers, function (j, v) {
+                                    $(".eleTable tbody tr").each(function () {
+                                        var itt = $(this).attr('id');
+                                        var search = itt;
+                                        var value = "tname-tr-" + v.Text;
+                                        if (search == value) {
+                                            $(this).attr('id', "tname-tr-" + v.Value);
+                                            $("#tname-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
+                                            j++;
+                                            return false;
+                                        }
+                                    });
+                                });
+                            } 
+                    }
+                }
+            });
+        }
         var sumN = 0;
         $(".TotalcalculateFE").each(function () {
             var regex = /^[0-9]*$/;
@@ -788,15 +861,11 @@
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
-        var ItIdN = $(this).data('itid');
+        var ItIdN = $(this).attr('data-itid');
         var Nregex = $(this).data('regex');
         var name = $(this).attr('name');
         var id = $(this).attr('id');
-        if (ItIdN == undefined || ItIdN == "") {
-            var ItId = "0";
-        } else {
-            var ItId = ItIdN;
-        }
+        var strID = id.replace(/\D/g, '');
         var regex = "";
         var text = "";
         if (Nregex == 'N') {
@@ -812,16 +881,21 @@
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
         }
+        if (ItIdN == undefined || ItIdN == "") {
+            var ItId = "0";
+        } else {
+            var ItId = ItIdN;
+        }
         if (regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + name + "']").text('').css({ "display": "none" });
-            elementAjaxCall(Value, EIId, ItId);
+            elementAjaxCall(Value, EIId, ItId, strID);
         }
     });
-    function elementAjaxCall(Value, EIId, ItId) {
+    function elementAjaxCall(Value, EIId, ItId, strID) {
         if (Value != '' && EIId != '') {
             $.ajax({
                 url: '/Customer/ElementDetails',
@@ -835,6 +909,9 @@
                             $.each(valuedata, function (index, value) {
                                 var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
                                 //$('#' + StateIdNewOne).val(value.Value);
+                                if ((value.Element.ElId == 63161 || value.Element.ElId == 63163 || value.Element.ElId == 63165 || value.Element.ElId == 63167 || value.Element.ElId == 63169 || value.Element.ElId == 63171 || value.Element.ElId == 63173) && strID != '') {
+                                    $("#tname-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                }
                                 if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
                                     var statedata = data.stateData;
                                     if (statedata != '' && statedata != null) {
@@ -850,7 +927,7 @@
                                                 $('#' + StateIdNew).attr('disabled', 'disabled');
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
+                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
                                                 $('#' + StateIdNew).removeAttr('required', 'required');
                                             } else if (value1.Value == 'Read Only') {
                                                 $('#' + StateIdNew).attr('readonly', 'readonly');
@@ -883,18 +960,51 @@
                             });
                         }
                     }
-                    //if (data.referrallist != null || data.referrallist != "") {
-                    //    $('#referralList-p').html('No Referral List');
-                    //} else {
-                    //    $('#referralList-p').html(data.referrallist);
-                    //}
+                    if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
+                        var rowsorcedata = data.rowsorcedata;
+                        if (rowsorcedata != '' && rowsorcedata != null) {
+                            $.each(rowsorcedata, function (index, value) {
+                                var rowsorcedataIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                var rowsorcedataType = $("[data-eiid=" + value.Element.ElId + "]").attr('type');
+                                var rowsorcedataName = $("[data-eiid=" + value.Element.ElId + "]").attr('name');
+                                var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
+                                var rowsorcedataOption = value.Options;
+                                if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
+                                    var html = '<option value="">--Select--</option>';
+                                    $.each(rowsorcedataOption, function (index1, value1) {
+                                        if (value1.DataValue == 0) {
+                                        } else {
+                                            html += '<option value="' + value1.DataValue + '">' + value1.DataText + '</option>';
+                                        }
+                                    });
+                                    if (rowsorcedataType == undefined) {
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    } else {
+                                        var NewHtml = '<select class="form-control vlidationInsure form-border-bottom commondataselection" data-eiid="' + rowsorcedataEIID + '" id="' + rowsorcedataIdNewOne + '" name="' + rowsorcedataName + '"></select>';
+                                        $('#' + rowsorcedataIdNewOne).replaceWith(NewHtml);
+                                        $('#' + rowsorcedataIdNewOne).html(html);
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (data.status == "Decline") {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('Decline');
+                    } else {
+                        var StateNameNewOne = $("[data-eiid=" + EIId + "]").attr('name');
+                        var StateNameNewOne1 = StateNameNewOne.split('.').join("");
+                        $("#" + StateNameNewOne1 + "error").val('');
+                    }
                     if (data.referrallists == "") {
                         $('#referralList-p').html('No Referral List');
                     } else {
                         $('#referralList-p').html(data.referrallists);
                     }
-                    if (data.usermessage == "") {
+                    if (data.usermessage == "" || typeof (data.usermessage) == "undefined") {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -903,10 +1013,16 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html('');
-                        $("label[for='" + labelid + "']").css({ "display": "none" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html('');
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "none" });
+                        } else {
+                            $("label[for='" + labelid + "']").html('');
+                            $("label[for='" + labelid + "']").css({ "display": "none" });
+                        }
                     } else {
                         var newIDforCurrentElement = $("[data-eiid=" + EIId + "]").attr('id');
+                        var newNameforCurrentElement = $("[data-eiid=" + EIId + "]").attr('name');
                         var newIDforCurrentElementTypes = $("[data-eiid=" + EIId + "]").attr('type');
                         if (newIDforCurrentElementTypes == 'radio') {
                             var labelid = $('#' + newIDforCurrentElement).parent().parent().siblings('.error').attr("for");
@@ -915,8 +1031,13 @@
                         } else {
                             var labelid = $('#' + newIDforCurrentElement).siblings('.error').attr("for");
                         }
-                        $("label[for='" + labelid + "']").html(data.usermessage);
-                        $("label[for='" + labelid + "']").css({ "display": "block" });
+                        if (labelid == undefined) {
+                            $("label[for='" + newNameforCurrentElement + "']").html(data.usermessage);
+                            $("label[for='" + newNameforCurrentElement + "']").css({ "display": "block" });
+                        } else {
+                            $("label[for='" + labelid + "']").html(data.usermessage);
+                            $("label[for='" + labelid + "']").css({ "display": "block" });
+                        }
                     }
                 }
             });
@@ -934,6 +1055,17 @@
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
                     $('#savepolicyresult').html('');
+                }
+            }
+        });
+    });
+    $(document).ready(function () {
+        $("tr td .commondataselection").each(function () {
+            var id = $(this).attr('id');
+            var actval = $(this).data('actval');
+            if (actval != undefined) {
+                if (actval != '') {
+                    $(this).val(actval);
                 }
             }
         });

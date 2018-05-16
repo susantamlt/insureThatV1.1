@@ -5,9 +5,7 @@
 }
 
 <div class="content mt-60 mb-60">
-
     <div class="col_half policy-full-head"><h2>Policy List<span>@Model.PolicyData.Select(o=>o.InsuredName).FirstOrDefault()</span></h2></div>
-
     <div class="col_half col_last pull-right">
         <div class="fright">        
             <a class="btn color-bk-btn" href="@Url.Action("NewPolicy", "Customer",new { cid = @ViewBag.CustomerId ,InsureId=Model.PolicyData[0].InsuredDetails[0].InsuredID})">Add Policy</a>
@@ -21,11 +19,13 @@
         {
             for (int i = 0; i < Model.PolicyData.Count(); i++)
             {
+                if (Model.PolicyData[i].PrId == 1029 || Model.PolicyData[i].PrId == 1021)
+                {
                 <div class="pc-list">
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-2 col-xs-12">
-                                @if (Model.PolicyData[i].PrId == 1029 || Model.PolicyData[i].PrId == 1009)
+                                @if (Model.PolicyData[i].PrId == 1029)
                                 {
                                     <img src="~/images/rural-icon.png" class="policy-list-img">
                                 }
@@ -38,7 +38,7 @@
                                 <div class="col_full">
                                     <div class="row">
                                         <div class="col-sm-4 col-xs-6 p-5">
-                                            Policy Type: @if (Model.PolicyData[i].PrId == 1029 || Model.PolicyData[i].PrId == 1009)
+                                            Policy Type: @if (Model.PolicyData[i].PrId == 1029)
                                             {
                                                 <span>Rural Lifestyle</span>
                                             }
@@ -47,30 +47,30 @@
                                             }
                                         </div>
                                         <div class="col-sm-4 col-xs-6 p-5">Policy No: @Model.PolicyData[i].PolicyNumber <br/>(@if (Model.PolicyData[i].PolicyStatus != null)
-                        {
-                            if (Model.PolicyData[i].PolicyStatus == "AP")
-                            { <span>Endorsed Policy</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "AQ")
-                            { <span>Endorsement Quotation</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "CP")
-                            { <span>Cancelled Policy</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "CQ")
-                            { <span>Cancellation Quotation</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "DQ")
-                            { <span>Discarded Quotation</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "NP")
-                            { <span>New Policy</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "NQ")
-                            { <span>Quotation</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "RP")
-                            { <span>Renewed Policy</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "RQ")
-                            { <span>Renewal Invitation</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "XP")
-                            { <span>Cancelled Policy</span> }
-                            else if (Model.PolicyData[i].PolicyStatus == "XQ")
-                            { <span>Cancellation Quotation</span> }
-                        })</div>
+                                        {
+                                            if (Model.PolicyData[i].PolicyStatus == "AP")
+                                            { <span>Endorsed Policy</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "AQ")
+                                            { <span>Endorsement Quotation</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "CP")
+                                            { <span>Cancelled Policy</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "CQ")
+                                            { <span>Cancellation Quotation</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "DQ")
+                                            { <span>Discarded Quotation</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "NP")
+                                            { <span>New Policy</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "NQ")
+                                            { <span>Quotation</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "RP")
+                                            { <span>Renewed Policy</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "RQ")
+                                            { <span>Renewal Invitation</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "XP")
+                                            { <span>Cancelled Policy</span> }
+                                            else if (Model.PolicyData[i].PolicyStatus == "XQ")
+                                            { <span>Cancellation Quotation</span> }
+                                        })</div>
                                         <div class="col-sm-4 col-xs-6 p-5">Insured: @Model.PolicyData.Select(o => o.InsuredName).FirstOrDefault()</div>
                                         <div class="clearfix"></div>
                                         <div class="col-sm-4 col-xs-6 p-5">Start Date: @Model.PolicyData[i].InceptionDate.ToString("dd/MM/yyyy")</div>
@@ -80,7 +80,7 @@
                                 </div>
                             </div>
                             <div class="pc-list-btn col-sm-offset-0 col-xs-offset-1 col-md-2 col-sm-3 col-xs-12">
-                                <a href="@Url.Action("ViewUpdatePolicyDetails", "Customer",new {cid=@ViewBag.CustomerId, PcId= @Model.PolicyData[i].PcId})" class="btn-primary btn col-sm-12 col-xs-5">View Details</a>
+                                <a href="@Url.Action("ViewUpdatePolicyDetails", "Customer", new { cid = @ViewBag.CustomerId, PcId = @Model.PolicyData[i].PcId })" class="btn-primary btn col-sm-12 col-xs-5">View Details</a>
                                  @*policydatamulti= @Model.PolicyData.Where(o=>o.PolicyNumber== Model.PolicyData[i].PolicyNumber).ToList()*@
                                 @*@if (Model.PolicyData[i].PolicyStatus == "NP" || Model.PolicyData[i].PolicyStatus == "RP" || Model.PolicyData[i].PolicyStatus == "AP")
                                 {
@@ -113,6 +113,7 @@
                         </div>
                     </div>
                 </div>
+                }
             }
         }
         else

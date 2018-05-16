@@ -40,8 +40,15 @@ namespace InsureThatAPI.Controllers
             NameBOLists = BoatDetailsmodel.BoatOperatorLists();
             List<SelectListItem> ExcessList = new List<SelectListItem>();
             ExcessList = BoatDetailsmodel.excessRate();
-
             BoatDetails BoatDetails = new BoatDetails();
+            AddressData add = new AddressData();
+            NewPolicyDetailsClass MCVehicleDescriptionmodel = new NewPolicyDetailsClass();
+            List<AddressData> AddressList = new List<AddressData>();
+            AddressList = MCVehicleDescriptionmodel.MCADAddress();
+            BoatDetails.AdaddressObj = new MCADAddress();
+            BoatDetails.AdaddressObj.AddressList = new List<AddressData>();
+            BoatDetails.AdaddressObj.AddressList = AddressList;
+            BoatDetails.AdaddressList = new List<SelectListItem>();
             var db = new MasterDataEntities();
             if (cid != null)
             {
@@ -324,6 +331,17 @@ namespace InsureThatAPI.Controllers
             {
                 if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
+                    if (unitdetails.AddressList != null && unitdetails.AddressList.Count > 0)
+                    {
+                        BoatDetails.AdaddressObj.AddressList = unitdetails.AddressList;
+                        if (BoatDetails.AdaddressObj.AddressList != null && BoatDetails.AdaddressObj.AddressList.Count() > 0)
+                        {
+                            for (int i = 0; i < BoatDetails.AdaddressObj.AddressList.Count(); i++)
+                            {
+                                BoatDetails.AdaddressList.Add(new SelectListItem { Value = BoatDetails.AdaddressObj.AddressList[i].AddressID.ToString(), Text = BoatDetails.AdaddressObj.AddressList[i].AddressLine1 + ", " + BoatDetails.AdaddressObj.AddressList[i].Suburb + ", " + BoatDetails.AdaddressObj.AddressList[i].State + ", " + BoatDetails.AdaddressObj.AddressList[i].Postcode });
+                            }
+                        }
+                    }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == BoatDetails.BoatnameObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == BoatDetails.BoatnameObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -634,7 +652,8 @@ namespace InsureThatAPI.Controllers
                 }
 
             }
-
+            Session["Controller"] = "Boat";
+            Session["ActionName"] = "BoatDetails";
             return View(BoatDetails);
         }
         [HttpPost]

@@ -9,6 +9,12 @@ using System.Net.Http.Headers;
 using InsureThatAPI.CommonMethods;
 using Newtonsoft.Json;
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Text;
+using System.Runtime.Serialization.Json;
+using System.IO;
+using System.Web.Helpers;
+using System.Web.Script.Serialization;
+
 namespace InsureThatAPI.Controllers
 {
     public class FarmMotorsController : Controller
@@ -43,10 +49,8 @@ namespace InsureThatAPI.Controllers
             {
                 policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             }
-
             string apikey = null;
             bool policyinclusion = (policyinclusions != null && policyinclusions.Count() > 0 && policyinclusions.Exists(p => p.Name == "Motor"));
-
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -65,16 +69,14 @@ namespace InsureThatAPI.Controllers
             VehicleMakeList = MCVehicleDescriptionmodel.VehicleMake();
             List<SelectListItem> FamilyLists = new List<SelectListItem>();
             FamilyLists = MCVehicleDescriptionmodel.MotorCoverFamily();
-            List<SelectListItem> AddressList = new List<SelectListItem>();
+            List<AddressData> AddressList = new List<AddressData>();
             AddressList = MCVehicleDescriptionmodel.MCADAddress();
             List<SelectListItem> VNList = new List<SelectListItem>();
             VNList = MCVehicleDescriptionmodel.MCADVinNumber();
             List<SelectListItem> ENList = new List<SelectListItem>();
             ENList = MCVehicleDescriptionmodel.MCADEngineNumber();
-
             List<SelectListItem> descriptionList = new List<SelectListItem>();
-            descriptionList = MCVehicleDescriptionmodel.MCCDDescription();
-
+            descriptionList = MCVehicleDescriptionmodel.MCCDDescription();            
             List<SelectListItem> BasicExcessList = new List<SelectListItem>();
             BasicExcessList.Add(new SelectListItem { Value = "", Text = "--Select--" });
             BasicExcessList.Add(new SelectListItem { Value = "60953", Text = "Under 21 Excess" });
@@ -86,7 +88,6 @@ namespace InsureThatAPI.Controllers
                 policyid = PcId.ToString();
                 MCVehicleDescription.PolicyId = policyid;
             }
-
             else if (Session["Policyinclustions"] != null)
             {
                 #region Policy Selected or not testing
@@ -130,7 +131,7 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.FmmcyearObj = new FMMCYear();
             MCVehicleDescription.FmmcyearObj.EiId = 63825;
             MCVehicleDescription.FmmctypeObj = new FMMCType();
-            MCVehicleDescription.FmmctypeObj.FmFamilyList = FamilyLists;
+            MCVehicleDescription.FmmctypeObj.FmFamilyLists = FamilyLists;
             MCVehicleDescription.FmmctypeObj.EiId = 63835;
             MCVehicleDescription.FmmcscdObj = new FMMCSelectCorDetails();
             MCVehicleDescription.FmmcscdObj.EiId = 63837;
@@ -139,7 +140,9 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.KeptnightObj = new MCADKeptAtNight();
             MCVehicleDescription.KeptnightObj.EiId = 63851;
             MCVehicleDescription.AdaddressObj = new MCADAddress();
+            MCVehicleDescription.AdaddressObj.AddressList = new List<AddressData>();
             MCVehicleDescription.AdaddressObj.AddressList = AddressList;
+            MCVehicleDescription.AdaddressList = new List<SelectListItem>();
             MCVehicleDescription.AdaddressObj.EiId = 0;
             MCVehicleDescription.VregisterObj = new MCADVehicleRegistered();
             MCVehicleDescription.VregisterObj.EiId = 63855;
@@ -169,16 +172,14 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.CcapacityObj.EiId = 63887;
             #endregion
             #region Driver
-            MCVehicleDescription.DrivernameObj = new DriverName();
-            MCVehicleDescription.DrivernameObj.EiId = 63901;
+            DriverList drlist = new DriverList();
+            Driver dr = new Driver();
             MCVehicleDescription.DriverageObj = new DriverAge();
-            MCVehicleDescription.DriverageObj.EiId = 63901;
             MCVehicleDescription.DrivergenderObj = new DriverGender();
             MCVehicleDescription.DrivergenderObj.GenderList = DriversGendarList;
-            MCVehicleDescription.DrivergenderObj.EiId = 63901;
-            MCVehicleDescription.DriveramicObj = new DriverAmic();
-            MCVehicleDescription.DriveramicObj.EiId = 63901;
+            MCVehicleDescription.DriverDatas = new DriverList();
             MCVehicleDescription.UsevehicleObj = new UseOfVehicle();
+            MCVehicleDescription.DriverDatas.DriverData = new List<Driver>();
             MCVehicleDescription.UsevehicleObj.EiId = 63903;
             #endregion
             #region Cover Details
@@ -215,8 +216,8 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.WindscreenObj.EiId = 64003;
             MCVehicleDescription.NoClaimBonusOptionObj = new HireCarOption();
             MCVehicleDescription.NoClaimBonusOptionObj.EiId = 64005;
-            //MCVehicleDescription.CaroptionObj = new HireCarOption();
-            //MCVehicleDescription.CaroptionObj.EiId = 64005;
+            MCVehicleDescription.CaroptionObj = new HireCarOption();
+            MCVehicleDescription.CaroptionObj.EiId = 64005;
             MCVehicleDescription.ExcessObj = new BasicExcess();
             MCVehicleDescription.ExcessObj.EiId = 64009;
             MCVehicleDescription.Excess21UnderObj = new Excess21UnderPEE();
@@ -320,7 +321,6 @@ namespace InsureThatAPI.Controllers
                     {
                     }
                 }
-
                 if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
                     if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
@@ -330,7 +330,6 @@ namespace InsureThatAPI.Controllers
                     else if (unitdetails.AddressData != null && unitdetails.AddressData.Count() > 0)
                     {
                         MCVehicleDescription.AdaddressObj.Address = unitdetails.AddressData[0].AddressLine1 + ", " + unitdetails.AddressData[0].Suburb + ", " + unitdetails.AddressData[0].State + ", " + unitdetails.AddressData[0].Postcode;
-
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.AccessoriesObj.EiId))
                     {
@@ -509,17 +508,7 @@ namespace InsureThatAPI.Controllers
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DmodifiedObj.EiId).Select(p => p.Value).FirstOrDefault();
                         MCVehicleDescription.DmodifiedObj.Dmodified = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DriverageObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.DriverageObj.Age = val;
-                    }
-                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId))
-                    {
-                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.DrivernameObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        MCVehicleDescription.DrivernameObj.Name = val;
-                    }
+                    }                    
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.EnumberObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.EnumberObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -579,14 +568,12 @@ namespace InsureThatAPI.Controllers
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == MCVehicleDescription.MCfamilyObj.EiId).Select(p => p.Value).FirstOrDefault();
                         MCVehicleDescription.MCfamilyObj.Family = val;
-
                     }
                     //if(unitdetails.SectionData.RowsourceData.Exists(p=>p.Element.ElId==MCVehicleDescription.MCfamilyObj.EiId))
                     //{
                     //    List<Options> lstopt = new List<Options>();
                     //   // lstopt = unitdetails.SectionData.RowsourceData.Where(p => p.Element.ElId == MCVehicleDescription.MCfamilyObj.EiId).Select(p=>p.Options).ToList();
                     //    MCVehicleDescription.MCfamilyObj.FamilyList = FamilyLists;
-
                     //}
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MCVehicleDescription.McmakeObj.EiId))
                     {
@@ -727,16 +714,24 @@ namespace InsureThatAPI.Controllers
                         MCVehicleDescription.Referels.Add(spltd[i].Replace("&nbsp;&nbsp;&nbsp;&nbsp", " "));
                     }
                 }
-
             }
             if (cid != null && cid.HasValue)
             {
                 MCVehicleDescription.CustomerId = cid.Value;
-
             }
             if (PcId != null && PcId.HasValue)
             {
                 MCVehicleDescription.PcId = PcId;
+            }
+            if (MCVehicleDescription.DriverDatas.DriverData != null && MCVehicleDescription.DriverDatas.DriverData.Count() == 0)
+            {
+                dr.Name = "";
+                dr.AccidentsAndConvictions = "";
+                dr.Dob = "";
+                dr.DriverNumber = "";
+                dr.Gender = "1";
+                dr.YearLicensed = 0;
+                MCVehicleDescription.DriverDatas.DriverData.Add(dr);
             }
             return View(MCVehicleDescription);
         }
@@ -766,6 +761,56 @@ namespace InsureThatAPI.Controllers
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = MCVehicleDescription.CustomerId, PcId = MCVehicleDescription.PcId });
+        }
+        [HttpPost]
+        public async System.Threading.Tasks.Task<ActionResult> Drivers(string dataToSend)
+        {
+            DriverList drs = new DriverList();
+            List<Driver> newdriver = new List<Driver>();
+            drs.DriverData = new List<Driver>();
+            var users = new JavaScriptSerializer().Deserialize<List<Driver>>(dataToSend);
+            if (users != null && users.Count() > 0)
+            {
+                for (int i = 0; i < users.Count(); i++)
+                {
+                    Driver dr = new Driver();
+                    dr.AccidentsAndConvictions = users[i].AccidentsAndConvictions;
+                    dr.Name = users[i].Name;
+                    dr.Dob = users[i].Dob;
+                    if (users[i].Gender == "1")
+                    {
+                        dr.Gender = "M";
+                    }
+                    else
+                    {
+                        dr.Gender = "F";
+                    }
+                    dr.DriverNumber = "0";
+                    dr.YearLicensed = users[i].YearLicensed;
+                    newdriver.Add(dr);
+                }
+            }
+            drs.DriverData = newdriver;
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            if (Request.IsAjaxRequest())
+            {
+                if (Session["ApiKey"] != null)
+                {
+                    string ApiKey = Session["apiKey"].ToString();
+                    drs.ApiKey = ApiKey;
+                }
+                else
+                {
+                    return Json(new { Status = false, data = "login" });
+                    return RedirectToAction("AgentLogin", "Login");
+                }
+                StringContent content = new StringContent(JsonConvert.SerializeObject(drs), Encoding.UTF8, "application/json");
+                var responses = await hclient.PostAsync("" + "DriverDetails?", content);
+            }
+            return Json(new { Status = true });
         }
         [HttpPost]
         public ActionResult MotorAjaxcontent(int id, string content)

@@ -131,7 +131,7 @@ namespace InsureThatAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult ActionNameFarm(int? cid, int PcId)
+        public ActionResult ActionNameFarms(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
@@ -189,9 +189,9 @@ namespace InsureThatAPI.Controllers
                                 {
                                     return RedirectToAction("MobileFarmProperty", "PolicyDetails", new { cid = cid, PcId = PcId });
                                 }
-                                else if (unitname == "Farm Interuption")
+                                else if (unitname == "Farm Interruption")
                                 {
-                                        return RedirectToAction("FarmInterruption", "PolicyDetails", new { cid = cid, PcId = PcId });
+                                    return RedirectToAction("FarmInterruption", "PolicyDetails", new { cid = cid, PcId = PcId });
                                 }
                                 else if (unitname == "Farm Liability")
                                 {
@@ -216,13 +216,12 @@ namespace InsureThatAPI.Controllers
                                 else if (unitname == "Valuables")
                                 {
                                     return RedirectToAction("FarmValuables", "PolicyDetails", new { cid = cid, PcId = PcId });
-
                                 }
-                                else if (unitname == "LiveStock")
+                                else if (unitname == "Livestock")
                                 {
                                     return RedirectToAction("FarmLivestock", "PolicyDetails", new { cid = cid, PcId = PcId });
                                 }
-                                else if (unitname == "Personal Liabilities Farm")
+                                else if (unitname == "Personal Liability")
                                 {
                                     return RedirectToAction("PersonalLiabilit", "PolicyDetails", new { cid = cid, PcId = PcId });
                                 }
@@ -252,10 +251,9 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
             return RedirectToAction("PremiumDetails", "Customer", new { cid = cid, PcId = PcId });
         }
-       
+            
    
         [HttpGet]
         public async System.Threading.Tasks.Task<ActionResult> HomeBilding(int? cid, int PcId)
@@ -280,7 +278,6 @@ namespace InsureThatAPI.Controllers
                     int sessionunitId = Convert.ToInt32(Session["UnitId"]);
                     units = policyinclu.Where(o => o.UnitId == sessionunitId).SingleOrDefault();
                     Session["profileId"] = units.ProfileUnId;
-
                 }
                 else
                 {
@@ -290,7 +287,6 @@ namespace InsureThatAPI.Controllers
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -299,7 +295,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if(model.PolicyInclusion!=null && model.PolicyInclusion.Count()>0)
@@ -322,7 +317,6 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.CoverPeriod = policydetails.CoverPeriod.Value;
                         model.PolicyData.CoverPeriodUnit = policydetails.CoverPeriodUnit;
                         model.PolicyData.TrId = policydetails.TrId;
-
                     }
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
@@ -331,7 +325,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -353,11 +346,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -375,12 +366,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -442,7 +431,6 @@ namespace InsureThatAPI.Controllers
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
@@ -471,7 +459,6 @@ namespace InsureThatAPI.Controllers
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -480,7 +467,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
@@ -525,11 +511,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -578,7 +562,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -629,7 +612,6 @@ namespace InsureThatAPI.Controllers
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
@@ -637,7 +619,6 @@ namespace InsureThatAPI.Controllers
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-
                 if (policydetails != null && policyinclu.Exists(o => o.Name == "Valuables"))
                 {
 
@@ -659,7 +640,6 @@ namespace InsureThatAPI.Controllers
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -668,7 +648,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if(model.Status== "Failure")
                     {
@@ -716,7 +695,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -742,7 +720,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -760,7 +737,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -791,7 +767,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -850,7 +825,6 @@ namespace InsureThatAPI.Controllers
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-
                 if (policydetails != null && policyinclu.Exists(o => o.Name == "Farm Property"))
                 {
 
@@ -872,7 +846,6 @@ namespace InsureThatAPI.Controllers
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -881,7 +854,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
@@ -928,7 +900,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -946,7 +917,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -1028,7 +998,6 @@ namespace InsureThatAPI.Controllers
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
@@ -1037,7 +1006,7 @@ namespace InsureThatAPI.Controllers
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
                 model.PolicyInclusion = policyinclu;
-                if (policydetails != null && policyinclu.Exists(o => o.Name == "Travels"))
+                if (policydetails != null && policyinclu.Exists(o => o.Name == "Travel"))
                 {
 
                 }
@@ -1045,7 +1014,7 @@ namespace InsureThatAPI.Controllers
                 {
                     return RedirectToAction("Liability", "PolicyDetails", new { cid = cid, PcId = PcId });
                 }
-                var units = policyinclu.Where(o => o.Name == "Travels").FirstOrDefault();
+                var units = policyinclu.Where(o => o.Name == "Travel").FirstOrDefault();
                 if (Session["UnitId"] != null)
                 {
                     int sessionunitId = Convert.ToInt32(Session["UnitId"]);
@@ -1053,12 +1022,11 @@ namespace InsureThatAPI.Controllers
                 }
                 else
                 {
-                    units = policyinclu.Where(o => o.Name == "Travels").FirstOrDefault();
+                    units = policyinclu.Where(o => o.Name == "Travel").FirstOrDefault();
                     Session["UnitId"] = units.UnitId;
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -1067,7 +1035,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -1080,6 +1047,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -1162,7 +1130,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -1213,7 +1180,6 @@ namespace InsureThatAPI.Controllers
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
@@ -1234,7 +1200,6 @@ namespace InsureThatAPI.Controllers
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -1243,7 +1208,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=0" );
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
@@ -1286,11 +1250,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -1308,12 +1270,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -1335,11 +1295,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -1390,7 +1348,6 @@ namespace InsureThatAPI.Controllers
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
@@ -1398,7 +1355,6 @@ namespace InsureThatAPI.Controllers
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-
                 if (policydetails != null && policyinclu.Exists(o => o.Name == "Boat"))
                 {
 
@@ -1420,7 +1376,6 @@ namespace InsureThatAPI.Controllers
                 }
                 if (units != null)
                 {
-
                     HttpClient hclient = new HttpClient();
                     string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
                     hclient.BaseAddress = new Uri(url);
@@ -1475,7 +1430,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -1497,7 +1451,6 @@ namespace InsureThatAPI.Controllers
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -1523,7 +1476,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -1600,18 +1552,16 @@ namespace InsureThatAPI.Controllers
                     units = policyinclu.Where(o => o.Name == "Motor").FirstOrDefault();
                     Session["UnitId"] = units.UnitId;
                 }
+                HttpClient hclient = new HttpClient();
+                string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+                hclient.BaseAddress = new Uri(url);
+                hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 if (units != null)
-                {
-
-                    HttpClient hclient = new HttpClient();
-                    string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
-                    hclient.BaseAddress = new Uri(url);
-                    hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                {                  
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
@@ -1631,6 +1581,13 @@ namespace InsureThatAPI.Controllers
                     }
                     if (model.SectionData != null)
                     {
+                        HttpResponseMessage getunit = await hclient.GetAsync("DriverDetails?ApiKey=" + ApiKey);
+                        var EmpResponses = getunit.Content.ReadAsStringAsync().Result;
+                        if (EmpResponses != null)
+                        {
+                            model.DriverList = new DriverList();
+                            model.DriverList = JsonConvert.DeserializeObject<DriverList>(EmpResponses);
+                        }
                         string unit_Type = null;
 
                         if (units.Component == "Profile")
@@ -1658,7 +1615,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -1676,12 +1632,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -1707,7 +1661,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -1765,7 +1718,6 @@ namespace InsureThatAPI.Controllers
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).FirstOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-
                 if (policydetails != null && policyinclu.Exists(o => o.Name == "Pets"))
                 {
 
@@ -1795,7 +1747,6 @@ namespace InsureThatAPI.Controllers
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     model.PolicyInclusion = policyinclu;
                     if (policydetails != null)
@@ -1827,12 +1778,10 @@ namespace InsureThatAPI.Controllers
                     {
                         ViewBag.error = "We are unable to fetch details at this time.";
                         return View(model);
-
                     }
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -1854,11 +1803,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -1876,12 +1823,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -1903,11 +1848,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -1940,7 +1883,6 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmHomeBilding(int? cid, int PcId)
@@ -1955,14 +1897,12 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.PcId = PcId;
             }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();               
                 var units = policyinclu.Where(o => o.Name == "Home Buildings").FirstOrDefault();
                 if (units != null)
                 {
@@ -1971,10 +1911,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -1988,6 +1927,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                         //model.ReferralList = policydetails.ReferralList;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -1995,7 +1935,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -2021,7 +1960,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -2039,12 +1977,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -2066,11 +2002,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -2103,7 +2037,6 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmHomeContents(int? cid, int PcId)
@@ -2118,14 +2051,12 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.PcId = PcId;
             }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();              
                 var units = policyinclu.Where(o => o.Name == "Home Contents").SingleOrDefault();
                 if (units != null)
                 {
@@ -2134,10 +2065,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -2150,6 +2080,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -2179,11 +2110,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -2201,12 +2130,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -2228,11 +2155,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -2265,7 +2190,6 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmValuables(int? cid, int PcId)
@@ -2280,14 +2204,12 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.PcId = PcId;
             }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();              
                 var units = policyinclu.Where(o => o.Name == "Valuables").SingleOrDefault();
                 if (units != null)
                 {
@@ -2296,10 +2218,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Valuables&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Valuables&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -2312,6 +2233,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -2319,7 +2241,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -2345,7 +2266,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -2363,7 +2283,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -2394,7 +2313,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -2427,30 +2345,31 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FixedFarmProperty(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-            model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();       
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();             
                 var units = policyinclu.Where(o => o.Name == "Fixed Farm Property").FirstOrDefault();
+                if (Session["UnitId"] != null)
+                {
+                    int sessionunitId = Convert.ToInt32(Session["UnitId"]);
+                    units = policyinclu.Where(o => o.UnitId == sessionunitId).SingleOrDefault();
+                    Session["profileId"] = units.ProfileUnId;
+                }
+                else
+                {
+                    units = policyinclu.Where(o => o.Name == "Fixed Farm Property").FirstOrDefault();
+                    Session["UnitId"] = units.UnitId;
+                    Session["profileId"] = units.ProfileUnId;
+                }
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
@@ -2458,10 +2377,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Fixed Farm Property&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Fixed Farm Property&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -2475,6 +2393,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                         model.PolicyInclusion = policyinclu;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -2504,11 +2423,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -2526,7 +2443,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -2557,7 +2473,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -2590,29 +2505,28 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> PersonalLiabilit(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-            model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();         
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();           
                 var units = policyinclu.Where(o => o.Name == "Personal Liability").SingleOrDefault();
                 if (units != null)
                 {
@@ -2621,10 +2535,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Personal Liability&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Personal Liability&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -2637,6 +2550,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -2644,7 +2558,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -2666,11 +2579,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -2688,12 +2599,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -2715,11 +2624,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -2752,29 +2659,28 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmLivestock(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
                 var units = policyinclu.Where(o => o.Name == "Livestock").SingleOrDefault();
                 if (units != null)
                 {
@@ -2783,10 +2689,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Livestock&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Livestock&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -2799,6 +2704,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -2806,7 +2712,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -2825,23 +2730,13 @@ namespace InsureThatAPI.Controllers
                         }
                         if (model.SectionData.ValueData != null && model.SectionData.ValueData.Count > 0)
                         {
-                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
-                            ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
-                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
-                            ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
-                            ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
-                            ////{
                             var jsonStateData = JsonConvert.SerializeObject(model.SectionData.StateData);
-                            // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, null, jsonStateData, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
-                            ////}
                         }
                         if (model.AddressData != null)
                         {
@@ -2850,12 +2745,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -2877,11 +2770,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -2914,30 +2805,29 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmMotors(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
-                var units = policyinclu.Where(o => o.Name == "Motors").SingleOrDefault();
+                var units = policyinclu.Where(o => o.Name == "Motor").SingleOrDefault();
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
@@ -2945,10 +2835,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Motors&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Motor&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -2961,6 +2850,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -2990,11 +2880,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3012,12 +2900,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -3039,11 +2925,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -3076,30 +2960,43 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
-            return View(model);
-        }
-        public async System.Threading.Tasks.Task<ActionResult> MobileFarmProperty(int? cid, int PcId)
-        {
-            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
-            model.PolicyInclusion = new List<usp_GetUnit_Result>();
             if (cid != null)
             {
                 ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
             }
             if (PcId != null)
             {
                 ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
             }
-
+            return View(model);
+        }
+        [HttpGet]
+        public async System.Threading.Tasks.Task<ActionResult> MobileFarmProperty(int? cid, int PcId)
+        {
+            ViewEditPolicyDetails model = new ViewEditPolicyDetails();
+            model.PolicyInclusion = new List<usp_GetUnit_Result>();
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
+
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
-                var units = policyinclu.Where(o => o.Name == "Mobile Farm Property").SingleOrDefault();
+                var units = policyinclu.Where(o => o.Name == "Mobile Farm Property").FirstOrDefault();
+                if (Session["UnitId"] != null)
+                {
+                    int sessionunitId = Convert.ToInt32(Session["UnitId"]);
+                    units = policyinclu.Where(o => o.UnitId == sessionunitId).SingleOrDefault();
+                    Session["profileId"] = units.ProfileUnId;
+                }
+                else
+                {
+                    units = policyinclu.Where(o => o.Name == "Mobile Farm Property").FirstOrDefault();
+                    Session["UnitId"] = units.UnitId;
+                    Session["profileId"] = units.ProfileUnId;
+                }               
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
@@ -3107,10 +3004,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Mobile Farm Property&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Mobile Farm Property&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -3123,6 +3019,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -3130,7 +3027,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -3152,11 +3048,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3174,7 +3068,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -3205,7 +3098,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -3238,29 +3130,29 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+                model.PolicyData.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                model.PcId = PcId.ToString();
+                ViewBag.PcId = PcId;
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmLiability(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();              
                 var units = policyinclu.Where(o => o.Name == "Farm Liability").SingleOrDefault();
                 if (units != null)
                 {
@@ -3269,10 +3161,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Liability&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Liability&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -3285,6 +3176,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -3318,7 +3210,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3336,7 +3227,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -3367,7 +3257,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -3400,29 +3289,28 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> Burglary(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();              
                 var units = policyinclu.Where(o => o.Name == "Burglary").SingleOrDefault();
                 if (units != null)
                 {
@@ -3431,10 +3319,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Burglary&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Burglary&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -3447,6 +3334,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -3476,11 +3364,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3498,7 +3384,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -3525,11 +3410,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -3562,29 +3445,29 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmElectronics(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+             
                 var units = policyinclu.Where(o => o.Name == "Farm Electronics").SingleOrDefault();
                 if (units != null)
                 {
@@ -3593,10 +3476,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Electronics&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Electronics&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -3609,6 +3491,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -3616,7 +3499,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -3642,7 +3524,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3660,7 +3541,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -3687,11 +3567,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -3724,29 +3602,28 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmInterruption(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();             
                 var units = policyinclu.Where(o => o.Name == "Farm Interruption").SingleOrDefault();
                 if (units != null)
                 {
@@ -3755,10 +3632,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Interruption&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Interruption&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -3771,6 +3647,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -3804,7 +3681,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3822,7 +3698,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -3849,11 +3724,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -3886,30 +3759,30 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmMachinery(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
-                var units = policyinclu.Where(o => o.Name == "Farm Machinery").SingleOrDefault();
+            
+                var units = policyinclu.Where(o => o.Name == "Machinery").SingleOrDefault();
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
@@ -3917,10 +3790,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Machinery&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Machinery&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -3933,6 +3805,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -3940,7 +3813,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -3962,11 +3834,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -3984,7 +3854,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -4015,7 +3884,6 @@ namespace InsureThatAPI.Controllers
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -4048,28 +3916,28 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmMoney(int? cid, int PcId)
         {
             ViewEditPolicyDetails model = new ViewEditPolicyDetails();
             model.PolicyInclusion = new List<usp_GetUnit_Result>();
-            if (cid != null)
-            {
-                ViewBag.cid = cid;
-            }
-            if (PcId != null)
-            {
-                ViewBag.PcId = PcId;
-            }
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
-                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
+                var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();             
                 var units = policyinclu.Where(o => o.Name == "Farm Money").SingleOrDefault();
                 if (units != null)
                 {
@@ -4078,10 +3946,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Money&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Money&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -4094,6 +3961,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -4101,7 +3969,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -4123,11 +3990,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -4145,12 +4010,10 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Home")
                         {
                             unit_Type = "H";
@@ -4172,11 +4035,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -4209,7 +4070,16 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         public async System.Threading.Tasks.Task<ActionResult> FarmTransit(int? cid, int PcId)
@@ -4224,15 +4094,14 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.PcId = PcId;
             }
-
             var db = new MasterDataEntities();
             if (Session["apiKey"] != null)
             {
                 string ApiKey = Session["apiKey"].ToString();
                 var policydetails = db.usp_dt_GetPolicyDetails(null, PcId).SingleOrDefault();
                 var policyinclu = db.usp_GetUnit(null, PcId, null).ToList();
-                model.PolicyInclusion = policyinclu;
-                var units = policyinclu.Where(o => o.Name == "Farm Money").SingleOrDefault();
+            
+                var units = policyinclu.Where(o => o.Name == "Transit").SingleOrDefault();
                 if (units != null)
                 {
                     HttpClient hclient = new HttpClient();
@@ -4240,10 +4109,9 @@ namespace InsureThatAPI.Controllers
                     hclient.BaseAddress = new Uri(url);
                     hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     //HttpResponseMessage Ress = await hclient.GetAsync("https://api.insurethat.com.au/Api/UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Home Buildings&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);/*insureddetails.InsuredID */
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Farm Money&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.PolicyId);
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=Transit&SectionUnId=" + units.UnId + "&ProfileUnId=" + units.ProfileUnId);
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     //Deserializing the response recieved from web api and storing into the Employee list // EncryptedPassword
-
                     model = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     if (policydetails != null)
                     {
@@ -4256,6 +4124,7 @@ namespace InsureThatAPI.Controllers
                         model.PolicyData.InceptionDate = policydetails.InceptionDate.Value;
                         model.PolicyData.ExpiryDate = policydetails.ExpiryDate.Value;
                     }
+                    model.PolicyInclusion = policyinclu;
                     if (model.ErrorMessage != null && model.ErrorMessage.Count > 0 && model.ErrorMessage.Contains("API Session Expired"))
                     {
                         return RedirectToAction("AgentLogin", "Login");
@@ -4263,7 +4132,6 @@ namespace InsureThatAPI.Controllers
                     if (model.SectionData != null)
                     {
                         string unit_Type = null;
-
                         if (units.Component == "Profile")
                         {
                             unit_Type = "P";
@@ -4285,11 +4153,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.SectionData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.SectionData.StateData != null && model.SectionData.StateData.Count > 0)
                         {
@@ -4307,7 +4173,6 @@ namespace InsureThatAPI.Controllers
                                 var addressdata = db.IT_CC_InsertAddressDetails(model.AddressData[add].AddressID, model.AddressData[add].AddressLine1, model.AddressData[add].AddressLine1, model.AddressData[add].Suburb, model.AddressData[add].State, model.AddressData[add].Postcode.ToString());
                             }
                         }
-
                     }
                     else if (model.ProfileData != null)
                     {
@@ -4334,11 +4199,9 @@ namespace InsureThatAPI.Controllers
                             ////for (int row = 0; row < model.SectionData.ValueData.Count; row++)
                             ////{
                             var jsonValueData = JsonConvert.SerializeObject(model.ProfileData.ValueData);
-
                             // var jsonValueData = jsonSerialiser.Serialize(model.SectionData.ValueData);
                             var inser_Unit_Details = db.IT_dt_Insert_UnitDetails(units.UnitId, units.Component, unit_Type, units.UnitId, null, null, jsonValueData, null, model.ReferralList, model.Status, model.AddressID).SingleOrDefault();
                             ////}
-
                         }
                         if (model.ProfileData.StateData != null && model.ProfileData.StateData.Count > 0)
                         {
@@ -4371,7 +4234,16 @@ namespace InsureThatAPI.Controllers
             {
                 return RedirectToAction("AgentLogin", "Login");
             }
-
+            if (cid != null)
+            {
+                ViewBag.cid = cid;
+                model.CustomerId = cid.Value;
+            }
+            if (PcId != null)
+            {
+                ViewBag.PcId = PcId;
+                model.PcId = PcId.ToString();
+            }
             return View(model);
         }
         // GET: PolicyDetails

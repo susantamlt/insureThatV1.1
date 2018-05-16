@@ -206,6 +206,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
         <div class="row content policy-full-view">
             <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div class="deletedsuccess"></div>
                 @if (Model.SectionData != null)
                 {
                     using (Html.BeginForm("ActionName", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
@@ -1541,7 +1542,7 @@
                             {
                                 for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
                                 {
-                                    <div class="policy-loc-row">
+                                    <div class="policy-loc-row" id="rightPannel-@i">
                                         @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
                                         <script type="text/javascript">
                                             $(document).ready(function () {
@@ -1554,8 +1555,8 @@
                                             });
                                         </script>
                                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                                            <a id="RPEdit-@i" class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                            <a id="RPDelete-@i" class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
                                         </div>
                                     </div>
                                 }
@@ -1688,6 +1689,7 @@
                                                 if (responce.Status == true) {
                                                     var prentId = $('#' + currId).parent().parent().attr("id");
                                                     $('#' + prentId).remove();
+                                                    $(".deletedsuccess").html('Section Deleted Succussfully.').addClass("alert alert-success").delay().fadeOut(10000);
                                                 }
                                             }
                                         });
@@ -1735,13 +1737,36 @@
                                                 var valuedata = data.dt;
                                                 if (valuedata != '' && valuedata != null) {
                                                     $.each(valuedata, function (index, value) {
-                                                        $(".dropdown ul").append('<li><a href="/Customer/PrintDocument?PrintId=' + value.PrintId + '" onclick="return !window.open(this.href)">' + value.Name + '</a></li>');
+                                                        $(".dropdown ul").append('<li><span class="printer" data-printid=' + value.PrintId + '>' + value.Name + '</span></li>');
                                                         ////$(".repalcedoc").html(replaceText);
                                                     });
                                                 }
                                             }
                                         }
                                     });
+                                });
+                                $(document).on('click', '.printer', function () {
+                                    var printid = $(this).attr('data-printid');
+                                    //var printid = data.printid;
+                                    if (printid != '') {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Customer/PrintDocument",
+                                            data: {
+                                                "PrintId": printid
+                                            }, success: function (data) {
+                                                if (data != '' && data.status == true) {
+                                                    var win = window.open(data.result, '_blank');
+                                                }
+                                                else if (data != '' && data.status == false) {
+                                                    $(".error").html("This document is not available.").delay(10000).fadeOut();
+                                                }
+                                                //win.focus();
+                                                //window.open("data:text/html," + encodeURIComponent(data.result),
+                                                //    "_blank", "width=200,height=100");                  
+                                            }
+                                        });
+                                    }
                                 });
                                 $("#endorsecover").click(function () {
                                     var selectedname = $(this).data('name');

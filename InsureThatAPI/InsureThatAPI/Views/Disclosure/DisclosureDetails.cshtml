@@ -4,19 +4,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
-    <h4><span>RURAL LIFESTYLE POLICY</span> / DISCLOSURE</h4>
+    <h4><span>@*RURAL LIFESTYLE POLICY*@</span> DISCLOSURE</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
-    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
+    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 policy-full-head">
         <h2>INSURED'S DISCLOSURE DETAILS</h2>
     </div>
-    <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
+    <div class="col-md-6 col-sm-6 col-xs-12 pull-right">
         <div class="pull-right">
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
-
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
-        </div>
+            <button type="button" href="#" role="button"  class="button-3d nomargin tab-linker" id="goback" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:-10px important;line-height:22px;">Go Back</button>
+         </div>
     </div>
     <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
         <div class="modal-dialog">
@@ -107,18 +107,24 @@
             </div>
         </div>
     </div>
+
     @using (Html.BeginForm("DisclosureDetails", "Disclosure", FormMethod.Post, new { enctype = "multipart/form-data", @name = "disclosureDetails", @id = "disclosureDetails" }))
     {
-
         @Html.AntiForgeryToken()
         @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
-
-        @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+        @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })  
+        @Html.HiddenFor(p => p.PrId, new { id="prid"})
         <div class="clearfix mb-md-30 mt-10 mb-10">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+            @if(Session["PolicyNo"] != null)
+            {            
+                <h5 class="clearfix col-md-12 col-sm-12 col-xs-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
+            }
             <p class="col-md-12 col-sm-12 col-xs-12">If the answer to any question marked with an asterisk (*) is "Yes", full details must be entered under "Provide Details" below.</p>
+            <p class="col-md-12 col-sm-12 col-xs-12">&nbsp;</p>
             <p class="col-md-8 col-sm-8 col-xs-12">Previous insurer</p>
             <div class="col-md-4 col-sm-4 col-xs-12">
-                @Html.TextBoxFor(p => p.PreviousinsurerObj.Pinsurer, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.PreviousinsurerObj.EiId, @id = "pinsurer" })
+                @Html.TextBoxFor(p => p.PreviousinsurerObj.Pinsurer, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.PreviousinsurerObj.EiId, @id = "pinsurer" })
                 @Html.HiddenFor(p => p.PreviousinsurerObj.EiId)
                 <label id="PreviousinsurerObj.Pinsurer-error" class="error" for="PreviousinsurerObj.Pinsurer"></label>
             </div>
@@ -169,13 +175,13 @@
             </div>
         </div>
         <div class="clearfix mb-md-30 mt-10 mb-10 datedschgr" style="display:none;">
-                <p class="col-md-8 col-sm-8 col-xs-12">Discharge date</p>
-                <div class="col-md-4 col-sm-4 col-xs-12">
-                    @Html.TextBoxFor(p => p.DateObj.Date, new { @class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DateObj.EiId, @id = "date", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
-                    @Html.HiddenFor(p => p.DateObj.EiId)
-                    <label id="DateObj.Date-error" class="error" for="DateObj.Date"></label>
-                </div>
+            <p class="col-md-8 col-sm-8 col-xs-12">Discharge date</p>
+            <div class="col-md-4 col-sm-4 col-xs-12">
+                @Html.TextBoxFor(p => p.DateObj.Date, new { @autocomplete = "off", @class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DateObj.EiId, @id = "date", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                @Html.HiddenFor(p => p.DateObj.EiId)
+                <label id="DateObj.Date-error" class="error" for="DateObj.Date"></label>
             </div>
+        </div>
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <p class="col-md-8 col-sm-8 col-xs-12">* Is any of the property that You wish to cover in immediate danger of being lost or damaged or is it already damaged?</p>
             <div class="col-md-4 col-sm-4 col-xs-12">
@@ -203,9 +209,9 @@
                 </div>
             </div>*@
         <div class="clearfix mb-md-30 mt-10 mb-10 detailsbbox hidden">
-            <p class="col-md-8 col-sm-8 col-xs-12">Please provide details</p>
-            <div class="col-md-4 col-sm-4 col-xs-12">
-                <input type="text" placeholder="Enter Details" class="form-control  form-border-bottom" />
+            <p class="col-md-4 col-sm-4 col-xs-12">Please provide details</p>
+            <div class="col-md-8 col-sm-8 col-xs-12">
+                <input type="text" autocomplete="off" placeholder="Enter Details" class="form-control  form-border-bottom" />
                 @*@Html.TextBoxFor(p => p.DetailsboxObj.Details, new { @class = "form-control  form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsboxObj.EiId })
                 *@
                 @Html.HiddenFor(p => p.DetailsboxObj.EiId)
@@ -252,8 +258,9 @@
                     var selectedTrId = $(this).data('trid');
                     var PcId = $(this).data('pcid');
                     var policyStatus = $(this).data('policystatus');
+                    var prid = $("#prid").val();
                     // var prId = $(this).data('prId');
-                    var prId = 1029;
+                    var prId = prid;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
@@ -340,8 +347,9 @@
                                 var selectedTrId = $(this).data('trid');
                                 var PcId = $(this).data('pcid');
                                 var policyStatus = $(this).data('policystatus');
+                                var prid = $("#prid").val();
                                 // var prId = $(this).data('prId');
-                                var prId = 1029;
+                                var prId = prid;                               
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/EndorsePolicy",
@@ -389,7 +397,7 @@
 
         }
         <div class="clearfix"></div>
-        <div class="dropdown pc pc-in">
+        @*<div class="dropdown pc pc-in">
             <a class="new-cover-policy" href="javascript:void(0);">New Cover</a>
             <ul class="dropdown-menu col-md-12 unit">
                 <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
@@ -423,7 +431,7 @@
                                 });
                             });
             </script>
-        </div>
+        </div>*@
     </div>
 </div>
 <script src="~/js/jquery.inputmask.bundle.js"></script>
@@ -434,6 +442,25 @@
                             });
 </script>
 <script type="text/javascript">
+                            $(document).on('click', '.savepolicyP', function () {
+                                var prid = $("#prid").val();
+                                // var prId = $(this).data('prId');
+                                var prId = prid;                            
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/SavePolicy",
+                                    data: { "PrId": prId },
+                                    success: function (res) {
+                                        if (res.status == true) {
+                                            var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
+                                            $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                                        } else {
+                                            var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
+                                            $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                                        }
+                                    }
+                                });
+                            });
                             $(document).on('click', '.coRadioButtonDC', function () {
                                 var prebox1 = $("input[name='RenewpolicyObj.Rpolicy']:checked").val();
                                 var prebox2 = $("input[name='CriminaloffenceObj.Offence']:checked").val();
@@ -663,12 +690,15 @@
                                 }
                             });
                             function elementAjaxCall(Value, EIId, ItId) {
+                                var prid = $("#prid").val();
+                                // var prId = $(this).data('prId');
+                                var prId = prid;
                                 if (Value != '' && EIId != '') {
                                     $.ajax({
                                         url: '/Customer/ElementDetails',
                                         type: "POST",
                                         crossOrigin: true,
-                                        data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
+                                        data: { "PrId": prId, "ElId": EIId, "Value": Value, "ItId": ItId },
                                         success: function (data) {
                                             if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
                                                 var valuedata = data.valuedata;
@@ -734,4 +764,18 @@
                                     });
                                 }
                             }
+                            $("#goback").click(function () {
+                                var prid = $("#prid").val();
+                                // var prId = $(this).data('prId');
+                                var prId = prid;
+                                $.ajax({
+                                    url: '/Customer/GoBack',
+                                    type: "POST",
+                                    crossOrigin: true,
+                                    data: { "PrId": prId },
+                                    success: function (data) {
+                                        window.location.href = data;
+                                    }
+                                });
+                            })
 </script>

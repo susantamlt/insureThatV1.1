@@ -215,17 +215,52 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPValuables.ExcessValuablesObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPValuables.ExcessValuablesObj.Excess = val;
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPValuables.SpecifiedItemDescriptionObj.ItemDescription = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPValuables.SpecifiedItemDescriptionObj.ItemDescription = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ItemDescriptionList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ItemDescriptionList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63733;
+                                vds.Element.ItId = ItemDescriptionList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemDescriptionObj.EiId && p.Element.ItId == ItemDescriptionList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPValuables.SpecifiedItemDescriptionList = elmnts;
+                        }
                     }
-                    if (unitdetails.ProfileData.ValueData.Exists(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId))
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId))
                     {
-                        string val = unitdetails.ProfileData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPValuables.SpecifiedItemSumInsuredObj.ItemSumInsured = val;
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            FPValuables.SpecifiedItemSumInsuredObj.ItemSumInsured = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var ItemSumInsuredList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < ItemSumInsuredList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 63735;
+                                vds.Element.ItId = ItemSumInsuredList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPValuables.SpecifiedItemSumInsuredObj.EiId && p.Element.ItId == ItemSumInsuredList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            FPValuables.SpecifiedItemSumInsuredList = elmnts;
+                        }
                     }
-
                 }
             }
             return View(FPValuables);

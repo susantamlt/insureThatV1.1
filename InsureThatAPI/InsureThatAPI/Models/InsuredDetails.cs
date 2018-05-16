@@ -19,6 +19,7 @@ namespace InsureThatAPI.Models
         public List<InsuredDetails> Insureds { get; set; }
         public InsuredDetails InsuredData { get; set; }
         public List<AddressData> AddressData { get; set; }
+        public List<AddressData> PostalAddressData { get; set; }
         public List<Identifiers> IdentifierUpdates { get; set; }
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }
@@ -50,7 +51,11 @@ namespace InsureThatAPI.Models
         public string ABN { get; set; }
         public string Address { get; set; }
         public int? AddressID { get; set; }
-        public int? PostalAddressID { get; set; }
+        public string PostalAddressID { get; set; }
+        public string PostalAddressLine { get; set; }
+        public string PostalSuburb { get; set; }
+        public string PostalState { get; set; }
+        public string PostalPostcode { get; set; }
         public string MobileNo { get; set; }
         public string PhoneNo { get; set; }
         public DateTime DOB { get; set; }
@@ -64,7 +69,6 @@ namespace InsureThatAPI.Models
     }
      public class InsuredDetailsSerobj
     {
-    
         public int? PolicyType { get; set; }
         public int? CustomerId { get; set; }
         public string postcode { get; set; }
@@ -82,15 +86,18 @@ namespace InsureThatAPI.Models
         public string ABN { get; set; }
         public string AddressLine { get; set; }
         public int? AddressID { get; set; }
-        public int? PostalAddressID { get; set; }
+        public string PostalAddressID { get; set; }
+        public string PostalAddressLine { get; set; }
+        public string PostalSuburb { get; set; }
+        public string PostalState { get; set; }
+        public string PostalPostcode { get; set; }
         public string MobileNo { get; set; }
         public string PhoneNo { get; set; }
 
         [DataType(DataType.DateTime)]
         public DateTime? DOB { get; set; }
         public string EmailID { get; set; }
-        public List<string> PolicyNumbers { get; set; }
-       
+        public List<string> PolicyNumbers { get; set; }       
         public List<string> IdentifierUpdates { get; set; }
         public string Status { get; set; }
         public List<string> ErrorMessage { get; set; }

@@ -47,13 +47,10 @@
             </h2>
         </div>
         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
             <a class="btn color-bk-btn col-md-4 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("PolicyHistory", "RuralLifeStyle", new { cid = @ViewBag.cid, PcId = Model.PolicyData.PolicyNumber })">View Policy History</a>
             <a class="btn color-bk-btn col-md-3 margin-left-5 leftmargin-sm pull-right" href="@Url.Action("InsuredList", "Customer", new { cid = @ViewBag.cid, PolicyNumber = Model.PolicyData.PolicyNumber })">View Insured</a>
-
             <a class="btn color-bk-btn col-sm-3 margin-left-5 pull-right" href="@Url.Action("NewPolicy", "Customer", new { cid = @ViewBag.cid})">Add Policy</a>
         </div>
-
         <div class="mt-50 mb-50"></div>
         <div class="p-10 col-md-12 border-bottom-1 mb-15">
             <div class="col-lg-1 col-md-1 col-sm-2 col-xs-12">
@@ -203,6 +200,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
         <div class="row content policy-full-view">
             <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div class="deletedsuccess"></div>
                 @if (Model.SectionData != null)
                 {
                     using (Html.BeginForm("ActionName", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
@@ -210,7 +208,6 @@
                         @Html.AntiForgeryToken()
                         <div class="well">
                             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
-
                             @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
                             <h3 class="col-md-9 col-sm-9 col-xs-12">BOAT DETAILS</h3>
                             @if (Model.ReferralList != "")
@@ -521,7 +518,6 @@
                                         {
                                     <span>Outboard</span>
                                         }
-
                                     }
                                 </p>
                             </div>
@@ -538,7 +534,6 @@
                                         {
                                     <span>Stern</span>
                                         }
-
                                     }
                                 </p>
                             </div>
@@ -801,12 +796,12 @@
                                 <p class="col-md-6 col-sm-6 col-xs-12 text-right">
                                     @if (Model.ProfileData.ValueData != null && (Model.ProfileData.ValueData.Count > 0))
                                     {
-                                        string oddeven = "odd";
+                                        //string oddeven = "odd";
                                         for (int i = 0; i < Model.SectionData.ValueData.Count; i++)
                                         {
                                             if (Model.SectionData.ValueData[i].Element.ElId == 61279 && Model.SectionData.ValueData[i].Value != "")
                                             {
-                                                if (oddeven == "odd")
+                                                @*if (oddeven == "odd")
                                                 {
                                                     oddeven = "even";
                                                 }
@@ -814,7 +809,9 @@
                                                 {
                                                     oddeven = "odd";
                                                     <span>@Model.SectionData.ValueData[i].Value</span>
-                                                }
+                                                }*@
+
+                                                <span>@Model.SectionData.ValueData[i].Value</span>
                                             }
                                         }
                                     }
@@ -832,7 +829,6 @@
                     {
                         <div class="well">
                             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
-
                             @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
                             <h3>BOAT DETAILS</h3>
                             <div class="row">
@@ -845,7 +841,7 @@
                     }
                 }
             </div>
-            @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
+            @if ((Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP"))
             {
                 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
                     <button type="button" href="#endorsepolicys" role="button" data-target="#endorsepolicys" class="btn-primary btn col-md-12" data-toggle="modal">Endorse Policy</button>
@@ -874,7 +870,7 @@
                             {
                                 for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
                                 {
-                                    <div class="policy-loc-row">
+                                    <div class="policy-loc-row" id="rightPannel-@i">
                                         @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
                                         <script type="text/javascript">
                                             $(document).ready(function () {
@@ -887,8 +883,8 @@
                                             });
                                         </script>
                                         <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                                            <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                                            <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                                            <a id="RPEdit-@i" class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                            <a id="RPDelete-@i" class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
                                         </div>
                                     </div>
                                 }
@@ -1020,6 +1016,7 @@
                                                 if (responce.Status == true) {
                                                     var prentId = $('#' + currId).parent().parent().attr("id");
                                                     $('#' + prentId).remove();
+                                                    $(".deletedsuccess").html('Section Deleted Succussfully.').addClass("alert alert-success").delay().fadeOut(10000);
                                                 }
                                             }
                                         });
@@ -1067,13 +1064,36 @@
                                                 var valuedata = data.dt;
                                                 if (valuedata != '' && valuedata != null) {
                                                     $.each(valuedata, function (index, value) {
-                                                        $(".dropdown ul").append('<li><a href="/Customer/PrintDocument?PrintId=' + value.PrintId + '" onclick="return !window.open(this.href)">' + value.Name + '</a></li>');
+                                                        $(".dropdown ul").append('<li><span class="printer" data-printid=' + value.PrintId + '>' + value.Name + '</span></li>');
                                                         ////$(".repalcedoc").html(replaceText);
                                                     });
                                                 }
                                             }
                                         }
                                     });
+                                });
+                                $(document).on('click', '.printer', function () {
+                                    var printid = $(this).attr('data-printid');
+                                    //var printid = data.printid;
+                                    if (printid != '') {
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "/Customer/PrintDocument",
+                                            data: {
+                                                "PrintId": printid
+                                            }, success: function (data) {
+                                                if (data != '' && data.status == true) {
+                                                    var win = window.open(data.result, '_blank');
+                                                }
+                                                else if (data != '' && data.status == false) {
+                                                    $(".error").html("This document is not available.").delay(10000).fadeOut();
+                                                }
+                                                //win.focus();
+                                                //window.open("data:text/html," + encodeURIComponent(data.result),
+                                                //    "_blank", "width=200,height=100");                  
+                                            }
+                                        });
+                                    }
                                 });
                                 $("#endorsecover").click(function () {
                                     var selectedname = $(this).data('name');

@@ -5,16 +5,22 @@
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>RURAL LIFESTYLE POLICY</span> / PETS</h4>
+ 
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
         <h2>PETS</h2>
+        @if (Session["PolicyNo"] != null)
+        {
+            <h5>Policy Number: @Session["PolicyNo"].ToString()</h5>
+        }
     </div>
     <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
         <div class="pull-right">
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -66,7 +72,7 @@
         </div>
     </div>
     <div id="premiumModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="premiumModel" aria-hidden="false">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header" style="padding: 15px 26px 0px;">
                     <h3 class="pull-left">Premium Details</h3>
@@ -214,7 +220,7 @@
             <div class="mt-10 mb-10 col-md-12 cl-61337" id="other" @if (@Model.BreedObj.Breed != "301") { <text> style="display: none;" </text> }>
                 <p class="col-md-5 col-sm-5 col-xs-12">Name of breed :</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.OtherbreedObj.Otherbreed, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.OtherbreedObj.EiId, @id = "otherbreed", @data_regex = "A" })
+                    @Html.TextBoxFor(p => p.OtherbreedObj.Otherbreed, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.OtherbreedObj.EiId, @id = "otherbreed", @data_regex = "A" })
                     <label id="OtherbreedObj.Otherbreed-error" class="error" for="OtherbreedObj.Otherbreed"></label>
                     @Html.HiddenFor(p => p.OtherbreedObj.EiId)
                 </div>
@@ -222,7 +228,7 @@
             <div class="mt-10 mb-10 col-md-12 cl-61339">
                 <p class="col-md-5 col-sm-5 col-xs-12">What is the name of your pet?</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.NameObj.Name, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.NameObj.EiId, @id = "name", @data_regex = "A" })
+                    @Html.TextBoxFor(p => p.NameObj.Name, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.NameObj.EiId, @id = "name", @data_regex = "A" })
                     @Html.HiddenFor(p => p.NameObj.EiId)
                     <label id="NameObj.Name-error" class="error" for="NameObj.Name"></label>
                 </div>
@@ -230,7 +236,7 @@
             <div class="mt-10 mb-10 col-md-12  cl-61339">
                 <p class="col-md-5 col-sm-5 col-xs-12">What is your pet's date of birth?<br><span class="mini-text">(We will cover your animals up untill the age of 9 years)</span></p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DatebirthObj.EiId, @id = "dateofbirth", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
+                    @Html.TextBoxFor(p => p.DatebirthObj.Datebirth, new { @autocomplete = "off", @class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYY", @data_eiid = @Model.DatebirthObj.EiId, @id = "dateofbirth", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
                     @Html.HiddenFor(p => p.DatebirthObj.EiId)
                     <label id="DatebirthObj.Datebirth-error" class="error" for="DatebirthObj.Datebirth"></label>
                     <input name="DatebirthObj.Datebirth.error" id="DatebirthObjDatebirtherror" type="hidden" value="" />
@@ -270,7 +276,7 @@
             <div class="mt-10 mb-10 col-md-12 cl-61345" id="desIllness" @if (@Model.PreexistingObj.Preexisting != "1") { <text> style="display: none;" </text> }>
                 <p class="col-md-5 col-sm-5 col-xs-12">If yes ,  please describe the illness</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    @Html.TextBoxFor(p => p.DescriptionillnessObj.Descriptionillness, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionillnessObj.EiId, @id = "descriptionillness", @data_regex = "A" })
+                    @Html.TextBoxFor(p => p.DescriptionillnessObj.Descriptionillness, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DescriptionillnessObj.EiId, @id = "descriptionillness", @data_regex = "A" })
                     @Html.HiddenFor(p => p.DescriptionillnessObj.EiId)
                     <label id="DescriptionillnessObj.Descriptionillness-error" class="error" for="DescriptionillnessObj.Descriptionillness"></label>
                 </div>
@@ -278,7 +284,7 @@
             <div class="mt-10 mb-10 col-md-12 cl-61347" id="acLimit">
                 <p class="col-md-5 col-sm-5 col-xs-12">Annual cover limit</p>
                 <div class="col-md-7 col-sm-7 col-xs-12">
-                    $@Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, "12,500", new { @style = "display:inline-block;width:95%;background:none;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnualcoverlimitObj.EiId, @id = "annualcoverlimit", @data_regex = "N", @readonly = "readonly" })
+                    $@Html.TextBoxFor(p => p.AnnualcoverlimitObj.Annualcoverlimit, "12,500", new { @autocomplete = "off", @style = "display:inline-block;width:95%;background:none;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnualcoverlimitObj.EiId, @id = "annualcoverlimit", @data_regex = "N", @readonly = "readonly" })
                     @Html.HiddenFor(p => p.AnnualcoverlimitObj.EiId)
                     <label id="AnnualcoverlimitObj.Annualcoverlimit-error" class="error" for="AnnualcoverlimitObj.Annualcoverlimit"></label>
                 </div>
@@ -349,7 +355,7 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61367" id="aLimitbf" @if (@Model.BoardingfeeObj.Boardingfee == "0" || @Model.BoardingfeeObj.Boardingfee == "" || @Model.BoardingfeeObj.Boardingfee == null) { <text> style="display: none;" </text> }>
                     @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">*@
-                    $@Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatest", @data_eiid = @Model.AnnuallimitbfObj.EiId, @id = "annuallimitbf", @style = "width: 94%;display:inline-block;float: none;background:none;",@readonly = "readonly" ,@data_regex = "ANS" })
+                    $@Html.TextBoxFor(p => p.AnnuallimitbfObj.Annuallimitbf, new { @autocomplete = "off", @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatest", @data_eiid = @Model.AnnuallimitbfObj.EiId, @id = "annuallimitbf", @style = "width: 94%;display:inline-block;float: none;background:none;",@readonly = "readonly" ,@data_regex = "ANS" })
                     @Html.HiddenFor(p => p.AnnuallimitbfObj.EiId)
                     <label id="AnnuallimitbfObj.Annuallimitbf-error" class="error" for="AnnuallimitbfObj.Annuallimitbf"></label>
                     @*</div>
@@ -495,7 +501,7 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61371" id="aLimitdt" @if (@Model.DeathillnessObj.Deathillness == "0" || @Model.DeathillnessObj.Deathillness == null || @Model.DeathillnessObj.Deathillness == "") { <text> style="display: none;" </text> }>
                     @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">*@
-                    $@Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitdtObj.EiId, @id = "annuallimit", @style = "width: 94%;display:inline-block;float: none;background:none;", @data_regex = "N",@readonly="readonly" })
+                    $@Html.TextBoxFor(p => p.AnnuallimitdtObj.Annuallimit, new { @autocomplete = "off", @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitdtObj.EiId, @id = "annuallimit", @style = "width: 94%;display:inline-block;float: none;background:none;", @data_regex = "N",@readonly="readonly" })
                     @Html.HiddenFor(p => p.AnnuallimitdtObj.EiId)
                     <label id="AnnuallimitdtObj.Annuallimit-error" class="error" for="AnnuallimitdtObj.Annuallimit"></label>
                     @*</div>
@@ -534,7 +540,7 @@
                 </div>
                 <div class="col-md-6 col-sm-6 col-xs-12 mini-text cl-61375" id="aLimitij" @if (@Model.DeathinjuryObj.Deathinjury == "0" || @Model.DeathinjuryObj.Deathinjury == "" || @Model.DeathinjuryObj.Deathinjury == null) { <text> style="display: none;" </text> }>
                     @*<div class="col-md-6 col-sm-6 col-xs-12" style="padding:0px;">*@
-                    $@Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitijObj.EiId, @id = "annuallimitij", @style = "width: 94%;display:inline-block;float: none;background:none;", @data_regex = "N", @readonly = "readonly" })
+                    $@Html.TextBoxFor(p => p.AnnuallimitijObj.Annuallimitij, new { @autocomplete = "off", @class = "form-control form-border-bottom col-md-6 col-sm-6 col-xs-12 mini-text vlidationInsure commondatatestComma commondatatestPrice", @data_eiid = @Model.AnnuallimitijObj.EiId, @id = "annuallimitij", @style = "width: 94%;display:inline-block;float: none;background:none;", @data_regex = "N", @readonly = "readonly" })
                     @Html.HiddenFor(p => p.AnnuallimitijObj.EiId)
                     <label id="AnnuallimitijObj.Annuallimitij-error" class="error" for="AnnuallimitijObj.Annuallimitij"></label>
                     @*</div>*@
@@ -555,7 +561,7 @@
         {
             for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
             {
-                <div class="policy-loc-row">
+                <div class="policy-loc-row"  id="rightPannel-@i">
                     @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span>@Model.PolicyInclusion[i].Name</label>
                     <script type="text/javascript">
                         $(document).ready(function () {
@@ -569,8 +575,8 @@
                         });
                     </script>
                     <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                        <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                        <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
+                        <a id="RPEdit-@i" class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                        <a id="RPDelete-@i" class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Delete</a>
                     </div>
                 </div>
             }

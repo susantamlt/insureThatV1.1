@@ -82,7 +82,7 @@ namespace InsureThatAPI.Controllers
                 {
                     if (Policyincllist != null)
                     {
-                          if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                          if (Policyincllist.Exists(p => p.name == "Livestock"))
                         {
                           
 
@@ -107,12 +107,12 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
                         }
-                        if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        if (Policyincllist.Exists(p => p.name == "Livestock"))
                         {
                             if (Session["unId"] == null && Session["profileId"] == null)
                             {
-                                Session["unId"] = Policyincllist.Where(p => p.name == "LiveStock").Select(p => p.UnitId).First();
-                                Session["profileId"] = Policyincllist.Where(p => p.name == "LiveStock").Select(p => p.ProfileId).First();
+                                Session["unId"] = Policyincllist.Where(p => p.name == "Livestock").Select(p => p.UnitId).First();
+                                Session["profileId"] = Policyincllist.Where(p => p.name == "Livestock").Select(p => p.ProfileId).First();
                             }
                         }
                         else
@@ -216,7 +216,6 @@ namespace InsureThatAPI.Controllers
             if (policyinclusion == true && PcId != null && PcId.HasValue)
             {
                 FPLivestock.ExistingPolicyInclustions = policyinclusions;
-
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                 var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                 if (EmpResponse != null)
@@ -228,7 +227,7 @@ namespace InsureThatAPI.Controllers
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=LiveStockFarm&SectionUnId=&ProfileUnId=0");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=LiveStock&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {

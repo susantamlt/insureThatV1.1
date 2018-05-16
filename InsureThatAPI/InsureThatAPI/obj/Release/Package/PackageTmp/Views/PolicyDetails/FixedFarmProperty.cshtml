@@ -73,7 +73,7 @@
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">
                                 Policy No: @Model.PolicyData.PolicyNumber
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured:@Model.PolicyData.InsuredName</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Insured: @Model.PolicyData.InsuredName</div>
 
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Start Date: @Model.PolicyData.InceptionDate.ToString("dd/MM/yyyy")</div>
                             <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">End Date: @Model.PolicyData.ExpiryDate.ToString("dd/MM/yyyy")</div>
-                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: 12 Months</div>
+                            <div class="col-lg-4 col-md-4 col-sm-6 col-xs-12 p-10">Duration: @Model.PolicyData.CoverPeriod &nbsp;@Model.PolicyData.CoverPeriodUnit</div>
                         </div>
                     </div>
                 </div>
@@ -91,12 +91,11 @@
                             <a href="#" class="btn-primary btn col-md-12 mb-5 width-480-100 vwdoc ">View Documents </a>
                             <ul class="dropdown-menu"></ul>
                         </div>
-
                     </div>
                     @if (Model.PolicyData.PolicyStatus == "NP" || Model.PolicyData.PolicyStatus == "RP" || Model.PolicyData.PolicyStatus == "AP")
                 {
-                        @*<a href="#cancelpolicymodel" class="btn-primary btn col-md-12">Cancel Policy</a>*@
-                        <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12 width-480-100" data-toggle="modal">Cancel Policy</button>
+                    @*<a href="#cancelpolicymodel" class="btn-primary btn col-md-12">Cancel Policy</a>*@
+                    <button type="button" href="#cancelpolicymodel" role="button" data-target="#cancelpolicymodel" class="btn-primary btn col-md-12 width-480-100" data-toggle="modal">Cancel Policy</button>
                     }
                 </div>
                 <div id="cancelpolicymodel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="cancelpolicymodel" aria-hidden="false">
@@ -109,8 +108,12 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure cancelling this policy. Action can not be reversed.</p>
-                                <p>Please enter reason for cancellation <input name="cancelreason" class="cancelpol col-sm-2 form-control form-inline field-length-xs" type="text" /></p>
+                                <p style="margin-bottom: 5px;">Are you sure cancelling this policy. Action can not be reversed.</p>
+                                <p style="margin-bottom: 5px;">Please enter reason for cancellation <input name="cancelreason" class="cancelpol form-control form-inline" type="text" /></p>
+                                <p style="margin-bottom: 5px;">
+                                    Cancellation Date <input name="pCanDate" id="pCanDate" class="form-control form-inline datePicker" data-inputmask-alias="date" data-inputmask-inputformat="dd/mm/yyyy" />
+                                    <label id="pCanDate-error" class="error" for="pCanDate" style="display:none;"></label>
+                                </p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -118,6 +121,11 @@
                             </div>
                         </div>
                     </div>
+                    <script src="~/js/jquery.inputmask.bundle.js"></script>
+                    <script src="~/js/inputmask.date.extensions.js"></script>
+                    <script type="text/javascript">
+                        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+                    </script>
                 </div>
                 <div id="endorsepolicys" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="endorsepolicys" aria-hidden="false">
                     <div class="modal-dialog">
@@ -129,9 +137,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p></p>
-
-                                <p><B>Cover Period:</B> <span>@Model.PolicyData.CoverPeriod &nbsp;@Model.PolicyData.CoverPeriodUnit </span></p>
+                            <p><B>Cover Period:</B> <span>@Model.PolicyData.CoverPeriod &nbsp;@Model.PolicyData.CoverPeriodUnit </span></p>
                                 <p>
                                     <B>Status:</B> @if (Model.PolicyData.PolicyStatus != null)
                                     {
@@ -164,7 +170,6 @@
                                 <p>Please note that you cannot change the start date of your policy. </p>
                             </div>
                             <div class="modal-footer">
-
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
                                 <button class="btn btn-default no-border" id="endorsecover" aria-hidden="true"> Endorse </button>
                             </div>
@@ -179,19 +184,17 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-full-head">
         <div class="row content policy-full-view">
             <div id="screens" class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                <div class="deletedsuccess"></div>
                 @if (Model.SectionData != null)
                 {
-                    using (Ajax.BeginForm("ActionNameFarm", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }, new AjaxOptions()
-                    {
-                        HttpMethod = "GET"
-
-                    }))
+                    using (Html.BeginForm("ActionNameFarms", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
                     {
                         @Html.AntiForgeryToken()
                         <div class="row content policy-full-view">
                             <div class="col-xs-12">
                                 <div class="well">
-                                    @Html.HiddenFor(p => p.CustomerId)
+                                    @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+                                    @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
                                     <h3 class="col-md-9 col-sm-9 col-xs-12">FIXED FARM PROPERTY DETAILS</h3>
                                     @if (Model.ReferralList != "")
                                     {
@@ -225,15 +228,20 @@
                                     <div class="row">
                                         <p class="col-md-8 col-sm-8 col-xs-12">Address</p>
                                         <p class="col-md-4 col-sm-4 col-xs-12 text-right">
-                                            @if (Model.AddressData != null && Model.AddressData.Count > 0)
+                                            @if (Model.SectionData.AddressData != null)
                                             {
-                                                <span>@Model.AddressData[0].AddressLine1,&nbsp;@Model.AddressData[0].Suburb,&nbsp;@Model.AddressData[0].State,&nbsp;@Model.AddressData[0].Postcode</span>
+                                                <span>@Model.SectionData.AddressData.AddressLine1,&nbsp;@Model.SectionData.AddressData.Suburb,&nbsp;@Model.SectionData.AddressData.State,&nbsp;@Model.SectionData.AddressData.Postcode</span>
                                             }
                                         </p>
                                     </div>
                                     <div class="row">
                                         <p class="col-md-10 col-sm-10 col-xs-10">What type of farm is it?</p>
-                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right"></p>
+                                        <p class="col-md-2 col-sm-2 col-xs-2 text-right">
+                                            @if (Model.SectionData.ValueData.Exists(p => p.Element.ElId == 62005) && (Model.SectionData.ValueData.Find(p => p.Element.ElId == 62005).Value != null))
+                                            {
+                                                @Model.SectionData.ValueData.Find(p => p.Element.ElId == 62005).Value
+                                            }
+                                        </p>
                                     </div>
                                     <div class="row">
                                         <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>Farm Buildings</strong></p>
@@ -247,15 +255,68 @@
                                         <p class="col-md-2 col-sm-2 col-xs-12 text-right">How much do you need to replace your building</p>
                                     </div>
                                     <div class="row">
-                                        <p class="col-md-3 col-sm-3 col-xs-12 text-left">
+                                        @*<p class="col-md-3 col-sm-3 col-xs-12 text-left">
                                             @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
                                             {
                                                 for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
                                                 {
-                                                    if (Model.SectionData.ValueData[j].Element.ElId == 62255 && Model.SectionData.ValueData[j].Value != "")
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "1")
                                                     {
-                                                        <span>@Model.SectionData.ValueData[j].Value</span><br /><br />
+                                                        <span>Apiarist</span>
                                                     }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "2")
+                                                    {
+                                                        <span>Aquaculture</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "3")
+                                                    {
+                                                        <span>Cane</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "4")
+                                                    {
+                                                        <span>Chicken</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "5")
+                                                    {
+                                                        <span>Cotton</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "6")
+                                                    {
+                                                        <span>Crop</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "7")
+                                                    {
+                                                        <span>Dairy</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "8")
+                                                    {
+                                                        <span>Hobby</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "9")
+                                                    {
+                                                        <span>Livestock</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "10")
+                                                    {
+                                                        <span>Mixed</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "11")
+                                                    {
+                                                        <span>Orchard</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "12")
+                                                    {
+                                                        <span>Stud Farm - not horses</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "13")
+                                                    {
+                                                        <span>Stud Horses</span>
+                                                    }
+                                                    if (@Model.SectionData.ValueData.Find(p => p.Element.ElId == 62283).Value == "14")
+                                                    {
+                                                        <span>Winery</span>
+                                                    }
+                                                    <br /><br />
                                                 }
                                             }
                                         </p>
@@ -303,8 +364,8 @@
                                                     }
                                                 }
                                             }
-                                        </p>
-                                        <p class="col-md-2 col-sm-2 col-xs-12 text-left">
+                                        </p>*@
+                                        @*<p class="col-md-2 col-sm-2 col-xs-12 text-left">
                                             @if (Model.SectionData.ValueData != null && (Model.SectionData.ValueData.Count > 0))
                                             {
                                                 for (int j = 0; j < Model.SectionData.ValueData.Count; j++)
@@ -315,7 +376,7 @@
                                                     }
                                                 }
                                             }
-                                        </p>
+                                        </p>*@
                                     </div>
                                     <div class="row">
                                         <p class="col-md-10 col-sm-10 col-xs-10">Do you confirm that all Farm Structures to be insured are structurally sound, well maintained and have no unrepaired damage?</p>
@@ -466,14 +527,12 @@
                 }
                 else
                 {
-                    using (Ajax.BeginForm("ActionNameFarm", "PolicyDetails", new { cid = @ViewBag.cid, PcId = @ViewBag.PcId}, new AjaxOptions()
+                    using (Html.BeginForm("ActionNameFarms", "PolicyDetails", FormMethod.Get, new { cid = @ViewBag.cid, PcId = @Model.PolicyData.PcId }))
                     {
-                        HttpMethod = "GET"
-
-                    }))
-                    {
+                        @Html.AntiForgeryToken()
                         <div class="well">
-                            @Html.HiddenFor(p => p.CustomerId)
+                            @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
+                            @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
                             <h3>FIXED FARM PROPERTY DETAILS</h3>
                             <div class="row">
                                 <p class="col-md-12 col-sm-12 col-xs-12 alert alert-info"><strong>No details</strong></p>
@@ -500,9 +559,9 @@
                 {
                     for (int i = 0; i < Model.PolicyInclusion.Count(); i++)
                     {
-                                <div class="policy-loc-row">
-                                    @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
-                                    <script type="text/javascript">
+                        <div class="policy-loc-row">
+                            @Html.RadioButtonFor(m => m.SelectedInclusion, @Model.PolicyInclusion[i].Name, new { @class = "inclusions", @data_name = @Model.PolicyInclusion[i].Name, @data_nid = @i })<label for="radio1"><span><span></span></span><a class="viewsectn" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">@Model.PolicyInclusion[i].Name</a></label>
+                            <script type="text/javascript">
                                         $(document).ready(function () {
                                             $('.inclusions').click(function () {
                                                 var name = $(this).attr('data-name');
@@ -511,37 +570,31 @@
                                                 $("#policy-ed-del-wrap-" + nid).show();
                                             });
                                         });
-                                    </script>
-                                    <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                                        <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
-                                        <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
-                                    </div>
-                                </div>
+                            </script>
+                            <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                                <a class="btn color-bk-btn policy-edit-wrap" data-policystatus="@Model.PolicyData.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" href="javascript:void(0);">Edit</a>&nbsp;
+                                <a class="btn color-bk-btn policy-delet-wrap" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusion[i].Name" data-cid="@Model.CustomerId" data-trid="@Model.PolicyData.TrId" data-pcid="@Model.PcId" data-unid="@Model.PolicyInclusion[i].UnId" data-profileid="@Model.PolicyInclusion[i].ProfileUnId" data-unitid="@Model.PolicyInclusion[i].UnitId" href="javascript:void(0);">Delete</a>
+                            </div>
+                        </div>
                             }
                         }
                         <div class="clearfix"></div>
                         <div class="dropdown pc pc-in">
                             <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
                             <ul class="dropdown-menu col-md-12 unit">
-                                @*<li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>*@
-                                <li><a href="@Url.Action("FarmContents", "MobileFarm",new { cid = @ViewBag.cid })">+  Mobile Farm Property</a></li>
-                                <li><a href="@Url.Action("FarmLocationDetails", "FarmPolicyProperty",new { cid = @ViewBag.cid })">+  Farm Property</a></li>
-                                <li><a href="@Url.Action("FarmInterruption", "FarmPolicyFarmInterruption",new { cid = @ViewBag.cid })">+  Farm Interruption</a></li>
-
-                                <li><a href="@Url.Action("FarmLiability", "FarmPolicyFarmLiability",new { cid = @ViewBag.cid })">+  Farm Liability</a></li>
-
-                                <li><a href="@Url.Action("Burglary", "FarmPolicyBurglary",new { cid = @ViewBag.cid })">+  Burglary</a></li>
-                                <li><a href="@Url.Action("Money", "FarmPolicyMoney",new { cid = @ViewBag.cid })">+  Money</a></li>
-                                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
-
-                                <li><a href="@Url.Action("Livestock", "FarmPolicyLivestock",new { cid = @ViewBag.cid })">+  Livestock</a></li>
-                                <li><a href="@Url.Action("PersonalLiability", "FarmPolicyPersonalLiability",new { cid = @ViewBag.cid })">+  Liability</a></li>
-                                <li><a href="@Url.Action("MainDetails", "FarmPolicyHome",new { cid = @ViewBag.cid })">+  Home Building</a></li>
-                                <li><a href="@Url.Action("HomeContents", "FarmPolicyHomeContent",new { cid = @ViewBag.cid })">+  Home Content</a></li>
-
-                                <li><a href="@Url.Action("Valuables", "FarmPolicyValuables",new { cid = @ViewBag.cid })">+  Valuables</a></li>
-                                <li><a href="@Url.Action("Transit", "FarmPolicyTransit",new { cid = @ViewBag.cid })">+  Transit</a></li>
-
+                                <li><a href="javascript:void(0);" class="Mobile Farm Property">+  Mobile Farm Property</a></li>
+                                <li><a href="javascript:void(0);" class="Fixed Farm Property">+ Fixed Farm Property</a></li>
+                                <li><a href="javascript:void(0);" class="Farm Interruption">+  Farm Interruption</a></li>
+                                <li><a href="javascript:void(0);" class="Farm Liability">+  Farm Liability</a></li>
+                                <li><a href="javascript:void(0);" class="Burglary">+  Burglary</a></li>
+                                <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
+                                <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
+                                <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
+                                <li><a href="javascript:void(0);" class="Liability">+  Liability</a></li>
+                                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                                <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
+                                <li><a href="javascript:void(0);" class="Transit">+  Transit</a></li>
+                                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
                             </ul>
                         </div>
                         <script type="text/javascript">
@@ -549,7 +602,7 @@
                                 var unitname = $(this).children("a").attr("class");
                                 var cid = $("#ciid").val();
                                 var pcid = $("#pcidd").val();
-                                var prid = 1029;
+                                var prid = 1021;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/AddUnit",
@@ -565,6 +618,7 @@
                                 });
                             });
                         </script>
+
                     </div>
                 </div>
             }
@@ -583,7 +637,7 @@
                                 var PcId = $(this).data('pcid');
                                 var policyStatus = $(this).data('policystatus');
                                 // var prId = $(this).data('prId');
-                                var prId = 1029;
+                                var prId = 1021;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/ViewSection",
@@ -609,7 +663,7 @@
                                 var PcId = $(this).data('pcid');
                                 var policyStatus = $(this).data('policystatus');
                                 // var prId = $(this).data('prId');
-                                var prId = 1029;
+                                var prId = 1021;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/EndorsePolicy",
@@ -649,6 +703,7 @@
                                             if (responce.Status == true) {
                                                 var prentId = $('#' + currId).parent().parent().attr("id");
                                                 $('#' + prentId).remove();
+                                                $(".deletedsuccess").html('Section Deleted Succussfully.').addClass("alert alert-success").delay().fadeOut(10000);
                                             }
                                         }
                                     });
@@ -670,21 +725,46 @@
                                 var selectedcid = $("#ciid").val();
                                 var selectedTrId = $("#tridd").val();
                                 var reson = $(".cancelpol").val();
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/Customer/CancelPolicy",
-                                    data: {
-                                        "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson
-                                    },
-                                    success: function (responce) {
+                                var date = $("#pCanDate").val();
+                                var PSDate = $("#pStartDate").text();
+                                var PEDate = $("#pEndDate").text();
+                                var valid = 1;
+                                var TextMsg = '';
+                                var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
+                                var diffDateCalculatePets = true;
+                                var diffDateCalculatePets1 = true;
+                                if (PSDate != '' && regex.test(PSDate) && PEDate != '' && regex.test(PEDate) && date != '' && regex.test(date)) {
+                                    var PSDaterVal = PSDate.split('/');
+                                    var PSDaterValN = PSDaterVal[1] + '/' + PSDaterVal[0] + '/' + PSDaterVal[2];
+                                    var PEDaterVal = PEDate.split('/');
+                                    var PEDaterValN = PEDaterVal[1] + '/' + PEDaterVal[0] + '/' + PEDaterVal[2];
+                                    var daterVal = date.split('/');
+                                    var daterValN = daterVal[1] + '/' + daterVal[0] + '/' + daterVal[2];
+                                    diffDateCalculatePets = diffDateCalculateE(daterValN, PSDaterValN);
+                                    diffDateCalculatePets1 = diffDateCalculateE(PEDaterValN, daterValN);
+                                    if (diffDateCalculatePets == false || diffDateCalculatePets1 == false) {
+                                        valid = 0;
+                                        TextMsg = 'Cancellation date should not be less then start date and geter then end date';
                                     }
-                                });
-
+                                } else {
+                                    valid = 0;
+                                    TextMsg = 'Date format not valid';
+                                }
+                                if (valid == 0) {
+                                    $("label[for='pCanDate']").text(TextMsg).css({ "display": "block" });
+                                } else {
+                                    $("label[for='pCanDate']").text("").css({ "display": "none" });
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/CancelPolicy",
+                                        data: {
+                                            "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "Reson": reson, "cdate": date
+                                        },
+                                        success: function (responce) {
+                                        }
+                                    });
+                                }
                             });
-
-</script>
-
-<script>
                             $(".vwdoc").mouseover(function () {
                                 $(".dropdown ul").html('');
                                 $.ajax({
@@ -696,13 +776,36 @@
                                             var valuedata = data.dt;
                                             if (valuedata != '' && valuedata != null) {
                                                 $.each(valuedata, function (index, value) {
-                                                    $(".dropdown ul").append('<li><a href="/Customer/PrintDocument?PrintId=' + value.PrintId + '" onclick="return !window.open(this.href)">' + value.Name + '</a></li>');
+                                                    $(".dropdown ul").append('<li><span class="printer" data-printid=' + value.PrintId + '>' + value.Name + '</span></li>');
                                                     ////$(".repalcedoc").html(replaceText);
                                                 });
                                             }
                                         }
                                     }
                                 });
+                            });
+                            $(document).on('click', '.printer', function () {
+                                var printid = $(this).attr('data-printid');
+                                //var printid = data.printid;
+                                if (printid != '') {
+                                    $.ajax({
+                                        type: "GET",
+                                        url: "/Customer/PrintDocument",
+                                        data: {
+                                            "PrintId": printid
+                                        }, success: function (data) {
+                                            if (data != '' && data.status == true) {
+                                                var win = window.open(data.result, '_blank');
+                                            }
+                                            else if (data != '' && data.status == false) {
+                                                $(".error").html("This document is not available.").delay(10000).fadeOut();
+                                            }
+                                            //win.focus();
+                                            //window.open("data:text/html," + encodeURIComponent(data.result),
+                                            //    "_blank", "width=200,height=100");
+                                        }
+                                    });
+                                }
                             });
                             $("#endorsecover").click(function () {
                                 var selectedname = $(this).data('name');
@@ -713,7 +816,7 @@
                                 var PcId = $("#pcidd").val();
                                 var policyStatus = $(".policystus").val();
                                 var effcdate = $("#effectivedate").val();
-                                var prId = 1029;
+                                var prId = 1021;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/EndorsePolicy",

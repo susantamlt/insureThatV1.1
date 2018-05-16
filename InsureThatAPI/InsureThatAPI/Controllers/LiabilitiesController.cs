@@ -191,7 +191,6 @@ namespace InsureThatAPI.Controllers
                         }
                     }
                 }
-
                 else
                 {
                     HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Liability&SectionUnId=&ProfileUnId="+HprofileId);
@@ -285,8 +284,7 @@ namespace InsureThatAPI.Controllers
                         }
                     }
                 }
-            }
-       
+            }       
             if (unitdetails!=null &&  unitdetails.ReferralList != null)
             {
                 LiabilityCover.ReferralList = unitdetails.ReferralList;
@@ -312,6 +310,8 @@ namespace InsureThatAPI.Controllers
             {
                 LiabilityCover.PcId = PcId;
             }
+            Session["Controller"] = "Liabilities";
+            Session["ActionName"] = "LiabilityCover";
             return View(LiabilityCover);
         }
         [HttpPost]
@@ -320,10 +320,8 @@ namespace InsureThatAPI.Controllers
             List<SelectListItem> ExcList = new List<SelectListItem>();
             ExcList.Add(new SelectListItem { Text = "$250", Value = "1" });
             LiabilityCover.ExcessLCObj.ExcessList = ExcList;
-
             var db = new MasterDataEntities();
-            string policyid = null;
-          
+            string policyid = null;          
             Session["profileId"] = null;
             Session["UnId"] = null;
             string actionname = null;

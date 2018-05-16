@@ -63,12 +63,10 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
                             }
-
                             else if (Policyincllist.Exists(p => p.name == "Electronics"))
                             {
                                 return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
-                            }
-                          
+                            }                          
                             else if (Policyincllist.Exists(p => p.name == "Transit"))
                             {
                                 return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
@@ -76,7 +74,6 @@ namespace InsureThatAPI.Controllers
                             else if (Policyincllist.Exists(p => p.name == "LiveStock"))
                             {
                                 return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
-
                             }
                             else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
                             {
@@ -194,7 +191,6 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = MobileFarmContents.CustomerId;
             }
-
             var db = new MasterDataEntities();
             string policyid = null;
             HttpClient hclient = new HttpClient();
@@ -234,8 +230,7 @@ namespace InsureThatAPI.Controllers
                 bool policyinclusion = policyinclusions.Exists(p => p.Name == "Mobile Farm Property");
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-
-                    int sectionId = policyinclusions.Where(p => p.Name == "Mobile Farm Property" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
+                    int sectionId = policyinclusions.Where(p => p.Name == "Mobile Farm Property").Select(p => p.UnId).FirstOrDefault();
                     int? profileunid = policyinclusions.Where(p => p.Name == "Mobile Farm Property" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                     HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
@@ -274,7 +269,7 @@ namespace InsureThatAPI.Controllers
                                 }
                             }
                             Session["unId"] = unitdetails.SectionData.UnId;
-                            Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
+                            //Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
                             Session["profileId"] = unitdetails.SectionData.ProfileUnId;
                             if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Mobile Farm Property"))
                             {
@@ -319,6 +314,13 @@ namespace InsureThatAPI.Controllers
             }
             if (unitdetails != null)
             {
+                if (unitdetails.SectionData!=null && unitdetails.SectionData.AddressData != null)
+                {
+                    MobileFarmContents.AddressObj = new AddressForFP();
+                    MobileFarmContents.LocationObj = new LocatioForFP();
+                    MobileFarmContents.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1;
+                    MobileFarmContents.LocationObj.Location = unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Suburb + ", " + unitdetails.SectionData.AddressData.Postcode; 
+                }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == MobileFarmContents.FarmContentsSumInsuredFPObj.EiId))

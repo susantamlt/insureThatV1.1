@@ -1,6 +1,7 @@
 ﻿using InsureThatAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -139,6 +140,7 @@ namespace InsureThatAPI.Models
         //public List<string> ErrorMessage { get; set; }
         //public List<string> ReferralList { get; set; }
         public string Reason { get; set; }
+        public string ReferralStatus { get; set; }
         public int? InsuredId { get; set; }
     }
     public class NewPolicyDetailsRef
@@ -188,7 +190,7 @@ namespace InsureThatAPI.Models
         public string UserMessage { get; set; }
         public bool Status { get; set; }
         public List<string> ErrorMessage { get; set; }
-
+        public List<Identifiers> Identifiers { get; set; }
 
     }
     public class FocusElement
@@ -218,7 +220,7 @@ namespace InsureThatAPI.Models
         public string ApiKey { get; set; }
         public int PcId { get; set; }
         public int TrId { get; set; }
-      //  public int MyProperty { get; set; }
+        //  public int MyProperty { get; set; }
         public List<PremiumDetails> PremiumData { get; set; }
         public float UnderwriterFee { get; set; }
         public float FeeGst { get; set; }
@@ -227,6 +229,33 @@ namespace InsureThatAPI.Models
         public List<string> ErrorMessage { get; set; }
 
     }
+    public class DocumentDetails
+    {
+        public string ApiKey { get; set; }
+        public int? PcId { get; set; }
+        public int? TrId { get; set; }
+        public string DocumentUrl { get; set; }
+        public string Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+    }
+    public class EmailFormModel
+    {
+        //[Required, Display(Name = "Your name")]
+        public string FromName { get; set; }
+        //[Required, Display(Name = "Your email"), EmailAddress]
+        public string FromEmail { get; set; }
+        //[Required]
+        public string Message { get; set; }
+    }
+    public class DeleteRow
+    {
+        public ElementDetails ElementData { get; set; }
+        public string InformationMessage { get; set; }
+        public string Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+     
+    }
+
     public class Floodarea
     {
         public string ApiKey { get; set; }
@@ -252,10 +281,20 @@ namespace InsureThatAPI.Models
         public string Suburb { get; set; }
         public string State { get; set; }
         public string Postcode { get; set; }
-
-
+        public int? PcId { get; set; }
+        public int? TrId { get; set; }
+        public AddressData AddressData { get; set; }
+        public List<RowsourceDatas> RowsourceData { get; set; }
+        public string ReferralList { get; set; }
+        public string Status { get; set; }
+        public List<string> ErrorMessage { get; set; }
+        public List<ValueData> ValueData { get; set; }
+        public List<StateData> StateData { get; set; }
+        public FocusElement FocusElement { get; set; }
+        public List<Identifiers> IdentifierUpdates { get; set; }
+        public string UserMessage { get; set; }
     }
-        public class ViewEditPolicyDetails
+    public class ViewEditPolicyDetails
     {
 
         public List<AddressData> AddressList { get; set; }
@@ -289,10 +328,8 @@ namespace InsureThatAPI.Models
         public List<ValueData> ValueData { get; set; }
         public List<StateData> StateData { get; set; }
         public ElementDetails ElementData { get; set; }
-      
         public string UserMessage { get; set; }
-
-
+        public DriverList DriverList {get; set;}
 
     }
     public class Identifiers

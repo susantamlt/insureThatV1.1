@@ -10,6 +10,12 @@
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
         <h2>CLAIMS DETAILS</h2>
     </div>
+    <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
+        <div class="pull-right">
+            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     @using (Ajax.BeginForm("ClaimsDetails", "Claims", new AjaxOptions()
     {
         HttpMethod = "POST"
@@ -20,53 +26,70 @@
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         @Html.AntiForgeryToken()
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-4 col-sm-4 col-xs-12">Claim Type</p>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.DropDownListFor(p => p.ClaimtypeObj.Type, @Model.ClaimtypeObj.ClaimTypeList, new { @class = "form-control form-border-bottom vlidationInsure commondataselection", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type" })
-                @Html.HiddenFor(p => p.ClaimtypeObj.EiId)
-                <label id="ClaimtypeObj.Type-error" class="error" for="ClaimtypeObj.Type"></label>
+            @if(Session["PolicyNo"] != null)
+            {
+            
+                <h5 class="clearfix col-md-12 col-sm-12 col-xs-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
+            }
+        </div>
+        <div class="col-md-12 mt-10 mb-10">
+            <p class="col-md-12"><strong></strong></p>
+            <div class="col-md-12 table-8">
+                <table class="table ClaimsDetail" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th class="space_left">Claim Type</th>
+                            <th class="space_left">Details of Claim</th>
+                            <th class="space_left">Claim Value</th>
+                            <th class="space_left">Claim Year</th>
+                            <th class="space_left">Insurer</th>
+                            <th class="space_left">Driver</th>
+                            <th class="space_right">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="tname-tr-1">
+                            <td class="no-border">
+                                @Html.DropDownListFor(p => p.ClaimtypeObj.Type, @Model.ClaimtypeObj.ClaimTypeList, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type", @data_itid = "-1" })
+                                @Html.HiddenFor(p => p.ClaimtypeObj.EiId)
+                            </td>
+                            <td class="no-border">
+                                @Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details", @data_itid = "-1" })
+                                @Html.HiddenFor(p => p.DetailsclaimObj.EiId)
+                            </td>
+                            <td class="no-border">
+                                $@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @autocomplete = "off", @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure", @style = "width: 87%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue", @data_itid = "-1" })
+                                @Html.HiddenFor(p => p.ClaimvalueObj.EiId)
+                            </td>
+                            <td class="no-border">
+                                @Html.TextBoxFor(p => p.YearObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;", @data_itid = "-1" })
+                                @Html.HiddenFor(p => p.YearObj.EiId)
+                            </td>
+                            <td class="no-border">
+                                @Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer", @data_itid = "-1" })
+                                @Html.HiddenFor(p => p.InsurerObj.EiId)
+                            </td>
+                            <td class="no-border">
+                                @Html.TextBoxFor(p => p.DriverObj.Driver, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DriverObj.EiId, @id = "driver", @data_itid = "-1" })
+                                @Html.HiddenFor(p => p.DriverObj.EiId)
+                            </td>
+                            <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(-1)" class="button-3d">+</a></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="no-border"><label id="ClaimtypeObj.Type-error" class="error" for="ClaimtypeObj.Type"></label></td>
+                            <td class="no-border"><label id="DetailsclaimObj.Details-error" class="error" for="DetailsclaimObj.Details"></label></td>
+                            <td class="no-border"><label id="ClaimvalueObj.Cvalue-error" class="error" for="ClaimvalueObj.Cvalue"></label></td>
+                            <td class="no-border"><label id="YearObj.Year-error" class="error" for="YearObj.Year"></label></td>
+                            <td class="no-border"><label id="InsurerObj.Insurer-error" class="error" for="InsurerObj.Insurer"></label></td>
+                            <td class="no-border"><label id="DriverObj.Driver-error" class="error" for="DriverObj.Driver"></label></td>
+                            <td  class="no-border">&nbsp;</td>
+                        </tr>                        
+                    </tfoot>
+                </table>
             </div>
         </div>
-        <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-4 col-sm-4 col-xs-12">Details of Claim</p>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details" })
-                @Html.HiddenFor(p => p.DetailsclaimObj.EiId)
-                <label id="DetailsclaimObj.Details-error" class="error" for="DetailsclaimObj.Details"></label>
-            </div>
-        </div>
-        <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-4 col-sm-4 col-xs-12">Claim Value</p>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                $@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure commondatatest", @style = "width: 94%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue" })
-                @Html.HiddenFor(p => p.ClaimvalueObj.EiId)
-                <label id="ClaimvalueObj.Cvalue-error" class="error" for="ClaimvalueObj.Cvalue"></label>
-            </div>
-        </div>
-        <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-4 col-sm-4 col-xs-12">Claim Year</p>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;" })
-                @Html.HiddenFor(p => p.YearObj.EiId)
-                <label id="YearObj.Year-error" class="error" for="YearObj.Year"></label>
-            </div>
-        </div>
-        <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-4 col-sm-4 col-xs-12">Insurer</p>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer" })
-                @Html.HiddenFor(p => p.InsurerObj.EiId)
-                <label id="InsurerObj.Insurer-error" class="error" for="InsurerObj.Insurer"></label>
-            </div>
-        </div>
-        <div class="clearfix mb-md-30 mt-10 mb-10">
-            <p class="col-md-4 col-sm-4 col-xs-12">Driver</p>
-            <div class="col-md-8 col-sm-8 col-xs-12">
-                @Html.TextBoxFor(p => p.DriverObj.Driver, new { @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.DriverObj.EiId, @id = "driver" })
-                @Html.HiddenFor(p => p.DriverObj.EiId)
-                <label id="DriverObj.Driver-error" class="error" for="DriverObj.Driver"></label>
-            </div>
-        </div>        
         <div class="col-md-6 pull-right text-right mt-30">
             <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtnFHC">Submit</button>
         </div>
@@ -80,6 +103,20 @@
     });
 </script>
 <script type="text/javascript">
+    $(document).ready(function () {
+        $("tr td .vlidationInsure").each(function () {
+            var id = $(this).attr('id');
+            //var prid1 = $(this).parent().parent().attr('id');
+            //var prid = prid1.replace(/\D/g, '');
+            var itid = $(this).data('itid');
+            if (itid == -1) {
+                var nItid = itid +(-1);
+            } else {
+                var nItid = itid;
+            }
+            $(this).attr('id', id + '' + nItid);;
+        });
+    });
     $(document).ready(function () {
         var currentYearNew = new Date().getFullYear();
         $("#ptabbtnFHC").click(function (e) {
@@ -186,90 +223,104 @@
                 }
             });
             if (valid == 1) {
-                $("form[name='claimsDetails']").submit();
+                var ClaimsData = new Array();
+                $('.ClaimsDetail tbody .vlidationInsure ').each(function () {
+                    var ClaimsDatas = { 'PrId': '0', Element: { 'ElId': $(this).attr('data-eiid'), 'ItId': $(this).attr('data-itid') }, 'Value': $(this).val() };
+                    ClaimsData.push(ClaimsDatas);
+                });
+                $.ajax({
+                    url: '/Claims/ClaimsDetails',
+                    type: 'POST',
+                    data: { data: ClaimsData },
+                    success: function (response) {
+                        window.location.href = response;
+                        if (response.status == true) {
+                        }
+                    }
+                });
             }
         });
     });
-    $(document).on('focusout', ".commondatatest", function () {
-        var Value = $(this).val();
-        var EIId = $(this).data('eiid');
-        var ItIdN = $(this).data('itid');
-        if (ItIdN == undefined || ItIdN == "") {
-            var ItId = "0";
-        } else {
-            var ItId = ItIdN;
-        }
-        if (Value != "") {
-            elementAjaxCall(Value, EIId, ItId);
-        }
-    });
-    function elementAjaxCall(Value, EIId, ItId) {
-        if (Value != '' && EIId != '') {
+    function tnameAdd(id) {
+        var countId = id + (-1);     
+        var i = -1;
+        $(".table tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            $("#" + RowId + " .form-control").attr("data-itid", i);
+            i--;
+        });        
+        $('#tname' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tname-tr' + countId + '"><td class="no-border">@Html.DropDownListFor(p => p.ClaimtypeObj.Type, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type", @data_itid = "-1"})@Html.HiddenFor(p => p.ClaimtypeObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details", @data_itid = "-1" })@Html.HiddenFor(p => p.DetailsclaimObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure", @style = "width: 87%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue", @data_itid = "-1" })@Html.HiddenFor(p => p.ClaimvalueObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;", @data_itid = "-1" })@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer", @data_itid = "-1" })@Html.HiddenFor(p => p.InsurerObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DriverObj.Driver, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DriverObj.EiId, @id = "driver", @data_itid = "-1" })@Html.HiddenFor(p => p.DriverObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+        $.ajax({
+            url: '/Claims/ClaimsDetailAjax',
+            type: 'POST',
+            data: { "id": id, "content": "ClaimsDetail" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tname" + id).html(replaceA);
+                    $("#tname-tr" + id).after(html);
+                    $("#tname-tr" + countId + " .form-control").attr("data-itid", countId);
+                    $("#tname-tr" + countId + " .form-control").val('');
+                    $("#tname-tr" + countId + ' #type').html(html1);
+                    $("#tname-tr" + countId + ' #type').attr('id', "type" + countId);
+                    $("#tname-tr" + countId + ' #details').attr('id', "details" + countId);
+                    $("#tname-tr" + countId + ' #cvalue').attr('id', "cvalue" + countId);
+                    $("#tname-tr" + countId + ' #year').attr('id', "year" + countId);
+                    $("#tname-tr" + countId + ' #insurer').attr('id', "insurer" + countId);
+                    $("#tname-tr" + countId + ' #driver').attr('id', "driver" + countId);
+                } else {
+                    $('#tname' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
+                }
+            }
+        });        
+    }
+    function tnameRemove(id) {
+        if (confirm('Are you sure? You want to delete this row?')) {
+            var elidAll = new Array();
+            var itid = '';
+            $("#tname-tr-" + id + " td .vlidationInsure").each(function () {
+                elidAll.push($(this).attr('data-eiid'));
+                itid = $(this).attr('data-itid');
+            });
             $.ajax({
-                url: '/Customer/ElementDetails',
+                url: '/Customer/DeleteRow',
                 type: "POST",
                 crossOrigin: true,
-                data: { "PrId": "1029", "ElId": EIId, "Value": Value, "ItId": ItId },
-                success: function (data) {
-                    if (!$.isEmptyObject(data.valuedata) && data.valuedata.length > 0) {
-                        var valuedata = data.valuedata;
-                        if (valuedata != '' && valuedata != null) {
-                            $.each(valuedata, function (index, value) {
-                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                //$('#' + StateIdNewOne).val(value.Value);
-                                if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
-                                    var statedata = data.stateData;
-                                    if (statedata != '' && statedata != null) {
-                                        $.each(statedata, function (index1, value1) {
-                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
-                                            if (value1.Value == 'Invisible') {
-                                                $('#' + StateIdNew).removeAttr('readonly');
-                                                $('#' + StateIdNew).removeAttr('disabled');
-                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'none' });
-                                                $('#' + StateIdNew).removeAttr('required', 'required');
-                                            } else if (value1.Value == 'Disabled') {
-                                                $('#' + StateIdNew).attr('disabled', 'disabled');
-                                                $('#' + StateIdNew).removeAttr('readonly');
-                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                $('#' + StateIdNew).removeAttr('required', 'required');
-                                            } else if (value1.Value == 'Read Only') {
-                                                $('#' + StateIdNew).attr('readonly', 'readonly');
-                                                $('#' + StateIdNew).removeAttr('disabled');
-                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                $('#' + StateIdNew).removeAttr('required', 'required');
-                                            } else if (value1.Value == 'Strike Through') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': 'line-through' });
-                                                $('#' + StateIdNew).removeAttr('readonly');
-                                                $('#' + StateIdNew).removeAttr('disabled');
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                $('#' + StateIdNew).removeAttr('required', 'required');
-                                            } else if (value1.Value == 'Required') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('#' + StateIdNew).removeAttr('readonly');
-                                                $('#' + StateIdNew).removeAttr('disabled');
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                $('#' + StateIdNew).attr('required', 'required');
-                                            } else if (value1.Value == '"Not Rendered') {
-                                                $('#' + StateIdNew).css({ 'text-decoration': '' });
-                                                $('#' + StateIdNew).removeAttr('readonly');
-                                                $('#' + StateIdNew).removeAttr('disabled');
-                                                $('.cl-' + value1.Element.ElId).css({ 'display': 'block' });
-                                                $('#' + StateIdNew).removeAttr('required', 'required');
-                                            }
-
-                                        });
+                data: { "profileid": "1029", "ElId": elidAll, "unid": '@Session["UnitId"]', "ItId": itid },
+                success: function (response) {
+                    if (response.status == true) {
+                        $("#tname-tr-" + id).remove();
+                        var rowCount = $('.table tbody tr').length;
+                        var i = 1;
+                        if (response.identifiers != '') {
+                            $.each(response.identifiers, function (j, v) {
+                                $(".table tbody tr").each(function () {
+                                    var itt = $(this).attr('id');
+                                    var search = itt;
+                                    var value = "tname-tr-" + v.Text;
+                                    if (search == value) {
+                                        $(this).attr('id', "tname-tr-" + v.Value);
+                                        $("#tname-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
+                                        j++;
+                                        return false;
                                     }
-                                }
+                                });
                             });
-                        }
-                    }
-                    if (data.referrallist != null || data.referrallist != "") {
-                        $('#referralList-p').html('No Referral List');
-                    } else {
-                        $('#referralList-p').html(data.referrallist);
+                        }       
+                        //$(".table tbody tr").each(function () {
+                        //    var RowId = $(this).attr('id');
+                        //    if (i != rowCount) {
+                        //        $("#" + RowId + " .form-control").attr("data-itid", i);
+                        //    } else {
+                        //        $("#" + RowId + " .form-control").attr("data-itid", 0);
+                        //    }
+                        //    i++;
+                        //});
                     }
                 }
             });

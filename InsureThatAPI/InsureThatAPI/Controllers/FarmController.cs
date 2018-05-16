@@ -754,6 +754,8 @@ namespace InsureThatAPI.Controllers
             {
                 FarmContents.PcId = PcId;
             }
+            Session["Controller"] = "Farm";
+            Session["ActionName"] = "FarmContents";
             return View(FarmContents);
         }
         [HttpPost]

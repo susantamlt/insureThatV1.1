@@ -33,6 +33,7 @@ namespace InsureThatAPI.Controllers
                 return RedirectToAction("AgentLogin", "Login");
             }
             DisclosureDetails DisclosureDetails = new DisclosureDetails();
+            DisclosureDetails.PrId = Convert.ToInt32(Session["PrId"]);
             if (cid.HasValue && cid > 0)
             {
                 DisclosureDetails.CustomerId = cid.Value;
@@ -61,7 +62,6 @@ namespace InsureThatAPI.Controllers
             DisclosureDetails.DetailsboxObj = new DetailsBox();
             DisclosureDetails.DetailsboxObj.EiId = 415;
             return View(DisclosureDetails);
-
         }
         [HttpPost]
         public async System.Threading.Tasks.Task<ActionResult> DisclosureDetails(DisclosureDetails DisclosureDetails)
@@ -117,15 +117,15 @@ namespace InsureThatAPI.Controllers
                     vdssss.Value = DisclosureDetails.PrisonsentenceObj.Sentence;
                     lstvd.Add(vdssss);
                 }
-                //if (DisclosureDetails.UndischargedObj.EiId != null && DisclosureDetails.UndischargedObj.Undischarge != null)
-                //{
-                //    ValueData vdssy = new ValueData();
-                //    vdssy.Element = new Elements();
-                //    vdssy.Element.ElId = DisclosureDetails.UndischargedObj.EiId;
-                //    vdssy.Element.ItId = 0;
-                //    vdssy.Value = DisclosureDetails.UndischargedObj.Undischarge;
-                //    lstvd.Add(vdssy);
-                //}
+                if (DisclosureDetails.UndischargedObj.EiId != null && DisclosureDetails.UndischargedObj.Undischarge != null)
+                {
+                    ValueData vdssy = new ValueData();
+                    vdssy.Element = new Elements();
+                    vdssy.Element.ElId = DisclosureDetails.UndischargedObj.EiId;
+                    vdssy.Element.ItId = 0;
+                    vdssy.Value = DisclosureDetails.UndischargedObj.Undischarge;
+                    lstvd.Add(vdssy);
+                }
                 if (DisclosureDetails.BankruptObj.EiId != null && DisclosureDetails.BankruptObj.Bankrupt != null)
                 {
                     ValueData vdsy = new ValueData();
@@ -135,15 +135,15 @@ namespace InsureThatAPI.Controllers
                     vdsy.Value = DisclosureDetails.BankruptObj.Bankrupt;
                     lstvd.Add(vdsy);
                 }
-                //if (DisclosureDetails.DateObj.EiId != null && DisclosureDetails.DateObj.Date != null)
-                //{
-                //    ValueData vdsa = new ValueData();
-                //    vdsa.Element = new Elements();
-                //    vdsa.Element.ElId = DisclosureDetails.DateObj.EiId;
-                //    vdsa.Element.ItId = 0;
-                //    vdsa.Value = DisclosureDetails.DateObj.Date;
-                //    lstvd.Add(vdsa);
-                //}
+                if (DisclosureDetails.DateObj.EiId != null && DisclosureDetails.DateObj.Date != null)
+                {
+                    ValueData vdsa = new ValueData();
+                    vdsa.Element = new Elements();
+                    vdsa.Element.ElId = DisclosureDetails.DateObj.EiId;
+                    vdsa.Element.ItId = 0;
+                    vdsa.Value = DisclosureDetails.DateObj.Date;
+                    lstvd.Add(vdsa);
+                }
                 if (DisclosureDetails.ImmediatedangerObj.EiId != null && DisclosureDetails.ImmediatedangerObj.Danger != null)
                 {
                     ValueData vdsaa = new ValueData();

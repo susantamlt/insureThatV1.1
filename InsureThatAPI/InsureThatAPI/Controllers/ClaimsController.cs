@@ -9,6 +9,7 @@ using System.Net.Http.Headers;
 using InsureThatAPI.CommonMethods;
 using Newtonsoft.Json;
 using static InsureThatAPI.CommonMethods.EnumInsuredDetails;
+using System.Text;
 
 namespace InsureThatAPI.Controllers
 {
@@ -28,8 +29,8 @@ namespace InsureThatAPI.Controllers
             //ClaimTypeList = Calimmodel.ClaimTypeFarm(); //For Farm
             ClaimsDetails ClaimsDetails = new ClaimsDetails();
             ClaimsDetails.PolicyInclusions = new List<string>();
-
-            
+            Session["Controller"] = "Claims";
+            Session["ActionName"] = "ClaimsDetails";
             string apikey = null;
             if(Session["ApiKey"]!=null)
             {
@@ -67,10 +68,70 @@ namespace InsureThatAPI.Controllers
             return View(ClaimsDetails);
         }
         [HttpPost]
-        public ActionResult ClaimsDetails(ClaimsDetails ClaimsDetails)
+        public async System.Threading.Tasks.Task<ActionResult> ClaimsDetails(List<ValueData> data)
         {
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+           // string apikey = null;
+            List<ValueData> lstvd = new List<ValueData>();
+            List<ValueData> vdlst = new List<ValueData>();
+            vdlst = data;
+            int? cid = 0;
+            if (Session["cid"] != null)
+            {
+                cid = Convert.ToInt32(Session["cid"]);
+            }
+            ClaimsDetails ClaimsDetails = new ClaimsDetails();
+            if (vdlst!=null && vdlst.Count()>0)
+            {
+                for(int v=0;v<vdlst.Count();v++)
+                {
+                    ValueData vd = new ValueData();
+                    vd.Element = new Elements();
+                    vd.Element.ElId = vdlst[v].Element.ElId;
+                    vd.Element.ItId = vdlst[v].Element.ItId;
+                    vd.Value = vdlst[v].Value;
+                    lstvd.Add(vd);
+                }
+            }            
+            ClaimsDetails.ValueData = lstvd;
+            if (Session["apiKey"] != null)
+            {
+                string ApiKey = Session["apiKey"].ToString();
+                ClaimsDetails.ApiKey = ApiKey;
+            }
+            StringContent content = new StringContent(JsonConvert.SerializeObject(ClaimsDetails), Encoding.UTF8, "application/json");
+            var responses = await hclient.PostAsync("PreviousClaims", content);
+            var result = await responses.Content.ReadAsStringAsync();
+            if (result != null)
+            {
+                return Json(Url.Action("PremiumDetails", "Customer", new { cid = cid }));
+            }
             return RedirectToAction("PremiumDetails", "Customer", new { cid = ClaimsDetails.CustomerId });
             //return View(ClaimsDetails);
+        }
+        [HttpPost]
+        public ActionResult ClaimsDetailAjax(int id, string content)
+        {
+            NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
+            if (Request.IsAjaxRequest())
+            {
+                int cid = 1;
+                ViewBag.cid = cid;
+                if (content == "ClaimsDetail")
+                {
+                    List<SelectListItem> ClaimTypeList = new List<SelectListItem>();
+                    ClaimTypeList = commonModel.ClaimTypeRular(); //For Rular Life style
+                    return Json(new { status = true, des = ClaimTypeList });
+                }
+                else
+                {
+                    return Json(new { status = false, des = "" });
+                }
+            }
+            return Json(new { status = false, des = "" });
         }
     }
 }
