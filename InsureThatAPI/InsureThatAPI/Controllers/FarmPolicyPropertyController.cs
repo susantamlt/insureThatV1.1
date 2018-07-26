@@ -139,7 +139,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        else if (Policyincllist.Exists(p => p.name == "Livestock"))
                         {
                             return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
@@ -152,7 +152,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
@@ -612,6 +612,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue && cid>0)
+            {
+                FarmDetails.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                FarmDetails.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyProperty";
+            Session["ActionName"] = "FarmDetails";
             return View(FarmDetails);
         }
         [HttpPost]
@@ -634,8 +644,9 @@ namespace InsureThatAPI.Controllers
             string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
+            Session["FarmFxd"] = 1;
 
-            return RedirectToAction("FarmContents", "MobileFarm", new { cid = FarmDetails.CustomerId, PcId = FarmDetails.PolicyId });
+            return RedirectToAction("FarmContents", "MobileFarm", new { cid = FarmDetails.CustomerId, PcId = FarmDetails.PcId });
 
             return View(FarmDetails);
         }

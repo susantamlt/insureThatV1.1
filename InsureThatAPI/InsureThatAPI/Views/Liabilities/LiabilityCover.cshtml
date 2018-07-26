@@ -23,7 +23,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
-            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }  
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -115,7 +121,7 @@
     </div>
     <div class="mt-40 mb-40 row"></div>
     <div class="clearfix"></div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success savepolicyresult"></div>
     <div class="clearfix"></div>
     <div id="errorContainer"></div>
     @using (Ajax.BeginForm("LiabilityCover", "Liabilities", new { cid = @ViewBag.cid }, new AjaxOptions()
@@ -570,6 +576,7 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
             regex = /^[a-zA-Z ]*$/;
             text = "Special character & numeric are not allowed";
@@ -747,10 +754,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
                 }
             }
         });

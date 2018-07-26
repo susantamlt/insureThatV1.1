@@ -64,7 +64,7 @@ namespace InsureThatAPI.Models
         public bool Money { get; set; }
         public bool Transit { get; set; }
         public bool ValuablesFarm { get; set; }
-        public bool LiveStockFarm { get; set; }
+        public bool LivestockFarm { get; set; }
         public bool PersonalLiabilitiesFarm { get; set; }
         public bool HomeBuildingFarm { get; set; }
         public bool HomeContent { get; set; }
@@ -258,6 +258,7 @@ namespace InsureThatAPI.Models
 
     public class Floodarea
     {
+        public int? PcId { get; set; }
         public string ApiKey { get; set; }
         public string InceptionDate { get; set; }
         public string ExpiryDate { get; set; }

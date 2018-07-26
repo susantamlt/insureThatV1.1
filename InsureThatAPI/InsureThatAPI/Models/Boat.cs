@@ -40,14 +40,22 @@ namespace InsureThatAPI.Models
         public OtherPleaseDetails otherpleasedetailObj { get; set; }
         public AddressesBD AddressObj { get; set; }
 
+        public List<ValueDatas> MotorDetailsObjList { get; set; }
         public YearOfManufacture YearmanufactureMDObj { get; set; }
         public MakeAndModel MakemodelObj { get; set; }
+        public List<ValueDatas> MakemodelObjList { get; set; }
         public SerialNumbersMD SerialnumberObj { get; set; }
+        public List<ValueDatas> SerialNumberObjList { get; set; }
         public FuelType FueltypeObj { get; set; }
+        public List<ValueDatas> FuelObjList { get; set; }
         public MotorPosition MotorpositionObj { get; set; }
+        public List<ValueDatas> MotorPositionObjList { get; set; }
         public DriveType DrivetypeObj { get; set; }
+        public List<ValueDatas> DriverTypeObjList { get; set; }
         public Detectors DetectorMDObj { get; set; }
         public Powers PowerObj { get; set; }
+        public List<ValueDatas> PowerObjList { get; set; }
+
         public MarketValues MarketvalueObj { get; set; }
 
         public NameBOs NameboObj { get; set; }
@@ -79,6 +87,17 @@ namespace InsureThatAPI.Models
         public List<ValueDatas> InstitutionsObjList { get; set; }
         public LocationsIPB LocationObj { get; set; }
         public List<ValueDatas> LocationObjList { get; set; }
+    }
+    public class BoatMotorDetails
+    {
+        public YearOfManufacture YearmanufactureMDObj { get; set; }
+        public MakeAndModel MakemodelObj { get; set; }
+        public SerialNumbersMD SerialnumberObj { get; set; }
+        public FuelType FueltypeObj { get; set; }
+        public MotorPosition MotorpositionObj { get; set; }
+        public DriveType DrivetypeObj { get; set; }
+        public Detectors DetectorMDObj { get; set; }
+        public Powers PowerObj { get; set; }
     }
     public class MotorDetails
     {

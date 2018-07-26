@@ -132,9 +132,12 @@
                 <div class="row">
                     <div class="col-md-6 col-sm-6 col-xs-12"></div>
                     <div class="col-md-6 col-sm-6 col-xs-12 text-right">
+                        @if (Model.Actntype==null || ( Model.Actntype != null && Model.Actntype != "Attachs"))
+                        {
                         <button type="submit" class="form-control form-border-bottom btn newcut text-right" role="button" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:5px;line-height:22px;">
                             New Customer
                         </button>
+                        }
                     </div>
                 </div>
             }
@@ -164,20 +167,38 @@
 <script src="~/Scripts/select2.js"></script>
 <script type="text/javascript">
     $(".attchplcy").click(function () {
+        var phonenu = $("#phonenu").val();
+        var name = $("#name").val();
+        var email = $("#email").val();
+        if (email == '' || phonenu == '') {
+            return false;
+        }
+        else if ((email == '' && phonenu == '') || (email == '')) {
+            return false;
+        }
         $.ajax({
-            url: '/customer/AdvancedCustomerSearch',
-            type: 'POST',
-            data: { "actions":"newattach" },
-            success: function (response) {                
+            url: '/customer/Attach',
+            type: 'Post',
+            data: { "email": email, "name": name, "phone": phonenu },
+            success: function (responce) {
                 window.location.href = responce;
             }
         });
     });
     $(".attachpolicy").click(function () {
+        var phonenu = $("#phonenu").val();
+        var name = $("#name").val();
+        var email = $("#email").val();
+        if (email == '' || phonenu == '') {
+            return false;
+        }
+        else if ((email == '' && phonenu == '') || (email == '')) {
+            return false;
+        }
         $.ajax({
             url: '/customer/Attach',
             type: 'Post',
-            data: {},
+            data: { "email": email, "name": name,  "phone": phonenu},
             success: function (responce) {
                 window.location.href = responce;
             }

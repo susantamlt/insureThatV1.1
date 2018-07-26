@@ -20,6 +20,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin savepolicyP tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }  
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -109,6 +116,11 @@
             </div>
         </div>
     </div>
+    <div class="mt-40 mb-40 row"></div>
+    @if (Session["PolicyNo"] != null)
+    {
+        <h5 class="col-md-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
+    }
     <div class="clearfix"></div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     @using (Ajax.BeginForm("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = @ViewBag.cid }, new AjaxOptions()
@@ -374,7 +386,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>The extra wages that You have to pay due to a delay in shearing Your livestock. The delay must be caused by the moisture content of their fleece that prevents shearing. The moisture content must not be less than the level shown in the relevant shearing award. The most We will pay under Part D Shearing Delays is $50,000 in any one period of cover as shown on the Certificate.</p>
+                        <p>The extra wages that You have to pay due to a delay in shearing Your Livestock. The delay must be caused by the moisture content of their fleece that prevents shearing. The moisture content must not be less than the level shown in the relevant shearing award. The most We will pay under Part D Shearing Delays is $50,000 in any one period of cover as shown on the Certificate.</p>
                     </div>
                     <div class="modal-footer">
                         <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -475,7 +487,7 @@
                             },
                             success: function (responce) {
                                 if (responce.Status == false) {
-                                    $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                    $(".savepolicyresult").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
                                     $("html, body").animate({ scrollTop: 0 }, "slow");
                                 } else {
                                     window.location.href = responce;
@@ -554,7 +566,7 @@
                                 },
                                 success: function (responce) {
                                     if (responce.Status == false) {
-                                        $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                        $(".savepolicyresult").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
                                         $("html, body").animate({ scrollTop: 0 }, "slow");
                                     } else {
                                         window.location.href = responce;
@@ -601,7 +613,7 @@
                 <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
                 <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
                 <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
-                <li><a href="javascript:void(0);" class="Personal Liabilities Farm">+  Person Liability</a></li>
+                <li><a href="javascript:void(0);" class="Personal Liability">+  Person Liability</a></li>
                 <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
                 <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
@@ -621,7 +633,7 @@
                         data: { "unit": unitname, "cid": cid, "pcid": pcid, "Prid": prid },
                         success: function (responce) {
                             if (responce.Status == false) {
-                                $(".errors").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $(".savepolicyresult").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
                             } else {
                                 window.location.href = responce;
@@ -812,12 +824,13 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9 ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
@@ -827,7 +840,7 @@
         } else {
             var ItId = ItIdN;
         }
-        if (regex != '' && !regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {

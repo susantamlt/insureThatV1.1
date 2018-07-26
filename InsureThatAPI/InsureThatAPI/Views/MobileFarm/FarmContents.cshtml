@@ -24,6 +24,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }  
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -114,15 +121,31 @@
         </div>
     </div>
     <div class="mt-40 mb-40 row"></div>
+    @if (Session["PolicyNo"] != null)
+    {
+        <h5 class="col-md-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
+    }
     <div class="clearfix"></div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     <div id="processTabs">
-        <ul class="process-steps clearfix col-sm-12">
-            <li><a href="javascript:void(0)" id="ptb1">Farm Contents</a></li>
-            <li><a href="javascript:void(0)" id="ptb2">Farm Machinery</a></li>
-            <li><a href="javascript:void(0)" id="ptb3">Livestock</a></li>
-            <li><a href="javascript:void(0)" id="ptb4">Working Dogs and Beehives</a></li>
-        </ul>
+        @if (Model.PcId != null)
+        {
+            <ul class="process-steps clearfix col-sm-12">
+                <li><a href="javascript:void(0)" id="ptb1" class="success">Farm Contents</a></li>
+                <li><a href="javascript:void(0)" id="ptb2" class="success">Farm Machinery</a></li>
+                <li><a href="javascript:void(0)" id="ptb3" class="success">Livestock</a></li>
+                <li><a href="javascript:void(0)" id="ptb4" class="success">Working Dogs and Beehives</a></li>
+            </ul>
+        }
+        else
+        {
+            <ul class="process-steps clearfix col-sm-12">
+                <li><a href="javascript:void(0)" id="ptb1">Farm Contents</a></li>
+                <li><a href="javascript:void(0)" id="ptb2">Farm Machinery</a></li>
+                <li><a href="javascript:void(0)" id="ptb3">Livestock</a></li>
+                <li><a href="javascript:void(0)" id="ptb4">Working Dogs and Beehives</a></li>
+            </ul>
+        }
         <div>
             <div id="errorContainer"></div>
             <div class="errors"></div>
@@ -135,6 +158,8 @@
                 @Html.AntiForgeryToken()
                 @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
                 @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+                <input type="hidden" id="policyn" value="@Session["farmmobile"]" />
+                <input type="hidden" value="farmmobile" class="sectionname" />
                 <div id="ptab1">
                     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>FARM CONTENTS</h2></div>
                     <div class="col-md-12">
@@ -190,19 +215,19 @@
                         <div class="col-md-9">
                             <div class="col-md-11" style="padding-left:0px;padding-right:0px;">
                                 @*<input type="text" name="AdaddressObj.Address" data-regex="ANS" id="Address" readonly="readonly" class="form-control form-border-bottom">*@
-                                    <div class="col-md-6" style="padding-left:0px;">
-                                        @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "form-control form-border-bottom vlidationInsure",@readonly="readonly", @placeholder = "Address", @id = "addresshome", @style = "width:100%", @autocomplete = "off" })
-                                        <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
-                                    </div>
-                                    <div class="col-md-6" style="padding:0px;">
-                                        @Html.TextBoxFor(p => p.LocationObj.Location, new { @class = "form-control form-border-bottom vlidationInsure", @readonly = "readonly", @placeholder = "Suburb", @id = "suburb", @name = "SubUrb", @style = "width:100%" })
-                                        <label id="LocationObj.Location-error" class="error" for="LocationObj.Location"></label>
-                                    </div>
+                                <div class="col-md-6" style="padding-left:0px;">
+                                    @Html.TextBoxFor(p => p.AddressObj.Address, new { @class = "form-control form-border-bottom vlidationInsure", @readonly = "readonly", @placeholder = "Address", @id = "addresshome", @style = "width:100%", @autocomplete = "off" })
+                                    <label id="AddressObj.Address-error" class="error" for="AddressObj.Address"></label>
+                                </div>
+                                <div class="col-md-6" style="padding:0px;">
+                                    @Html.TextBoxFor(p => p.LocationObj.Location, new { @class = "form-control form-border-bottom vlidationInsure", @readonly = "readonly", @placeholder = "Suburb", @id = "suburb", @name = "SubUrb", @style = "width:100%" })
+                                    <label id="LocationObj.Location-error" class="error" for="LocationObj.Location"></label>
+                                </div>
                                 <label id="AdaddressObj.Address-error" class="error" for="AdaddressObj.Address"></label>
                             </div>
                             @*<div class="col-md-1">
-                                <button type="button" id="openNewAddressSet" class="form-control"></button>
-                            </div>*@
+                                    <button type="button" id="openNewAddressSet" class="form-control"></button>
+                                </div>*@
                         </div>
                     </div>
                     <div class="clearfix mb-md-30 mt-10 mb-10" id="newAddressSet" style="display:none;">
@@ -465,10 +490,10 @@
                     </div>
                 </div>
                 <div id="ptab3" style="display:none;">
-                    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>LIVESTOCK</h2></div>
-                    <h5 class="col-md-12"><a href="#livestockModalLabel" role="button" data-target="#livestockModalLabel" data-toggle="modal"><span class="cover-options">Click here to see what your Livestock is covered against.</span></a></h5>
-                    <div class="col-md-12"><P class="col-md-12">Please list the livestock you wish to cover </P></div>
-                    <div id="livestockModalLabel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
+                    <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head"><h2>Livestock</h2></div>
+                    <h5 class="col-md-12"><a href="#LivestockModalLabel" role="button" data-target="#LivestockModalLabel" data-toggle="modal"><span class="cover-options">Click here to see what your Livestock is covered against.</span></a></h5>
+                    <div class="col-md-12"><P class="col-md-12">Please list the Livestock you wish to cover </P></div>
+                    <div id="LivestockModalLabel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="costumModalLabel" aria-hidden="false">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -594,8 +619,8 @@
                                         <td class="no-border"><label id="FPTotalSumOfInsuredLivestockObj.TotalSumOfInsured-error" class="error" for="FPTotalSumOfInsuredLivestockObj.TotalSumOfInsured"></label></td>
                                     </tr>
                                     @*<tr>
-                                            <td colspan="3" class="no-border"><p class="form-border-bottom" style="margin-top:0px;padding-top: 10px;">Total for livestock</p></td>
-                                            <td class="no-border">$<input name="totallivestock" style="width:90%; display:inline-block;" id="totallivestock" readonly="readonly" class="form-control form-border-bottom" type="text"></td>
+                                            <td colspan="3" class="no-border"><p class="form-border-bottom" style="margin-top:0px;padding-top: 10px;">Total for Livestock</p></td>
+                                            <td class="no-border">$<input name="totalLivestock" style="width:90%; display:inline-block;" id="totalLivestock" readonly="readonly" class="form-control form-border-bottom" type="text"></td>
                                             <td class="no-border">&nbsp;</td>
                                         </tr>*@
                                 </tfoot>
@@ -603,13 +628,13 @@
                         </div>
                     </div>
                     <div class="mt-10 mb-10 col-md-12">
-                        <p class="col-md-8 col-sm-8 col-xs-12">Total for livestock</p>
+                        <p class="col-md-8 col-sm-8 col-xs-12">Total for Livestock</p>
                         <div class="col-md-4 col-sm-4 col-xs-12">
-                            $<input name="totallivestock" style="width:90%; display:inline-block;" id="totallivestock" readonly="readonly" class="form-control form-border-bottom" type="text" autocomplete="off" />
+                            $<input name="totalLivestock" style="width:90%; display:inline-block;" id="totalLivestock" readonly="readonly" class="form-control form-border-bottom" type="text" autocomplete="off" />
                         </div>
                     </div>
                     <div class="mt-10 mb-10 col-md-12">
-                        <p class="col-md-8 col-sm-8 col-xs-12">Do you wish to insure your livestock against dog attack?</p>
+                        <p class="col-md-8 col-sm-8 col-xs-12">Do you wish to insure your Livestock against dog attack?</p>
                         <div class="col-md-4 col-sm-4 col-xs-12">
                             <div class="policy-loc-row">
                                 <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">
@@ -626,7 +651,7 @@
                         </div>
                     </div>
                     <div class="mt-10 mb-10 col-md-12 ">
-                        <div class="col-md-8"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for livestock</p></div>
+                        <div class="col-md-8"><p>Please select <a href="#ExcesshomeBuildingModel" role="button" data-target="#ExcesshomeBuildingModel" data-toggle="modal">Excess</a> for Livestock</p></div>
                         <div class="col-md-4">
                             @Html.DropDownListFor(p => p.FPExcessLivestockObj.Excess, listsExcess, new { @class = "gray-bg-underline form-control form-border-bottom field-length-sm vlidationInsure commondataselection", @data_eiid = @Model.FPExcessLivestockObj.EiId, @data_itid = "0", @id = "excess" })
                             @Html.HiddenFor(p => p.FPExcessLivestockObj.EiId)
@@ -676,7 +701,7 @@
                                 {
                                     <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="workingdogs vlidationInsure" name="workingdogs" id="workingdogs1" value="0" /><label for="radio1"><span><span></span></span>No</label></div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="workingdogs vlidationInsure" name="workingdogs" id="workingdogs2" value="1" checked="checked" /><label for="radio1"><span><span></span></span>Yes</label></div>
-                                }                            
+                                }
                             </div>
                             <label id="harvestedWouldLike-error" class="error" for="harvestedWouldLike"></label>
                         </div>
@@ -714,8 +739,8 @@
                                 <label id="FPExcessWorkingDogsObj.Excess-error" class="error" for="FPExcessWorkingDogsObj.Excess"></label>
                             </div>
                             @*<div class="col-md-3">
-                                <div class="policy-loc-row"><input type="checkbox" name="ImposedWDBObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
-                            </div>*@
+                                    <div class="policy-loc-row"><input type="checkbox" name="ImposedWDBObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                                </div>*@
                         </div>
                     </div>
                     <h5 class="col-md-12">Beehives</h5>
@@ -752,7 +777,7 @@
                         <div class="col-md-4"><p>Would you like to insure your harvested crops?</p></div>
                         <div class="col-md-8 col-sm-8 col-xs-12">
                             <div class="policy-loc-row">
-                                @if (Model.FPBeehivesSumInsuredObj.BeehivesSumInsured != null )
+                                @if (Model.FPBeehivesSumInsuredObj.BeehivesSumInsured != null)
                                 {
                                     <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="beehivesWouldLike vlidationInsure" name="beehivesWouldLike" id="beehivesWouldLike1" value="0" /><label for="radio1"><span><span></span></span>No</label></div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="beehivesWouldLike vlidationInsure" name="beehivesWouldLike" id="beehivesWouldLike2" value="1" checked="checked" /><label for="radio1"><span><span></span></span>Yes</label></div>
@@ -761,7 +786,7 @@
                                 {
                                     <div class="col-md-3 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="beehivesWouldLike vlidationInsure" name="beehivesWouldLike" id="beehivesWouldLike1" value="0" checked="checked" /><label for="radio1"><span><span></span></span>No</label></div>
                                     <div class="col-md-4 col-sm-6 col-xs-12 policy-loc-row"><input type="radio" class="beehivesWouldLike vlidationInsure" name="beehivesWouldLike" id="beehivesWouldLike2" value="1" /><label for="radio1"><span><span></span></span>Yes</label></div>
-                                }                            
+                                }
                             </div>
                             <label id="beehivesWouldLike-error" class="error" for="beehivesWouldLike"></label>
                         </div>
@@ -791,8 +816,8 @@
                                 <label id="FPExcessBeehivesObj.Excess-error" class="error" for="FPExcessBeehivesObj.Excess"></label>
                             </div>
                             @*<div class="col-md-3">
-                                <div class="policy-loc-row"><input type="checkbox" name="ImposedbeehivesObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
-                            </div>*@
+                                    <div class="policy-loc-row"><input type="checkbox" name="ImposedbeehivesObj.Imposed" id="imposed"><label for="checkbox1"><span><span></span></span>Imposed</label></div>
+                                </div>*@
                         </div>
                     </div>
                     <div class="mt-10 mb-10 col-md-12 ">
@@ -858,94 +883,6 @@
                 </div>
             }
             <script type="text/javascript">
-                $(".policy-edit-wrap").click(function () {
-                    var selectedname = $(this).data('name');
-                    var selectedunid = $(this).data('unid');
-                    var selectedprofileid = $(this).data('profileid');
-                    var selectedcid = $(this).data('cid');
-                    var selectedTrId = $(this).data('trid');
-                    var PcId = $(this).data('pcid');
-                    var policyStatus = $(this).data('policystatus');
-                    // var prId = $(this).data('prId');
-                    var prId = 1021;
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/EndorsePolicy",
-                        data: {
-                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
-                        },
-                        success: function (responce) {
-                            if (responce.Status == false) {
-                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                            } else {
-                                window.location.href = responce;
-                            }
-                        }
-                    });
-                });
-                $(".policy-delet-wrap").click(function () {
-                    var r = confirm("Are you sure you want to delete this section?");
-                    if (r == true) {
-                        var PcId = $("#pcidd").val();
-                        var selectedunid = $(this).data('unid');
-                        var selectedcid = $(this).data('cid');
-                        var PcId = $(this).data('pcid');
-                        var selectedname = $(this).data('name');
-                        var selectedprofileid = $(this).data('profileid');
-                        var selectedTrId = $(this).data('trid');
-                        var policyStatus = $(this).data('policystatus');
-                        var currId = $(this).attr("id");
-                        $.ajax({
-                            type: "POST",
-                            url: "/Customer/DeleteUnit",
-                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
-                            success: function (responce) {
-                                if (responce.Status == true) {
-                                    var prentId = $('#' + currId).parent().parent().attr("id");
-                                    $('#' + prentId).remove();
-                                }
-                            }
-                        });
-                    }
-                });
-                $("#bindcover").click(function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/BindCover",
-                        data: {},
-                        success: function (responce) {
-                        }
-                    });
-                });
-            </script>
-        }
-        else
-        {
-            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
-            {
-                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
-                {
-                    <div class="policy-loc-row">
-                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('.inclusions').click(function () {
-                                    var name = $(this).attr('data-name');
-                                    var nid = $(this).attr('data-nid');
-                                    $('.policy-ed-del-wrapper').hide();
-                                    $("#policy-ed-del-wrap-" + nid).show();
-
-                                });
-                            });
-                        </script>
-                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
-                        </div>
-                    </div>
-                }
-                    <script type="text/javascript">
                         $(".policy-edit-wrap").click(function () {
                             var selectedname = $(this).data('name');
                             var selectedunid = $(this).data('unid');
@@ -960,11 +897,11 @@
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
                                 data: {
-                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus
                                 },
                                 success: function (responce) {
                                     if (responce.Status == false) {
-                                        $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                        $(".savepolicyresult").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
                                         $("html, body").animate({ scrollTop: 0 }, "slow");
                                     } else {
                                         window.location.href = responce;
@@ -997,7 +934,95 @@
                                 });
                             }
                         });
-                    </script>
+                        $("#bindcover").click(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/BindCover",
+                                data: {},
+                                success: function (responce) {
+                                }
+                            });
+                        });
+            </script>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
+
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                }
+                <script type="text/javascript">
+                            $(".policy-edit-wrap").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1021;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1
+                                    },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".savepolicyresult").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
+                            $(".policy-delet-wrap").click(function () {
+                                var r = confirm("Are you sure you want to delete this section?");
+                                if (r == true) {
+                                    var PcId = $("#pcidd").val();
+                                    var selectedunid = $(this).data('unid');
+                                    var selectedcid = $(this).data('cid');
+                                    var PcId = $(this).data('pcid');
+                                    var selectedname = $(this).data('name');
+                                    var selectedprofileid = $(this).data('profileid');
+                                    var selectedTrId = $(this).data('trid');
+                                    var policyStatus = $(this).data('policystatus');
+                                    var currId = $(this).attr("id");
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/DeleteUnit",
+                                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                        success: function (responce) {
+                                            if (responce.Status == true) {
+                                                var prentId = $('#' + currId).parent().parent().attr("id");
+                                                $('#' + prentId).remove();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                </script>
             }
         }
         <div class="clearfix"></div>
@@ -1011,7 +1036,7 @@
                 <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
                 <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
                 <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
-                <li><a href="javascript:void(0);" class="Personal Liabilities Farm">+  Person Liability</a></li>
+                <li><a href="javascript:void(0);" class="Personal Liability">+  Person Liability</a></li>
                 <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
                 <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
@@ -1020,51 +1045,51 @@
                 <li><a href="javascript:void(0);" class="Machinery">+  Machinery</a></li>
             </ul>
             <script type="text/javascript">
-                $(document).on('click', 'ul.unit > li', function () {
-                    var unitname = $(this).children("a").attr("class");
-                    var cid = $("#ciid").val();
-                    var pcid = $("#pcidd").val();
-                    var prid = 1021;
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/AddUnit",
-                        data: { "unit": unitname, "cid": cid, "pcid": pcid, "Prid": prid },
-                        success: function (responce) {
-                            if (responce.Status == false) {
-                                $(".errors").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                            } else {
-                                window.location.href = responce;
-                            }
-                        }
-                    });
-                });
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                var cid = $("#ciid").val();
+                                var pcid = $("#pcidd").val();
+                                var prid = 1021;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname, "cid": cid, "pcid": pcid, "Prid": prid },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".savepolicyresult").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
             </script>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("tr td .vlidationInsure").each(function () {
-            var id = $(this).attr('id');
-            var itid = $(this).data('itid');
-            if (itid == 0) {
-                var nItid = itid + 1;
-            } else {
-                var nItid = itid;
-            }
-            $(this).attr('id', id + '' + nItid);;
-        });
-    });
+                            $(document).ready(function () {
+                                $("tr td .vlidationInsure").each(function () {
+                                    var id = $(this).attr('id');
+                                    var itid = $(this).data('itid');
+                                    if (itid == 0) {
+                                        var nItid = itid + 1;
+                                    } else {
+                                        var nItid = itid;
+                                    }
+                                    $(this).attr('id', id + '' + nItid);;
+                                });
+                            });
 </script>
 <script type="text/javascript">
-    function addnewrows(id) {
-        var countId = id + 1;
-        var html = '';
-        var img = "~/images/mark-icon.png";
-        html = '<div class="clearfix mb-md-30 mt-10 mb-10" id="locationCovered-' + countId + '"><div class="col-md-6"><p>Location covered' + countId + ' <a href="javascript:void(0)" onclick="addnewrows(' + countId + ');"><img src="' + img + '" /></a></p></div><div class="col-md-6 col-sm-6 col-xs-12"><input type="text" name="location" class="form-control form-border-bottom"></div></div>';
-        $("#locationCovered-" + id).after(html);
-    }
+                            function addnewrows(id) {
+                                var countId = id + 1;
+                                var html = '';
+                                var img = "~/images/mark-icon.png";
+                                html = '<div class="clearfix mb-md-30 mt-10 mb-10" id="locationCovered-' + countId + '"><div class="col-md-6"><p>Location covered' + countId + ' <a href="javascript:void(0)" onclick="addnewrows(' + countId + ');"><img src="' + img + '" /></a></p></div><div class="col-md-6 col-sm-6 col-xs-12"><input type="text" name="location" class="form-control form-border-bottom"></div></div>';
+                                $("#locationCovered-" + id).after(html);
+                            }
 </script>
 <script type="text/javascript">
     var currentYearNew = new Date().getFullYear();
@@ -1187,6 +1212,14 @@
             $("#ptab4 #rlsFSFChome").val(1);
         }
     });
+    $(document).ready(function () {
+        var pcc = $("#pcidd").val();
+        if (pcc != '') {
+            $("#ptab4 #rlsFSFChome").val(1);
+            $("#ptab4 #rlsFMhome").val(1);
+            $("#ptab4 #rlsLShome").val(1);
+        }
+    });
     $("#ptabbtn2").click(function (e) {
         var valid = 1;
         $("#ptab2 .vlidationInsure").each(function () {
@@ -1222,10 +1255,10 @@
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Please enter description').css({ "display": "block" });
                     valid = 0;
-                } else if (newval!='' && !regex.test(newval)) {
-                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (newval!='' && !regex.test(newval)) {
+                //    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab2 #' + id).css({ "border": "" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("");
@@ -1262,10 +1295,10 @@
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Please enter serial number').css({ "display": "block" });
                     valid = 0;
-                } else if (newval != '' && !regex.test(newval)) {
-                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (newval != '' && !regex.test(newval)) {
+                //    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab2 #' + id).css({ "border": "" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("");
@@ -1371,7 +1404,7 @@
             if (nameAttr == "OptDogAttackLivestockObj.OptDogAttack") {
                 if ($("#ptab3  input[name='" + nameAttr + "']:checked").val() == undefined) {
                     $("#ptab3  input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                    $("#ptab3  label[for='" + nameAttr + "']").text("Please check wish to insure your livestock against dog attack").css({ "display": "block" });
+                    $("#ptab3  label[for='" + nameAttr + "']").text("Please check wish to insure your Livestock against dog attack").css({ "display": "block" });
                     valid = 0;
                 } else {
                     $("#ptab3  input[name='" + nameAttr + "']").css({ "border": "" });
@@ -1555,12 +1588,13 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9 ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
@@ -1570,15 +1604,39 @@
         } else {
             var ItId = ItIdN;
         }
-        if (regex != '' && !regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + name + "']").text('').css({ "display": "none" });
+            var ppcid = $("#pcidd").val();
+            var pc = $("#policyn").val();
+            if (ppcid != '' || (pc != '' && pc == 1)) {
+                ExistingPolicy();
+            }
             elementAjaxCall(Value, EIId, ItId, strID);
         }
     });
+    function ExistingPolicy() {
+        var existing;
+        $('.process-steps>li>a').each(function () {
+            var myText = $(this).attr('class');
+            if (myText == "success active") {
+                var myid = $(this).attr('id');
+                var mm = $("#" + myid).removeClass("success");
+                if (myid == "ptb1") {
+                    $("#ptab4 #rlsFSFChome").val(0);
+                }
+                if (myid == "ptb2") {
+                    $("#ptab4 #rlsFMhome").val(0);
+                }
+                if (myid == "ptb3") {
+                    $("#ptab4 #rlsLShome").val(0);
+                }
+            }
+        });
+    }
     function elementAjaxCall(Value, EIId, ItId, strID) {
         if (Value != '' && EIId != '') {
             $.ajax({
@@ -1593,11 +1651,16 @@
                             $.each(valuedata, function (index, value) {
                                 var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
                                 //$('#' + StateIdNewOne).val(value.Value);
-                                if ((value.Element.ElId == 62431 || value.Element.ElId == 62433 || value.Element.ElId == 62435 || value.Element.ElId == 62437 || value.Element.ElId == 62439) && strID != '') {
-                                    $("#tnameFM-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
-                                }
-                                if ((value.Element.ElId == 62467 || value.Element.ElId == 62469 || value.Element.ElId == 62471 || value.Element.ElId == 62473) && strID != '') {
-                                    $("#tnameLS-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                                    var identifiers = data.identifiers;
+                                    $.each(identifiers, function (index2, value2) {
+                                        if ((value.Element.ElId == 62431 || value.Element.ElId == 62433 || value.Element.ElId == 62435 || value.Element.ElId == 62437 || value.Element.ElId == 62439) && strID != '') {
+                                            $("#tnameFM-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                        if ((value.Element.ElId == 62467 || value.Element.ElId == 62469 || value.Element.ElId == 62471 || value.Element.ElId == 62473) && strID != '') {
+                                            $("#tnameLS-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                    });
                                 }
                                 if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
                                     var statedata = data.stateData;
@@ -1643,6 +1706,18 @@
                                             }
                                         });
                                     }
+                                }
+                            });
+                        }
+                    } else {
+                        if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                            var identifiers = data.identifiers;
+                            $.each(identifiers, function (index2, value2) {
+                                if ((EIId == 62431 || EIId == 62433 || EIId == 62435 || EIId == 62437 || EIId == 62439) && strID != '') {
+                                    $("#tnameFM-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                }
+                                if ((EIId == 62467 || EIId == 62469 || EIId == 62471 || EIId == 62473) && strID != '') {
+                                    $("#tnameLS-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
                                 }
                             });
                         }
@@ -1745,7 +1820,7 @@
         $.ajax({
             url: '/farm/farmajaxcontent',
             type: 'POST',
-            data: { "id": countId, "content": "liveStockFP" },
+            data: { "id": countId, "content": "LivestockFP" },
             success: function (response) {
                 if (response.status == true) {
                     var html1 = '';
@@ -1787,10 +1862,10 @@
                         var i = 1;
                         $(".FPDescriptionLS tbody tr").each(function () {
                             var RowId = $(this).attr('id');
-                            if (i != rowCount) {
-                                //$("#" + RowId + " .form-control").attr("data-itid", i);
+                            if (i <= rowCount) {
+                                $("#" + RowId + " .form-control").attr("data-itid", i);
                             } else {
-                                //$("#" + RowId + " .form-control").attr("data-itid", 0);
+                                $("#" + RowId + " .form-control").attr("data-itid", 0);
                             }
                             i++;
                         });
@@ -1807,7 +1882,7 @@
             }
         });
         var newvalLS = commaReplace(sum);
-        $("#ptab3 #totallivestock").val(newvalLS);
+        $("#ptab3 #totalLivestock").val(newvalLS);
     }
     $(document).on('focusout', '.autocalLS ', function () {
         var regex = /^[0-9]*$/;
@@ -1830,7 +1905,7 @@
             }
         });
         var newvalLS1 = commaReplace(sum);
-        $("#ptab3 #totallivestock").val(newvalLS1);
+        $("#ptab3 #totalLivestock").val(newvalLS1);
     });
     function tnameFMAdd(id) {
         var countId = id + 1;
@@ -1890,10 +1965,10 @@
                         var i = 1;
                         $(".FPDescriptionsFM tbody tr").each(function () {
                             var RowId = $(this).attr('id');
-                            if (i != rowCount) {
-                                //$("#" + RowId + " .form-control").attr("data-itid", i);
+                            if (i <= rowCount) {
+                                $("#" + RowId + " .form-control").attr("data-itid", i);
                             } else {
-                                //$("#" + RowId + " .form-control").attr("data-itid", 0);
+                                $("#" + RowId + " .form-control").attr("data-itid", 0);
                             }
                             i++;
                         });
@@ -1962,7 +2037,7 @@
             }
         });
         var newvalLS = commaReplace(sumls);
-        $("#ptab3 #totallivestock").val(newvalLS);
+        $("#ptab3 #totalLivestock").val(newvalLS);
 
         $(".autoCalculateWDB").each(function () {
             var Value1 = $('#suminsuredperdog').val();
@@ -2012,7 +2087,7 @@
                 data: { "Add": add, "suburb": suburb, "state": state, "postcode": postcode },
                 success: function (res) {
                     if (res.Status) {
-                        var locationhb = '' + add + ', ' + suburb+', '+state+', '+postcode;
+                        var locationhb = '' + add + ', ' + suburb + ', ' + state + ', ' + postcode;
                         $('#ptab1 #Address').val(locationhb);
                         $('#newAddressSet').fadeToggle();
                     }

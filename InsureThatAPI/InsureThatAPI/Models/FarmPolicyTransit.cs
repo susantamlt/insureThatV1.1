@@ -36,7 +36,7 @@ namespace InsureThatAPI.Models
 
     public class LivestockMaximumValOfOneload
     {
-        public string livestockMaxValoneload { get; set; }
+        public string LivestockMaxValoneload { get; set; }
         public int EiId { get; set; }
     }
 

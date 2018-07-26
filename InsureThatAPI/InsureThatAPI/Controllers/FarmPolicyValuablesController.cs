@@ -103,7 +103,7 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
-            int profileid = 0;
+            int? profileid = 0;
             int Fprofileid = 0;
             if (Session["unId"] != null && Session["ProfileId"] != null)
             {
@@ -136,14 +136,18 @@ namespace InsureThatAPI.Controllers
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
 
-                    int sectionId = policyinclusions.Where(p => p.Name == "Valuables" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
-                    int? profileunid = policyinclusions.Where(p => p.Name == "Valuables" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    unid = policyinclusions.Where(p => p.Name == "Valuables").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Valuables").Select(p => p.ProfileUnId).FirstOrDefault();
                     HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
+                }
+                else
+                {
+                    return RedirectToAction("VehicleDescription", "FarmMotors", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -195,6 +199,7 @@ namespace InsureThatAPI.Controllers
                             if (unitdetails != null && unitdetails.SectionData != null)
                             {
                                 Session["unId"] = unitdetails.SectionData.UnId;
+                                Session["profileId"] = unitdetails.SectionData.ProfileUnId;
                                 Session["FprofileId"] = unitdetails.SectionData.ProfileUnId;
                             }
                         }
@@ -263,6 +268,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue && cid > 0)
+            {
+                FPValuables.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                FPValuables.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyValuables";
+            Session["ActionName"] = "Valuables";
             return View(FPValuables);
         }
 

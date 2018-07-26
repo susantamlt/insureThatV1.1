@@ -36,6 +36,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
         </div>
     </div>
     <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
@@ -797,7 +804,7 @@ else
                         </div>
                         <div class="mt-10 mb-10 col-md-12">
                             <div class="col-md-12 table-8">
-                                <table class="table" style=" width: 100%; ">
+                                <table class="table InterestedParty" style=" width: 100%; ">
                                     <thead>
                                         <tr>
                                             <th class="space_left">Name of Institution</th>
@@ -1995,6 +2002,7 @@ else
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
             regex = /^[a-zA-Z ]*$/;
             text = "Special character & numeric are not allowed";
@@ -2043,9 +2051,14 @@ else
                         if (valuedata != '' && valuedata != null) {
                             $.each(valuedata, function (index, value) {
                                 var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                //$('#' + StateIdNewOne).val(value.Value);
-                                if ((value.Element.ElId == 62189 || value.Element.ElId == 62187) && strID != '') {
-                                    $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                //$('#' + StateIdNewOne).val(value.Value);                                
+                                if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                                    var identifiers = data.identifiers;
+                                    $.each(identifiers, function (index2, value2) {
+                                        if ((value.Element.ElId == 62189 || value.Element.ElId == 62187) && strID != '') {
+                                            $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                    });
                                 }
                                 if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
                                     var statedata = data.stateData;
@@ -2091,6 +2104,15 @@ else
                                             }
                                         });
                                     }
+                                }
+                            });
+                        }
+                    } else {
+                        if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                            var identifiers = data.identifiers;
+                            $.each(identifiers, function (index2, value2) {
+                                if ((EIId == 62189 || EIId == 62187) && strID != '') {
+                                    $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
                                 }
                             });
                         }
@@ -2345,14 +2367,14 @@ else
                 success: function (response) {
                     if (response.status == true) {
                         $("#tnameHDIP-tr-" + id).remove();
-                        var rowCount = $('#ptab4 .table tbody tr').length;
+                        var rowCount = $('#ptab4 .InterestedParty tbody tr').length;
                         var i = 1;
-                        $("#ptab4 .table tbody tr").each(function () {
+                        $("#ptab4 .InterestedParty tbody tr").each(function () {
                             var RowId = $(this).attr('id');
-                            if (i != rowCount) {
-                                //$("#" + RowId + " .form-control").attr("data-itid", i);
+                            if (i <= rowCount) {
+                                $("#" + RowId + " .form-control").attr("data-itid", i);
                             } else {
-                                //$("#" + RowId + " .form-control").attr("data-itid", 0);
+                                $("#" + RowId + " .form-control").attr("data-itid", 0);
                             }
                             i++;
                         });

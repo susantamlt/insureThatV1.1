@@ -21,7 +21,7 @@ namespace InsureThatAPI.Controllers
             return View();
         }
         [HttpGet]
-        public ActionResult DisclosureDetails(int? cid, int? PcId)
+        public async System.Threading.Tasks.Task<ActionResult> DisclosureDetails(int? cid, int? PcId)
         {
             string apikey = null;
             if (Session["Apikey"] != null)
@@ -38,9 +38,18 @@ namespace InsureThatAPI.Controllers
             {
                 DisclosureDetails.CustomerId = cid.Value;
             }
+            var db = new MasterDataEntities();
             DisclosureDetails.PolicyInclusions = new List<SessionModel>();
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
             DisclosureDetails.PolicyInclusions = Policyincllist;
+            var policyinclusions = new List<usp_GetUnit_Result>();
+            if (PcId != null && PcId > 0)
+            {
+                policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                DisclosureDetails.PolicyInclusion = new List<usp_GetUnit_Result>();
+                DisclosureDetails.PolicyInclusion = policyinclusions;
+            }
+            DisclosureDetails.PcId = PcId;
             DisclosureDetails.PreviousinsurerObj = new PreviousInsurer();
             DisclosureDetails.PreviousinsurerObj.EiId = 2019;
             DisclosureDetails.RenewpolicyObj = new RenewPolicy();
@@ -61,6 +70,71 @@ namespace InsureThatAPI.Controllers
             DisclosureDetails.DutydisclosureObj.EiId = 2018;
             DisclosureDetails.DetailsboxObj = new DetailsBox();
             DisclosureDetails.DetailsboxObj.EiId = 415;
+            ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
+            HttpClient hclient = new HttpClient();
+            string url = System.Configuration.ConfigurationManager.AppSettings["APIURL"];
+            hclient.BaseAddress = new Uri(url);
+            hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage getunit = await hclient.GetAsync("DisclosureDetails?ApiKey=" + apikey);
+            var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+            if (EmpResponse != null)
+            {
+                unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);               
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.DetailsboxObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.DetailsboxObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.DetailsboxObj.Details= val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.BankruptObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.BankruptObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.BankruptObj.Bankrupt = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.CriminaloffenceObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.CriminaloffenceObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.CriminaloffenceObj.Offence = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.DateObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.DateObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.DateObj.Date = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.DutydisclosureObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.DutydisclosureObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.DutydisclosureObj.Dutydisclosure = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.ImmediatedangerObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.ImmediatedangerObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.ImmediatedangerObj.Danger = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.PreviousinsurerObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.PreviousinsurerObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.PreviousinsurerObj.Pinsurer = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.PrisonsentenceObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.PrisonsentenceObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.PrisonsentenceObj.Sentence = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.RenewpolicyObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.RenewpolicyObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.RenewpolicyObj.Rpolicy = val;
+                }
+                if (unitdetails.ValueData.Exists(p => p.Element.ElId == DisclosureDetails.UndischargedObj.EiId))
+                {
+                    string val = unitdetails.ValueData.Where(p => p.Element.ElId == DisclosureDetails.UndischargedObj.EiId).Select(p => p.Value).FirstOrDefault();
+                    DisclosureDetails.UndischargedObj.Undischarge = val;
+                }
+            }
+            if(Session["PrId"]!=null)
+            {
+                DisclosureDetails.PrId = Convert.ToInt32(Session["PrId"]);
+            }
             return View(DisclosureDetails);
         }
         [HttpPost]
@@ -180,7 +254,7 @@ namespace InsureThatAPI.Controllers
             if (result != null)
             {
             }
-            return RedirectToAction("ClaimsQ", "Customer", new { cid = DisclosureDetails.CustomerId });
+            return RedirectToAction("ClaimsQ", "Customer", new { cid = DisclosureDetails.CustomerId,PcId= DisclosureDetails.PcId });
             return View(DisclosureDetails);
         }
     }

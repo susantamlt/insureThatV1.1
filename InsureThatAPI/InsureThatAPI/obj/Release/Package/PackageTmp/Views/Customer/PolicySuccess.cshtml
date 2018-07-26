@@ -4,7 +4,7 @@
 }
 <div class="col-xs-12 endorsment-overview">
     <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 policy-full-head">
-        <h2>Policy Success</h2>
+        <h2>Policy Status</h2>
     </div>
     <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12 text-right">
         @*<a style="padding: 5px 15px;" class="btn color-bk-btn col-md-3 margin-right-10 leftmargin-sm pull-right" href="@Url.Action("AdvancedCustomerSearch", "Customer")">ADVANCED SEARCH</a>*@
@@ -13,14 +13,21 @@
 </div>
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 endorsment-overview">
     <div class="clearfix"></div>
+    @if (TempData["Error"] != null)
+    {
+        <h3 class="col-md-12" style="color:red" ;>Thank you for your quotation request. We're sorry, your referal could not be completed.  </h3>
+    }
+    else
+    {
     <h3 class="col-md-12" style="color:green" ;>Thank you for your quotation request, our underwriters will now review your application and will contact you if they have any questions.   We will advise you whether or not your quotation has been accepted.  </h3>
+    }
     <button type="button" class="col-md-3  pull-right btn-primary btn col-md-12 width-480-100" id="referunder">Bind Cover</button>
 </div>
 <script>
     $("#referunder").click(function () {
         $.ajax({
             type: "POST",
-            url: "/Customer/Reffer",
+            url: "/Customer/BindCover",
             data: {},
             success: function (responce) {              
                 if (responce != '')

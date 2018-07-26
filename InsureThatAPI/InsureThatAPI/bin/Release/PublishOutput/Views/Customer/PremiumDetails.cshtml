@@ -21,15 +21,18 @@
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsment-overview">
     <div class="clearfix"></div>
-    @using (Html.BeginForm("BindCover", "Customer", FormMethod.Get, new { enctype = "multipart/form-data", cid = @ViewBag.cid, @id = "premium", @name = "premiumDec" }))
+    <div class="error"></div>
+    @using (Html.BeginForm("Reffer", "Customer", FormMethod.Post))
     {
-
         <div class="col-md-12 quotation-wrapper">
             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
             @Html.HiddenFor(p => p.PcId, new { @id = "pcidd" })
-            @if(Session["PolicyNo"] != null)
-            {
+        
+             @Html.HiddenFor(p => p.PolicyData.PrId, new { @id = "prid" })
             
+            @if (Session["PolicyNo"] != null)
+            {
+
                 <h5 class="clearfix col-md-12 col-sm-12 col-xs-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
             }
             <table class="table_color text-center">
@@ -83,13 +86,12 @@
                 </p>
             </div>
             <div class="col-md-4">
-                <button type="submit" class="form-control button-3d nomargin tab-linker quot-btn leftmargin-sm pull-right" style="margin-right:20%;">Reffer to Under writter</button>
+                <button type="submit" class="form-control button-3d nomargin tab-linker quot-btn leftmargin-sm pull-right" style="margin-right:20%;">Refer to Underwriter</button>
             </div>
         </div>
         @*<div><button type="submit" class="button-3d nomargin tab-linker quot-btn">Bind Quotation</button>
             <button type="submit" class="button-3d nomargin tab-linker">Insurer Registration</button></div>*@
     }
-
 </div>
 <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12 policy-side-wrap">
     <h3>Policy Sections</h3>
@@ -127,8 +129,8 @@
                     var selectedTrId = $(this).data('trid');
                     var PcId = $(this).data('pcid');
                     var policyStatus = $(this).data('policystatus');
-                    // var prId = $(this).data('prId');
-                    var prId = 1029;
+                    var prId = $("#prid").val();
+                    //var prId = 1029;
                     $.ajax({
                         type: "POST",
                         url: "/Customer/EndorsePolicy",
@@ -207,7 +209,6 @@
                     </div>
                     <script>
                             $(".policy-edit-wrap").click(function () {
-
                                 var selectedname = $(this).data('name');
                                 var selectedunid = $(this).data('unid');
                                 var selectedprofileid = $(this).data('profileid');
@@ -215,8 +216,8 @@
                                 var selectedTrId = $(this).data('trid');
                                 var PcId = $(this).data('pcid');
                                 var policyStatus = $(this).data('policystatus');
-                                // var prId = $(this).data('prId');
-                                var prId = 1029;
+                                var prId = $("#prid").val();
+                               // var prId = 1029;
                                 $.ajax({
                                     type: "POST",
                                     url: "/Customer/EndorsePolicy",
@@ -265,70 +266,70 @@
 
         }
         <div class="clearfix"></div>
-        <div class="dropdown pc pc-in">
-            <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
-            <ul class="dropdown-menu col-md-12 unit">
-                <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
-                <li><a href="javascript:void(0);" class="Home Contents">+  Home Content</a></li>
-                <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
-                <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
-                <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
-                <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
+        @*<div class="dropdown pc pc-in">
+                <a class="new-cover-policy" href="javascript:void(0);">New Section</a>
+                <ul class="dropdown-menu col-md-12 unit">
+                    <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
+                    <li><a href="javascript:void(0);" class="Home Contents">+  Home Content</a></li>
+                    <li><a href="javascript:void(0);" class="Farm Property">+  Farm Property</a></li>
+                    <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
+                    <li><a href="javascript:void(0);" class="Motor">+  Motor</a></li>
+                    <li><a href="javascript:void(0);" class="Pet">+  Pet</a></li>
 
-                <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
-                <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
-            </ul>
-            <script type="text/javascript">
-                            $(document).on('click', 'ul.unit > li', function () {
-                                var unitname = $(this).children("a").attr("class");
-                                var cid = $("#ciid").val();
-                                var pcid = $("#pcidd").val();
-                                var prid = 1029;
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/Customer/AddUnit",
-                                    data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
-                                    success: function (responce) {
-                                        if (responce.Status == false) {
-                                            $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                            $("html, body").animate({ scrollTop: 0 }, "slow");
-                                        } else {
-                                            window.location.href = responce;
+                    <li><a href="javascript:void(0);" class="Travel">+  Travel</a></li>
+                    <li><a href="javascript:void(0);" class="Boat">+  Boat</a></li>
+                </ul>
+                <script type="text/javascript">
+                                $(document).on('click', 'ul.unit > li', function () {
+                                    var unitname = $(this).children("a").attr("class");
+                                    var cid = $("#ciid").val();
+                                    var pcid = $("#pcidd").val();
+                                    var prid = 1029;
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/AddUnit",
+                                        data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
+                                        success: function (responce) {
+                                            if (responce.Status == false) {
+                                                $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                                            } else {
+                                                window.location.href = responce;
+                                            }
                                         }
-                                    }
+                                    });
                                 });
-                            });
-            </script>
-            <script>
-                            $(".viewsectn").click(function () {
-                                var selectedname = $(this).data('name');
-                                var selectedunid = $(this).data('unid');
-                                var selectedprofileid = $(this).data('profileid');
-                                var selectedcid = $(this).data('cid');
-                                var selectedTrId = $(this).data('trid');
-                                var unitid = $(this).data('unitid');
-                                var PcId = $(this).data('pcid');
-                                //var policyStatus = $(this).data('policystatus');
-                                // var prId = $(this).data('prId');
-                                var prId = 1029;
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/Customer/ViewSection",
-                                    data: {
-                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": null, "prId": prId, "unitid": unitid
-                                    },
-                                    success: function (responce) {
-                                        if (responce.Status == false) {
-                                            $(".error").css("color", "red").html("Failed to view section, there is a problem in core system.").delay(100000).fadeOut();
-                                            $("html, body").animate({ scrollTop: 0 }, "slow");
-                                        } else {
-                                            window.location.href = responce;
+                </script>
+                <script>
+                                $(".viewsectn").click(function () {
+                                    var selectedname = $(this).data('name');
+                                    var selectedunid = $(this).data('unid');
+                                    var selectedprofileid = $(this).data('profileid');
+                                    var selectedcid = $(this).data('cid');
+                                    var selectedTrId = $(this).data('trid');
+                                    var unitid = $(this).data('unitid');
+                                    var PcId = $(this).data('pcid');
+                                    //var policyStatus = $(this).data('policystatus');
+                                    // var prId = $(this).data('prId');
+                                    var prId = 1029;
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/ViewSection",
+                                        data: {
+                                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "policyStatus": null, "prId": prId, "unitid": unitid
+                                        },
+                                        success: function (responce) {
+                                            if (responce.Status == false) {
+                                                $(".error").css("color", "red").html("Failed to view section, there is a problem in core system.").delay(100000).fadeOut();
+                                                $("html, body").animate({ scrollTop: 0 }, "slow");
+                                            } else {
+                                                window.location.href = responce;
+                                            }
                                         }
-                                    }
+                                    });
                                 });
-                            });
-            </script>
-        </div>
+                </script>
+            </div>*@
     </div>
 </div>
 
@@ -337,11 +338,15 @@
                                 var cid = $("#ciid").val();
                                 $.ajax({
                                     type: "GET",
-                                    url: "/Customer/BindCover",
-                                    data: {
-                                        "cid": cid
-                                    },
+                                    url: "/Customer/Reffer",
+                                    data: {},
                                     success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to refer.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
                                     }
                                 });
                             });

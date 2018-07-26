@@ -9,17 +9,24 @@
     listsExcess.Add(new SelectListItem { Value = "2000", Text = "$2,000" });
 }
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
-    <h4><span>FARM POLICY</span> / LIVESTOCK</h4>
+    <h4><span>FARM POLICY</span> / Livestock</h4>
 </div>
 <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
     <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
-        <h2>LIVESTOCK</h2>
+        <h2>Livestock</h2>
     </div>
     <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
         <div class="pull-right">
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin savepolicyP tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }  
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -109,12 +116,17 @@
             </div>
         </div>
     </div>
+    <div class="mt-40 mb-40 row"></div>
+    @if (Session["PolicyNo"] != null)
+    {
+        <h5 class="col-md-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
+    }
     <div class="clearfix"></div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     @using (Ajax.BeginForm("Livestock", "FarmPolicyLivestock", new { cid = @ViewBag.cid }, new AjaxOptions()
     {
         HttpMethod = "POST"
-    }, new { @id = "livestockID", @name = "livestockName" }))
+    }, new { @id = "LivestockID", @name = "LivestockName" }))
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
@@ -275,7 +287,7 @@
         <div class="clearfix mb-md-30 mt-10 mb-10">
             <div class="col-md-6"><p>For how much do you wish to insure your animal?</p></div>
             <div class="col-md-6">
-                $@Html.TextBoxFor(p => p.SumInsuredLivestockFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "suminsuredlivestock", @data_eiid = @Model.SumInsuredLivestockFPObj.EiId, @data_regex = 'N', @autocomplete = "off" })
+                $@Html.TextBoxFor(p => p.SumInsuredLivestockFPObj.SumInsured, new { @style = "width:95%; display:inline-block;", @class = "vlidationInsure commondatatestComma commondatatestPrice form-control form-border-bottom", @id = "suminsuredLivestock", @data_eiid = @Model.SumInsuredLivestockFPObj.EiId, @data_regex = 'N', @autocomplete = "off" })
                 @Html.HiddenFor(p => p.SumInsuredLivestockFPObj.EiId)
                 <label id="SumInsuredLivestockFPObj.SumInsured-error" class="error" for="SumInsuredLivestockFPObj.SumInsured"></label>
             </div>
@@ -527,7 +539,7 @@
                         },
                         success: function (responce) {
                             if (responce.Status == false) {
-                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $(".savepolicyresult").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
                             } else {
                                 window.location.href = responce;
@@ -615,7 +627,7 @@
                                 },
                                 success: function (responce) {
                                     if (responce.Status == false) {
-                                        $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                        $(".savepolicyresult").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
                                         $("html, body").animate({ scrollTop: 0 }, "slow");
                                     } else {
                                         window.location.href = responce;
@@ -662,7 +674,7 @@
                 <li><a href="javascript:void(0);" class="Electronics">+  Electronics</a></li>
                 <li><a href="javascript:void(0);" class="Money">+  Money</a></li>
                 <li><a href="javascript:void(0);" class="Livestock">+  Livestock</a></li>
-                <li><a href="javascript:void(0);" class="Personal Liabilities Farm">+  Person Liability</a></li>
+                <li><a href="javascript:void(0);" class="Personal Liability">+  Person Liability</a></li>
                 <li><a href="javascript:void(0);" class="Home Buildings">+  Home Buildings</a></li>
                 <li><a href="javascript:void(0);" class="Home Contents">+  Home Contents</a></li>
                 <li><a href="javascript:void(0);" class="Valuables">+  Valuables</a></li>
@@ -682,7 +694,7 @@
                         data: { "unit": unitname, "cid": cid, "pcid": pcid, "Prid": prid },
                         success: function (responce) {
                             if (responce.Status == false) {
-                                $(".errors").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                $(".savepolicyresult").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
                                 $("html, body").animate({ scrollTop: 0 }, "slow");
                             } else {
                                 window.location.href = responce;
@@ -706,25 +718,25 @@
                 var newval = $(this).val();
                 if (nameAttr == "BreedOfAnimalFPObj.BreedofAnimal") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval != '' && !regex.test(newval)) {
-                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $("input[name='" + nameAttr + "']").css({ "border": "" });
-                        $("label[for='" + nameAttr + "']").text("");
-                    }
+                    //if (newval != '' && !regex.test(newval)) {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "" });
+                    //    $("label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "ColourOfAnimalFPObj.ColourofAnimal") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval != '' && !regex.test(newval)) {
-                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $("input[name='" + nameAttr + "']").css({ "border": "" });
-                        $("label[for='" + nameAttr + "']").text("");
-                    }
+                    //if (newval != '' && !regex.test(newval)) {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "" });
+                    //    $("label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "UseOfAnimalFPObj.UseofAnimal") {
                     if ($('#classofanimal').val() == 4 && newval == '') {
@@ -738,25 +750,25 @@
                 }
                 if (nameAttr == "DescBrandOfAnimalFPObj.BrandofAnimal") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval != '' && !regex.test(newval)) {
-                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $("input[name='" + nameAttr + "']").css({ "border": "" });
-                        $("label[for='" + nameAttr + "']").text("");
-                    }
+                    //if (newval != '' && !regex.test(newval)) {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "" });
+                    //    $("label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "DescMarksOfAnimalFPObj.MarkingsofAnimal") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (newval != '' && !regex.test(newval)) {
-                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $("input[name='" + nameAttr + "']").css({ "border": "" });
-                        $("label[for='" + nameAttr + "']").text("");
-                    }
+                    //if (newval != '' && !regex.test(newval)) {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "" });
+                    //    $("label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "OptSoundHealthofAnimalFPObj.HealthofAnimal") {
                     if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
@@ -774,10 +786,10 @@
                         $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text("please provide details").css({ "display": "block" });
                         valid = 0;
-                    } else if (!regex.test(newval)) {
-                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
+                    //} else if (!regex.test(newval)) {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
                     } else {
                         $("input[name='" + nameAttr + "']").css({ "border": "" });
                         $("label[for='" + nameAttr + "']").text("");
@@ -799,10 +811,10 @@
                         $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
                         $("label[for='" + nameAttr + "']").text("Please please provide details").css({ "display": "block" });
                         valid = 0;
-                    } else if (!regex.test(newval)) {
-                        $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
+                    //} else if (!regex.test(newval)) {
+                    //    $("input[name='" + nameAttr + "']").css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
                     } else {
                         $("input[name='" + nameAttr + "']").css({ "border": "" });
                         $("label[for='" + nameAttr + "']").text("");
@@ -910,7 +922,7 @@
                 }
             });
             if (valid == 1) {
-                $("form[name='livestockName']").submit();
+                $("form[name='LivestockName']").submit();
             }
         });
     });
@@ -932,17 +944,18 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9 ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
         }
-        if (!regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {

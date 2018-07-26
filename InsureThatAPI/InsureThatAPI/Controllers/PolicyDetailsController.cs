@@ -1585,7 +1585,6 @@ namespace InsureThatAPI.Controllers
                         var EmpResponses = getunit.Content.ReadAsStringAsync().Result;
                         if (EmpResponses != null)
                         {
-                            model.DriverList = new DriverList();
                             model.DriverList = JsonConvert.DeserializeObject<DriverList>(EmpResponses);
                         }
                         string unit_Type = null;

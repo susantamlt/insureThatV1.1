@@ -71,7 +71,7 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                            else if (Policyincllist.Exists(p => p.name == "Livestock"))
                             {
                                 return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
                             }
@@ -83,7 +83,7 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                             }          
-                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                            else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                             {
                                 return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                             }
@@ -148,7 +148,7 @@ namespace InsureThatAPI.Controllers
             MobileFarmContents.FPSumOfInsuredFMObj = new FPSumOfInsuredFM();
             MobileFarmContents.FPSumOfInsuredFMObj.EiId = 62439;
             #endregion
-            #region livestock
+            #region Livestock
             MobileFarmContents.FPDescriptionLivestockObj = new FPDescriptionLivestock();
             MobileFarmContents.FPDescriptionLivestockObj.DescriptionList = desList;
             MobileFarmContents.FPDescriptionLivestockObj.EiId = 62467;
@@ -198,7 +198,7 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
-            int profileid = 0;
+            int? profileid = 0;
             int Fprofileid = 0;
             if (Session["unId"] != null && Session["ProfileId"] != null)
             {
@@ -230,14 +230,18 @@ namespace InsureThatAPI.Controllers
                 bool policyinclusion = policyinclusions.Exists(p => p.Name == "Mobile Farm Property");
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-                    int sectionId = policyinclusions.Where(p => p.Name == "Mobile Farm Property").Select(p => p.UnId).FirstOrDefault();
-                    int? profileunid = policyinclusions.Where(p => p.Name == "Mobile Farm Property" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    unid = policyinclusions.Where(p => p.Name == "Mobile Farm Property").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Mobile Farm Property").Select(p => p.ProfileUnId).FirstOrDefault();
                     HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
+                }
+                else
+                {
+                    return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -587,6 +591,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                MobileFarmContents.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                MobileFarmContents.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyMobileFarm";
+            Session["ActionName"] = "FarmContents";
             return View(MobileFarmContents);
         }
         [HttpPost]
@@ -611,7 +625,7 @@ namespace InsureThatAPI.Controllers
             string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
-        
+            Session["farmmobile"] = 1;
             return RedirectToAction("Burglary", "FarmPolicyBurglary", new { cid = MobileFarmContents.CustomerId, PcId = MobileFarmContents.PcId });
 
             return View(MobileFarmContents);
@@ -648,7 +662,7 @@ namespace InsureThatAPI.Controllers
                     excessforUMPay.AddRange(excessforUMPayB);
                     return Json(new { status = true, des = excessforUMPay });
                 }
-                else if (content == "liveStock")
+                else if (content == "Livestock")
                 {
                     List<SelectListItem> desList = new List<SelectListItem>();
                     List<SelectListItem> desListB = new List<SelectListItem>();

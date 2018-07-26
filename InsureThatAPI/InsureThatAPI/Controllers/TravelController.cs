@@ -89,6 +89,10 @@ namespace InsureThatAPI.Controllers
             TravelCover.ExcessObj = new ExcessesTC();
             TravelCover.ExcessObj.EiId = 61443;
             TravelCover.ExcessObj.ExcessList = ExcTcList;
+            TravelCover.TravellerscoveredGObj = new TravellersToBeCoveredG();
+            TravelCover.TravellerscoveredGObj.EiId = 61463;
+            TravelCover.DataofbirthGObj = new DataOfBirthsTCG();
+            TravelCover.DataofbirthGObj.EiId = 61465;
             string policyid = null;
             bool policyinclusion = policyinclusions.Exists(p => p.Name == "Travel");
             HttpClient hclient = new HttpClient();
@@ -102,11 +106,20 @@ namespace InsureThatAPI.Controllers
                 unid = Convert.ToInt32(Session["unId"]);
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
                 TravelCover.ExistingPolicyInclustions = policyinclusions;
                 TravelCover.PolicyInclusion = policyinclusions;
                 TravelCover.NewSections = cmn.NewSectionP(policyinclusions);
+                if (Session["unId"] != null && Session["profileId"] != null)
+                {
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+                }
+                else
+                {
+                    return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
+                }
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
@@ -253,6 +266,52 @@ namespace InsureThatAPI.Controllers
                                 elmnts.Add(vds);
                             }
                             TravelCover.DataofbirthObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.TravellerscoveredGObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredGObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            TravelCover.TravellerscoveredGObj.Travellerscovered = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == TravelCover.TravellerscoveredGObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var TravellerscoveredGList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredGObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < TravellerscoveredGList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61463;
+                                vds.Element.ItId = TravellerscoveredGList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.TravellerscoveredGObj.EiId && p.Element.ItId == TravellerscoveredGList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            TravelCover.TravellerscoveredGObjList = elmnts;
+                        }
+                    }
+                    if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.DataofbirthGObj.EiId))
+                    {
+                        string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthGObj.EiId).Select(p => p.Value).FirstOrDefault();
+                        if (val != null && !string.IsNullOrEmpty(val))
+                        {
+                            TravelCover.DataofbirthGObj.Dataofbirth = val;
+                        }
+                        if (unitdetails.SectionData.ValueData.Select(p => p.Element.ElId == TravelCover.DataofbirthGObj.EiId).Count() > 1)
+                        {
+                            List<ValueDatas> elmnts = new List<ValueDatas>();
+                            var DataofbirthGList = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthGObj.EiId).Select(p => p.Element.ItId).ToList();
+                            for (int i = 0; i < DataofbirthGList.Count(); i++)
+                            {
+                                ValueDatas vds = new ValueDatas();
+                                vds.Element = new Elements();
+                                vds.Element.ElId = 61465;
+                                vds.Element.ItId = DataofbirthGList[i];
+                                vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == TravelCover.DataofbirthGObj.EiId && p.Element.ItId == DataofbirthGList[i]).Select(p => p.Value).FirstOrDefault();
+                                elmnts.Add(vds);
+                            }
+                            TravelCover.DataofbirthGObjList = elmnts;
                         }
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == TravelCover.TravellerscoveredObj.EiId))

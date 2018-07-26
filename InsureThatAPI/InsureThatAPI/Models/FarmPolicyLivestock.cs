@@ -24,20 +24,35 @@ namespace InsureThatAPI.Models
         public string ApiKey { get; set; }
         public string PolicyId { get; set; }
         public ClassOfAnimalFP ClassOfAnimalFPObj { get; set; }
+        public List<ValueDatas> ClassOfAnimalFPObjList { get; set; }
         public TypeOfAnimalFP TypeOfAnimalFPObj { get; set; }
+        public List<ValueDatas> TypeOfAnimalFPObjList { get; set; }
         public BreedOfAnimalFP BreedOfAnimalFPObj { get; set; }
+        public List<ValueDatas> BreedOfAnimalFPObjList { get; set; }
         public AgeOfAnimalFP AgeOfAnimalFPObj { get; set; }
+        public List<ValueDatas> AgeOfAnimalFPObjList { get; set; }
         public ColourOfAnimalFP ColourOfAnimalFPObj { get; set; }
+        public List<ValueDatas> ColourOfAnimalFPObjList { get; set; }
         public UseOfAnimalFP UseOfAnimalFPObj { get; set; }
+        public List<ValueDatas> UseOfAnimalFPObjList { get; set; }
         public DescBrandOfAnimalFP DescBrandOfAnimalFPObj { get; set; }
+        public List<ValueDatas> DescBrandOfAnimalFPObjList { get; set; }
         public DescMarksOfAnimalFP DescMarksOfAnimalFPObj { get; set; }
+        public List<ValueDatas> DescMarksOfAnimalFPObjList { get; set; }
         public OptSoundHealthofAnimalFP OptSoundHealthofAnimalFPObj { get; set; }
+        public List<ValueDatas> OptSoundHealthofAnimalFPObjList { get; set; }
         public DescSoundHealthofAnimalFP DescSoundHealthofAnimalFPObj { get; set; }
+        public List<ValueDatas> DescSoundHealthofAnimalFPObjList { get; set; }
         public OptDiseaseOfAnimalFP OptDiseaseOfAnimalFPObj { get; set; }
+        public List<ValueDatas> OptDiseaseOfAnimalFPObjList { get; set; }
         public DescDiseaseOfAnimalFP DescDiseaseOfAnimalFPObj { get; set; }
+        public List<ValueDatas> DescDiseaseOfAnimalFPObjList { get; set; }
         public OptAnimalSyndicatedFP OptAnimalSyndicatedFPObj { get; set; }
+        public List<ValueDatas> OptAnimalSyndicatedFPObjList { get; set; }
         public DescAnimalSyndicatedFP DescAnimalSyndicatedFPObj { get; set; }
+        public List<ValueDatas> DescAnimalSyndicatedFPObjList { get; set; }
         public SumInsuredLivestockFP SumInsuredLivestockFPObj { get; set; }
+        public List<ValueDatas> SumInsuredLivestockFPObjList { get; set; }
         public OptInfertilityFP OptInfertilityFPObj { get; set; }
         public OptLossofUseLivestockFP OptLossofUseLivestockFPObj { get; set; }
         public OptTheftLivestockFP OptTheftLivestockFPObj { get; set; }

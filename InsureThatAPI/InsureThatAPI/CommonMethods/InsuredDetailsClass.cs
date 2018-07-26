@@ -47,7 +47,7 @@ namespace InsureThatAPI.CommonMethods
             Money = 7,
             Transit = 8,
             ValuablesFarm = 9,
-            LiveStockFarm = 10,
+            LivestockFarm = 10,
             PersonalLiabilitiesFarm = 11,
             HomeBuildingFarm = 12,
             HomeContent = 13,

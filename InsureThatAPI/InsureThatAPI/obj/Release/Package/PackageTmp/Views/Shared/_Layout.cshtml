@@ -68,10 +68,10 @@
             <div id="copyrights">
                 <div class="container-fluid clearfix">
                     <div class="col_half">
-                        <div class="copyright-links"><a href="#">Terms of Use</a> / <a href="#">Privacy Policy</a></div>
+                        @*<div class="copyright-links"><a href="#">Terms of Use</a> / <a href="#">Privacy Policy</a></div>*@
                     </div>
                     <div class="col_half col_last tright">
-                        <div class="fright clearfix">
+                        @*<div class="fright clearfix">
                             <a href="#" class="social-icon si-small si-borderless si-facebook">
                                 <i class="icon-facebook"></i>
                                 <i class="icon-facebook"></i>
@@ -84,7 +84,7 @@
                                 <i class="icon-linkedin"></i>
                                 <i class="icon-linkedin"></i>
                             </a>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
             </div><!-- #copyrights end -->
@@ -129,6 +129,11 @@
             } else if (newval != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(newval, EIId, ItId, strID);
             }
         });
@@ -192,6 +197,11 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
@@ -228,9 +238,15 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
+      
         $(document).on('focusout', ".commondatatestPrice", function () {
             var Value = $(this).val();
             var EIId = $(this).data('eiid');
@@ -254,6 +270,11 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc ==1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
@@ -296,6 +317,11 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[id='" + name + "-error']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(rVal, EIId, ItId, strID);
             }
         });
@@ -310,8 +336,12 @@
             } else {
                 var ItId = ItIdN;
             }
-
             if (Value != '') {
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
@@ -327,6 +357,11 @@
                 var ItId = ItIdN;
             }
             if (Value != '') {
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
@@ -360,6 +395,11 @@
             } else if (rVal != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
@@ -393,6 +433,11 @@
             } else if (Value != "") {
                 $('#' + id).css({ "border": "" });
                 $("label[for='" + name + "']").text('').css({ "display": "none" });
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(Value, EIId, ItId, strID);
             }
         });
@@ -470,6 +515,124 @@
             } else {
                 return 0;
             }
+        }
+        function ExistingPolicys() {
+            var existing;
+            $('.process-steps>li>a').each(function () {
+                var myText = $(this).attr('class');
+                if (myText == "success active") {
+                    var myid = $(this).attr('id');
+                    var mm = $("#" + myid).removeClass("success");
+                    var sectionname = $(".sectionname").val();                  
+                    if (sectionname!='' && sectionname == "rlshomebuilding") {
+                        if (myid == "ptb1") {
+                            $("#ptab5 #rlshbhome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab5 #rlscdhome").val(0);
+                        } if (myid == "ptb4") {
+                            $("#ptab5 #rlsiphome").val(0);
+                        }
+                        if (myid == "ptb3") {
+                            $("#ptab5 #rlsodhome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "rlsfarm") {
+                        if (myid == "ptb1") {
+                            $("#ptab4 #rlsFSFChome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab4 #rlsFMhome").val(0);
+                        } if (myid == "ptb3") {
+                            $("#ptab4 #rlsLShome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "farmfarm") {
+                        if (myid == "ptb1") {
+                            $("#ptab5 #rlshbhome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab5 #rlscdhome").val(0);
+                        }
+                        if (myid == "ptb3") {
+                            $("#ptab5 #rlsodhome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "farmmobile") {
+                        if (myid == "ptb1") {
+                            $("#ptab4 #rlsFSFChome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab4 #rlsFMhome").val(0);
+                        }
+                        if (myid == "ptb3") {
+                            $("#ptab4 #rlsLShome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "rlsmotor") {
+                        if (myid == "ptb1") {
+                            $("#ptab6 #rlsVDhome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab6 #rlsADhome").val(0);
+                        } if (myid == "ptb3") {
+                            $("#ptab6 #rlsDRodhome").val(0);
+                        }
+                        if (myid == "ptb4") {
+                            $("#ptab6 #rlsCDhome").val(0);
+                        }
+                        if (myid == "ptb5") {
+                            $("#ptab6 #rlsOEEhome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "farmmotor")
+                    {                        
+                        if (myid == "ptb1") {
+                            $("#ptab6 #rlsVDhome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab6 #rlsADhome").val(0);
+                        } if (myid == "ptb3") {
+                            $("#ptab6 #rlsDRodhome").val(0);
+                        }
+                        if (myid == "ptb4") {
+                            $("#ptab6 #rlsCDhome").val(0);
+                        }
+                        if (myid == "ptb5") {
+                            $("#ptab6 #rlsOEEhome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "farmhome") {
+                        if (myid == "ptb1") {
+                            $("#ptab5 #rlshbhome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab5 #rlscdhome").val(0);
+                        } if (myid == "ptb3") {
+                            $("#ptab5 #rlsodhome").val(0);
+                        }
+                        if (myid == "ptb4") {
+                            $("#ptab5 #rlsiphome").val(0);
+                        }
+                    }
+                    if (sectionname != '' && sectionname == "rlsboat") {
+                        if (myid == "ptb1") {
+                            $("#ptab6 #rlsBDhome").val(0);
+                        }
+                        if (myid == "ptb2") {
+                            $("#ptab6 #rlsMDhome").val(0);
+                        } if (myid == "ptb3") {
+                            $("#ptab6 #rlsBOhome").val(0);
+                        }
+                        if (myid == "ptb4") {
+                            $("#ptab6 #rlsCDhome").val(0);
+                        }
+                        if (myid == "ptb5") {
+                            $("#ptab6 #rlsOPodhome").val(0);
+                        }
+                    }
+                }
+            });
         }
         function CalculateMonthDayYearE(FromDate, sdate) {
             var newFromDate = FromDate.split('/');
@@ -635,6 +798,11 @@
                 var ItId = ItIdN;
             }
             if (Value != '') {
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                if (ppcid != '' || (pc != '' && pc == 1)) {
+                    ExistingPolicys();
+                }
                 elementAjaxCall(Value, EIId, ItId);
             }
         });

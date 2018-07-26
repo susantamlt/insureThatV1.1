@@ -19,7 +19,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
-            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            } 
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -115,28 +121,54 @@
         <h5 class="col-md-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
     }
     <div class="clearfix"></div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success savepolicyresult"></div>
     <div id="processTabs">
-        <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
-            <li>
-                <a href="javascript:void(0)" id="ptb1">Vehicle Description</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb2">Additional Details</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb3">Drivers</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb4">Cover Details</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb5">Optional Extras and Excesses</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb6">Interested Parties</a>
-            </li>
-        </ul>
+        @if (Model.PcId != null || Session["RLSmotor"] != null)
+        {
+            <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
+                <li>
+                    <a href="javascript:void(0)" id="ptb1" class="success active">Vehicle Description</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb2" class="success">Additional Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb3" class="success">Drivers</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb4" class="success">Cover Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb5" class="success">Optional Extras and Excesses</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb6" class="success">Interested Parties</a>
+                </li>
+            </ul>
+        }
+        else
+        {
+            <ul class="process-steps clearfix col-sm-12" style="padding:0px 0px 0px 10px !important;">
+                <li>
+                    <a href="javascript:void(0)" id="ptb1" class="active">Vehicle Description</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb2">Additional Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb3">Drivers</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb4">Cover Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb5">Optional Extras and Excesses</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb6">Interested Parties</a>
+                </li>
+            </ul>
+        }
         @using (Ajax.BeginForm("VehicleDescription", "MotorCover", new { cid = @ViewBag.CustomerId }, new AjaxOptions()
         {
             HttpMethod = "POST"
@@ -145,6 +177,8 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
             @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+            <input type="hidden" id="policyn" value="@Session["RLSmotor"]" />
+            <input type="hidden" class="sectionname" value="rlsmotor" />
             <div class="error"></div>
             <div id="homeBuildContain">
                 <div id="ptab1">
@@ -207,7 +241,7 @@
                             </div>
                         </div>
                     </div>
-                    <div id="GlassListedVehicles" @if (Model.LscategoryObj.Category == "4" || Model.LscategoryObj.Category == "5" || Model.LscategoryObj.Category == "6" || Model.LscategoryObj.Category == "7") { <text> style="display:none;" </text> }>
+                    <div id="GlassListedVehicles" @if (Model.LscategoryObj.Category == "4" || Model.LscategoryObj.Category == "5" || Model.LscategoryObj.Category == "6" || Model.LscategoryObj.Category == "7") { <text> style="display:none;" </text>   }>
                         <div class="mt-10 mb-10 col-md-12">
                             <div class="col-md-6"><p>What is the make of your <a href="#VehicleDesModel" role="button" data-target="#VehicleDesModel" data-toggle="modal">Vehicle</a>?</p></div>
                             <div class="col-md-6">
@@ -219,7 +253,7 @@
                             </div>
                         </div>
                         <div class="mt-10 mb-10 col-md-12">
-                            <div class="col-md-6"><p>What year was it manufactured?</p></div>                            
+                            <div class="col-md-6"><p>What year was it manufactured?</p></div>
                             <div class="col-md-6">
                                 @Html.TextBoxFor(p => p.McyearObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.McyearObj.EiId, @id = "year1" })
                                 @Html.HiddenFor(p => p.McyearObj.EiId)
@@ -239,14 +273,14 @@
                         <div class="mt-10 mb-10 col-md-12">
                             <div class="col-md-6"><p>Select details</p></div>
                             <div class="col-md-6">
-                                @Html.DropDownListFor(p => p.MCscdObj.Scd, Enumerable.Empty<SelectListItem>(), "--Select--", new { @class = "form-control vlidationInsure form-border-bottom vehicle commondataselection", @id = "details1", @data_eiid = @Model.MCscdObj.EiId })
+                                @Html.DropDownListFor(p => p.MCscdObj.Scd, @Model.MCscdObj.ScdList, "--Select--", new { @class = "form-control vlidationInsure form-border-bottom vehicle commondataselection", @id = "details1", @data_eiid = @Model.MCscdObj.EiId })
                                 @Html.HiddenFor(p => p.MCscdObj.EiId)
                                 <label id="MCscdObj.Scd-error" class="error" for="MCscdObj.Scd"></label>
                                 <input name="details1Default" id="details1Default" type="hidden" value="@Model.MCscdObj.Scd" />
                             </div>
                         </div>
                     </div>
-                    <div id="FarmMachineryNew" @if (Model.LscategoryObj.Category == "1" || Model.LscategoryObj.Category == "2" || Model.LscategoryObj.Category == "3") { <text> style="display:none;" </text> }>
+                    <div id="FarmMachineryNew" @if (Model.LscategoryObj.Category == "1" || Model.LscategoryObj.Category == "2" || Model.LscategoryObj.Category == "3") { <text> style="display:none;" </text>   }>
                         <div class="mt-10 mb-10 col-md-12">
                             <div class="col-md-6"><p>What is the make of your <a href="#VehicleDesModel" role="button" data-target="#VehicleDesModel" data-toggle="modal">Vehicle</a>?</p></div>
                             <div class="col-md-6">
@@ -376,7 +410,7 @@
                             <label id="VregisterObj.Register-error" class="error" for="VregisterObj.Register"></label>
                         </div>
                     </div>
-                    <div class="mt-10 mb-10 col-md-12 Rnumber cl-@Model.RnumberObj.EiId" @if (Model.VregisterObj.Register == "0" || Model.VregisterObj.Register == "") { <text> style="display:none;" </text> }>
+                    <div class="mt-10 mb-10 col-md-12 Rnumber cl-@Model.RnumberObj.EiId" @if (Model.VregisterObj.Register == "0" || Model.VregisterObj.Register == "") { <text> style="display:none;" </text>   }>
                         <div class="col-md-4"><p>Registration number</p></div>
                         <div class="col-md-8">
                             @Html.TextBoxFor(p => p.RnumberObj.Rnumber, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestUpperCase commondatatest", @id = "rnumber", @data_eiid = @Model.RnumberObj.EiId, @data_regex = "AN" })
@@ -548,7 +582,7 @@
                                             jCountD = i + 1;
                                             <tr id="tname-tr-@jCountD" CountTotalD="@CountTotalD">
                                                 <td class="no-border">
-                                                    @Html.TextBoxFor(p => p.DriverDatas.DriverData[i].Name, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestDriver drvrlist", @data_itid = jCount, @id = "drivername", @data_regex = "A" })
+                                                    @Html.TextBoxFor(p => p.DriverDatas.DriverData[i].Name, new {  @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestDriver drvrlist", @data_itid = jCount, @id = "drivername", @data_regex = "A" })
                                                 </td>
                                                 <td class="no-border">
                                                     @Html.TextBoxFor(p => p.DriverDatas.DriverData[i].Dob, new { @autocomplete = "off", @class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYYDriver drvrlist", @data_itid = jCount, @id = "age", @data_inputmask_alias = "date", @data_inputmask_inputformat = "dd/mm/yyyy" })
@@ -738,7 +772,7 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <p>Our assessment of Your Vehicle, Caravan, Farm Machinery, livestock or harvested crops value at the time of the incident You are claiming for, using local market prices and considering the age and the condition of the Vehicle, Caravan, Farm Machinery, livestock or harvested crops.</p>
+                                    <p>Our assessment of Your Vehicle, Caravan, Farm Machinery, Livestock or harvested crops value at the time of the incident You are claiming for, using local market prices and considering the age and the condition of the Vehicle, Caravan, Farm Machinery, Livestock or harvested crops.</p>
                                 </div>
                                 <div class="modal-footer">
                                     <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -793,9 +827,9 @@
                                 <label id="Vehiclemodified-error" class="error" for="Vehiclemodified"></label>
                             </div>
                         </div>*@
-                    <div class="mt-10 mb-10 col-md-12" id="desc" @if (Model.AccessoriesObj.Accessories != "1") { <text> style="display:none;" </text> }>
+                    <div class="mt-10 mb-10 col-md-12 AccessoriesDesc" id="desc" @if (Model.AccessoriesObj.Accessories != "1") { <text> style="display:none;" </text>   }>
                         <div class="col-md-12 table-8">
-                            <table class="table" style=" width: 100%; ">
+                            <table class="table coverDetails" style=" width: 100%; ">
                                 <thead>
                                     <tr>
                                         <th class="space_left">Description</th>
@@ -888,7 +922,7 @@
                             <label id="LimitindemnityObj.Indemnity-error" class="error" for="LimitindemnityObj.Indemnity"></label>
                         </div>
                     </div>
-                    <div class="drivingcomp" @if (Model.LscategoryObj.Category != "1") { <text> style="display:none;" </text> }>
+                    <div class="drivingcomp" @if (Model.LscategoryObj.Category != "1") { <text> style="display:none;" </text>   }>
                         <h5>What is your no claim rating based on how many years you have been driving and the number of accidents/claims you have made - a rating 1 means you have held your licence longer than 5 years and have had no claims in the last 3 years.</h5>
                         <div class="mt-10 mb-10 col-md-12 ">
                             <p class="col-md-3 col-sm-12 col-xs-12 policy-loc-row">Rating</p>
@@ -987,7 +1021,7 @@
                     <div class="mt-10 mb-10 col-md-12 ">
                         <div class="col-md-4"><p>Under 21 Excess</p></div>
                         <div class="col-md-4">
-                            $@Html.TextBoxFor(p => p.Excess21UnderObj.Excess21Under, new { @autocomplete = "off", @readonly = "readonly", @maxlength = "13", @style = "display: inline-block;width: 96%;", @class = "vlidationInsure form-control form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.Excess21UnderObj.EiId, @id = "Excess21Under" })
+                            $@Html.TextBoxFor(p => p.Excess21UnderObj.Excess21Under, new { @autocomplete = "off", @readonly = "readonly", @maxlength = "13", @style = "display: inline-block;width: 96%; background-color: #ffffff;", @class = "vlidationInsure form-control form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.Excess21UnderObj.EiId, @id = "Excess21Under" })
                             @Html.HiddenFor(p => p.Excess21UnderObj.EiId)
                             <label id="Excess21UnderObj.Excess21Under-error" class="error" for="Excess21UnderObj.Excess21Under"></label>
                         </div>
@@ -995,7 +1029,7 @@
                     <div class="mt-10 mb-10 col-md-12 ">
                         <div class="col-md-4"><p>Under 25 Excess</p></div>
                         <div class="col-md-4">
-                            $@Html.TextBoxFor(p => p.Excess25UnderObj.Excess25Under, new { @autocomplete = "off", @readonly = "readonly", @maxlength = "13", @style = "display: inline-block;width: 96%;", @class = "vlidationInsure form-control form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.Excess25UnderObj.EiId, @id = "Excess25Under" })
+                            $@Html.TextBoxFor(p => p.Excess25UnderObj.Excess25Under, new { @autocomplete = "off", @readonly = "readonly", @maxlength = "13", @style = "display: inline-block;width: 96%;  background-color: #ffffff;", @class = "vlidationInsure form-control form-border-bottom commondatatestComma commondatatestPrice", @data_eiid = @Model.Excess25UnderObj.EiId, @id = "Excess25Under" })
                             @Html.HiddenFor(p => p.Excess25UnderObj.EiId)
                             <label id="Excess25UnderObj.Excess25Under-error" class="error" for="Excess25UnderObj.Excess25Under"></label>
                         </div>
@@ -1017,7 +1051,7 @@
                     </div>
                     <div class="mt-10 mb-10 col-md-12">
                         <div class="col-md-12 table-8">
-                            <table class="table" style=" width: 100%;">
+                            <table class="table interestedParties" style=" width: 100%;">
                                 <thead>
                                     <tr>
                                         <th class="space_left">Name of Institution</th>
@@ -1160,7 +1194,7 @@
                     </div>
                 </div>
             </div>
-        }
+                                        }
     </div>
 </div>
 <script type="text/javascript">
@@ -1200,93 +1234,6 @@
                 </div>
             }
             <script type="text/javascript">
-                $(".policy-edit-wrap").click(function () {
-                    var selectedname = $(this).data('name');
-                    var selectedunid = $(this).data('unid');
-                    var selectedprofileid = $(this).data('profileid');
-                    var selectedcid = $(this).data('cid');
-                    var selectedTrId = $(this).data('trid');
-                    var PcId = $(this).data('pcid');
-                    var policyStatus = $(this).data('policystatus');
-                    // var prId = $(this).data('prId');
-                    var prId = 1029;
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/EndorsePolicy",
-                        data: {
-                            "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "effcdate": null
-                        },
-                        success: function (responce) {
-                            if (responce.Status == false) {
-                                $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                            } else {
-                                window.location.href = responce;
-                            }
-                        }
-                    });
-                });
-                $(".policy-delet-wrap").click(function () {
-                    var r = confirm("Are you sure you want to delete this section?");
-                    if (r == true) {
-                        var PcId = $("#pcidd").val();
-                        var selectedunid = $(this).data('unid');
-                        var selectedcid = $(this).data('cid');
-                        var PcId = $(this).data('pcid');
-                        var selectedname = $(this).data('name');
-                        var selectedprofileid = $(this).data('profileid');
-                        var selectedTrId = $(this).data('trid');
-                        var policyStatus = $(this).data('policystatus');
-                        var currId = $(this).attr("id");
-                        $.ajax({
-                            type: "POST",
-                            url: "/Customer/DeleteUnit",
-                            data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
-                            success: function (responce) {
-                                if (responce.Status == true) {
-                                    var prentId = $('#' + currId).parent().parent().attr("id");
-                                    $('#' + prentId).remove();
-                                }
-                            }
-                        });
-                    }
-                });
-                $("#bindcover").click(function () {
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/BindCover",
-                        data: {},
-                        success: function (responce) {
-                        }
-                    });
-                });
-            </script>
-        }
-        else
-        {
-            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
-            {
-                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
-                {
-                    <div class="policy-loc-row">
-                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
-                        <script type="text/javascript">
-                            $(document).ready(function () {
-                                $('.inclusions').click(function () {
-                                    var name = $(this).attr('data-name');
-                                    var nid = $(this).attr('data-nid');
-                                    $('.policy-ed-del-wrapper').hide();
-                                    $("#policy-ed-del-wrap-" + nid).show();
-
-                                });
-                            });
-                        </script>
-                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
-                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
-                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
-                        </div>
-                    </div>
-                    <script>
                         $(".policy-edit-wrap").click(function () {
                             var selectedname = $(this).data('name');
                             var selectedunid = $(this).data('unid');
@@ -1301,7 +1248,7 @@
                                 type: "POST",
                                 url: "/Customer/EndorsePolicy",
                                 data: {
-                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1, "effcdate": null
+                                    "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "effcdate": null
                                 },
                                 success: function (responce) {
                                     if (responce.Status == false) {
@@ -1338,6 +1285,93 @@
                                 });
                             }
                         });
+                        $("#bindcover").click(function () {
+                            $.ajax({
+                                type: "POST",
+                                url: "/Customer/BindCover",
+                                data: {},
+                                success: function (responce) {
+                                }
+                            });
+                        });
+            </script>
+        }
+        else
+        {
+            if (Model.PolicyInclusions != null && Model.PolicyInclusions.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyInclusions.Count(); i++)
+                {
+                    <div class="policy-loc-row">
+                        @Html.RadioButtonFor(m => m.SelectedInclusion, @i, new { @class = "inclusions", @data_name = @i, @data_nid = @i, @title = "Home Building should be filled first." })<label for="radio1"><span><span></span></span>@Model.PolicyInclusions[i].name</label>
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $('.inclusions').click(function () {
+                                    var name = $(this).attr('data-name');
+                                    var nid = $(this).attr('data-nid');
+                                    $('.policy-ed-del-wrapper').hide();
+                                    $("#policy-ed-del-wrap-" + nid).show();
+
+                                });
+                            });
+                        </script>
+                        <div id="policy-ed-del-wrap-@i" class="policy-ed-del-wrapper" data style="display: none;">
+                            <a class="btn color-bk-btn policy-edit-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Edit</a>&nbsp;
+                            <a class="btn color-bk-btn policy-delet-wrap" data-pcid="@Model.PcId" data-policystatus="@Model.PolicyStatus" data-name="@Model.PolicyInclusions[i].name" data-cid="@Model.CustomerId" data-unid="@Model.PolicyInclusions[i].UnitId" data-profileid="@Model.PolicyInclusions[i].ProfileId" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                    <script>
+                            $(".policy-edit-wrap").click(function () {
+                                var selectedname = $(this).data('name');
+                                var selectedunid = $(this).data('unid');
+                                var selectedprofileid = $(this).data('profileid');
+                                var selectedcid = $(this).data('cid');
+                                var selectedTrId = $(this).data('trid');
+                                var PcId = $(this).data('pcid');
+                                var policyStatus = $(this).data('policystatus');
+                                // var prId = $(this).data('prId');
+                                var prId = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/EndorsePolicy",
+                                    data: {
+                                        "name": selectedname, "PcId": PcId, "cid": selectedcid, "trId": selectedTrId, "unid": selectedunid, "Profileid": selectedprofileid, "prId": prId, "policyStatus": policyStatus, "calltype": 1, "effcdate": null
+                                    },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to edit section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
+                            $(".policy-delet-wrap").click(function () {
+                                var r = confirm("Are you sure you want to delete this section?");
+                                if (r == true) {
+                                    var PcId = $("#pcidd").val();
+                                    var selectedunid = $(this).data('unid');
+                                    var selectedcid = $(this).data('cid');
+                                    var PcId = $(this).data('pcid');
+                                    var selectedname = $(this).data('name');
+                                    var selectedprofileid = $(this).data('profileid');
+                                    var selectedTrId = $(this).data('trid');
+                                    var policyStatus = $(this).data('policystatus');
+                                    var currId = $(this).attr("id");
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/Customer/DeleteUnit",
+                                        data: { "unid": selectedunid, "cid": selectedcid, "pcid": PcId, "unit": selectedname, "profileid": selectedprofileid, "trid": selectedTrId, "policystatus": policyStatus },
+                                        success: function (responce) {
+                                            if (responce.Status == true) {
+                                                var prentId = $('#' + currId).parent().parent().attr("id");
+                                                $('#' + prentId).remove();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
                     </script>
                 }
             }
@@ -1386,25 +1420,25 @@
                     }
                 </ul>
                 <script type="text/javascript">
-                    $(document).on('click', 'ul.unit > li', function () {
-                        var unitname = $(this).children("a").attr("class");
-                        var cid = $("#ciid").val();
-                        var pcid = $("#pcidd").val();
-                        var prid = 1029;
-                        $.ajax({
-                            type: "POST",
-                            url: "/Customer/AddUnit",
-                            data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
-                            success: function (responce) {
-                                if (responce.Status == false) {
-                                    $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                    $("html, body").animate({ scrollTop: 0 }, "slow");
-                                } else {
-                                    window.location.href = responce;
-                                }
-                            }
-                        });
-                    });
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                var cid = $("#ciid").val();
+                                var pcid = $("#pcidd").val();
+                                var prid = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
                 </script>
             }
         </div>
@@ -1412,85 +1446,7 @@
 </div>
 <script src="~/js/jquery.inputmask.bundle.js"></script>
 <script src="~/js/inputmask.date.extensions.js"></script>
-<script type="text/javascript">
-    var dataToSend = [];
-    $(document).ready(function () {
-        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
-    });
-    $(document).on('click', 'input[name="AccessoriesObj.Accessories"]', function () {
-        var isb = $("input[name='AccessoriesObj.Accessories']:checked").val();
-        if (isb == 1) {
-            $('#desc').css({ 'display': 'block' });
-        } else {
-            $('#desc').css({ 'display': 'none' });
-        }
-    });
-    $(document).on('click', '.commondataradioNewCoveroptionObj', function () {
-        var isbsss = $("input[name='CoveroptionObj.Coveroption']:checked").val();
-        if (isbsss == 1) {
-            $('.drivingcomp').css({ 'display': 'block' });
-        } else {
-            $('.drivingcomp').css({ 'display': 'none' });
-        }
-    });
-    $(document).ready(function () {
-        var isb = $("input[name='AccessoriesObj.Accessories']:checked").val();
-        if (isb == 1) {
-            $('#desc').css({ 'display': 'block' });
-        } else {
-            $('#desc').css({ 'display': 'none' });
-        }
-        var isbCC = $("input[name='CoveroptionObj.Coveroption']:checked").val();
-        if (isbCC == 1) {
-            $('.drivingcomp').css({ 'display': 'block' });
-        } else {
-            $('.drivingcomp').css({ 'display': 'none' });
-        }
-        var isbVM = $("input[name='VmodifiedObj.Vmodified']:checked").val();
-        if (isbVM == 1) {
-            $('#describe').removeAttr('disabled');
-            $('#ptab2 .Dmodified').css({ "display": "block" });
-        } else {
-            $('#describe').attr('disabled', 'disabled');
-            $('#ptab2 .Dmodified').css({ "display": "none" });
-        }
-        var isbVR = $("input[name='VregisterObj.Register']:checked").val();
-        if (isbVR == 1) {
-            $('#ptab2 #rnumber').removeAttr('disabled');
-            $('#ptab2 .Rnumber').css({ "display": "block" });
-        } else {
-            $('#ptab2 #rnumber').attr('disabled', 'disabled');
-            $('#ptab2 .Rnumber').css({ "display": "none" });
-        }
-        var isbVMSDF = $("input[name='RatingObj.Rating']:checked").val();
-        if (isb == 1) {
-            if (isbVMSDF == 6) {
-                $('#dispountFreeperiodew').text('0');
-            } else if (isbVMSDF == 1) {
-                $('#dispountFreeperiodew').text('60');
-            } else if (isbVMSDF == 2) {
-                $('#dispountFreeperiodew').text('50');
-            } else if (isbVMSDF == 3) {
-                $('#dispountFreeperiodew').text('40');
-            } else if (isbVMSDF == 4) {
-                $('#dispountFreeperiodew').text('30');
-            } else if (isbVMSDF == 5) {
-                $('#dispountFreeperiodew').text('20');
-            } else {
-                $('#dispountFreeperiodew').text('');
-            }
-        } else {
-            $('#dispountFreeperiodew').text('');
-        }
-        var comyear = $('.commondatatestYearHome').val();
-        if (comyear == "0") {
-            $('.commondatatestYearHome').val('');
-        }
-        var indemnityCoverDetailsValue = '30000000';
-        var indemnityCoverDetails = commaReplace(indemnityCoverDetailsValue);
-        $("#ptab4 #indemnity").val(indemnityCoverDetails);
-    });
-</script>
+
 <script type="text/javascript">
     var currentYearNew = new Date().getFullYear();
     function pta1() {
@@ -1579,7 +1535,6 @@
     }
     $(document).ready(function () {
         $("#ptab1").show();
-        $("#ptb1").addClass("active");
         $("#ptab2").hide();
         $("#ptab3").hide();
         $("#ptab4").hide();
@@ -1611,7 +1566,7 @@
         $("#ptab1 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             var NewValidValue = $("#ptab1 input[name='LscategoryObj.Category']:checked").val();
             if (nameAttr == "LscategoryObj.Category") {
@@ -1688,10 +1643,10 @@
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab1 label[for='" + nameAttr + "']").text('Please select vehicle').css({ "display": "block" });
                     valid = 0
-                } else if (!regex.test(newval)) {
-                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else if ((NewValidValue == '4' || NewValidValue == '5' || NewValidValue == '6' || NewValidValue == '7') && FmmcmakeObj == 'Decline') {
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
@@ -1729,10 +1684,10 @@
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab1 label[for='" + nameAttr + "']").text("Please select famaly").css({ "display": "block" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
-                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab1 #' + id).css({ "border": "" });
                     $("#ptab1 label[for='" + nameAttr + "']").text("");
@@ -1744,10 +1699,10 @@
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab1 label[for='" + nameAttr + "']").text("Please select famaly").css({ "display": "block" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
-                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab1 #' + id).css({ "border": "" });
                     $("#ptab1 label[for='" + nameAttr + "']").text("");
@@ -1765,7 +1720,7 @@
         $("#ptab2 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr == "KeptnightObj.Keptnight") {
                 if (newval == '') {
@@ -1803,10 +1758,10 @@
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("Please select registration number").css({ "display": "block" });
                     valid = 0;
-                } else if ($('#ptab2 input[name="VregisterObj.Register"]:checked').val() == '1' && !regex.test(newval)) {
-                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if ($('#ptab2 input[name="VregisterObj.Register"]:checked').val() == '1' && !regex.test(newval)) {
+                //    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab2 #' + id).css({ "border": "" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("");
@@ -1821,7 +1776,7 @@
                     $('#ptab2 #' + id).css({ "border": "" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("");
                 }
-            }            
+            }
             if (nameAttr == "VnumberObj.Vnumber") {
                 if ($('#ptab2 #chassis').val() == '' && newval == '') {
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
@@ -1858,10 +1813,10 @@
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab2 label[for='" + nameAttr + "']").text('Please enter modifications').css({ "display": "block" });
                     valid = 0;
-                } else if ($('#ptab2 input[name="VmodifiedObj.Vmodified"]:checked').val() == '1' && !regex.test(newval)) {
-                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if ($('#ptab2 input[name="VmodifiedObj.Vmodified"]:checked').val() == '1' && !regex.test(newval)) {
+                //    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab2 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab2 #' + id).css({ "border": "" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("");
@@ -1910,10 +1865,10 @@
                     $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab3 #" + idNewId + "-error").text("Please enter driver name").css({ "display": "block" });
                     valid = 0;
-                } else if (newval!='' && !regex.test(newval)) {
-                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab3 #" + idNewId +"-error").text("Special character no allowed").css({ "display": "block" });
-                    valid = 0;
+                //} else if (newval!='' && !regex.test(newval)) {
+                //    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab3 #" + idNewId +"-error").text("Special character no allowed").css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab3 #' + id).css({ "border": "" });
                     $("#ptab3 #" + idNewId + "-error").text("");
@@ -1977,10 +1932,10 @@
                     $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab3 #" + idNewId + "-error").text('Please enter claims/convictions information').css({ "display": "block" });
                     valid = 0;
-                } else if (newval != "" && !regex.test(newval)) {
-                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab3 #" + idNewId + "-error").text("Special character are not allowed").css({ "display": "block" });
-                    valid = 0;
+                //} else if (newval != "" && !regex.test(newval)) {
+                //    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab3 #" + idNewId + "-error").text("Special character are not allowed").css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab3 #' + id).css({ "border": "" });
                     $("#ptab3 #" + idNewId + "-error").text("");
@@ -2000,11 +1955,11 @@
                     valid = 0;
                 } else if (newval != "" && newval > min) {
                     $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab3 #" + idNewId + "-error").text("Not accept geter then 100 persented").css({ "display": "block" });
+                    $("#ptab3 #" + idNewId + "-error").text("Cumulative percentage lesser or greater than 100 is not accepted").css({ "display": "block" });
                     valid = 0;
-                } else if (newval != "" && totalusevehiclePer > min) {
+                } else if (newval != "" && (totalusevehiclePer > min || totalusevehiclePer < min)) {
                     $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab3 #" + idNewId + "-error").text("Not accept geter then 100 persented").css({ "display": "block" });
+                    $("#ptab3 #" + idNewId + "-error").text("Cumulative percentage lesser or greater than 100 is not accepted").css({ "display": "block" });
                     valid = 0;
                 } else {
                     $('#ptab3 #' + id).css({ "border": "" });
@@ -2021,7 +1976,7 @@
             //        $("#ptab3 #percentage-error").text('').css({ "display": "none" });
             //    }
             //}
-        });  
+        });
         if (valid == 1) {
             var datasend = JSON.stringify( dataToSend );
             $.ajax({
@@ -2110,10 +2065,10 @@
                     $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab4 label[for='" + nameAttr + "']").text("Please select description").css({ "display": "block" });
                     valid = 0;
-                } else if (newval!='' && !regex.test(newval)) {
-                    $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab4 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                    valid = 0;
+                //} else if (newval!='' && !regex.test(newval)) {
+                //    $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab4 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab4 #' + id).css({ "border": "" });
                     $("#ptab4 label[for='" + nameAttr + "']").text("");
@@ -2188,7 +2143,7 @@
         $("#ptab5 .vlidationInsure").each(function (e) {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr == "CaroptionObj.Caroption") {
                 if ($("input[name='" + nameAttr + "']:checked").val() == undefined && $("input[name='NoClaimBonusOptionObj.Caroption']:checked").val() == undefined && $("input[name='WindscreenObj.Caroption']:checked").val() == undefined) {
@@ -2255,6 +2210,8 @@
     $("#ptb6").click(function () {
         pta6();
     });
+    var dataToSend = [];
+    var newItIdIncreMent = 0;
     $(document).on('focusout', ".commondatatest", function () {
         var Value = $(this).val();
         var EIId = $(this).data('eiid');
@@ -2268,12 +2225,13 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
-        } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
-        } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            Value = Value.replace(/,/g, '');
+        //} else if (Nregex == 'A') {
+        //    //regex = /^[a-zA-Z ]*$/;
+        //    //text = "Special character & numeric are not allowed";
+        //} else if (Nregex == 'AN') {
+        //    //regex = /^[a-zA-Z0-9 ]*$/;
+        //    //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
@@ -2283,13 +2241,29 @@
         } else {
             var ItId = ItIdN;
         }
-        if (regex != '' && !regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + name + "']").text('').css({ "display": "none" });
+            var ppcid = $("#pcidd").val();
+            var pc = $("#policyn").val();
+            if (ppcid != '' || (pc != '' && pc == 1)) {
+                ExistingPolicy();
+            }
             elementAjaxCall(Value, EIId, ItId, strID);
+        }
+    });
+    $(document).ready(function () {
+        var ppcid = $("#pcidd").val();
+        var pc = $("#policyn").val();
+        if (ppcid != '' || (pc != '' && pc == 1 )) {
+            $("#ptab6 #rlsVDhome").val(1);
+            $("#ptab6 #rlsADhome").val(1);
+            $("#ptab6 #rlsDRodhome").val(1);
+            $("#ptab6 #rlsCDhome").val(1);
+            $("#ptab6 #rlsOEEhome").val(1);
         }
     });
     $(document).on('focusout', ".commondatatestDriver", function () {
@@ -2306,11 +2280,11 @@
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9 ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
@@ -2326,6 +2300,11 @@
         } else if (Value != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + nId + "']").text('').css({ "display": "none" });
+            var ppcid = $("#pcidd").val();
+            var pc = $("#policyn").val();
+            if (ppcid != '' || (pc != '' && pc == 1)) {
+                ExistingPolicy();
+            }
             elementAjaxCall(Value, EIId, ItId);
         }
     });
@@ -2363,6 +2342,11 @@
         } else if (Value != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + nId + "']").text('').css({ "display": "none" });
+            var ppcid = $("#pcidd").val();
+            var pc = $("#policyn").val();
+            if (ppcid != '' || (pc != '' && pc == 1)) {
+                ExistingPolicy();
+            }
             elementAjaxCall(Value, EIId, ItId);
         }
     });
@@ -2396,9 +2380,38 @@
         } else if (rVal != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + nId + "']").text('').css({ "display": "none" });
+            var ppcid = $("#pcidd").val();
+            var pc = $("#policyn").val();
+            if (ppcid != '' || (pc != '' && pc == 1)) {
+                ExistingPolicy();
+            }
             elementAjaxCall(rVal, EIId, ItId);
         }
     });
+    function ExistingPolicy() {
+        var existing;
+        $('.process-steps>li>a').each(function () {
+            var myText = $(this).attr('class');
+            if (myText == "success active") {
+                var myid = $(this).attr('id');
+                var mm = $("#" + myid).removeClass("success");
+                if (myid == "ptb1") {
+                    $("#ptab6 #rlsVDhome").val(0);
+                }
+                if (myid == "ptb2") {
+                    $("#ptab6 #rlsADhome").val(0);
+                } if (myid == "ptb3") {
+                    $("#ptab6 #rlsDRodhome").val(0);
+                }
+                if (myid == "ptb4") {
+                    $("#ptab6 #rlsCDhome").val(0);
+                }
+                if (myid == "ptb5") {
+                    $("#ptab6 #rlsOEEhome").val(0);
+                }
+            }
+        });
+    }
     function elementAjaxCall(Value, EIId, ItId, strID) {
         if (Value != '' && EIId != '') {
             $.ajax({
@@ -2411,13 +2424,27 @@
                         var valuedata = data.valuedata;
                         if (valuedata != '' && valuedata != null) {
                             $.each(valuedata, function (index, value) {
-                                var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                //$('#' + StateIdNewOne).val(value.Value);
-                                if ((value.Element.ElId == 60967 || value.Element.ElId == 60969) && strID != '') {
-                                    $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                //$("[data-eiid=" + value.Element.ElId + "]").attr('value',value.Value);
+                                //alert(value.Value + "---" + value.Element.ElId);
+                                if (value.Element.ElId == 60877 || value.Element.ElId == 60861 || value.Element.ElId == 60859 || value.Element.ElId == 60845) {
+                                } else {
+                                    var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
+                                    $('#' + StateIdNewOne).val(value.Value);
                                 }
-                                if ((value.Element.ElId == 60891 || value.Element.ElId == 60893) && strID != '') {
-                                    $("#tnameCD-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                                    var identifiers = data.identifiers;
+                                    $.each(identifiers, function (index2, value2) {
+                                        if ((value.Element.ElId == 60967 || value.Element.ElId == 60969 || EIId == 60967 || EIId == 60969) && strID != '') {
+                                            $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                            $('#ptab6 #NameInstitutions' + strID).data("itid", value2.NewId);
+                                            $('#ptab6 #locationIP' + strID).data("itid", value2.NewId);
+                                        }
+                                        if ((value.Element.ElId == 60891 || value.Element.ElId == 60893 || EIId == 60891 || EIId == 60893) && strID != '') {
+                                            $("#tnameCD-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                            $('#ptab4 #description' + strID).data("itid", value2.NewId);
+                                            $('#ptab4 #suminsured' + strID).data("itid", value2.NewId);
+                                        }
+                                    });
                                 }
                                 if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
                                     var statedata = data.stateData;
@@ -2467,6 +2494,23 @@
                             });
                         }
                     }
+                    else {
+                        if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                            var identifiers = data.identifiers;
+                            $.each(identifiers, function (index2, value2) {
+                                if ((EIId == 60967 || EIId == 60969) && strID != '') {
+                                    $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-ditid", value2.NewId);
+                                    $('#ptab6 #NameInstitutions' + strID).data("itid", value2.NewId);
+                                    $('#ptab6 #locationIP' + strID).data("itid", value2.NewId);
+                                }
+                                if ((EIId == 60891 || EIId == 60893) && strID != '') {
+                                    $("#tnameCD-tr-" + strID + " .form-control").attr("data-ditid", value2.NewId);
+                                    $('#ptab4 #description' + strID).data("itid", value2.NewId);
+                                    $('#ptab4 #suminsured' + strID).data("itid", value2.NewId);
+                                }
+                            });
+                        }
+                    }
                     if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
                         var rowsorcedata = data.rowsorcedata;
                         if (rowsorcedata != '' && rowsorcedata != null) {
@@ -2477,8 +2521,12 @@
                                 var rowsorcedataEIID = $("[data-eiid=" + value.Element.ElId + "]").data('eiid');
                                 var rowsorcedataOption = value.Options;
                                 if (!$.isEmptyObject(rowsorcedataOption) && rowsorcedataOption.length > 0) {
-                                    //var html = '<option value="">--Select--</option>';
-                                    var html = '';
+                                  var html = '';
+                                    if (value.Element.ElId == 60951) {
+                                        var html = '';
+                                    } else {
+                                        var html = '<option value="">--Select--</option>';
+                                    }
                                     $.each(rowsorcedataOption, function (index1, value1) {
                                         if (value1.DataValue == 0) {
                                         } else {
@@ -2554,8 +2602,8 @@
                     var mval1 = $('.ExcessForOEE').val();
                     if (mval1 > 0) {
                         var newvalLS = commaReplace(mval1);
-                        $('#ptab5 #Excess21Under').val(newvalLS);
-                        $('#ptab5 #Excess25Under').val(newvalLS);
+                        //$('#ptab5 #Excess21Under').val(newvalLS);
+                        //$('#ptab5 #Excess25Under').val(newvalLS);
                     } else {
                         $('#ptab5 #Excess21Under').val('');
                         $('#ptab5 #Excess25Under').val('');
@@ -2566,15 +2614,9 @@
     }
     function tnameAdd(id) {
         var countId = id + 1;
-        //var i = 1;
-        //$("#ptab3 .table tbody tr").each(function () {
-        //    var RowId = $(this).attr('id');
-        //    $("#" + RowId + " .form-control").attr("data-itid", i);
-        //    i++;
-        //});
         $('#tname-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border"><input type=text name="DriverDatas.DriverData[' + id + '].Name" class="form-control form-border-bottom vlidationInsure commondatatestDriver drvrlist" data-itid="" id="drivername" data-regex="A" /></td > <td class="no-border"><input type=text name=DriverDatas.DriverData[' + id + '].Dob class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYYDriver drvrlist" data-itid = "" id = "age" data_inputmask_alias = "date" data-inputmask_inputformat = "dd/mm/yyyy" /></td> <td class="no-border"><select style="width:auto;" class = "gray-bg-underline form-control drvrlist form-border-bottom field-length-sm vlidationInsure commondataselection" data-itid="" id = "gender"><option value="">--Select--</option><option value="1">Male</option><option value="2">Female</option>  </select></td ><td class="no-border"><input type=text name="DriverDatas.DriverData[' + id + '].YearLicensed" class="form-control form-border-bottom vlidationInsure commondatatestYearHomeDriver drvrlist" data-itid="0" id="YearLicensed" data-regex="N" /></td><td class="no-border"><input type=text name="DriverDatas.DriverData[' + id + '].AccidentsAndConvictions" class="form-control form-border-bottom vlidationInsure commondatatestDriver drvrlist" data-itid="0" id="AccidentsAndConvictions" data-regex="AN" /></td><td class="no-border"> @Html.TextBoxFor(p => p.UsevehicleObj.Usevehicle, new { @class = "form-control form-border-bottom vlidationInsure commondatatestDriver usevehicle drvrlist", @data_itid = "", @id = "percentage", @data_eiid = @Model.UsevehicleObj.EiId, @data_regex = "N",@data_min="100" })@Html.HiddenFor(p => p.UsevehicleObj.EiId)</td> <td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr > ';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border"><input type=text  autocomplete = "off" name="DriverDatas.DriverData[' + id + '].Name" class="form-control form-border-bottom vlidationInsure commondatatestDriver drvrlist" data-itid="" id="drivername" data-regex="A"  style = "font-size:8px;"/></td > <td class="no-border"><input type=text autocomplete = "off" name=DriverDatas.DriverData[' + id + '].Dob class = "form-control form-border-bottom datePicker vlidationInsure commondataDDMMYYYDriver drvrlist" data-itid = "" id = "age" data_inputmask_alias = "date" data-inputmask_inputformat = "dd/mm/yyyy" /></td> <td class="no-border"><select style="width:auto;" class = "gray-bg-underline form-control drvrlist form-border-bottom field-length-sm vlidationInsure commondataselection" data-itid="" id = "gender"><option value="">--Select--</option><option value="1">Male</option><option value="2">Female</option>  </select></td ><td class="no-border"><input type=text autocomplete = "off" name="DriverDatas.DriverData[' + id + '].YearLicensed" class="form-control form-border-bottom vlidationInsure commondatatestYearHomeDriver drvrlist" data-itid="0" id="YearLicensed" data-regex="N" /></td><td class="no-border"><input type=text autocomplete = "off" name="DriverDatas.DriverData[' + id + '].AccidentsAndConvictions" class="form-control form-border-bottom vlidationInsure commondatatestDriver drvrlist" data-itid="0" id="AccidentsAndConvictions" data-regex="AN" /></td><td class="no-border"> @Html.TextBoxFor(p => p.UsevehicleObj.Usevehicle, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestDriver usevehicle drvrlist", @data_itid = "", @id = "percentage", @data_eiid = @Model.UsevehicleObj.EiId, @data_regex = "N",@data_min="100" })@Html.HiddenFor(p => p.UsevehicleObj.EiId)</td> <td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr > ';
         $("#tname-" + id).html(replaceA);
         $("#tname-tr-" + id).after(html);
         $("#tname-tr-" + countId + " .form-control").attr("data-itid", 0);
@@ -2593,7 +2635,7 @@
         var idn = $(this).attr('id');
         var rowDriver = $("#rowDriver").val();
         var itidN = $(this).data('itid');
-        var lastIsC = idn.substr(idn.length - 1);
+        var lastIsC = idn.replace(/\D/g, '');
         var name = $("#drivername" + lastIsC).val();
         var gender = $("#gender" + lastIsC).val();
         var age = $("#age" + lastIsC).val();
@@ -2601,11 +2643,21 @@
         var ACon = $("#AccidentsAndConvictions" + lastIsC).val();
         var per = $("#percentage" + lastIsC).val();
         var len;
-        if (name != '' && gender != '' && age != '' && Ylin != '' && ACon!='') {
+        var incrementId = 0;
+        $(".tableDriver tbody tr").each(function () {
+            var RowId = $(this).attr('id');
+            //var lastIDN = RowId.replace(/\D/g, '');
+            var RealId = $("#ptab3 #" + RowId + " .datePicker").attr("id");
+            if (RealId == 'age' + lastIsC) {
+                itidN = incrementId;
+            }
+            incrementId++;
+        });
+        if (name != '' && gender != '' && age != '' && Ylin != '' && ACon != '') {
             var newarray = { 'Name': name, 'Dob': age, 'Gender': gender, 'YearLicensed': Ylin, 'AccidentsAndConvictions': ACon };
-            if ($.isEmptyObject(dataToSend) === true) {
+            if ($.isEmptyObject(dataToSend) == true) {
                 dataToSend.splice(itidN, 0, newarray);
-            } else if (typeof(dataToSend[itidN]) == "undefined") {
+            } else if (typeof (dataToSend[itidN]) == "undefined") {
                 dataToSend.splice(itidN, 0, newarray);
             } else {
                 dataToSend.splice(itidN, 1);
@@ -2630,23 +2682,17 @@
                 success: function (response) {
                     if (response.status == true) {
                         $("#tname-tr-" + id).remove();
-                        var rowCount = $('.table tbody tr').length;
+                        var rowCount = $('.tableDriver tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $(".table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tname-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tname-tr-" + v.Value);
-                                            $("#tname-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
-                                });
-                            }                         
+                        $(".tableDriver tbody tr").each(function () {
+                            var RowId = $(this).attr('id');
+                            if (i <= rowCount) {
+                                $("#" + RowId + " .form-control").attr("data-itid", i);
+                            } else {
+                                $("#" + RowId + " .form-control").attr("data-itid", 0);
+                            }
+                            i++;
+                        });
                     }
                 }
             });
@@ -2671,6 +2717,24 @@
             }
         });
         $("#totalusevehicle").val(sumDV);
+    });
+    $(document).on("keyup", ".locat", function () {
+        var id = $(this).attr('id');
+        $("#" + id).autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    url: "/Customer/LocationData",
+                    type: "GET",
+                    dataType: "json",
+                    data: { Fragment: $("#" + id).val() },
+                    success: function (data) {
+                        response($.map(data, function (item) {
+                            return { label: item, value: item };
+                        }));
+                    }
+                });
+            },
+        });
     });
     $(document).on('focusout', '.suminsuredCoverDetails', function () {
         var sum = 0;
@@ -2707,12 +2771,6 @@
     });
     function tnameAddCD(id) {
         var countId = id + 1;
-        //var i = 1;
-        //$("#ptab4 .table tbody tr").each(function () {
-        //    var RowId = $(this).attr('id');
-        //    $("#" + RowId + " .form-control").attr("data-itid", i);
-        //    i++;
-        //});
         $('#tnameCD-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveCD(' + id + ')" class="button-3d">-</a>';
         var html = '<tr id="tnameCD-tr-'+countId+'"><td class="no-border">@Html.DropDownListFor(p => p.DescriptionObj.Description, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom newVisibleVCD vlidationInsure commondataselection", @data_itid="", @id = "description", @data_eiid = @Model.DescriptionObj.EiId })@Html.HiddenFor(p => p.DescriptionObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.SumnsuredObj.Suminsured, new { @autocomplete = "off", @maxlength = "13", @style = "display:inline-block;width:95%;", @class = "form-control form-border-bottom vlidationInsure commondatatestComma commondatatestPrice suminsuredCoverDetails", @id = "suminsured", @data_eiid = @Model.SumnsuredObj.EiId, @data_regex = "N", @data_itid = "" })@Html.HiddenFor(p => p.SumnsuredObj.EiId)</td><td class="no-border" id="tnameCD-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddCD('+countId+')" class="button-3d">+</a></td></tr>';
@@ -2755,23 +2813,19 @@
                 success: function (response) {
                     if (response.status == true) {
                         $("#tnameCD-tr-" + id).remove();
-                        var rowCount = $('.table tbody tr').length;
+                        var rowCount = $('#ptab4 .coverDetails tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $("#ptab4.table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tnameCD-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tnameCD-tr-" + v.Value);
-                                            $("#tnameCD-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
-                                });
-                            } 
+                        if (response.identifiers != '') {
+                            $("#ptab4 .coverDetails tbody tr").each(function () {
+                                var RowId = $(this).attr('id');
+                                if (i <= rowCount) {
+                                    $("#ptab4 #" + RowId + " .form-control").attr("data-itid", i);
+                                } else {
+                                    $("#ptab4 #" + RowId + " .form-control").attr("data-itid", 0);
+                                }
+                                i++;
+                            });
+                        }
                     }
                 }
             });
@@ -2789,12 +2843,6 @@
     }
     function tnameAddHDIP(id) {
         var countId = id + 1;
-        //var i = 1;
-        //$("#ptab6 .table tbody tr").each(function () {
-        //    var RowId = $(this).attr('id');
-        //    $("#" + RowId + " .form-control").attr("data-itid", i);
-        //    i++;
-        //});
         $('#tnameHDIP-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveHDIP(' + id + ')" class="button-3d">-</a>';
         var html = '<tr id="tnameHDIP-tr-' + countId + '"><td class="no-border">@Html.TextBoxFor(p => p.MCPartynameObj.Name, new { @autocomplete = "off", maxlength =40,@class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.MCPartynameObj.EiId, @id = "NameInstitutions", @data_regex = "AN", @data_itid = "" })@Html.HiddenFor(p => p.MCPartynameObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.MCPartyLocationObj.Location, new { @placeholder = "Suburb", @class = "form-control form-border-bottom vlidationInsure commondatatest locat ui-autocomplete-input", @data_eiid = @Model.MCPartyLocationObj.EiId, @id = "locationIP", @data_regex = "AN", @data_itid = "" })@Html.HiddenFor(p => p.MCPartyLocationObj.EiId)</td><td class="no-border" id="tnameHDIP-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddHDIP(' + countId + ')" class="button-3d">+</a></td></tr>';
@@ -2821,29 +2869,110 @@
                 success: function (response) {
                     if (response.status == true) {
                         $("#tnameHDIP-tr-" + id).remove();
-                        var rowCount = $('.table tbody tr').length;
+                        var rowCount = $('#ptab6 .interestedParties tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $("#ptab5.table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tnameHDIP-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tnameHDIP-tr-" + v.Value);
-                                            $("#tnameHDIP-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
-                                });
-                            } 
+                        if (response.identifiers != '') {
+                            $("#ptab6 .interestedParties tbody tr").each(function () {
+                                var RowId = $(this).attr('id');
+                                if (i <= rowCount) {
+                                    $("#ptab6 #" + RowId + " .form-control").attr("data-itid", i);
+                                } else {
+                                    $("#ptab6 #" + RowId + " .form-control").attr("data-itid", 0);
+                                }
+                                i++;
+                            });
+                        }
                     }
                 }
             });
         }
     }
 </script>
+<script type="text/javascript">
+    var dataToSend = [];
+    $(document).ready(function () {
+        $(".datePicker").inputmask("99/99/9999", { "placeholder": "dd/mm/yyyy" });
+    });
+    $(document).ready(function () {
+        var isb = $("input[name='AccessoriesObj.Accessories']:checked").val();
+        if (isb == 1) {
+            $('#desc').css({ 'display': 'block' });
+        } else {
+            $('#desc').css({ 'display': 'none' });
+        }
+        var isbCC = $("input[name='CoveroptionObj.Coveroption']:checked").val();
+        if (isbCC == 1) {
+            $('.drivingcomp').css({ 'display': 'block' });
+        } else {
+            $('.drivingcomp').css({ 'display': 'none' });
+        }
+        var isbVM = $("input[name='VmodifiedObj.Vmodified']:checked").val();
+        if (isbVM == 1) {
+            $('#describe').removeAttr('disabled');
+            $('#ptab2 .Dmodified').css({ "display": "block" });
+        } else {
+            $('#describe').attr('disabled', 'disabled');
+            $('#ptab2 .Dmodified').css({ "display": "none" });
+        }
+        var isbVR = $("input[name='VregisterObj.Register']:checked").val();
+        if (isbVR == 1) {
+            $('#ptab2 #rnumber').removeAttr('disabled');
+            $('#ptab2 .Rnumber').css({ "display": "block" });
+        } else {
+            $('#ptab2 #rnumber').attr('disabled', 'disabled');
+            $('#ptab2 .Rnumber').css({ "display": "none" });
+        }
+        var isbVMSDF = $("input[name='RatingObj.Rating']:checked").val();
+        if (isb == 1) {
+            if (isbVMSDF == 6) {
+                $('#dispountFreeperiodew').text('0');
+            } else if (isbVMSDF == 1) {
+                $('#dispountFreeperiodew').text('60');
+            } else if (isbVMSDF == 2) {
+                $('#dispountFreeperiodew').text('50');
+            } else if (isbVMSDF == 3) {
+                $('#dispountFreeperiodew').text('40');
+            } else if (isbVMSDF == 4) {
+                $('#dispountFreeperiodew').text('30');
+            } else if (isbVMSDF == 5) {
+                $('#dispountFreeperiodew').text('20');
+            } else {
+                $('#dispountFreeperiodew').text('');
+            }
+        } else {
+            $('#dispountFreeperiodew').text('');
+        }
+        var comyear = $('.commondatatestYearHome').val();
+        if (comyear == "0") {
+            $('.commondatatestYearHome').val('');
+        }
+        var indemnityCoverDetailsValue = '30000000';
+        var indemnityCoverDetails = commaReplace(indemnityCoverDetailsValue);
+        $("#ptab4 #indemnity").val(indemnityCoverDetails);
+    });
+    $(document).on('click', '#ptab4 input[name="AccessoriesObj.Accessories"]', function () {
+        var id = $(this).attr('id');
+        var isb = $('#ptab4 #' + id).val();
+        if (isb == 1) {
+            $('#ptab4 #renewalno').removeAttr('checked');
+            $('#ptab4 #' + id).attr('checked', 'checked');
+            $('#ptab4 #desc').css({ 'display': 'block' });
+        } else {
+            $('#ptab4 #renewalyes').removeAttr('checked');
+            $('#ptab4 #' + id).attr('checked', 'checked');
+            $('#ptab4 #desc').css({ 'display': 'none' });
+        }
+    });
+    $(document).on('click', 'input[name="CoveroptionObj.Coveroption"]', function () {
+        var isbsss = $('input[name="CoveroptionObj.Coveroption"]:checked').val();
+        if (isbsss == 1) {
+            $('.drivingcomp').css({ 'display': 'block' });
+        } else {
+            $('.drivingcomp').css({ 'display': 'none' });
+        }
+    });
+</script>
+
 <script type="text/javascript">
     $(document).ready(function () {
         $("#ptabbtn6").click(function (e) {
@@ -2852,18 +2981,18 @@
             $("#ptab6 .vlidationInsure").each(function () {
                 var id = $(this).attr('id');
                 var nameAttr = $(this).attr('name');
-                var lastChar = id.replace(/\D/g, '');;
+                var lastChar = id.replace(/\D/g, '');
                 var newval = $(this).val();
                 if (nameAttr == "MCPartynameObj.Name") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (!regex.test(newval)) {
-                        $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#ptab6 #' + id).css({ "border": "" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("");
-                    }
+                    //var regex = /^[a-zA-Z0-9 ]*$/;
+                    //if (!regex.test(newval)) {
+                    //    $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#ptab6 #' + id).css({ "border": "" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "MCPartyLocationObj.Location") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
@@ -2877,7 +3006,7 @@
                     }
                 }
                 if (nameAttr == "rlsVDhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the vehicle description details,").css({ "display": "block" });
                         valid = 0;
@@ -2887,7 +3016,7 @@
                     }
                 }
                 if (nameAttr == "rlsADhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the additional details,").css({ "display": "block" });
                         valid = 0;
@@ -2897,7 +3026,7 @@
                     }
                 }
                 if (nameAttr == "rlsDRodhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the drivers,").css({ "display": "block" });
                         valid = 0;
@@ -2907,7 +3036,7 @@
                     }
                 }
                 if (nameAttr == "rlsCDhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the cover details,").css({ "display": "block" });
                         valid = 0;
@@ -2917,7 +3046,7 @@
                     }
                 }
                 if (nameAttr == "rlsOEEhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete an optional extras and excesses,").css({ "display": "block" });
                         valid = 0;
@@ -2940,10 +3069,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
                 }
             }
         });
@@ -3104,24 +3233,26 @@
 <link rel="stylesheet" href="~/css/jquery-ui.css" />
 <script src="~/js/jquery-ui.min.js"></script>
 <script type="text/javascript">
-    $(document).on("keyup", "input.locat", function () {
-        var id = $(this).attr('id');
-        $("#" + id).autocomplete({
-            source: function (request, response) {
-                $.ajax({
-                    url: "/Customer/LocationData",
-                    type: "GET",
-                    dataType: "json",
-                    data: { Fragment: $("#" + id).val() },
-                    success: function (data) {
-                        response($.map(data, function (item) {
-                            return { label: item, value: item };
-                        }));
-                    }
-                });
-            },
-        });
-    });
+    //$(document).on("keyup", "#ptab6 > input.locat", function () {
+    //    var id = $(this).attr('id');
+    //    alert(id);
+    //    $("#" + id).autocomplete({
+    //        source: function (request, response) {
+    //            $.ajax({
+    //                url: "/Customer/LocationData",
+    //                type: "GET",
+    //                dataType: "json",
+    //                data: { Fragment: $("#" + id).val() },
+    //                success: function (data) {
+    //                    response($.map(data, function (item) {
+    //                        return { label: item, value: item };
+    //                    }));
+    //                }
+    //            });
+    //        },
+    //    });
+    //});
+
     $(document).on('focusout', '#CoverDetailsSuburb', function () {
         var suburb1 = $(this).val();
         var add = $('#addresshome').val();
@@ -3139,7 +3270,31 @@
                         var valId = $('#ptab2 #Address option').filter(function () { return $(this).html() == locationhb; }).val();
                         if (valId == undefined) {
                             $('#ptab2 #Address').append('<option value="' + res.AddressID + '">' + locationhb + '</option>');
-                        }                        
+                        }
+                        $('#newAddressSet').css({ 'display': 'none' });
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('focusout', '#NameInstitutions', function () {
+        var suburb1 = $(this).val();
+        var add = $('#locationIP').val();
+        if (add != '' && suburb1 != '') {
+            var postcode = suburb1.slice((suburb1.length - 4), suburb1.length);
+            var state = suburb1.slice((suburb1.length - 8), (suburb1.length - 5));
+            var suburb = suburb1.slice(0, (suburb1.length - 8));
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": suburb, "state": state, "postcode": postcode },
+                success: function (res) {
+                    if (res.Status) {
+                        var locationhb = '' + add + ', ' + suburb1;
+                        //var valId = $('#ptab2 #Address option').filter(function () { return $(this).html() == locationhb; }).val();
+                        //if (valId == undefined) {
+                        //    $('#ptab2 #Address').append('<option value="' + res.AddressID + '">' + locationhb + '</option>');
+                        //}
                         $('#newAddressSet').css({ 'display': 'none' });
                     }
                 }
@@ -3164,6 +3319,30 @@
                         if (valId == undefined) {
                             $('#ptab2 #Address').append('<option value="' + res.AddressID + '">' + locationhb + '</option>');
                         }
+                        $('#newAddressSet').css({ 'display': 'none' });
+                    }
+                }
+            });
+        }
+    });
+    $(document).on('focusout', "#locationIP", function () {
+        var suburb1 = $('#NameInstitutions').val();
+        var add = $(this).val();
+        if (add != '' && suburb1 != '') {
+            var postcode = suburb1.slice((suburb1.length - 4), suburb1.length);
+            var state = suburb1.slice((suburb1.length - 8), (suburb1.length - 5));
+            var suburb = suburb1.slice(0, (suburb1.length - 8));
+            $.ajax({
+                type: "POST",
+                url: "/Customer/AddHomeProfile",
+                data: { "Add": add, "suburb": suburb, "state": state, "postcode": postcode },
+                success: function (res) {
+                    if (res.Status) {
+                        var locationhb = '' + add + ', ' + suburb1;
+                        //var valId = $('#ptab2 #Address option').filter(function () { return $(this).html() == locationhb; }).val();
+                        //if (valId == undefined) {
+                        //    $('#ptab2 #Address').append('<option value="' + res.AddressID + '">' + locationhb + '</option>');
+                        //}
                         $('#newAddressSet').css({ 'display': 'none' });
                     }
                 }
@@ -3248,7 +3427,12 @@
             } else {
                 var ItId = ItIdN;
             }
-            if (Value!='') {
+            if (Value != '') {
+                var ppcid = $("#pcidd").val();
+                var pc = $("#policyn").val();
+                //if (ppcid != '' || (pc != '' && pc == 1)) {                   
+                //    ExistingPolicy();
+                //}
                 elementAjaxCall(Value, EIId, ItId, strID);
             }
         });

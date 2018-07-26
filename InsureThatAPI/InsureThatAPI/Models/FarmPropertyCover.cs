@@ -65,7 +65,7 @@ namespace InsureThatAPI.Models
         public List<ValueDatas> SuminsuredperObjList { get; set; }
         public SumOfInsured SuminsuredLSObj { get; set; }
         public List<ValueDatas> SuminsuredLSObjList { get; set; }
-        public TotalForLiveStock TotallivestockObj { get; set; }
+        public TotalForLivestock TotalLivestockObj { get; set; }
         public DogAttackOption DogattackObj { get; set; }
         public ExcessesFPC ExcessesLSObj { get; set; }
 
@@ -96,7 +96,7 @@ namespace InsureThatAPI.Models
         public NumberOfAnimals NumberanimalObj { get; set; }
         public SumInsuredPerAnimals SuminsuredperObj { get; set; }
         public SumOfInsured SuminsuredObj { get; set; }
-        public TotalForLiveStock TotallivestockObj { get; set; }
+        public TotalForLivestock TotalLivestockObj { get; set; }
         public DogAttackOption DogattackObj { get; set; }
         public ExcessesFPC ExcessesFpcObj { get; set; }
     }
@@ -132,9 +132,9 @@ namespace InsureThatAPI.Models
         public string Dogattack { get; set; }
         public int EiId { get; set; }
     }
-    public class TotalForLiveStock
+    public class TotalForLivestock
     {
-        public string Totallivestock { get; set; }
+        public string TotalLivestock { get; set; }
         public int EiId { get; set; }
     }
     public class NumberOfAnimals

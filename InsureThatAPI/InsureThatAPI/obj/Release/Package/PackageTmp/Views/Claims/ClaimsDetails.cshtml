@@ -6,16 +6,45 @@
 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 policy-indiv-head">
     <h4><span>RURAL LIFESTYLE POLICY</span> / CLAIMS</h4>
 </div>
-<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 endorsmentview">
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 endorsmentview">
     <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12 policy-full-head">
         <h2>CLAIMS DETAILS</h2>
     </div>
-    <div class="col-md-5 col-sm-5 col-xs-12 pull-right">
+    <div class="col-md-3 col-sm-3 col-xs-12 pull-right">
         <div class="pull-right">
-            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+            @if (Model.PcId != null)
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;padding: 3.73px 10.5px;">Disclosure</a>
+
+            }
         </div>
     </div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 15px 26px 0px;">
+                    <h3 class="pull-left">Save Policy</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <img src="~/images/close-icon.png" />
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Do you wish to save your policy till now and continue later.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
+                    <button class="btn btn-default no-border savepolicyP" data-dismiss="modal" aria-hidden="true"> Save </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success savepolicyresult"></div>
     @using (Ajax.BeginForm("ClaimsDetails", "Claims", new AjaxOptions()
     {
         HttpMethod = "POST"
@@ -26,9 +55,9 @@
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
         @Html.AntiForgeryToken()
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            @if(Session["PolicyNo"] != null)
+            @if (Session["PolicyNo"] != null)
             {
-            
+
                 <h5 class="clearfix col-md-12 col-sm-12 col-xs-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
             }
         </div>
@@ -50,30 +79,30 @@
                     <tbody>
                         <tr id="tname-tr-1">
                             <td class="no-border">
-                                @Html.DropDownListFor(p => p.ClaimtypeObj.Type, @Model.ClaimtypeObj.ClaimTypeList, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type", @data_itid = "-1" })
+                                @Html.DropDownListFor(p => p.ClaimtypeObj.Type, @Model.ClaimtypeObj.ClaimTypeList, new {  @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type1", @data_itid = "-1" })
                                 @Html.HiddenFor(p => p.ClaimtypeObj.EiId)
                             </td>
                             <td class="no-border">
-                                @Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details", @data_itid = "-1" })
+                                @Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details1", @data_itid = "-1" })
                                 @Html.HiddenFor(p => p.DetailsclaimObj.EiId)
                             </td>
                             <td class="no-border">
-                                $@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @autocomplete = "off", @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure", @style = "width: 87%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue", @data_itid = "-1" })
+                                $@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @autocomplete = "off", @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure", @style = "width: 87%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue1", @data_itid = "-1" })
                                 @Html.HiddenFor(p => p.ClaimvalueObj.EiId)
                             </td>
                             <td class="no-border">
-                                @Html.TextBoxFor(p => p.YearObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;", @data_itid = "-1" })
+                                @Html.TextBoxFor(p => p.YearObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.YearObj.EiId, @id = "year1", @style = "background:none;", @data_itid = "-1" })
                                 @Html.HiddenFor(p => p.YearObj.EiId)
                             </td>
                             <td class="no-border">
-                                @Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer", @data_itid = "-1" })
+                                @Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer1", @data_itid = "-1" })
                                 @Html.HiddenFor(p => p.InsurerObj.EiId)
                             </td>
                             <td class="no-border">
-                                @Html.TextBoxFor(p => p.DriverObj.Driver, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DriverObj.EiId, @id = "driver", @data_itid = "-1" })
+                                @Html.TextBoxFor(p => p.DriverObj.Driver, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DriverObj.EiId, @id = "driver1", @data_itid = "-1" })
                                 @Html.HiddenFor(p => p.DriverObj.EiId)
                             </td>
-                            <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(-1)" class="button-3d">+</a></td>
+                            <td class="no-border" id="tname-1"><a href="javascript:void(0)" onclick="tnameAdd(1)" class="button-3d">+</a></td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -84,14 +113,14 @@
                             <td class="no-border"><label id="YearObj.Year-error" class="error" for="YearObj.Year"></label></td>
                             <td class="no-border"><label id="InsurerObj.Insurer-error" class="error" for="InsurerObj.Insurer"></label></td>
                             <td class="no-border"><label id="DriverObj.Driver-error" class="error" for="DriverObj.Driver"></label></td>
-                            <td  class="no-border">&nbsp;</td>
-                        </tr>                        
+                            <td class="no-border">&nbsp;</td>
+                        </tr>
                     </tfoot>
                 </table>
             </div>
         </div>
         <div class="col-md-6 pull-right text-right mt-30">
-            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtnFHC">Submit</button>
+            <button type="submit" class="button-3d nomargin tab-linker quot-next-btn" id="ptabbtnFHC">Save & Continue</button>
         </div>
     }
 </div>
@@ -103,18 +132,24 @@
     });
 </script>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("tr td .vlidationInsure").each(function () {
-            var id = $(this).attr('id');
-            //var prid1 = $(this).parent().parent().attr('id');
-            //var prid = prid1.replace(/\D/g, '');
-            var itid = $(this).data('itid');
-            if (itid == -1) {
-                var nItid = itid +(-1);
-            } else {
-                var nItid = itid;
+
+    $(document).on('click', '.savepolicyP', function () {
+        var prid = $("#prid").val();
+        // var prId = $(this).data('prId');
+        var prId = prid;
+        $.ajax({
+            type: "POST",
+            url: "/Customer/SavePolicy",
+            data: { "PrId": prId },
+            success: function (res) {
+                if (res.status == true) {
+                    var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
+                } else {
+                    var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
+                }
             }
-            $(this).attr('id', id + '' + nItid);;
         });
     });
     $(document).ready(function () {
@@ -242,16 +277,10 @@
         });
     });
     function tnameAdd(id) {
-        var countId = id + (-1);     
-        var i = -1;
-        $(".table tbody tr").each(function () {
-            var RowId = $(this).attr('id');
-            $("#" + RowId + " .form-control").attr("data-itid", i);
-            i--;
-        });        
-        $('#tname' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
+        var countId = id+1;
+        $('#tname-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tname-tr' + countId + '"><td class="no-border">@Html.DropDownListFor(p => p.ClaimtypeObj.Type, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type", @data_itid = "-1"})@Html.HiddenFor(p => p.ClaimtypeObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details", @data_itid = "-1" })@Html.HiddenFor(p => p.DetailsclaimObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure", @style = "width: 87%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue", @data_itid = "-1" })@Html.HiddenFor(p => p.ClaimvalueObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;", @data_itid = "-1" })@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer", @data_itid = "-1" })@Html.HiddenFor(p => p.InsurerObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DriverObj.Driver, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DriverObj.EiId, @id = "driver", @data_itid = "-1" })@Html.HiddenFor(p => p.DriverObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tname-tr-' + countId + '"><td class="no-border">@Html.DropDownListFor(p => p.ClaimtypeObj.Type, Enumerable.Empty<SelectListItem>(), new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.ClaimtypeObj.EiId, @id = "type", @data_itid = "-1"})@Html.HiddenFor(p => p.ClaimtypeObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DetailsclaimObj.Details, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsclaimObj.EiId, @id = "details", @data_itid = "-1" })@Html.HiddenFor(p => p.DetailsclaimObj.EiId)</td><td class="no-border">$@Html.TextBoxFor(p => p.ClaimvalueObj.Cvalue, new { @maxlength = "13", @class = "form-control form-border-bottom vlidationInsure", @style = "width: 87%;display:inline-block;float: none;", @data_eiid = @Model.ClaimvalueObj.EiId, @id = "cvalue", @data_itid = "-1" })@Html.HiddenFor(p => p.ClaimvalueObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearObj.Year, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.YearObj.EiId, @id = "year", @style = "background:none;", @data_itid = "-1" })@Html.HiddenFor(p => p.YearObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.InsurerObj.Insurer, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.InsurerObj.EiId, @id = "insurer", @data_itid = "-1" })@Html.HiddenFor(p => p.InsurerObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.DriverObj.Driver, new { @class = "form-control form-border-bottom vlidationInsure", @data_eiid = @Model.DriverObj.EiId, @id = "driver", @data_itid = "-1" })@Html.HiddenFor(p => p.DriverObj.EiId)</td><td class="no-border" id="tname-' + countId + '"><a href="javascript:void(0)" onclick="tnameAdd(' + countId + ')" class="button-3d">+</a></td></tr>';
         $.ajax({
             url: '/Claims/ClaimsDetailAjax',
             type: 'POST',
@@ -262,22 +291,31 @@
                     $.each(response.des, function (i, v) {
                         html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
                     });
-                    $("#tname" + id).html(replaceA);
-                    $("#tname-tr" + id).after(html);
-                    $("#tname-tr" + countId + " .form-control").attr("data-itid", countId);
-                    $("#tname-tr" + countId + " .form-control").val('');
-                    $("#tname-tr" + countId + ' #type').html(html1);
-                    $("#tname-tr" + countId + ' #type').attr('id', "type" + countId);
-                    $("#tname-tr" + countId + ' #details').attr('id', "details" + countId);
-                    $("#tname-tr" + countId + ' #cvalue').attr('id', "cvalue" + countId);
-                    $("#tname-tr" + countId + ' #year').attr('id', "year" + countId);
-                    $("#tname-tr" + countId + ' #insurer').attr('id', "insurer" + countId);
-                    $("#tname-tr" + countId + ' #driver').attr('id', "driver" + countId);
+                    $("#tname-" + id).html(replaceA);
+                    $("#tname-tr-" + id).after(html);
+                    $("#tname-tr-" + countId + " .form-control").val('');
+                    $("#tname-tr-" + countId + ' #type').html(html1);
+                    $("#tname-tr-" + countId + ' #type').attr('id', "type" + countId);
+                    $("#tname-tr-" + countId + ' #details').attr('id', "details" + countId);
+                    $("#tname-tr-" + countId + ' #cvalue').attr('id', "cvalue" + countId);
+                    $("#tname-tr-" + countId + ' #year').attr('id', "year" + countId);
+                    $("#tname-tr-" + countId + ' #insurer').attr('id', "insurer" + countId);
+                    $("#tname-tr-" + countId + ' #driver').attr('id', "driver" + countId);
+                    var i = -1;
+                    $(".ClaimsDetail tbody tr").each(function () {
+                        var RowId = $(this).attr('id');
+                        var orgId = RowId.split('-');
+                        var itidN = $("#" + RowId + " #type" + orgId[2]).attr("data-itid");
+                        if (parseInt(itidN) < 0) {
+                            $("#" + RowId + " .form-control").attr("data-itid", i);
+                            i--;
+                        }
+                    });
                 } else {
-                    $('#tname' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
+                    $('#tname-' + id + ' > a').css({ 'pointer-events': '', 'cursor': '' });
                 }
             }
-        });        
+        });
     }
     function tnameRemove(id) {
         if (confirm('Are you sure? You want to delete this row?')) {
@@ -295,32 +333,21 @@
                 success: function (response) {
                     if (response.status == true) {
                         $("#tname-tr-" + id).remove();
-                        var rowCount = $('.table tbody tr').length;
-                        var i = 1;
-                        if (response.identifiers != '') {
-                            $.each(response.identifiers, function (j, v) {
-                                $(".table tbody tr").each(function () {
-                                    var itt = $(this).attr('id');
-                                    var search = itt;
-                                    var value = "tname-tr-" + v.Text;
-                                    if (search == value) {
-                                        $(this).attr('id', "tname-tr-" + v.Value);
-                                        $("#tname-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                        j++;
-                                        return false;
-                                    }
-                                });
-                            });
-                        }       
-                        //$(".table tbody tr").each(function () {
-                        //    var RowId = $(this).attr('id');
-                        //    if (i != rowCount) {
-                        //        $("#" + RowId + " .form-control").attr("data-itid", i);
-                        //    } else {
-                        //        $("#" + RowId + " .form-control").attr("data-itid", 0);
-                        //    }
-                        //    i++;
-                        //});
+                        var rowCount = $('.ClaimsDetail tbody tr').length;
+                        var i = -1;
+                        var j = 1;
+                        $(".ClaimsDetail tbody tr").each(function () {
+                            var RowId = $(this).attr('id');
+                            var orgId = RowId.split('-');
+                            var itidN = $("#" + RowId + " #type" + orgId[2]).attr("data-itid");
+                            if (parseInt(itidN) < 0) {
+                                $("#" + RowId + " .form-control").attr("data-itid", i);
+                                i--;
+                            } else {
+                                $("#" + RowId + " .form-control").attr("data-itid", j);
+                                j++;
+                            }
+                        });
                     }
                 }
             });

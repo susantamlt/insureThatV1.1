@@ -39,9 +39,7 @@ namespace InsureThatAPI.Controllers
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
-            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
-            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Money");
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -89,10 +87,9 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                    else if (Policyincllist.Exists(p => p.name == "Livestock"))
                     {
                         return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
-
                     }
                     else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
                     {
@@ -102,7 +99,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                    else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                     {
                         return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                     }
@@ -125,8 +122,7 @@ namespace InsureThatAPI.Controllers
                         else
                         {
                             return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
-                        }
-                    
+                        }                    
             }
             #endregion
         }
@@ -151,16 +147,36 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = Convert.ToInt32(Session["unId"]);
-            int profileid = Convert.ToInt32(Session["profileId"]);
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            int? profileid = Convert.ToInt32(Session["profileId"]);
+            if (PcId != null && PcId.HasValue)
             {
-                FPMoney.ExistingPolicyInclustions = policyinclusions;
-
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPMoney.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    FPMoney.PolicyInclusion = policyinclusions;
+                }
+                FPMoney.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    policyid = PcId.ToString();
+                    FPMoney.PolicyId = policyid;
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Money");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    unid = policyinclusions.Where(p => p.Name == "Money").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Money").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -227,18 +243,26 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                FPMoney.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPMoney.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyMoney";
+            Session["ActionName"] = "Money";
             return View(FPMoney);
         }
         [HttpPost]
         public ActionResult Money(int? cid, FPMoney FPMoney)
         {
-
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> MoneyExcessToPay = new List<SelectListItem>();
             MoneyExcessToPay = commonModel.excessRate();
             FPMoney.ExcessFPMoneyObj.ExcessList = MoneyExcessToPay;
             var db = new MasterDataEntities();
-            string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("FarmLiability", "FarmPolicyFarmLiability", new { cid = FPMoney.CustomerId, PcId = FPMoney.PcId });

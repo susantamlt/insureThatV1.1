@@ -78,7 +78,7 @@ namespace InsureThatAPI.Models
         public FPTotalSpecifiedItemsFM FPTotalSpecifiedItemsFMObj { get; set; }
 
     }
-    public class MobileLiveStock
+    public class MobileLivestock
     {
         public int CustomerId { get; set; }
         public string CompletionTrackFPC { get; set; }

@@ -210,15 +210,7 @@ namespace InsureThatAPI.Controllers
             }
             if (PcId != null && PcId.HasValue)
             {
-                FarmContents.NewSections = cmn.NewSectionP(policyinclusions);
-                if (Session["unId"] != null && Session["profileId"] != null)
-                {
-                    unid = Convert.ToInt32(Session["unId"]);
-                    profileid = Convert.ToInt32(Session["profileId"]);
-                  
-                }
-                else
-                {
+                FarmContents.NewSections = cmn.NewSectionP(policyinclusions);             
                     if (policyinclusions.Exists(p => p.Name == "Farm Property"))
                     {
                         unid = policyinclusions.Where(p => p.Name == "Farm Property").Select(p => p.UnId).FirstOrDefault();
@@ -228,9 +220,7 @@ namespace InsureThatAPI.Controllers
                     else
                     {
                         return RedirectToAction("LiabilityCover", "Liabilities", new { cid = cid, PcId = PcId });
-                    }
-                }
-
+                    }                
                 if (unid == null || unid == 0)
                 {
                     unid = unitdetails.SectionData.UnId;
@@ -326,7 +316,6 @@ namespace InsureThatAPI.Controllers
                         {
                             Session["unId"] = unitdetails.SectionData.UnId;
                             Session["profileId"] = unitdetails.SectionData.ProfileUnId;
-
                         }
                     }
                 }
@@ -735,7 +724,6 @@ namespace InsureThatAPI.Controllers
                 FarmContents.ReferralList.Replace("&nbsp;&nbsp;&nbsp;&nbsp", "");
                 FarmContents.Referels = new List<string>();
                 string[] delim = { "<br/>" };
-
                 string[] spltd = FarmContents.ReferralList.Split(delim, StringSplitOptions.None);
                 if (spltd != null && spltd.Count() > 0)
                 {
@@ -744,7 +732,6 @@ namespace InsureThatAPI.Controllers
                         FarmContents.Referels.Add(spltd[i].Replace("&nbsp;&nbsp;&nbsp;&nbsp", " "));
                     }
                 }
-
             }
             if (cid != null)
             {
@@ -781,9 +768,8 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = FarmContents.CustomerId;
             }
-            string policyid = null;
-
             Session["profileId"] = null;
+            Session["RLSFrm"] = 1;
             Session["UnId"] = null;
             string actionname = null;
             string controllername = null;
@@ -795,12 +781,6 @@ namespace InsureThatAPI.Controllers
             {
                 controllername = Session["controller"].ToString();
             }
-            //if (actionname != null && controllername != null)
-            //{
-            //    return RedirectToAction(actionname, controllername, new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
-            //}
-            return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
-
             return RedirectToAction("LiabilityCover", "Liabilities", new { cid = FarmContents.CustomerId, PcId = FarmContents.PcId });
         }
 
@@ -833,7 +813,7 @@ namespace InsureThatAPI.Controllers
                     excessforUMPay = commonModel.excessRate();
                     return Json(new { status = true, des = excessforUMPay });
                 }
-                else if (content == "liveStock")
+                else if (content == "Livestock")
                 {
                     List<SelectListItem> desListB = new List<SelectListItem>();
                     desListB = commonModel.descriptionLS();
@@ -880,7 +860,7 @@ namespace InsureThatAPI.Controllers
                     desList = commonModel.VolumeOfVat();
                     return Json(new { status = true, des = desList });
                 }
-                else if (content == "liveStockFP")
+                else if (content == "LivestockFP")
                 {
                     List<SelectListItem> desList = new List<SelectListItem>();
                     desList = commonModel.descriptionLS();

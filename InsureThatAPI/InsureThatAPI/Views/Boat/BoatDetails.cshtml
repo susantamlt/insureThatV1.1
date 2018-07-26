@@ -28,7 +28,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
-            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }  
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -126,26 +132,52 @@
     <div class="clearfix"></div>
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
     <div id="processTabs">
-        <ul class="process-steps clearfix col-sm-12">
-            <li>
-                <a href="javascript:void(0)" id="ptb1">Boat Details</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb2">Motor Details</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb3">Boat Operators</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb4">Cover Details</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb5">Options</a>
-            </li>
-            <li>
-                <a href="javascript:void(0)" id="ptb6">Interested Parties</a>
-            </li>
-        </ul>
+        @if (Model.PcId != null || Session["RLSboat"] != null)
+        {
+            <ul class="process-steps clearfix col-sm-12">
+                <li>
+                    <a href="javascript:void(0)" id="ptb1" class="success">Boat Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb2" class="success">Motor Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb3" class="success">Boat Operators</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb4" class="success">Cover Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb5" class="success">Options</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb6" class="success">Interested Parties</a>
+                </li>
+            </ul>
+        }
+        else
+        {
+            <ul class="process-steps clearfix col-sm-12">
+                <li>
+                    <a href="javascript:void(0)" id="ptb1">Boat Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb2">Motor Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb3">Boat Operators</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb4">Cover Details</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb5">Options</a>
+                </li>
+                <li>
+                    <a href="javascript:void(0)" id="ptb6">Interested Parties</a>
+                </li>
+            </ul>
+        }
         @using (Ajax.BeginForm("BoatDetails", "Boat", new { cid = @ViewBag.cid }, new AjaxOptions()
         {
             HttpMethod = "POST"
@@ -154,6 +186,8 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(p => p.CustomerId, new { @id = "ciid" })
             @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })
+            <input type="hidden" id="policyn" value="@Session["RLSboat"]" />
+            <input type="hidden" class="sectionname" value="rlsboat" />
             <div id="ptab1">
                 <div class="col-lg-7 col-md-7 col-sm-7 col-xs-12 policy-full-head">
                     <h2>BOAT DETAILS</h2>
@@ -352,7 +386,7 @@
                         <label id="MooringstorageObj.Mooringorstorage-error" class="error" for="MooringstorageObj.Mooringorstorage"></label>
                     </div>
                 </div>
-                <div class="mt-10 mb-10 col-md-12" id="otherpleasedetail-div" @if (Model.MooringstorageObj.Mooringorstorage != "6") { <text> style="display:none;" </text>  }>
+                <div class="mt-10 mb-10 col-md-12" id="otherpleasedetail-div" @if (Model.MooringstorageObj.Mooringorstorage != "6") { <text> style="display:none;" </text>             }>
                     <div class="col-md-6"><p>If other, please list details here</p></div>
                     <div class="col-md-6">
                         @Html.TextBoxFor(p => p.otherpleasedetailObj.Other, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest", @data_eiid = @Model.otherpleasedetailObj.EiId, @id = "other", @data_regex = "A" })
@@ -393,95 +427,151 @@
                     <h2>MOTOR DETAILS</h2>
                 </div>
                 <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Year Manufactured</p></div>
-                    <div class="col-md-6">
-                        @Html.TextBoxFor(p => p.YearmanufactureMDObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearmanufactureMDObj.EiId, @id = "yearmd" })
-                        @Html.HiddenFor(p => p.YearmanufactureMDObj.EiId)
-                        <label id="YearmanufactureMDObj.Year-error" class="error" for="YearmanufactureMDObj.Year"></label>
-                    </div>
-                </div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Make and Model</p></div>
-                    <div class="col-md-6">
-                        @Html.TextBoxFor(p => p.MakemodelObj.Makemodel, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.MakemodelObj.EiId, @id = "makemodel", @data_regex = "ANS" })
-                        @Html.HiddenFor(p => p.MakemodelObj.EiId)
-                        <label id="MakemodelObj.Makemodel-error" class="error" for="MakemodelObj.Makemodel"></label>
-                    </div>
-                </div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Serial Number</p></div>
-                    <div class="col-md-6">
-                        @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @id = "serialnumber", @data_regex = "NA" })
-                        @Html.HiddenFor(p => p.SerialnumberObj.EiId)
-                        <label id="SerialnumberObj.Serialnumber-error" class="error" for="SerialnumberObj.Serialnumber"></label>
-                    </div>
-                </div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Fuel Type</p></div>
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(p => p.FueltypeObj.Type, @Model.FueltypeObj.FualList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.FueltypeObj.EiId, @id = "fueltype" })
-                        @Html.HiddenFor(p => p.FueltypeObj.EiId)
-                        <label id="FueltypeObj.Type-error" class="error" for="FueltypeObj.Type"></label>
-                    </div>
-                </div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Motor Position</p></div>
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(p => p.MotorpositionObj.Position, listMotorposition, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MotorpositionObj.EiId, @id = "meterials" })
-                        @Html.HiddenFor(p => p.MotorpositionObj.EiId)
-                        <label id="MotorpositionObj.Position-error" class="error" for="MotorpositionObj.Position"></label>
-                    </div>
-                    <script type="text/javascript">
-                        $(document).on('change', '#meterials', function () {
-                            var name = $(this).val();
-                            if (name == 1) {
-                                $('#drivetype').removeAttr('disabled');
-                                $('.indoardRadio').css({ 'display': 'block' });
-                            } else {
-                                $('#drivetype').attr('disabled', 'disabled');
-                                $('.indoardRadio').css({ 'display': 'none' });
-                            }
-                        });
-                    </script>
-                </div>
-                <div class="mt-10 mb-10 col-md-12 indoardRadio" @if (Model.MotorpositionObj.Position != "1") { <text> style="display:none;" </text>  }>
-                    <p class="col-md-6 col-sm-12 col-xs-12 policy-loc-row">If Inboard does Your Boat have a bilge blower or gas detector?</p>
-                    <div class="col-md-6 col-sm-12 col-xs-12">
-                        <div class="policy-loc-row">
-                            @if (@Model.DetectorMDObj.Detector == "0")
-                            {
-                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DetectorMDObj.Detector, '1', new { @id = "yes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DetectorObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DetectorMDObj.Detector, '0', new { @checked = "checked", @id = "no", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DetectorObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
-                            }
-                            else if (@Model.DetectorMDObj.Detector == "1")
-                            {
-                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DetectorMDObj.Detector, '1', new { @checked = "checked", @id = "yes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DetectorObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DetectorMDObj.Detector, '0', new { @id = "no", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DetectorObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
-                            }
-                            else
-                            {
-                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DetectorMDObj.Detector, '1', new { @checked = "checked", @id = "yes", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DetectorObj.EiId })<label for="radio1"><span><span></span></span>Yes</label></div>
-                                <div class="col-md-6 col-sm-6 col-xs-12 policy-loc-row">@Html.RadioButtonFor(p => p.DetectorMDObj.Detector, '0', new { @checked = "checked", @id = "no", @class = "commondataradio vlidationInsure", @data_eiid = @Model.DetectorObj.EiId })<label for="radio1"><span><span></span></span>No</label></div>
-                            }
-                            @Html.HiddenFor(p => p.DetectorMDObj.EiId)
-                        </div>
-                        <label id="DetectorMDObj.Detector-error" class="error" for="DetectorMDObj.Detector"></label>
-                    </div>
-                </div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Drive Type</p></div>
-                    <div class="col-md-6">
-                        @Html.DropDownListFor(p => p.DrivetypeObj.Drivetype, listDrivetype, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DrivetypeObj.EiId, @id = "drivetype" })
-                        @Html.HiddenFor(p => p.DrivetypeObj.EiId)
-                        <label id="DrivetypeObj.Drivetype-error" class="error" for="DrivetypeObj.Drivetype"></label>
-                    </div>
-                </div>
-                <div class="mt-10 mb-10 col-md-12">
-                    <div class="col-md-6"><p>Power (<a href="#hectarModalnew" role="button" data-target="#hectarModalnew" data-toggle="modal">HP</a>)</p></div>
-                    <div class="col-md-6">
-                        @Html.TextBoxFor(p => p.PowerObj.Power, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.PowerObj.EiId, @id = "power", @data_regex = "NFD" })
-                        @Html.HiddenFor(p => p.PowerObj.EiId)
-                        <label id="PowerObj.Power-error" class="error" for="PowerObj.Power"></label>
+                    <div class="col-md-12 table-8">
+                        <table class="table" style=" width: 100%; ">
+                            <thead>
+                                <tr>
+                                    <th class="space_left">Year Manufactured</th>
+                                    <th class="space_left">Make and Model</th>
+                                    <th class="space_left">Serial Number</th>
+                                    <th class="space_left">Fuel Type</th>
+                                    <th class="space_left">Motor Position</th>
+                                    @*<th class="space_left">Detector</th>*@
+                                    <th class="space_left">Drive Type</th>
+                                    <th class="space_left">Power (<a href="#hectarModalnew" role="button" data-target="#hectarModalnew" data-toggle="modal">HP</a>)</th>
+                                    <th class="space_right">&nbsp;</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.MotorDetailsObjList != null && Model.MotorDetailsObjList.Count() > 0)
+                                {
+                                    CountTotal = Model.MotorDetailsObjList.Count();
+                                    for (int i = 0; i < Model.MotorDetailsObjList.Count(); i++)
+                                    {
+                                        jCount = i + 1;
+                                        <tr id="tnamemd-tr-@jCount">
+                                            @if (jCount == CountTotal)
+                                            {
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.YearmanufactureMDObj.Year, @Model.MotorDetailsObjList[i].Value, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatestYearHome", @data_eiid = @Model.YearmanufactureMDObj.EiId, @id = "yearmd", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.YearmanufactureMDObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.MakemodelObj.Makemodel, @Model.MakemodelObjList[i].Value, new {  @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.MakemodelObj.EiId, @id = "makemodel", @data_itid = jCount, @data_regex = "ANS" })
+                                                    @Html.HiddenFor(p => p.MakemodelObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, @Model.SerialNumberObjList[i].Value, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @id = "serialnumber", @data_itid = jCount, @data_regex = "NA" })
+                                                    @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.FuelObjList[i].Value, @Model.FueltypeObj.FualList, new {  @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.FueltypeObj.EiId, @data_itid = jCount, @id = "fueltype" })
+                                                    @Html.HiddenFor(p => p.FueltypeObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.MotorpositionObj.Position, listMotorposition, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MotorpositionObj.EiId, @id = "meterials", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.MotorpositionObj.EiId)
+                                                </td>
+                                                @*<td class="no-border"></td>*@
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.DrivetypeObj.Drivetype, listDrivetype, new {  @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DrivetypeObj.EiId, @id = "drivetype", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.DrivetypeObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.PowerObj.Power, @Model.PowerObjList[i].Value, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.PowerObj.EiId, @id = "power", @data_regex = "NFD", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.PowerObj.EiId)
+                                                </td>
+                                                <td class="no-border" id="tnamemd-@jCount"><a href="javascript:void(0)" onclick="tnameAddMD(@jCount)" class="button-3d">+</a></td>
+                                                jCount = 0;
+                                                CountTotal = 0;
+                                            }
+                                            else
+                                            {
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.YearmanufactureMDObj.Year, @Model.MotorDetailsObjList[i].Value, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest commondatatestYearHome", @data_eiid = @Model.YearmanufactureMDObj.EiId, @id = "yearmd", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.YearmanufactureMDObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.MakemodelObj.Makemodel, @Model.MakemodelObjList[i].Value, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.MakemodelObj.EiId, @id = "makemodel", @data_itid = jCount, @data_regex = "ANS" })
+                                                    @Html.HiddenFor(p => p.MakemodelObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, @Model.SerialNumberObjList[i].Value, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @id = "serialnumber", @data_itid = jCount, @data_regex = "NA" })
+                                                    @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.FuelObjList[i].Value, @Model.FueltypeObj.FualList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.FueltypeObj.EiId, @data_itid = jCount, @id = "fueltype" })
+                                                    @Html.HiddenFor(p => p.FueltypeObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.MotorpositionObj.Position, listMotorposition, new {  @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MotorpositionObj.EiId, @id = "meterials", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.MotorpositionObj.EiId)
+                                                </td>
+                                                @*<td class="no-border"></td>*@
+                                                <td class="no-border">
+                                                    @Html.DropDownListFor(p => p.DrivetypeObj.Drivetype, listDrivetype, new {  @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DrivetypeObj.EiId, @id = "drivetype", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.DrivetypeObj.EiId)
+                                                </td>
+                                                <td class="no-border">
+                                                    @Html.TextBoxFor(p => p.PowerObj.Power, @Model.PowerObjList[i].Value, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.PowerObj.EiId, @id = "power", @data_regex = "NFD", @data_itid = jCount })
+                                                    @Html.HiddenFor(p => p.PowerObj.EiId)
+                                                </td>
+                                                <td class="no-border" id="tnamemd-@jCount"><a href="javascript:void(0)" onclick="tnameRemoveMD(@jCount)" class="button-3d">-</a></td>
+                                            }
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr id="tnamemd-tr-1">
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.YearmanufactureMDObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest commondatatestYearHome", @data_eiid = @Model.YearmanufactureMDObj.EiId, @id = "yearmd", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.YearmanufactureMDObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.MakemodelObj.Makemodel, new {  @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.MakemodelObj.EiId, @id = "makemodel", @data_regex = "ANS", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.MakemodelObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @id = "serialnumber", @data_regex = "NA", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.SerialnumberObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.DropDownListFor(p => p.FueltypeObj.Type, @Model.FueltypeObj.FualList, new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.FueltypeObj.EiId, @id = "fueltype", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.FueltypeObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.DropDownListFor(p => p.MotorpositionObj.Position, listMotorposition, new {  @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MotorpositionObj.EiId, @id = "meterials", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.MotorpositionObj.EiId)
+
+                                        </td>
+                                        @*<td class="no-border"></td>*@
+                                        <td class="no-border">
+                                            @Html.DropDownListFor(p => p.DrivetypeObj.Drivetype, listDrivetype, new {  @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DrivetypeObj.EiId, @id = "drivetype", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.DrivetypeObj.EiId)
+                                        </td>
+                                        <td class="no-border">
+                                            @Html.TextBoxFor(p => p.PowerObj.Power, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.PowerObj.EiId, @id = "power", @data_regex = "NFD", @data_itid = "0" })
+                                            @Html.HiddenFor(p => p.PowerObj.EiId)
+                                        </td>
+                                        <td class="no-border" id="tnamemd-1"><a href="javascript:void(0)" onclick="tnameAddMD(1)" class="button-3d">+</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td class="no-border"><label id="YearmanufactureMDObj.Year-error" class="error" for="YearmanufactureMDObj.Year"></label></td>
+                                    <td class="no-border"><label id="MakemodelObj.Makemodel-error" class="error" for="MakemodelObj.Makemodel"></label></td>
+                                    <td class="no-border"><label id="SerialnumberObj.Serialnumber-error" class="error" for="SerialnumberObj.Serialnumber"></label></td>
+                                    <td class="no-border"><label id="FueltypeObj.Type-error" class="error" for="FueltypeObj.Type"></label></td>
+                                    <td class="no-border"><label id="MotorpositionObj.Position-error" class="error" for="MotorpositionObj.Position"></label></td>
+                                    @*<td class="no-border"><label id="DetectorMDObj.Detector-error" class="error" for="DetectorMDObj.Detector"></label></td>*@
+                                    <td class="no-border"><label id="DrivetypeObj.Drivetype-error" class="error" for="DrivetypeObj.Drivetype"></label></td>
+                                    <td class="no-border"><label id="PowerObj.Power-error" class="error" for="PowerObj.Power"></label></td>
+                                    <td class="no-border">&nbsp;</td>
+                                </tr>
+                            </tfoot>
+                        </table>
                     </div>
                 </div>
                 <div id="hectarModalnew" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="hectarModalnew" aria-hidden="false">
@@ -529,7 +619,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>Our assessment of Your Vehicle, Caravan, Farm Machinery, livestock, Boat or harvested crops value at the time of the incident You are claiming for, using local market prices and considering the age and the condition of the Vehicle, Caravan, Farm Machinery, livestock, Boat or harvested crops.</p>
+                                <p>Our assessment of Your Vehicle, Caravan, Farm Machinery, Livestock, Boat or harvested crops value at the time of the incident You are claiming for, using local market prices and considering the age and the condition of the Vehicle, Caravan, Farm Machinery, Livestock, Boat or harvested crops.</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -664,7 +754,7 @@
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p>Our assessment of Your Vehicle, Caravan, Farm Machinery, livestock, Boat or harvested crops value at the time of the incident You are claiming for, using local market prices and considering the age and the condition of the Vehicle, Caravan, Farm Machinery, livestock, Boat or harvested crops.</p>
+                                <p>Our assessment of Your Vehicle, Caravan, Farm Machinery, Livestock, Boat or harvested crops value at the time of the incident You are claiming for, using local market prices and considering the age and the condition of the Vehicle, Caravan, Farm Machinery, Livestock, Boat or harvested crops.</p>
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-default no-border" data-dismiss="modal" aria-hidden="true"> Back </button>
@@ -1551,7 +1641,7 @@
         $("#ptab1 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr == "BoatnameObj.Name") {
                 var regex = /^[a-zA-Z ]*$/;
@@ -1574,10 +1664,10 @@
                     $("#ptab1 label[for='" + nameAttr + "']").text("Please enter registration").css({ "display": "block" });
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
-                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab1 #' + id).css({ "border": "" });
                     $("#ptab1 label[for='" + nameAttr + "']").text("");
@@ -1600,10 +1690,10 @@
                     $("#ptab1 label[for='" + nameAttr + "']").text("Please enter model").css({ "display": "block" });
                     $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
-                    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab1 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab1 label[for='" + nameAttr + "']").text('Special character not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab1 #' + id).css({ "border": "" });
                     $("#ptab1 label[for='" + nameAttr + "']").text("");
@@ -1738,7 +1828,7 @@
         $("#ptab2 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr == "YearmanufactureMDObj.Year") {
                 var regex = /^[0-9]*$/;
@@ -1784,10 +1874,10 @@
                     $("#ptab2 label[for='" + nameAttr + "']").text("Please enter serial number").css({ "display": "block" });
                     $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
-                    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab2 label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab2 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab2 label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab2 #' + id).css({ "border": "" });
                     $("#ptab2 label[for='" + nameAttr + "']").text("");
@@ -1876,7 +1966,7 @@
         $("#ptab3 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr =="NameboObj.Name"){
                 var regex = /^[a-zA-Z ]*$/;
@@ -1914,10 +2004,10 @@
                     $("#ptab3 label[for='" + nameAttr + "']").text("Please enter name").css({ "display": "block" });
                     $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
-                } else if (!regex.test(newval)) {
-                    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
-                    $("#ptab3 label[for='" + nameAttr + "']").text('Special character & numeric not allowed in name').css({ "display": "block" });
-                    valid = 0;
+                //} else if (!regex.test(newval)) {
+                //    $('#ptab3 #' + id).css({ "border": "1px solid #ff0000" });
+                //    $("#ptab3 label[for='" + nameAttr + "']").text('Special character & numeric not allowed in name').css({ "display": "block" });
+                //    valid = 0;
                 } else {
                     $('#ptab3 #' + id).css({ "border": "" });
                     $("#ptab3 label[for='" + nameAttr + "']").text("");
@@ -1930,12 +2020,23 @@
             $("#ptab6 #rlsBOhome").val(1);
         }
     });
+    $(document).ready(function () {
+        var ppcid = $("#pcidd").val();
+        var pc = $("#policyn").val();
+        if (ppcid != '' || (pc != '' && pc==1)) {
+            $("#ptab6 #rlsBDhome").val(1);
+            $("#ptab6 #rlsMDhome").val(1);
+            $("#ptab6 #rlsBOhome").val(1);
+            $("#ptab6 #rlsCDhome").val(1);
+            $("#ptab6 #rlsOPodhome").val(1);
+        }
+    });
     $("#ptabbtn4").click(function () {
         var valid = 1;
         $("#ptab4 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr == "MarketvalueCDObj.Marketvalue") {
                 var regex = /^[0-9]*$/;
@@ -1970,8 +2071,8 @@
                 }
             }
             if (nameAttr == "AccessorydescriptionObj.Description") {
-                var regex= /^[a-zA-Z0-9 ]*$/;
-                if (newval == '') {
+                var regex = /^[a-zA-Z0-9 ]*$/;
+                if (newval == '' && $('#ptab4 #suminsured' + lastChar).val()!='') {
                     $("#ptab4 label[for='" + nameAttr + "']").text("Please enter motor description").css({ "display": "block" });
                     $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
@@ -1983,11 +2084,11 @@
             if (nameAttr == "AccessorysuminsureObj.Suminsured") {
                 var regex = /^[0-9]*$/;
                 var newValValuablesS = newval.replace(/,/g, '');
-                if (newValValuablesS == '') {
+                if (newValValuablesS == '' && $('#ptab4 #description' + lastChar).val() != '') {
                     $("#ptab4 label[for='" + nameAttr + "']").text("Please enter sum insured").css({ "display": "block" });
                     $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
                     valid = 0;
-                } else if (!regex.test(newValValuablesS)) {
+                } else if (newValValuablesS != '' && !regex.test(newValValuablesS)) {
                     $('#ptab4 #' + id).css({ "border": "1px solid #ff0000" });
                     $("#ptab4 label[for='" + nameAttr + "']").text('Only numeric are allowed').css({ "display": "block" });
                     valid = 0;
@@ -2054,7 +2155,7 @@
         $("#ptab5 .vlidationInsure").each(function () {
             var id = $(this).attr('id');
             var nameAttr = $(this).attr('name');
-            var lastChar = id.substr(id.length - 1);
+            var lastChar = id.replace(/\D/g, '');
             var newval = $(this).val();
             if (nameAttr == "WaterwayObj.Waterway") {
                 if ($("input[name='" + nameAttr + "']:checked").val() == undefined) {
@@ -2118,36 +2219,36 @@
             $("#ptab6 .vlidationInsure").each(function () {
                 var id = $(this).attr('id');
                 var nameAttr = $(this).attr('name');
-                var lastChar = id.substr(id.length - 1);
+                var lastChar = id.replace(/\D/g, '');
                 var newval = $(this).val();
                 if (nameAttr == "InstitutionsObj.Name") {
                     var regex = /^[a-zA-Z0-9 ]*$/;
-                    if (!regex.test(newval)) {
-                        $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#ptab6 #' + id).css({ "border": "" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("");
-                    }
+                    //if (!regex.test(newval)) {
+                    //    $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#ptab6 #' + id).css({ "border": "" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "LocationObj.Location") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if ($('#ptab6 #NameInstitutions' + lastChar).val() != '' && newval == '') {
-                        $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("Please enter location").css({ "display": "block" });
-                        valid = 0;
-                    } else if ($('#ptab6 #NameInstitutions' + lastChar).val() != '' && !regex.test(newval)) {
-                        $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#ptab6 #' + id).css({ "border": "" });
-                        $("#ptab6 label[for='" + nameAttr + "']").text("");
-                    }
+                    //var regex = /^[a-zA-Z0-9 ]*$/;
+                    //if ($('#ptab6 #NameInstitutions' + lastChar).val() != '' && newval == '') {
+                    //    $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("Please enter location").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else if ($('#ptab6 #NameInstitutions' + lastChar).val() != '' && !regex.test(newval)) {
+                    //    $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("Special character are not allowed").css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#ptab6 #' + id).css({ "border": "" });
+                    //    $("#ptab6 label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "rlsBDhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the Boat Details,").css({ "display": "block" });
                         valid = 0;
@@ -2157,7 +2258,7 @@
                     }
                 }
                 if (nameAttr == "rlsMDhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the motor details,").css({ "display": "block" });
                         valid = 0;
@@ -2167,7 +2268,7 @@
                     }
                 }
                 if (nameAttr == "rlsBOhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the boat operator,").css({ "display": "block" });
                         valid = 0;
@@ -2177,7 +2278,7 @@
                     }
                 }
                 if (nameAttr == "rlsCDhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the cover details,").css({ "display": "block" });
                         valid = 0;
@@ -2187,7 +2288,7 @@
                     }
                 }
                 if (nameAttr == "rlsOPodhome") {
-                    if (newval == '') {
+                    if (newval == '' || newval == 0) {
                         $('#ptab6 #' + id).css({ "border": "1px solid #ff0000" });
                         $("#ptab6 label[for='" + nameAttr + "']").text("Please complete the options,").css({ "display": "block" });
                         valid = 0;
@@ -2226,32 +2327,62 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9 ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
         } else if (Nregex == 'NA') {
-            regex = /^[a-zA-Z0-9]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'NFD'){
             regex = /^[-+]?[0-9]+(\.[0-9]+)?$/;
             text = "Only float or integer or decimal are allowed";
         }
 
-        if (regex!='' && !regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
             $('#' + id).css({ "border": "" });
             $("label[for='" + name + "']").text('').css({ "display": "none" });
+            var ppcid = $("#pcidd").val();
+            var pc = $("#policyn").val();
+            if (ppcid != '' || (pc != '' && pc==1)) {
+                ExistingPolicy();
+            }
             elementAjaxCall(Value, EIId, ItId, strID);
         }
     });
+    function ExistingPolicy() {
+        var existing;
+        $('.process-steps>li>a').each(function () {
+            var myText = $(this).attr('class');
+            if (myText == "success active") {
+                var myid = $(this).attr('id');
+                var mm = $("#" + myid).removeClass("success");
+                if (myid == "ptb1") {
+                    $("#ptab6 #rlsBDhome").val(0);
+                }
+                if (myid == "ptb2") {
+                    $("#ptab6 #rlsMDhome").val(0);
+                } if (myid == "ptb3") {
+                    $("#ptab6 #rlsBOhome").val(0);
+                }
+                if (myid == "ptb4") {
+                    $("#ptab6 #rlsCDhome").val(0);
+                }
+                if (myid == "ptb5") {
+                    $("#ptab6 #rlsOPodhome").val(0);
+                }
+            }
+        });
+    }
     function elementAjaxCall(Value, EIId, ItId, strID) {
         if (Value != '' && EIId != '') {
             $.ajax({
@@ -2265,18 +2396,53 @@
                         if (valuedata != '' && valuedata != null) {
                             $.each(valuedata, function (index, value) {
                                 var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                //$('#' + StateIdNewOne).val(value.Value);
-                                if ((value.Element.ElId == 61277 || value.Element.ElId == 61279) && strID != '') {
-                                    $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                if (StateIdNewOne != undefined) {
+                                    var strIDN = StateIdNewOne.replace(/\d+/g, '');
+                                    if (strID != '') {
+                                        $('#' + strIDN + '' + strID).val(value.Value);
+                                    } else {
+                                        $('#' + StateIdNewOne).val(value.Value);
+                                    }
                                 }
-                                if ((value.Element.ElId == 61187 || value.Element.ElId == 61189 || value.Element.ElId == 61191) && strID != '') {
-                                    $("#tnameop-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                                    var identifiers = data.identifiers;
+                                    $.each(identifiers, function (index2, value2) {
+                                        if ((value.Element.ElId == 61277 || value.Element.ElId == 61279 || EIId == 61277 || EIId == 61279) && strID != '') {
+                                            $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                        if ((value.Element.ElId == 61187 || value.Element.ElId == 61189 || EIId == 61187 || EIId == 61189) && strID != '') {
+                                            $("#tnameop-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                        if ((value.Element.ElId == 61149 || value.Element.ElId == 61151 || value.Element.ElId == 61155 || value.Element.ElId == 61159 || value.Element.ElId == 61161 || value.Element.EIId == 61153 || value.Element.EIId == 61157 || EIId == 61149 || EIId == 61151 || EIId == 61155 || EIId == 61159 || EIId == 61161 || EIId == 61153 || EIId == 61157) && strID != '') {
+                                            $("#tnamemd-tr-" + strID + " .form-control").data("itid", value2.NewId);
+                                            $('#ptab2 #yearmd' + strID).attr("data-itid", value2.NewId);
+                                            $('#ptab2 #makemodel' + strID).attr("data-itid", value2.NewId);
+                                            $('#ptab2 #serialnumber' + strID).attr("data-itid", value2.NewId);
+                                            $('#ptab2 #fueltype' + strID).attr("data-itid", value2.NewId);
+                                            $('#ptab2 #drivertype' + strID).attr("data-itid",value2.NewId);
+                                            $('#ptab2 #meterials' + strID).attr("data-itid", value2.NewId);
+                                            $('#ptab2 #power' + strID).attr("data-itid", value2.NewId);
+                                        }
+                                        if ((value.Element.ElId == 61215 || value.Element.ElId == 61213 || EIId == 61215 || EIId == 61213) && strID != '') {
+                                            $("#tname-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                    });
                                 }
                                 if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
                                     var statedata = data.stateData;
                                     if (statedata != '' && statedata != null) {
                                         $.each(statedata, function (index1, value1) {
-                                            var StateIdNew = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            var StateIdNew1 = $("[data-eiid=" + value1.Element.ElId + "]").attr('id');
+                                            if (StateIdNew1 != undefined) {
+                                                var strIDN = StateIdNew1.replace(/\d+/g, '');
+                                                if (strID != '') {
+                                                    var StateIdNew = strIDN + '' + strID;
+                                                } else {
+                                                    var StateIdNew = StateIdNew1;
+                                                }
+                                            } else {
+                                                var StateIdNew = StateIdNew1;
+                                            }
                                             if (value1.Value == 'Invisible') {
                                                 $('#' + StateIdNew).removeAttr('readonly');
                                                 $('#' + StateIdNew).removeAttr('disabled');
@@ -2320,7 +2486,33 @@
                             });
                         }
                     }
+                    else {
+                        if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                            var identifiers = data.identifiers;
+                            $.each(identifiers, function (index2, value2) {
+                                if ((EIId == 61277 || EIId == 61279) && strID != '') {
+                                    $("#tnameHDIP-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                }
+                                if ((EIId == 61187 || EIId == 61189) && strID != '') {
+                                    $("#tnameop-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                }
+                                if ((EIId == 61149 || EIId == 61151 || EIId == 61155 || EIId == 61159 || EIId == 61161 || EIId == 61153 || EIId == 61157) && strID != '') {
 
+                                    $("#tnamemd-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                    $('#ptab2 #yearmd' + strID).attr("data-itid", value2.NewId);
+                                    $('#ptab2 #makemodel' + strID).attr("data-itid", value2.NewId);
+                                    $('#ptab2 #serialnumber' + strID).attr("data-itid", value2.NewId);
+                                    $('#ptab2 #fueltype' + strID).attr("data-itid", value2.NewId);
+                                    $('#ptab2 #drivertype' + strID).attr("data-itid", value2.NewId);
+                                    $('#ptab2 #meterials' + strID).attr("data-itid", value2.NewId);
+                                    $('#ptab2 #power' + strID).attr("data-itid", value2.NewId);
+                                }
+                                if ((EIId == 61215 || EIId == 61213) && strID != '') {
+                                    $("#tname-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                }
+                            });
+                        }
+                    }
                     if (data.referrallists == "") {
                         $('#referralList-p').html('No Referral List');
                     } else {
@@ -2367,6 +2559,81 @@
             });
         }
     }
+
+    function tnameAddMD(id) {
+        var countId = id + 1;
+        $('#tnamemd-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
+        var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveMD(' + id + ')" class="button-3d">-</a>';
+        var html = '<tr id="tnamemd-tr-' + countId + '"><td class="no-border">   @Html.TextBoxFor(p => p.YearmanufactureMDObj.Year, new { @autocomplete = "off", @class = "form-control form-border-bottom vlidationInsure commondatatest commondatatestYearHome", @data_eiid = @Model.YearmanufactureMDObj.EiId, @id = "yearmd", @data_itid = "0" })@Html.HiddenFor(p => p.YearmanufactureMDObj.EiId)</td><td class="no-border">  @Html.TextBoxFor(p => p.MakemodelObj.Makemodel, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.MakemodelObj.EiId, @id = "makemodel", @data_regex = "ANS", @data_itid = "0" })@Html.HiddenFor(p => p.MakemodelObj.EiId)</td><td class="no-border"> @Html.TextBoxFor(p => p.SerialnumberObj.Serialnumber, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatestUpperCase commondatatest", @data_eiid = @Model.SerialnumberObj.EiId, @id = "serialnumber", @data_regex = "NA", @data_itid = "0" })@Html.HiddenFor(p => p.SerialnumberObj.EiId)</td> <td class="no-border"> @Html.DropDownListFor(p => p.FueltypeObj.Type, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.FueltypeObj.EiId, @id = "fueltype", @data_itid = jCount })@Html.HiddenFor(p => p.FueltypeObj.EiId) </td><td class="no-border">  @Html.DropDownListFor(p => p.MotorpositionObj.Position, Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.MotorpositionObj.EiId, @id = "meterials", @data_itid = jCount })@Html.HiddenFor(p => p.MotorpositionObj.EiId)</td><td class="no-border">  @Html.DropDownListFor(p => p.DrivetypeObj.Drivetype,  Enumerable.Empty<SelectListItem>(), new { @class = "vlidationInsure form-control form-border-bottom commondataselection", @data_eiid = @Model.DrivetypeObj.EiId, @id = "drivetype", @data_itid = jCount })@Html.HiddenFor(p => p.DrivetypeObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.PowerObj.Power, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.PowerObj.EiId, @id = "power", @data_regex = "NFD", @data_itid = "0" })@Html.HiddenFor(p => p.PowerObj.EiId)</td><td class="no-border" id="tnamemd-' + countId + '"><a href="javascript:void(0)" onclick="tnameAddMD(' + countId + ')" class="button-3d">+</a></td></tr > ';
+        $.ajax({
+            url: '/Boat/BoatAjaxcontent',
+            type: 'POST',
+            data: { "id": countId, "content": "motorDetails" },
+            success: function (response) {
+                if (response.status == true) {
+                    var html1 = '';
+                    var html2 = '';
+                    var html3 = '';
+                    $.each(response.des, function (i, v) {
+                        html1 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $.each(response.con, function (i, v) {
+                        html2 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $.each(response.mon, function (i, v) {
+                        html3 += '<option value="' + v.Value + '">' + v.Text + '</option>';
+                    });
+                    $("#tnamemd-" + id).html(replaceA);
+                    $("#tnamemd-tr-" + id).after(html);
+                    $("#tnamemd-tr-" + countId + " .form-control").attr("data-itid", 0);
+                    $("#tnamemd-tr-" + countId + " .form-control").val('');
+                    $("#tnamemd-tr-" + countId + ' #fueltype').html(html3);
+                    $("#tnamemd-tr-" + countId + ' #meterials').html(html1);
+                    $("#tnamemd-tr-" + countId + ' #drivetype').html(html2);
+                    $("#tnamemd-tr-" + countId + ' #yearmd').attr('id', "yearmd" + countId);
+                    $("#tnamemd-tr-" + countId + ' #makemodel').attr('id', "makemodel" + countId);
+                    $("#tnamemd-tr-" + countId + ' #serialnumber').attr('id', "serialnumber" + countId);
+                    $("#tnamemd-tr-" + countId + ' #fueltype').attr('id', "fueltype" + countId);
+                    $("#tnamemd-tr-" + countId + ' #meterials').attr('id', "meterials" + countId);
+                    $("#tnamemd-tr-" + countId + ' #drivetype').attr('id', "drivetype" + countId);
+                    $("#tnamemd-tr-" + countId + ' #power').attr('id', "power" + countId);
+                }
+            }
+                });
+    }
+       function tnameRemoveMD(id) {
+        if (confirm('Are you sure? You want to delete this row?')) {
+            var elidAll = new Array();
+            var itid = '';
+            $("#tnamemd-tr-" + id + " td .vlidationInsure").each(function () {
+                elidAll.push($(this).attr('data-eiid'));
+                itid = $(this).attr('data-itid');
+            });
+            $.ajax({
+                url: '/Customer/DeleteRow',
+                type: "POST",
+                crossOrigin: true,
+                data: { "profileid": "1029", "ElId": elidAll, "unid": '@Session["UnitId"]', "ItId": itid },
+                success: function (response) {
+                    if (response.status == true) {
+                        $("#tnamemd-tr-" + id).remove();
+                        var rowCount = $('#ptab2 .table tbody tr').length;
+                        var i = 1;
+                                $("#ptab2 .table tbody tr").each(function () {
+                                    var RowId = $(this).attr('id');
+                                    if (i <= rowCount) {
+                                        $("#" + RowId + " .form-control").attr("data-itid", i);
+                                    } else {
+                                        $("#" + RowId + " .form-control").attr("data-itid", 0);
+                                    }
+                                    i++;
+                                });
+
+                    }
+                }
+            });
+        }
+    }
     function tnameAddOP(id) {
         var countId = id + 1;
         //var i = 1;
@@ -2377,7 +2644,7 @@
         //});
         $('#tnameop-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemoveOP(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tnameop-tr-' + countId +'"><td class="no-border">@Html.TextBoxFor(p => p.NameboObj.Name, new { @autocomplete = "off", maxlength = 40, @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.NameboObj.EiId, @id = "name", @data_itid = "", @data_regex = "A" })@Html.HiddenFor(p => p.NameboObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearsexperienceObj.Year, new { @autocomplete = "off", @placeholder = "Suburb", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.YearsexperienceObj.EiId, @id = "year", @data_itid = "", @data_regex = "N", @maxlength = "3" })@Html.HiddenFor(p => p.YearsexperienceObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.TypesboatObj.Type, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.TypesboatObj.EiId, @id = "type", @data_itid = "", @data_regex = "A" })@Html.HiddenFor(p => p.TypesboatObj.EiId)</td><td class="no-border" id="tnameop-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddOP('+countId+')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tnameop-tr-' + countId +'"><td class="no-border">@Html.TextBoxFor(p => p.NameboObj.Name, new { @autocomplete = "off", maxlength = 40, @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.NameboObj.EiId, @id = "name", @data_itid = "", @data_regex = "A" })@Html.HiddenFor(p => p.NameboObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.YearsexperienceObj.Year, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.YearsexperienceObj.EiId, @id = "year", @data_itid = "", @data_regex = "N", @maxlength = "3" })@Html.HiddenFor(p => p.YearsexperienceObj.EiId)</td><td class="no-border">@Html.TextBoxFor(p => p.TypesboatObj.Type, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_eiid = @Model.TypesboatObj.EiId, @id = "type", @data_itid = "", @data_regex = "A" })@Html.HiddenFor(p => p.TypesboatObj.EiId)</td><td class="no-border" id="tnameop-'+countId+'"><a href="javascript:void(0)" onclick="tnameAddOP('+countId+')" class="button-3d">+</a></td></tr>';
         $("#tnameop-" + id).html(replaceA);
         $("#tnameop-tr-" + id).after(html);
         $("#tnameop-tr-" + countId + " .form-control").attr("data-itid", 0);
@@ -2404,21 +2671,16 @@
                         $("#tnameop-tr-" + id).remove();
                         var rowCount = $('#ptab3 .table tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $("#ptab3 .table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tnameop-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tnameop-tr-" + v.Value);
-                                            $("#tnameop-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
+                                $("#ptab3 .table tbody tr").each(function () {
+                                    var RowId = $(this).attr('id');
+                                    if (i <= rowCount) {
+                                        $("#" + RowId + " .form-control").attr("data-itid", i);
+                                    } else {
+                                        $("#" + RowId + " .form-control").attr("data-itid", 0);
+                                    }
+                                    i++;
                                 });
-                            } 
+
                     }
                 }
             });
@@ -2434,7 +2696,7 @@
         //});
         $('#tname-' + id + ' > a').css({ 'pointer-events': 'none', 'cursor': 'default' });
         var replaceA = '<a href="javascript:void(0)" onclick="tnameRemove(' + id + ')" class="button-3d">-</a>';
-        var html = '<tr id="tname-tr-'+countId+'"><td class="no-border">@Html.TextBoxFor(p => p.AccessorydescriptionObj.Description, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_itid = "", @data_eiid = @Model.NameboObj.EiId, @id = "description", @data_regex = "ANS" })@Html.HiddenFor(p => p.AccessorydescriptionObj.EiId)</td><td class="no-border">$ @Html.TextBoxFor(p => p.AccessorysuminsureObj.Suminsured, new { @autocomplete = "off", @maxlength = "13", @class = "vlidationInsure form-control commondatatestComma commondatatestPrice form-border-bottom suminsured", @data_eiid = @Model.NameboObj.EiId, @id = "suminsured", @style = "display: inline-block;width: 95%;", @data_regex = "N", @data_itid = "" })@Html.HiddenFor(p => p.AccessorysuminsureObj.EiId)</td><td class="no-border" id="tname-'+countId+'"><a href="javascript:void(0)" onclick="tnameAdd('+countId+')" class="button-3d">+</a></td></tr>';
+        var html = '<tr id="tname-tr-'+countId+'"><td class="no-border">@Html.TextBoxFor(p => p.AccessorydescriptionObj.Description, new { @autocomplete = "off", @class = "vlidationInsure form-control form-border-bottom commondatatest", @data_itid = "", @data_eiid = @Model.AccessorydescriptionObj.EiId, @id = "description", @data_regex = "ANS" })@Html.HiddenFor(p => p.AccessorydescriptionObj.EiId)</td><td class="no-border">$ @Html.TextBoxFor(p => p.AccessorysuminsureObj.Suminsured, new { @autocomplete = "off", @maxlength = "13", @class = "vlidationInsure form-control commondatatestComma commondatatestPrice form-border-bottom suminsured", @data_eiid = @Model.AccessorysuminsureObj.EiId, @id = "suminsured", @style = "display: inline-block;width: 95%;", @data_regex = "N", @data_itid = "" })@Html.HiddenFor(p => p.AccessorysuminsureObj.EiId)</td><td class="no-border" id="tname-'+countId+'"><a href="javascript:void(0)" onclick="tnameAdd('+countId+')" class="button-3d">+</a></td></tr>';
         $("#tname-" + id).html(replaceA);
         $("#tname-tr-" + id).after(html);
         $("#tname-tr-" + countId + " .form-control").attr("data-itid", 0);
@@ -2460,21 +2722,15 @@
                         $("#tname-tr-" + id).remove();
                         var rowCount = $('#ptab4 .table tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $("#ptab4 .table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tname-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tname-tr-" + v.Value);
-                                            $("#tname-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
-                                });
-                            } 
+                            $("#ptab4 .table tbody tr").each(function () {
+                                var RowId = $(this).attr('id');
+                                if (i <= rowCount) {
+                                    $("#" + RowId + " .form-control").attr("data-itid", i);
+                                } else {
+                                    $("#" + RowId + " .form-control").attr("data-itid", 0);
+                                }
+                                i++;
+                            });
                     }
                 }
             });
@@ -2537,21 +2793,16 @@
                         $("#tnameHDIP-tr-" + id).remove();
                         var rowCount = $('#ptab6 .table tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $("#ptab6 .table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tnameHDIP-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tnameHDIP-tr-" + v.Value);
-                                            $("#tnameHDIP-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
-                                });
-                            } 
+                            $("#ptab6 .table tbody tr").each(function () {
+                                var RowId = $(this).attr('id');
+                                if (i <= rowCount) {
+                                    $("#" + RowId + " .form-control").attr("data-itid", i);
+                                } else {
+                                    $("#" + RowId + " .form-control").attr("data-itid", 0);
+                                }
+                                i++;
+                            });
+
                     }
                 }
             });

@@ -50,7 +50,7 @@ namespace InsureThatAPI.Controllers
                         {
 
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
@@ -123,7 +123,7 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
-            int profileid = 0;
+            int? profileid = 0;
             int Fprofileid = 0;
             if (Session["unId"] != null && Session["ProfileId"] != null)
             {
@@ -155,15 +155,18 @@ namespace InsureThatAPI.Controllers
                 bool policyinclusion = policyinclusions.Exists(p => p.Name == "Home Contents");
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-
-                    int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
-                    int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    unid = policyinclusions.Where(p => p.Name == "Home Contents").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Home Contents").Select(p => p.ProfileUnId).FirstOrDefault();
                     HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
+                }
+                else
+                {
+                    return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -186,13 +189,11 @@ namespace InsureThatAPI.Controllers
                                 if (policyhomelist != null && policyhomelist.Count() > 0)
                                 {
                                     Policyincllist.FindAll(p => p.name == "Home Contents").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
-
                                     Policyincllist.FindAll(p => p.name == "Home Contents").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
                                 }
                                 else
                                 {
                                     Policyincllist.FindAll(p => p.name == "Home Contents").First().UnitId = unitdetails.SectionData.UnId;
-
                                     Policyincllist.FindAll(p => p.name == "Home Contents").First().ProfileId = unitdetails.SectionData.ProfileUnId;
                                 }
                             }
@@ -267,6 +268,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                FPHomeContents.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPHomeContents.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyHomeContent";
+            Session["ActionName"] = "HomeContents";
             return View(FPHomeContents);
         }
 
@@ -277,7 +288,6 @@ namespace InsureThatAPI.Controllers
             List<SelectListItem> DescriptionListHomeContents = new List<SelectListItem>();
             DescriptionListHomeContents = commonModel.descriptionListFC();
             FPHomeContents.DescriptionFPObj.DescriptionList = DescriptionListHomeContents;
-            string policyid = null;
             if(FPHomeContents.CustomerId!=null && FPHomeContents.CustomerId>0)
             {
                 cid = FPHomeContents.CustomerId;
@@ -285,7 +295,6 @@ namespace InsureThatAPI.Controllers
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = FPHomeContents.CustomerId, PcId = FPHomeContents.PcId });
-            // return View(FPHomeContents);
-        }
+         }
     }
 }

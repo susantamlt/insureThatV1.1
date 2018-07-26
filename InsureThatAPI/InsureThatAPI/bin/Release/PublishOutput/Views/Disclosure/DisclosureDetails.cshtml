@@ -115,7 +115,7 @@
         @Html.HiddenFor(p => p.PcId, new { id = "pcidd" })  
         @Html.HiddenFor(p => p.PrId, new { id="prid"})
         <div class="clearfix mb-md-30 mt-10 mb-10">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success savepolicyresult"></div>
             @if(Session["PolicyNo"] != null)
             {            
                 <h5 class="clearfix col-md-12 col-sm-12 col-xs-12">Policy Number: @Session["PolicyNo"].ToString()</h5>
@@ -211,9 +211,9 @@
         <div class="clearfix mb-md-30 mt-10 mb-10 detailsbbox hidden">
             <p class="col-md-4 col-sm-4 col-xs-12">Please provide details</p>
             <div class="col-md-8 col-sm-8 col-xs-12">
-                <input type="text" autocomplete="off" placeholder="Enter Details" class="form-control  form-border-bottom" />
-                @*@Html.TextBoxFor(p => p.DetailsboxObj.Details, new { @class = "form-control  form-border-bottom vlidationInsure", @data_eiid = @Model.DetailsboxObj.EiId })
-                *@
+                @*<input type="text" autocomplete="off" placeholder="Enter Details" class="form-control  form-border-bottom" />*@
+                @Html.TextBoxFor(p => p.DetailsboxObj.Details, new { @class = "form-control  form-border-bottom vlidationInsure" ,@id="dd", @data_eiid = @Model.DetailsboxObj.EiId })
+                
                 @Html.HiddenFor(p => p.DetailsboxObj.EiId)
                 <label id="DetailsboxObj.Details-error" class="error" for="DetailsboxObj.Details"></label>
             </div>
@@ -442,6 +442,7 @@
                             });
 </script>
 <script type="text/javascript">
+                            var validdetails = 1;
                             $(document).on('click', '.savepolicyP', function () {
                                 var prid = $("#prid").val();
                                 // var prId = $(this).data('prId');
@@ -453,10 +454,10 @@
                                     success: function (res) {
                                         if (res.status == true) {
                                             var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                                            $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                                            $('.savepolicyresult').html(html).delay(10000).fadeOut();
                                         } else {
                                             var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                                            $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                                            $('.savepolicyresult').html(html).delay(10000).fadeOut();
                                         }
                                     }
                                 });
@@ -471,9 +472,11 @@
                                 var prebox7 = $("input[name='DutydisclosureObj.Dutydisclosure']:checked").val();
                                 if (prebox7 == 1 || prebox6 == 1 || prebox5 == 1 || prebox4 == 1 || prebox3 == 1 || prebox2 == 1 || prebox1 == 1) {
                                     $(".detailsbbox").show().removeClass('hidden');
+                                    validdetails = 0;
                                 }
                                 else {
                                     $(".detailsbbox").addClass('hidden');
+                                    validdetails = 1;
                                 }
                                 if (prebox5 == 1)
                                 {
@@ -491,9 +494,11 @@
                                 if (prebox7 == 1 || prebox6 == 1 || prebox5 == 1 || prebox4 == 1 || prebox3 == 1 || prebox2 == 1 || prebox1 == 1) {
                                     //alert(prebox7 + '-' + prebox6 + '-' + prebox5 + '-' + prebox4 + '-' + prebox3 + '-' + prebox2 + '-' + prebox1);
                                     $(".detailsbbox").show().removeClass('hidden');
+                                    validdetails = 0;
                                 }
                                 else {
                                     $(".detailsbbox").addClass('hidden');
+                                    validdetails = 1;
                                 }
                             });
                             $(document).ready(function () {
@@ -511,10 +516,10 @@
                                                 $('#' + id).css({ "border": "1px solid #ff0000" });
                                                 $("label[for='" + nameAttr + "']").text('Please answer this question').css({ "display": "block" });
                                                 valid = 0;
-                                            } else if (!regex.test(newval)) {
-                                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                                $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
-                                                valid = 0;
+                                            //} else if (!regex.test(newval)) {
+                                            //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                                            //    $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                                            //    valid = 0;
                                             } else {
                                                 $('#' + id).css({ "border": "" });
                                                 $("label[for='" + nameAttr + "']").text("");
@@ -619,30 +624,25 @@
                                                 $("label[for='" + nameAttr + "']").text("");
                                             }
                                         }
-                                        if (nameAttr == "DetailsboxObj.Details") {
-                                            var regex = /^(0?[1-9]|[12][0-9]|3[01])[\/](0?[1-9]|1[012])[\/]\d{4}$/;
-                                            var rVal = newval.split('/');
-                                            var currentYear = new Date().getFullYear();
-                                            if (newval == '') {
-                                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                                $("label[for='" + nameAttr + "']").text('Please answer this question').css({ "display": "block" });
-                                                valid = 0;
-                                            } else if (newval != '' && !regex.test(newval)) {
-                                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
-                                                valid = 0;
-                                            } else if (rVal[2] != '' && rVal[2].length != 4) {
-                                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                                $("label[for='" + name + "']").text('Please enter an appropriate year').css({ "display": "block" });
-                                                valid = 0;
-                                            } else if (rVal[2] != '' && rVal[2] > currentYear) {
-                                                $('#' + id).css({ "border": "1px solid #ff0000" });
-                                                $("label[for='" + name + "']").text('You can not provide future year').css({ "display": "block" });
-                                                valid = 0;
-                                            } else if (rVal != "") {
-                                                $('#' + id).css({ "border": "" });
-                                                $("label[for='" + name + "']").text('').css({ "display": "none" });
+                                     
+                                        if (validdetails == "0")
+                                        {
+                                            if (nameAttr == "DetailsboxObj.Details") {
+                                                var regex = /^[a-zA-Z ]*$/;
+                                                if ($('#dd' + lastChar).val() != '' && newval == '') {
+                                                    $('#' + id).css({ "border": "1px solid #ff0000" });
+                                                    $("label[for='" + nameAttr + "']").text('Please answer this question').css({ "display": "block" });
+                                                    valid = 0;
+                                                //} else if (!regex.test(newval)) {
+                                                //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                                                //    $("label[for='" + nameAttr + "']").text('Special character & numeric are not allowed').css({ "display": "block" });
+                                                //    valid = 0;
+                                                } else {
+                                                    $('#' + id).css({ "border": "" });
+                                                    $("label[for='" + nameAttr + "']").text("");
+                                                }
                                             }
+
                                         }
                                     });
                                     if (valid == 1) {
@@ -667,12 +667,13 @@
                                 if (Nregex == 'N') {
                                     regex = /^[0-9]*$/;
                                     text = "Only numeric are allowed";
+                                    Value = Value.replace(/,/g, '');
                                 } else if (Nregex == 'A') {
-                                    regex = /^[a-zA-Z ]*$/;
-                                    text = "Special character & numeric are not allowed";
+                                    //regex = /^[a-zA-Z ]*$/;
+                                    //text = "Special character & numeric are not allowed";
                                 } else if (Nregex == 'AN') {
-                                    regex = /^[a-zA-Z0-9 ]*$/;
-                                    text = "Special character are not allowed";
+                                    //regex = /^[a-zA-Z0-9 ]*$/;
+                                    //text = "Special character are not allowed";
                                 } else if (Nregex == 'AS') {
                                     regex = /^[a-zA-Z/ ]*$/;
                                     text = "Numericare not allowed";
@@ -680,7 +681,7 @@
                                     regex = /^[0-9/ ]*$/;
                                     text = "Numeric & '/' are allowed";
                                 }
-                                if (regex != '' && !regex.test(Value)) {
+                                if (Value != '' && regex != '' && !regex.test(Value)) {
                                     $('#' + id).css({ "border": "1px solid #ff0000" });
                                     $("label[for='" + name + "']").text(text).css({ "display": "block" });
                                 } else if (Value != "") {
@@ -766,13 +767,14 @@
                             }
                             $("#goback").click(function () {
                                 var prid = $("#prid").val();
-                                // var prId = $(this).data('prId');
+                                var pcId = $("#pcidd").val();
+                                var cid = $("#ciid").val();
                                 var prId = prid;
                                 $.ajax({
                                     url: '/Customer/GoBack',
                                     type: "POST",
                                     crossOrigin: true,
-                                    data: { "PrId": prId },
+                                    data: { "PrId": prid, "cid": cid, "pcid": pcId },
                                     success: function (data) {
                                         window.location.href = data;
                                     }

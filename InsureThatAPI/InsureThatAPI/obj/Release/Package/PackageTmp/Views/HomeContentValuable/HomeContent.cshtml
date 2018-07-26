@@ -35,7 +35,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
-            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:15px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:15px;line-height:29px;padding: 3.73px 10.5px;">Disclosure</a>
+            }  
         </div>
     </div>
     <div id="referralListModel" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="referralListModel" aria-hidden="false">
@@ -127,7 +133,7 @@
     </div>
     <div class="clearfix"></div>
     <div id="errorContainer"></div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success savepolicyresult"></div>
     @using (Ajax.BeginForm("HomeContent", "HomeContentValuable", new { cid = @ViewBag.cid }, new AjaxOptions()
     {
         HttpMethod = "POST"
@@ -288,7 +294,7 @@
         <div class="col-md-12 mt-10 mb-10">
             <p class="col-md-12"><strong>If the following items, pairs, Collections or Sets are valued at more than $10,000 they need to be listed separately as <a href="#SpecifiedValuablesModel" role="button" data-target="#SpecifiedValuablesModel" data-toggle="modal">Specified Contents</a>.</strong></p>
             <div class="col-md-12 table-8">
-                <table class="table" style="width:100%;">
+                <table class="table homeContant" style="width:100%;">
                     <thead>
                         <tr>
                             <th class="space_left">Description</th>
@@ -684,40 +690,40 @@
                 }
             </ul>
             <script type="text/javascript">
-                $(document).on('click', 'ul.unit > li', function () {
-                    var unitname = $(this).children("a").attr("class");
-                    var cid = $("#ciid").val();
-                    var pcid = $("#pcidd").val();
-                    var prid = 1029;
-                    $.ajax({
-                        type: "POST",
-                        url: "/Customer/AddUnit",
-                        data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
-                        success: function (responce) {
-                            if (responce.Status == false) {
-                                $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
-                                $("html, body").animate({ scrollTop: 0 }, "slow");
-                            } else {
-                                window.location.href = responce;
-                            }
-                        }
-                    });
-                });
+                            $(document).on('click', 'ul.unit > li', function () {
+                                var unitname = $(this).children("a").attr("class");
+                                var cid = $("#ciid").val();
+                                var pcid = $("#pcidd").val();
+                                var prid = 1029;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Customer/AddUnit",
+                                    data: { "unit": unitname, cid: cid, PcId: pcid, Prid: prid },
+                                    success: function (responce) {
+                                        if (responce.Status == false) {
+                                            $(".error").css("color", "red").html("Failed to add section, there is a problem in core system.").show().delay(100000).fadeOut();
+                                            $("html, body").animate({ scrollTop: 0 }, "slow");
+                                        } else {
+                                            window.location.href = responce;
+                                        }
+                                    }
+                                });
+                            });
             </script>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("tr td .vlidationInsure").each(function () {
-            var id = $(this).attr('id');
-            var prid1 = $(this).parent().parent().attr('id');
-            var prid = prid1.replace(/\D/g, '');
-            var itid = $(this).data('itid');
-            var nItid = itid + 1;
-            $(this).attr('id', id + '' + prid);;
-        });
-    });
+                            $(document).ready(function () {
+                                $("tr td .vlidationInsure").each(function () {
+                                    var id = $(this).attr('id');
+                                    var prid1 = $(this).parent().parent().attr('id');
+                                    var prid = prid1.replace(/\D/g, '');
+                                    var itid = $(this).data('itid');
+                                    var nItid = itid + 1;
+                                    $(this).attr('id', id + '' + prid);;
+                                });
+                            });
 </script>
 <script type="text/javascript">
     var allResData = '';
@@ -766,7 +772,7 @@
         $("#tname-tr-" + countId + ' #description').attr('id', "description" + countId);
         $("#tname-tr-" + countId + ' #suminsured').attr('id', "suminsured" + countId);
     }
-    function tnameRemove(id) {        
+    function tnameRemove(id) {
         if (confirm('Are you sure? You want to delete this row?')) {
             var elidAll = new Array();
             var itid = '';
@@ -774,7 +780,6 @@
                 elidAll.push($(this).attr('data-eiid'));
                 itid = $(this).attr('data-itid');
               });
-
             $.ajax({
                 url: '/Customer/DeleteRow',
                 type: "POST",
@@ -783,27 +788,21 @@
                 success: function (response) {
                     if (response.status == true) {
                         $("#tname-tr-" + id).remove();
-                        var rowCount = $('.table tbody tr').length;
+                        var rowCount = $('.homeContant tbody tr').length;
                         var i = 1;
-                            if (response.identifiers != '') {
-                                $.each(response.identifiers, function (j, v) {
-                                    $(".table tbody tr").each(function () {
-                                        var itt = $(this).attr('id');
-                                        var search = itt;
-                                        var value = "tname-tr-" + v.Text;
-                                        if (search == value) {
-                                            $(this).attr('id', "tname-tr-" + v.Value);
-                                            $("#tname-tr-" + v.Value + " .form-control").attr("data-itid", v.Value);
-                                            j++;
-                                            return false;
-                                        }
-                                    });
-                                });
-                            } 
+                        $(".homeContant tbody tr").each(function () {
+                            var RowId = $(this).attr('id');
+                            if (i <= rowCount) {
+                                $("#" + RowId + " .form-control").attr("data-itid", i);
+                            } else {
+                                $("#" + RowId + " .form-control").attr("data-itid", 0);
+                            }
+                            i++;
+                        });
                     }
                 }
             });
-        } 
+        }
         var sum = 0;
         $(".sumoftotalcover").each(function () {
             var Value = $(this).val();
@@ -862,15 +861,15 @@
                     }
                 }
                 if (nameAttr == "DescriptionObj.Description") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if ($('#suminsured' + lastChar).val() != '' && newval == '') {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("label[for='" + nameAttr + "']").text('Please enter description').css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#' + id).css({ "border": "" });
-                        $("label[for='" + nameAttr + "']").text("");
-                    }
+                    //var regex = /^[a-zA-Z0-9 ]*$/;
+                    //if ($('#suminsured' + lastChar).val() != '' && newval == '') {
+                    //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("label[for='" + nameAttr + "']").text('Please enter description').css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#' + id).css({ "border": "" });
+                    //    $("label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "SuminsuredObj.Suminsured") {
                     var regex = /^[0-9]*$/;
@@ -924,17 +923,18 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9 ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
             regex = /^[a-zA-Z/ ]*$/;
             text = "Numeric are not allowed";
         }
-        if (Value != '' && regex!='' && !regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
@@ -956,9 +956,13 @@
                         if (valuedata != '' && valuedata != null) {
                             $.each(valuedata, function (index, value) {
                                 var StateIdNewOne = $("[data-eiid=" + value.Element.ElId + "]").attr('id');
-                                //$('#' + StateIdNewOne).val(value.Value);
-                                if ((value.Element.ElId == 60285 || value.Element.ElId == 60287) && strID != '') {
-                                    $("#tname-tr-" + strID + " .form-control").attr("data-itid", value.Element.ItId);
+                                if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                                    var identifiers = data.identifiers;
+                                    $.each(identifiers, function (index2, value2) {
+                                        if ((value.Element.ElId == 60285 || value.Element.ElId == 60287) && strID != '') {
+                                            $("#tname-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                                    });
                                 }
                                 if (!$.isEmptyObject(data.stateData) && data.stateData.length > 0) {
                                     var statedata = data.stateData;
@@ -1006,6 +1010,17 @@
                                     }
                                 }
                             });
+                        }
+                    }
+                    else {
+                        if (!$.isEmptyObject(data.identifiers) && data.identifiers.length > 0) {
+                            var identifiers = data.identifiers;
+                            $.each(identifiers, function (index2, value2) {
+                                if ((EIId == 60285 || EIId == 60287) && strID != '') {
+                             
+                                            $("#tname-tr-" + strID + " .form-control").attr("data-itid", value2.NewId);
+                                        }
+                               });
                         }
                     }
                     if (!$.isEmptyObject(data.rowsorcedata) && data.rowsorcedata.length > 0) {
@@ -1099,10 +1114,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html).delay(10000).fadeOut();
+                    $('.savepolicyresult').html(html).delay(10000).fadeOut();
                 }
             }
         });

@@ -1,6 +1,6 @@
 ﻿@model InsureThatAPI.Models.PolicyHistory
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml"; ;
+    Layout = "~/Views/Shared/_lyout.cshtml"; ;
 }
 
 
@@ -10,7 +10,7 @@
 
     <div class="col_half col_last pull-right">
         <div class="fright">
-            <a class="btn color-bk-btn"  href="@Url.Action("NewPolicy", "Customer",new { cid=@ViewBag.cid})">Add Policy</a>
+            <a class="btn color-bk-btn" href="@Url.Action("NewPolicy", "Customer",new { cid=@ViewBag.cid})">Add Policy</a>
             <a class="btn color-bk-btn" href="@Url.Action("InsuredList", "Customer",new {cid = @ViewBag.cid, PolicyNumber=Model.PolicyData.Select(p=>p.PolicyNumber).First()})">View Insured</a>
 
         </div>
@@ -32,7 +32,7 @@
                                 {
                                     <lable>Rural Life Style</lable>
                                 }
-                                else if(Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1021)
+                                else if (Model.PolicyData.Select(p => p.TrId).FirstOrDefault() == 1021)
                                 { <label>Farm</label>
                                 }
                             </div>
@@ -78,14 +78,14 @@
                 <th class="space_right">Expiry Date</th>
             </tr>
 
-         
-    @if (Model.PolicyData != null && Model.PolicyData.Count() > 0)
-    {
-        for (int i = 0; i < Model.PolicyData.Count(); i++)
-        {
-            <tr>
-                <td>
-                    @if (Model.PolicyData[i].PolicyStatus == "AP")
+
+            @if (Model.PolicyData != null && Model.PolicyData.Count() > 0)
+            {
+                for (int i = 0; i < Model.PolicyData.Count(); i++)
+                {
+                    <tr>
+                        <td>
+                            @if (Model.PolicyData[i].PolicyStatus == "AP")
                     { <span>/ Endorsed Policy</span> }
                     else if (Model.PolicyData[i].PolicyStatus == "AQ")
                     { <span> Endorsement Quotation</span> }
@@ -107,17 +107,20 @@
                     { <span> Cancelled Policy</span> }
                     else if (Model.PolicyData[i].PolicyStatus == "XQ")
                     { <span> Cancellation Quotation</span> }
-                </td>
-                @*<td></td>*@
-                <td>@Model.PolicyData[i].EffectiveDate.ToString("dd/MM/yyyy")</td>
-                <td>@Model.PolicyData[i].EffectiveDate.ToString("dd/MM/yyyy")</td>
-            </tr>
-        }
-    }
-                @*<td>
-                        <input type="button" name="submit" value="Edit" class="btn-primary btn">&nbsp;<input type="button" name="submit" value="Delete" class="btn-primary btn">
-                    </td>*@
-           
+                        </td>
+                        @*<td></td>*@
+                        <td>@Model.PolicyData[i].EffectiveDate.ToString("dd/MM/yyyy")</td>
+                        <td>@Model.PolicyData[i].EffectiveDate.ToString("dd/MM/yyyy")</td>
+                    </tr>
+                }
+            }
+
         </table>
     </div>
+    <button onclick="goBack()" class="pull-right btn color-bk-btn">Go Back</button>
 </div>
+<script>
+    function goBack() {
+        window.history.back();
+    }
+</script>

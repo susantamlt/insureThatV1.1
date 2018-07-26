@@ -43,9 +43,7 @@ namespace InsureThatAPI.Controllers
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
-            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
-            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Transit");
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -88,10 +86,9 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                    else if (Policyincllist.Exists(p => p.name == "Livestock"))
                     {
                         return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
-
                     }
                     else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
                     {
@@ -101,7 +98,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                    else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                     {
                         return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                     }
@@ -125,7 +122,6 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
                     }
-
                 }
                 #endregion
             }
@@ -167,16 +163,36 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = Convert.ToInt32(Session["unId"]);
-            int profileid = Convert.ToInt32(Session["profileId"]);
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            int? profileid = Convert.ToInt32(Session["profileId"]);
+            if ( PcId != null && PcId.HasValue)
             {
-                FPFarmliability.ExistingPolicyInclustions = policyinclusions;
-
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPFarmliability.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    FPFarmliability.PolicyInclusion = policyinclusions;
+                }
+                FPFarmliability.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    policyid = PcId.ToString();
+                    FPFarmliability.PolicyId = policyid;
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Farm Liability");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    unid = policyinclusions.Where(p => p.Name == "Farm Liability").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Farm Liability").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -286,13 +302,22 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                FPFarmliability.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPFarmliability.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyFarmLiability";
+            Session["ActionName"] = "FarmLiability";
             return View(FPFarmliability);
         }
 
         [HttpPost]
         public ActionResult FarmLiability(int? cid, FPFarmliability FPFarmliability)
         {
-
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> GLLimitOfIndemnity = new List<SelectListItem>();
             GLLimitOfIndemnity = commonModel.LimitOfIndemnity();
@@ -304,8 +329,6 @@ namespace InsureThatAPI.Controllers
             GLTypeOfAccommodation = commonModel.TypeOfAccommodation();
             FPFarmliability.TypeOfAccomGuestsStayingInFPObj.TypeOfAccommodationGuestsStayingInList = GLTypeOfAccommodation;
             var db = new MasterDataEntities();
-            string policyid = null;
-
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = FPFarmliability.CustomerId, PcId = FPFarmliability.PcId });

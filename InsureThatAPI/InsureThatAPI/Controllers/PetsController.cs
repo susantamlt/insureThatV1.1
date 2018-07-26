@@ -58,7 +58,7 @@ namespace InsureThatAPI.Controllers
                     {
                         if (Policyincllist.Exists(p => p.name == "Travel"))
                         {
-                            return RedirectToAction("TravelCover", "Travel", new { cid = cid });
+                            return RedirectToAction("TravelCover", "Travel", new { cid = cid ,PcId=PcId});
                         }
                         else
                         {
@@ -138,6 +138,25 @@ namespace InsureThatAPI.Controllers
                 Pets.PolicyInclusion = policyinclusions;
                 Pets.ExistingPolicyInclustions = policyinclusions;
                 Pets.NewSections = cmn.NewSectionP(policyinclusions);
+                if (Session["unId"] != null && Session["profileId"] != null)
+                {
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+
+                }
+                else
+                {
+                    if (policyinclusions.Exists(p => p.Name == "Pets"))
+                    {
+                        unid = policyinclusions.Where(p => p.Name == "Pets").Select(p => p.UnId).FirstOrDefault();
+                        profileid = policyinclusions.Where(p => p.Name == "Pets").Select(p => p.UnId).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("TravelCover", "Travel", new { cid = cid, PcId = PcId });
+                    }
+                }
                 //int sectionId = policyinclusions.Where(p => p.Name == "Home Contents" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
                 //int? profileunid = policyinclusions.Where(p => p.Name == "Home Contents" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
                 HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);

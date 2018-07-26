@@ -39,9 +39,7 @@ namespace InsureThatAPI.Controllers
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
-            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
-            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Transit");
             List<SessionModel> PolicyInclustions = new List<SessionModel>();
             if (Session["apiKey"] != null)
             {
@@ -71,7 +69,7 @@ namespace InsureThatAPI.Controllers
                     {
                        
                     }
-                    else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                    else if (Policyincllist.Exists(p => p.name == "Livestock"))
                     {
                         return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
                     }
@@ -83,7 +81,7 @@ namespace InsureThatAPI.Controllers
                     {
                         return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                     }
-                    else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                    else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                     {
                         return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                     }
@@ -129,15 +127,34 @@ namespace InsureThatAPI.Controllers
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = Convert.ToInt32(Session["unId"]);
             int profileid = Convert.ToInt32(Session["profileId"]);
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if ( PcId != null && PcId.HasValue)
             {
-                FPTransit.ExistingPolicyInclustions = policyinclusions;
-
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPTransit.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    FPTransit.PolicyInclusion = policyinclusions;
+                }
+                FPTransit.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    FPTransit.PolicyId = PcId.ToString();
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Transit");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    int sectionId = policyinclusions.Where(p => p.Name == "Transit").Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Transit").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -178,12 +195,12 @@ namespace InsureThatAPI.Controllers
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload = val;
+                        FPTransit.LivestockMaxValOneLoadObj.LivestockMaxValoneload = val;
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPTransit.LivestockMaxValOneLoadObj.EiId).Select(p => p.Value).FirstOrDefault();
-                        FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload = val;
+                        FPTransit.LivestockMaxValOneLoadObj.LivestockMaxValoneload = val;
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == FPTransit.ExcessFPTransitObj.EiId))
                     {
@@ -204,7 +221,7 @@ namespace InsureThatAPI.Controllers
                         FPTransit.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
                     }
                 }
-            }            
+            }
 
             //var db = new MasterDataEntities();
             //string policyid = null;
@@ -213,7 +230,7 @@ namespace InsureThatAPI.Controllers
             //{
             //    if (details.Exists(q => q.QuestionId == FPTransit.LivestockMaxValOneLoadObj.EiId))
             //    {
-            //        FPTransit.LivestockMaxValOneLoadObj.livestockMaxValoneload = Convert.ToString(details.Where(q => q.QuestionId == FPTransit.LivestockMaxValOneLoadObj.EiId).FirstOrDefault().Answer);
+            //        FPTransit.LivestockMaxValOneLoadObj.LivestockMaxValoneload = Convert.ToString(details.Where(q => q.QuestionId == FPTransit.LivestockMaxValOneLoadObj.EiId).FirstOrDefault().Answer);
             //    }
             //    if (details.Exists(q => q.QuestionId == FPTransit.FarmProduceMaxValOneLoadObj.EiId))
             //    {
@@ -225,6 +242,16 @@ namespace InsureThatAPI.Controllers
             //        FPTransit.ExcessFPTransitObj.Excess = !string.IsNullOrEmpty(loc.Answer) ? (loc.Answer) : null;
             //    }
             //}
+            if (cid != null && cid.HasValue && cid > 0)
+            {
+                FPTransit.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId > 0)
+            {
+                FPTransit.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyTransit";
+            Session["ActionName"] = "Transit";
             return View(FPTransit);
         }
 

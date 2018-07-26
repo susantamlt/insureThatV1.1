@@ -83,7 +83,7 @@ namespace InsureThatAPI.Controllers
             string policyid = null;
             var Policyincllist = Session["Policyinclustions"] as List<SessionModel>;
             CommonUseFunctionClass cmn = new CommonUseFunctionClass();
-            if (PcId != null && PcId.HasValue && PcId > 0)
+            if (policyinclusion==true && PcId != null && PcId.HasValue && PcId > 0)
             {
                 policyid = PcId.ToString();
                 MCVehicleDescription.PolicyId = policyid;
@@ -151,6 +151,8 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.FmmctypeObj.FmFamilyList = FamilyLists;
             MCVehicleDescription.FmmctypeObj.FmFamilyLists = new List<SelectListItem>();
             MCVehicleDescription.FmmctypeObj.FmFamilyLists = FamilyLists;
+            MCVehicleDescription.MCscdObj.ScdList= new List<SelectListItem>();
+            MCVehicleDescription.MCscdObj.ScdList = FamilyLists;
             MCVehicleDescription.FmmctypeObj.EiId = 60779;
             MCVehicleDescription.FmmcscdObj = new FMMCSelectCorDetails();
             MCVehicleDescription.FmmcscdObj.EiId = 60781;
@@ -266,8 +268,27 @@ namespace InsureThatAPI.Controllers
             {
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
+                if (Session["unId"] != null && Session["profileId"] != null)
+                {
+                    unid = Convert.ToInt32(Session["unId"]);
+                    profileid = Convert.ToInt32(Session["profileId"]);
+
+                }
+                else
+                {
+                    if (policyinclusions.Exists(p => p.Name == "Motor"))
+                    {
+                        unid = policyinclusions.Where(p => p.Name == "Motor").Select(p => p.UnId).FirstOrDefault();
+                        profileid = policyinclusions.Where(p => p.Name == "Motor").Select(p => p.UnId).FirstOrDefault();
+
+                    }
+                    else
+                    {
+                        return RedirectToAction("BoatDetails", "Boat", new { cid = cid, PcId = PcId });
+                    }
+                }
                 MCVehicleDescription.ExistingPolicyInclustions = policyinclusions;
                 MCVehicleDescription.PolicyInclusion = new List<usp_GetUnit_Result>();
                 MCVehicleDescription.PolicyInclusion = policyinclusions;
@@ -278,7 +299,7 @@ namespace InsureThatAPI.Controllers
                     unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                 }
             }
-            else
+            else if (Session["Policyinclustions"] != null)
             {
                 if (PcId == null && Session["unId"] == null && (Session["profileId"] == null || profileid == 0))
                 {
@@ -907,6 +928,7 @@ namespace InsureThatAPI.Controllers
             Session["profileId"] = null;
             string actionname = null;
             string controllername = null;
+            Session["RLSmotor"] = 1;
             if (Session["Actname"] != null)
             {
                 actionname = Session["Actname"].ToString();

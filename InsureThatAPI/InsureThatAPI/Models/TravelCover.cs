@@ -6,8 +6,23 @@ using System.Web.Mvc;
 
 namespace InsureThatAPI.Models
 {
+
+    public class TravellersToBeCoveredG
+    {
+        public string Travellerscovered { get; set; }
+        public int EiId { get; set; }
+    }
+    public class DataOfBirthsTCG
+    {
+        public string Dataofbirth { get; set; }
+        public int EiId { get; set; }
+    }
     public class TravelCover
     {
+        public TravellersToBeCoveredG TravellerscoveredGObj { get; set; }
+        public List<ValueDatas> TravellerscoveredGObjList { get; set; }
+        public DataOfBirthsTCG DataofbirthGObj { get; set; }
+        public List<ValueDatas> DataofbirthGObjList { get; set; }
         public List<string> NewSections { get; set; }
         public List<string> Referels { get; set; }
         public string ReferralList { get; set; }
@@ -21,7 +36,7 @@ namespace InsureThatAPI.Models
         public UnspecificValuablesTC UnspecificvaluablesObj { get; set; }
         public List<usp_GetUnit_Result> ExistingPolicyInclustions { get; set; }
         public NumberOfTravelers NumbertravelersObj { get; set; }
-        public TravellersToBeCovered  TravellerscoveredObj  { get; set; }
+        public TravellersToBeCovered TravellerscoveredObj { get; set; }
         public List<ValueDatas> TravellerscoveredObjList { get; set; }
         public DataOfBirthsTC DataofbirthObj { get; set; }
         public List<ValueDatas> DataofbirthObjList { get; set; }

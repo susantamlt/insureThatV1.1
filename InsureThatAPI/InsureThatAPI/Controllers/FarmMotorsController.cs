@@ -19,7 +19,6 @@ namespace InsureThatAPI.Controllers
 {
     public class FarmMotorsController : Controller
     {
-        // GET: FarmMotors
         public ActionResult Index()
         {
             return View();
@@ -50,7 +49,6 @@ namespace InsureThatAPI.Controllers
                 policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             }
             string apikey = null;
-            bool policyinclusion = (policyinclusions != null && policyinclusions.Count() > 0 && policyinclusions.Exists(p => p.Name == "Motor"));
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -92,7 +90,6 @@ namespace InsureThatAPI.Controllers
             {
                 #region Policy Selected or not testing
                 List<SessionModel> PolicyInclustions = new List<SessionModel>();
-
                 MCVehicleDescription.PolicyInclusions = Policyincllist;
                 if (Policyincllist != null)
                 {
@@ -123,6 +120,8 @@ namespace InsureThatAPI.Controllers
             MCVehicleDescription.MCfamilyObj.FamilyList = FamilyLists;
             MCVehicleDescription.MCfamilyObj.EiId = 63813;
             MCVehicleDescription.MCscdObj = new GLVSelectCorDetails();
+            MCVehicleDescription.MCscdObj.ScdList = new List<SelectListItem>();
+            MCVehicleDescription.MCscdObj.ScdList = FamilyLists;
             MCVehicleDescription.MCscdObj.EiId = 63815;
             MCVehicleDescription.EstimatedValueObj = new EstimatedRetailValue();
             MCVehicleDescription.EstimatedValueObj.EiId = 63817;
@@ -237,22 +236,41 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
-            int profileid = 0;
+            int? profileid = 0;
             if (Session["unId"] != null && Session["profileId"] != null)
             {
                 unid = Convert.ToInt32(Session["unId"]);
                 profileid = Convert.ToInt32(Session["profileId"]);
             }
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if (PcId != null && PcId.HasValue)
             {
-                MCVehicleDescription.ExistingPolicyInclustions = policyinclusions;
                 MCVehicleDescription.PolicyInclusion = new List<usp_GetUnit_Result>();
                 MCVehicleDescription.PolicyInclusion = policyinclusions;
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    MCVehicleDescription.PolicyInclusion = policyinclusions;
+                }
+                MCVehicleDescription.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    policyid = PcId.ToString();
+                    MCVehicleDescription.PolicyId = policyid;
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Motor");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    unid = policyinclusions.Where(p => p.Name == "Motor").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Motor").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("DisclosureDetails", "Disclosure", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -323,6 +341,59 @@ namespace InsureThatAPI.Controllers
                 }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
+                    if (unitdetails.AddressList != null && unitdetails.AddressList.Count > 0)
+                    {
+                        MCVehicleDescription.AdaddressObj.AddressList = unitdetails.AddressList;
+                        if (MCVehicleDescription.AdaddressObj.AddressList != null && MCVehicleDescription.AdaddressObj.AddressList.Count() > 0)
+                        {
+                            for (int i = 0; i < MCVehicleDescription.AdaddressObj.AddressList.Count(); i++)
+                            {
+                                MCVehicleDescription.AdaddressList.Add(new SelectListItem { Value = MCVehicleDescription.AdaddressObj.AddressList[i].AddressID.ToString(), Text = MCVehicleDescription.AdaddressObj.AddressList[i].AddressLine1 + ", " + MCVehicleDescription.AdaddressObj.AddressList[i].Suburb + ", " + MCVehicleDescription.AdaddressObj.AddressList[i].State + ", " + MCVehicleDescription.AdaddressObj.AddressList[i].Postcode });
+                            }
+                        }
+                    }
+                    if (unitdetails.SectionData.RowsourceData.Exists(p => p.Element.ElId == MCVehicleDescription.MCfamilyObj.EiId))
+                    {
+                        Option op1 = new Option();
+                        List<Option> oplist1 = new List<Option>();
+                        List<SelectListItem> oplists1 = new List<SelectListItem>();
+                        MCVehicleDescription.MCfamilyObj.FamilyList = new List<SelectListItem>();
+                        var opp = unitdetails.SectionData.RowsourceData.Where(p => p.Element.ElId == MCVehicleDescription.MCfamilyObj.EiId).Select(p => p.Options).ToList();
+                        for (int i = 0; i < opp.Count(); i++)
+                        {
+                            var o = opp[i];
+                            for (int j = 0; j < o.Count(); j++)
+                            {
+                                op1 = new Option();
+                                op1.DataValue = o[j].DataValue;
+                                op1.DataText = o[j].DataText;
+                                oplist1.Add(op1);
+                                oplists1.Add(new SelectListItem { Value = o[j].DataValue, Text = o[j].DataText });
+                            }
+                        }
+                        MCVehicleDescription.MCfamilyObj.FamilyList = oplists1;
+                    }
+                    if (unitdetails.SectionData.RowsourceData.Exists(p => p.Element.ElId == MCVehicleDescription.MCscdObj.EiId))
+                    {
+                        Option op = new Option();
+                        List<Option> oplist = new List<Option>();
+                        List<SelectListItem> oplists = new List<SelectListItem>();
+                        MCVehicleDescription.MCscdObj.ScdList = new List<SelectListItem>();
+                        var opp = unitdetails.SectionData.RowsourceData.Where(p => p.Element.ElId == MCVehicleDescription.MCscdObj.EiId).Select(p => p.Options).ToList();
+                        for (int i = 0; i < opp.Count(); i++)
+                        {
+                            var o = opp[i];
+                            for (int j = 0; j < o.Count(); j++)
+                            {
+                                op = new Option();
+                                op.DataValue = o[j].DataValue;
+                                op.DataText = o[j].DataText;
+                                oplist.Add(op);
+                                oplists.Add(new SelectListItem { Value = o[j].DataValue, Text = o[j].DataText });
+                            }
+                        }
+                        MCVehicleDescription.MCscdObj.ScdList = oplists;
+                    }
                     if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
                     {
                         MCVehicleDescription.AdaddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + ", " + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
@@ -733,6 +804,8 @@ namespace InsureThatAPI.Controllers
                 dr.YearLicensed = 0;
                 MCVehicleDescription.DriverDatas.DriverData.Add(dr);
             }
+            Session["Controller"] = "FarmMotors";
+            Session["ActionName"] = "VehicleDescription";
             return View(MCVehicleDescription);
         }
         [HttpPost]

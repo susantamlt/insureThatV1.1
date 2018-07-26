@@ -20,7 +20,13 @@
             <button type="button" href="#savepolicy" role="button" data-target="#savepolicy" data-toggle="modal" class="button-3d nomargin tab-linker" id="savepolicyP" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Save Policy</button>
             <button type="button" href="#referralListModel" role="button" data-target="#referralListModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="referralList" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Referral List</button>
             <button type="button" href="#premiumModel" role="button" data-target="#premiumModel" data-toggle="modal" class="button-3d nomargin tab-linker" id="premium" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Premium</button>
-            <a type="button" href="/Disclosure/DisclosureDetails" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:22px;">Disclouser</a>
+            @if (Model.PcId != null)
+            { <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId&PcId=@Model.PcId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:25px;padding: 3.73px 10.5px;">Disclosure</a>
+            }
+            else
+            {
+                <a type="button" href="/Disclosure/DisclosureDetails?cid=@Model.CustomerId" role="button" class="button-3d nomargin tab-linker" style="width:auto;border:none;background-color:#000000;color:#FFFFFF;margin-top:10px;line-height:25px;padding: 3.73px 10.5px;">Disclosure</a>
+            } 
         </div>
     </div>
     <div id="savepolicy" class="modal" data-easein="fadeIn" tabindex="-1" role="dialog" aria-labelledby="savepolicy" aria-hidden="false">
@@ -111,7 +117,7 @@
         </div>
     </div>
     <div class="clearfix"></div>
-    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success" id="savepolicyresult"></div>
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 success savepolicyresult"></div>
     <div id="errorContainer"></div>
     @using (Ajax.BeginForm("PetsCover", "Pets", new { cid = @ViewBag.cid }, new AjaxOptions()
     {
@@ -857,34 +863,36 @@
                     }
                 }
                 if (nameAttr == "OtherbreedObj.Otherbreed") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
+                    var regex = /^[a-zA-Z0-9& ]*$/;
                     if ($("#breed").val() == "301" && Value == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('Please enter other breed').css({ "display": "block" });
                         valid = 0;
-                    } else if (!regex.test(Value)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#' + id).css({ "border": "" });
-                        $("#petsCover label[for='" + nameAttr + "']").text("");
                     }
+                    //else if (!regex.test(Value)) {
+                    //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#' + id).css({ "border": "" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "NameObj.Name") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
+                    var regex = /^[a-zA-Z0-9& ]*$/;
                     if (Value == '') {
                         $('#' + id).css({ "border": "1px solid #ff0000" });
                         $("#petsCover label[for='" + nameAttr + "']").text('Please enter name').css({ "display": "block" });
                         valid = 0;
-                    } else if (!regex.test(Value)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#' + id).css({ "border": "" });
-                        $("#petsCover label[for='" + nameAttr + "']").text("");
-                    }
+                    } 
+                    //  else if (!regex.test(Value)) {
+                    //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#' + id).css({ "border": "" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "DatebirthObj.Datebirth") {
                     var Wholives = $("input[name='" + nameAttr + ".error']").val();
@@ -936,19 +944,19 @@
                     }
                 }
                 if (nameAttr == "DescriptionillnessObj.Descriptionillness") {
-                    var regex = /^[a-zA-Z0-9 ]*$/;
-                    if ($("input[name='PreexistingObj.Preexisting']:checked").val() == "1" && newval == "") {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Please enter description of illness').css({ "display": "block" });
-                        valid = 0;
-                    } else if (!regex.test(newval)) {
-                        $('#' + id).css({ "border": "1px solid #ff0000" });
-                        $("#petsCover label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
-                        valid = 0;
-                    } else {
-                        $('#' + id).css({ "border": "" });
-                        $("#petsCover label[for='" + nameAttr + "']").text("");
-                    }
+                    //var regex = /^[a-zA-Z0-9&- ]*$/;
+                    //if ($("input[name='PreexistingObj.Preexisting']:checked").val() == "1" && newval == "") {
+                    //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text('Please enter description of illness').css({ "display": "block" });
+                    //    valid = 0;
+                    //} else if (!regex.test(newval)) {
+                    //    $('#' + id).css({ "border": "1px solid #ff0000" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text('Special character are not allowed').css({ "display": "block" });
+                    //    valid = 0;
+                    //} else {
+                    //    $('#' + id).css({ "border": "" });
+                    //    $("#petsCover label[for='" + nameAttr + "']").text("");
+                    //}
                 }
                 if (nameAttr == "AnnualcoverlimitObj.Annualcoverlimit") {
                     var regex = /^[0-9]*$/;
@@ -1068,14 +1076,15 @@
         if (Nregex == 'N') {
             regex = /^[0-9]*$/;
             text = "Only numeric are allowed";
+            Value = Value.replace(/,/g, '');
         } else if (Nregex == 'A') {
-            regex = /^[a-zA-Z ]*$/;
-            text = "Special character & numeric are not allowed";
+            //regex = /^[a-zA-Z&- ]*$/;
+            //text = "Special character & numeric are not allowed";
         } else if (Nregex == 'AN') {
-            regex = /^[a-zA-Z0-9 ]*$/;
-            text = "Special character are not allowed";
+            //regex = /^[a-zA-Z0-9&- ]*$/;
+            //text = "Special character are not allowed";
         } else if (Nregex == 'AS') {
-            regex = /^[a-zA-Z/ ]*$/;
+            regex = /^[a-zA-Z&-/ ]*$/;
             text = "Numeric are not allowed";
         } else if (Nregex == 'NS') {
             regex = /^[0-9/ ]*$/;
@@ -1086,7 +1095,7 @@
         } else {
             var ItId = ItIdN;
         }
-        if (regex!='' && !regex.test(Value)) {
+        if (Value != '' && regex != '' && !regex.test(Value)) {
             $('#' + id).css({ "border": "1px solid #ff0000" });
             $("label[for='" + name + "']").text(text).css({ "display": "block" });
         } else if (Value != "") {
@@ -1248,10 +1257,10 @@
             success: function (res) {
                 if (res.status == true) {
                     var html = '<div class="alert alert-success"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html(html);
+                    $('.savepolicyresult').html(html);
                 } else {
                     var html = '<div class="alert alert-danger"><strong>' + res.result + '</strong></div>';
-                    $('#savepolicyresult').html('');
+                    $('.savepolicyresult').html('');
                 }
             }
         });

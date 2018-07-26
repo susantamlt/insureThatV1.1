@@ -53,6 +53,7 @@ namespace InsureThatAPI.Models
         public int? AddressID { get; set; }
         public string PostalAddressID { get; set; }
         public string PostalAddressLine { get; set; }
+        public string PostalAddress { get; set; }
         public string PostalSuburb { get; set; }
         public string PostalState { get; set; }
         public string PostalPostcode { get; set; }
@@ -88,6 +89,7 @@ namespace InsureThatAPI.Models
         public int? AddressID { get; set; }
         public string PostalAddressID { get; set; }
         public string PostalAddressLine { get; set; }
+        public string PostalAddress { get; set; }
         public string PostalSuburb { get; set; }
         public string PostalState { get; set; }
         public string PostalPostcode { get; set; }

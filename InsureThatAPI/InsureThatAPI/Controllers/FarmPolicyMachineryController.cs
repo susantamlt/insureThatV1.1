@@ -66,7 +66,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        else if (Policyincllist.Exists(p => p.name == "Livestock"))
                         {
                             return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
@@ -79,7 +79,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
@@ -251,15 +251,18 @@ namespace InsureThatAPI.Controllers
                 bool policyinclusion = policyinclusions.Exists(p => p.Name == "Machinery");
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-
-                    int sectionId = policyinclusions.Where(p => p.Name == "Machinery" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
-                    int? profileunid = policyinclusions.Where(p => p.Name == "Machinery" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
-                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    int sectionId = policyinclusions.Where(p => p.Name == "Machinery").Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Machinery").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + sectionId + "&ProfileUnId=" + profileunid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
+                }
+                else
+                {
+                    return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -451,7 +454,10 @@ namespace InsureThatAPI.Controllers
                                 vds.Element.ElId = 62995;
                                 vds.Element.ItId = MilkingVolumeOfVatList[i];
                                 vds.Value = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPMachinery.MilkingVolumeOfVatFPObj.EiId && p.Element.ItId == MilkingVolumeOfVatList[i]).Select(p => p.Value).FirstOrDefault();
-                                elmnts.Add(vds);
+                                if (vds.Value != null && vds.Value != "")
+                                {
+                                    elmnts.Add(vds);
+                                }
                             }
                             FPMachinery.MilkingVolumeOfVatFPList = elmnts;
                         }
@@ -908,6 +914,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                FPMachinery.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPMachinery.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyMachinery";
+            Session["ActionName"] = "Machinery";
             return View(FPMachinery);
         }
 
@@ -947,7 +963,6 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FPMachinery.CustomerId;
                 cid = FPMachinery.CustomerId;
             }
-            string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = FPMachinery.CustomerId, PcId = FPMachinery.PcId });

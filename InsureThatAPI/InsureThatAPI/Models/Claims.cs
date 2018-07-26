@@ -22,11 +22,18 @@ namespace InsureThatAPI.Models
         public string PolicyId { get; set; }
         public List<RowsourceDatas> ClaimTypeRowsourceOptions { get; set; }
         public ClaimType ClaimtypeObj { get; set; }
+        public List<ValueDatas> ClaimtypeobjList { get; set; }
         public DetailsOfClaim DetailsclaimObj { get; set; }
+        public List<ValueDatas> DetailsclaimobjList { get; set; }
         public ClaimValue ClaimvalueObj { get; set; }
+        public List<ValueDatas> ClaimvalueobjList { get; set; }
+       
         public ClaimYear YearObj { get; set; }
+        public List<ValueDatas> yearobjList { get; set; }
         public ClaimInsurer InsurerObj { get; set; }
+        public List<ValueDatas> InsurerobjList { get; set; }
         public ClaimDriver DriverObj { get; set; }
+        public List<ValueDatas> DriverobjList { get; set; }
         public int? PrId { get; set; }
         public int? TrId { get; set; }
         public string Status { get; set; }

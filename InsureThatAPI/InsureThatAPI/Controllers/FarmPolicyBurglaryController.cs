@@ -74,7 +74,7 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                            else if (Policyincllist.Exists(p => p.name == "Livestock"))
                             {
                                 return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
@@ -87,7 +87,7 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                            else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                             {
                                 return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                             }
@@ -181,7 +181,7 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = 0;
-            int profileid = 0;
+            int? profileid = 0;
             int Fprofileid = 0;
             if (Session["unId"] != null && Session["profileId"] != null)
             {
@@ -213,15 +213,18 @@ namespace InsureThatAPI.Controllers
                 bool policyinclusion = policyinclusions.Exists(p => p.Name == "Burglary");
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-
-                    int sectionId = policyinclusions.Where(p => p.Name == "Burglary" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
-                    int? profileunid = policyinclusions.Where(p => p.Name == "Burglary" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
+                    unid = policyinclusions.Where(p => p.Name == "Burglary").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Burglary").Select(p => p.ProfileUnId).FirstOrDefault();
                     HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
+                }
+                else
+                {
+                    return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -236,7 +239,6 @@ namespace InsureThatAPI.Controllers
                         if (unitdetails != null && unitdetails.SectionData != null)
                         {
                             Session["unId"] = unitdetails.SectionData.UnId;
-
                             Session["profileId"] = unitdetails.SectionData.ProfileUnId;
                             if (Policyincllist != null && Policyincllist.Exists(p => p.name == "Burglary"))
                             {
@@ -244,13 +246,11 @@ namespace InsureThatAPI.Controllers
                                 if (policyhomelist != null && policyhomelist.Count() > 0)
                                 {
                                     Policyincllist.FindAll(p => p.name == "Burglary").Where(p => p.UnitId == null).First().UnitId = unitdetails.SectionData.UnId;
-
                                     Policyincllist.FindAll(p => p.name == "Burglary").Where(p => p.ProfileId == null).First().ProfileId = unitdetails.SectionData.ProfileUnId;
                                 }
                                 else
                                 {
                                     Policyincllist.FindAll(p => p.name == "Burglary").First().UnitId = unitdetails.SectionData.UnId;
-
                                     Policyincllist.FindAll(p => p.name == "Burglary").First().ProfileId = unitdetails.SectionData.ProfileUnId;
                                 }
                             }
@@ -354,13 +354,22 @@ namespace InsureThatAPI.Controllers
                     }
                 }                
             }
+            if (cid != null && cid.HasValue)
+            {
+                FPBurglary.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPBurglary.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyBurglary";
+            Session["ActionName"] = "Burglary";
             return View(FPBurglary);
         }
 
         [HttpPost]
         public ActionResult Burglary(int? cid, FPBurglary FPBurglary)
         {
-
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> BurglaryExcessToPay = new List<SelectListItem>();
             BurglaryExcessToPay = commonModel.excessRate();
@@ -378,7 +387,6 @@ namespace InsureThatAPI.Controllers
             string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
-
             return RedirectToAction("FarmInterruption", "FarmPolicyFarmInterruption", new { cid = FPBurglary.CustomerId, PcId = FPBurglary.PcId });
         }
     }

@@ -36,8 +36,8 @@ namespace InsureThatAPI.Controllers
             List<SelectListItem> UseofAnimalLivestock = new List<SelectListItem>();
             UseofAnimalLivestock = commonModel.UseofAnimalLivestock();
 
-            List<SelectListItem> excessToPayLiveStock = new List<SelectListItem>();
-            excessToPayLiveStock = commonModel.excessRate();
+            List<SelectListItem> excessToPayLivestock = new List<SelectListItem>();
+            excessToPayLivestock = commonModel.excessRate();
 
             FPLivestock FPLivestock = new FPLivestock();
             var db = new MasterDataEntities();
@@ -52,9 +52,7 @@ namespace InsureThatAPI.Controllers
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
-            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
-            bool policyinclusion = policyinclusions.Exists(p => p.Name == "LiveStock");
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -95,7 +93,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
@@ -185,7 +183,7 @@ namespace InsureThatAPI.Controllers
             FPLivestock.OptUnbornFoalFPObj.EiId = 63365;
 
             FPLivestock.ExcessLivestockFPObj = new ExcessLivestockFP();
-            FPLivestock.ExcessLivestockFPObj.ExcessList = excessToPayLiveStock;
+            FPLivestock.ExcessLivestockFPObj.ExcessList = excessToPayLivestock;
             FPLivestock.ExcessLivestockFPObj.EiId = 63375;
 
 
@@ -212,22 +210,42 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = Convert.ToInt32(Session["unId"]);
-            int profileid = Convert.ToInt32(Session["profileId"]);
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            int? profileid = Convert.ToInt32(Session["profileId"]);
+            if ( PcId != null && PcId.HasValue)
             {
-                FPLivestock.ExistingPolicyInclustions = policyinclusions;
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPLivestock.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    FPLivestock.PolicyInclusion = policyinclusions;
+                }
+                FPLivestock.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    FPLivestock.PolicyId = PcId.ToString();
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Livestock");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    unid = policyinclusions.Where(p => p.Name == "Livestock").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Livestock").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = cid, PcId = PcId });
                 }
             }
             else
             {
                 if (PcId == null && Session["unId"] == null && Session["profileId"] == null)
                 {
-                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=LiveStock&SectionUnId=&ProfileUnId=0");
+                    HttpResponseMessage Res = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=New&SectionName=Livestock&SectionUnId=&ProfileUnId=0");
                     var EmpResponse = Res.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
@@ -390,6 +408,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                FPLivestock.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPLivestock.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyLivestock";
+            Session["ActionName"] = "Livestock";
 
             return View(FPLivestock);
         }
@@ -415,9 +443,9 @@ namespace InsureThatAPI.Controllers
             UseofAnimalLivestock = commonModel.UseofAnimalLivestock();
             FPLivestock.UseOfAnimalFPObj.UseOfAnimalList = UseofAnimalLivestock;
 
-            List<SelectListItem> excessToPayLiveStock = new List<SelectListItem>();
-            excessToPayLiveStock = commonModel.excessRate();
-            FPLivestock.ExcessLivestockFPObj.ExcessList = excessToPayLiveStock;
+            List<SelectListItem> excessToPayLivestock = new List<SelectListItem>();
+            excessToPayLivestock = commonModel.excessRate();
+            FPLivestock.ExcessLivestockFPObj.ExcessList = excessToPayLivestock;
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -427,7 +455,6 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = FPLivestock.CustomerId;
             }
-            string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("MainDetails", "FarmPolicyHome", new { cid = FPLivestock.CustomerId, PcId = FPLivestock.PcId });

@@ -42,9 +42,7 @@ namespace InsureThatAPI.Controllers
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass commonmethods = new NewPolicyDetailsClass();
-            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
-            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Electronics");
             string ApiKey = null;
             if (Session["ApiKey"] != null)
             {
@@ -70,7 +68,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                        else if (Policyincllist.Exists(p => p.name == "Livestock"))
                         {
                             return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
 
@@ -83,7 +81,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
@@ -160,15 +158,34 @@ namespace InsureThatAPI.Controllers
             {
                 FPElectronics.PolicyInclusions = Policyincllist;
             }
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            if ( PcId != null && PcId.HasValue)
             {
-                FPElectronics.ExistingPolicyInclustions = policyinclusions;
-
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                FPElectronics.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    FPElectronics.PolicyInclusion = policyinclusions;
+                }
+                FPElectronics.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    FPElectronics.PolicyId = PcId.ToString();                  
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Electronics");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    int sectionId = policyinclusions.Where(p => p.Name == "Electronics").Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Electronics").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + sectionId + "&ProfileUnId=" + profileunid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -264,14 +281,22 @@ namespace InsureThatAPI.Controllers
                         FPElectronics.AddressObj.Address = unitdetails.SectionData.AddressData.AddressLine1 + ", " + unitdetails.SectionData.AddressData.Suburb + " ," + unitdetails.SectionData.AddressData.State + ", " + unitdetails.SectionData.AddressData.Postcode;
                     }
                 }
-
+              }
+            if (cid != null && cid.HasValue)
+            {
+                FPElectronics.CustomerId = cid.Value;
             }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPElectronics.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyElectronics";
+            Session["ActionName"] = "Electronics";
             return View(FPElectronics);
         }
         [HttpPost]
         public ActionResult Electronics(int? cid, FPElectronics FPElectronics)
         {
-
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> ElectronicsExcessToPay = new List<SelectListItem>();
             ElectronicsExcessToPay = commonModel.excessRate();
@@ -287,7 +312,6 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FPElectronics.CustomerId;
             }
             var db = new MasterDataEntities();
-            string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = FPElectronics.CustomerId, PcId = FPElectronics.PcId });

@@ -39,9 +39,7 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = HB2HomeDescription.CustomerId;
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
-            var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
             string apikey = null;
-            bool policyinclusion = policyinclusions.Exists(p => p.Name == "Money");
             if (Session["apiKey"] != null)
             {
                 apikey = Session["apiKey"].ToString();
@@ -74,7 +72,7 @@ namespace InsureThatAPI.Controllers
                         {
                             return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                         }
-                        else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                        else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                         {
                             return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                         }
@@ -116,6 +114,8 @@ namespace InsureThatAPI.Controllers
             HB2HomeDescription.TypeOfBuildingObj.EiId = 62081;
             HB2HomeDescription.DescribeBuildingObj = new DescribeBuilding();
             HB2HomeDescription.DescribeBuildingObj.EiId = 62083;
+            HB2HomeDescription.AreapropertyObj = new Areapropertys();
+            HB2HomeDescription.AreapropertyObj.Areaproperty = 62089;
             #endregion
             #region Constrution Details         
             HB2HomeDescription.ExtwallsmadeObj = new ExtWallsMades();
@@ -188,16 +188,35 @@ namespace InsureThatAPI.Controllers
             hclient.BaseAddress = new Uri(url);
             hclient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             int unid = Convert.ToInt32(Session["unId"]);
-            int profileid = Convert.ToInt32(Session["profileId"]);
-            if (policyinclusion == true && PcId != null && PcId.HasValue)
+            int? profileid = Convert.ToInt32(Session["profileId"]);
+            if ( PcId != null && PcId.HasValue)
             {
-                HB2HomeDescription.ExistingPolicyInclustions = policyinclusions;
-
-                HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
-                var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
-                if (EmpResponse != null)
+                var policyinclusions = db.usp_GetUnit(null, PcId, null).ToList();
+                HB2HomeDescription.PolicyInclusion = new List<usp_GetUnit_Result>();
+                if (PcId != null && PcId.HasValue && PcId > 0)
                 {
-                    unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    HB2HomeDescription.PolicyInclusion = policyinclusions;
+                }
+                HB2HomeDescription.PolicyInclusions = new List<SessionModel>();
+                if (PcId != null && PcId > 0)
+                {
+                    HB2HomeDescription.PolicyId = PcId.ToString();
+                }
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Home Buildings");
+                if (policyinclusion == true && PcId != null && PcId.HasValue)
+                {
+                    unid = policyinclusions.Where(p => p.Name == "Home Buildings").Select(p => p.UnId).FirstOrDefault();
+                    profileid = policyinclusions.Where(p => p.Name == "Home Buildings").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + apikey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
+                    if (EmpResponse != null)
+                    {
+                        unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
+                    }
+                }
+                else
+                {
+                    return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -240,19 +259,6 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.ExtwallsmadeObj.EiId).Select(p => p.Value).FirstOrDefault();
                         HB2HomeDescription.ExtwallsmadeObj.Extwallsmade = val;
                     }
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.AddressObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.AddressObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    HB2HomeDescription.AddressObj.Address = val;
-                    //}
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.AreapropertyObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.AreapropertyObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        HB2HomeDescription.AreapropertyObj.Areaproperty = Convert.ToInt32(val);
-                    //    }
-                    //}
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.IsbuildinglocatedObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.IsbuildinglocatedObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -331,15 +337,6 @@ namespace InsureThatAPI.Controllers
                             HB2HomeDescription.LocationObjsList = elmntsts;
                         }
                     }
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.AgediscountObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.AgediscountObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        HB2HomeDescription.AgediscountObj.Agediscount = val;
-                    //    }
-                    //}
-
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.ConsecutivedayObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.ConsecutivedayObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -348,7 +345,6 @@ namespace InsureThatAPI.Controllers
                             HB2HomeDescription.ConsecutivedayObj.Consecutiveday = Convert.ToInt32(val);
                         }
                     }
-
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.DescribeaddressObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.DescribeaddressObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -463,24 +459,6 @@ namespace InsureThatAPI.Controllers
                             }
                         }
                     }
-
-
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.ImposedObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.ImposedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        HB2HomeDescription.ImposedObj.Imposed = val;
-                    //    }
-                    //}
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.IsbuildinglocatedObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.IsbuildinglocatedObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {                            
-                    //            HB2HomeDescription.IsbuildinglocatedObj.Isbuildinglocated = Convert.ToInt32(val);                          
-                    //    }
-                    //}
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.IsusedbusinessObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.IsusedbusinessObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -489,22 +467,6 @@ namespace InsureThatAPI.Controllers
                             HB2HomeDescription.IsusedbusinessObj.Isusedbusiness = Convert.ToInt32(val);
                         }
                     }
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.NoclaimdiscountObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.NoclaimdiscountObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        HB2HomeDescription.NoclaimdiscountObj.Noclaimdiscount = val;
-                    //    }
-                    //}
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.PropertytypeObj.EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.PropertytypeObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        HB2HomeDescription.PropertytypeObj.Propertytype = val;
-                    //    }
-                    //}
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.UnderconstructionObj.EiId))
                     {
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.UnderconstructionObj.EiId).Select(p => p.Value).FirstOrDefault();
@@ -555,14 +517,6 @@ namespace InsureThatAPI.Controllers
                             HB2HomeDescription.YearofBuiltObj.YearBuilt = val;
                         }
                     }
-                    //if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription..EiId))
-                    //{
-                    //    string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == HB2HomeDescription.YearofBuiltObj.EiId).Select(p => p.Value).FirstOrDefault();
-                    //    if (val != null && val != "0" && !string.IsNullOrEmpty(val))
-                    //    {
-                    //        HB2HomeDescription.YearofBuiltObj.YearBuilt = val;
-                    //    }
-                    //}
                 }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.ValueData != null)
                 {
@@ -577,7 +531,6 @@ namespace InsureThatAPI.Controllers
                     else
                     {
                         HB2HomeDescription.ClaimfreeperiodObj.Claimfreeperiod = -1;
-
                     }
                     if (unitdetails.SectionData.ValueData.Exists(p => p.Element.ElId == HB2HomeDescription.CostforRebuildingObj.EiId))
                     {
@@ -602,6 +555,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
+            if (cid != null && cid.HasValue)
+            {
+                HB2HomeDescription.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                HB2HomeDescription.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyHome";
+            Session["ActionName"] = "MainDetails";
             return View(HB2HomeDescription);
         }
         [HttpPost]
@@ -617,14 +580,10 @@ namespace InsureThatAPI.Controllers
             {
                 ViewBag.cid = HB2HomeDescription.CustomerId;
             }
-            string policyid = null;
-     
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = HB2HomeDescription.CustomerId, PcId = HB2HomeDescription.PcId });
-
-        }
- 
+        } 
   
     }
 }

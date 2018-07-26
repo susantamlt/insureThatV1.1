@@ -26,7 +26,6 @@ namespace InsureThatAPI.Controllers
             NewPolicyDetailsClass commonModel = new NewPolicyDetailsClass();
             List<SelectListItem> ExcessToPay = new List<SelectListItem>();
             ExcessToPay = commonModel.excessRate();
-
             FPFarmInterruption FPFarmInterruption = new FPFarmInterruption();
             string ApiKey = null;
             if (Session["ApiKey"] != null)
@@ -61,20 +60,17 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("Machinery", "FarmPolicyMachinery", new { cid = cid, PcId = PcId });
                             }
-
                             else if (Policyincllist.Exists(p => p.name == "Electronics"))
                             {
                                 return RedirectToAction("Electronics", "FarmPolicyElectronics", new { cid = cid, PcId = PcId });
                             }
-
                             else if (Policyincllist.Exists(p => p.name == "Transit"))
                             {
                                 return RedirectToAction("Transit", "FarmPolicyTransit", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "LiveStock"))
+                            else if (Policyincllist.Exists(p => p.name == "Livestock"))
                             {
                                 return RedirectToAction("Livestock", "FarmPolicyLivestock", new { cid = cid, PcId = PcId });
-
                             }
                             else if (Policyincllist.Exists(p => p.name == "Home Buildings"))
                             {
@@ -84,7 +80,7 @@ namespace InsureThatAPI.Controllers
                             {
                                 return RedirectToAction("HomeContents", "FarmPolicyHomeContent", new { cid = cid, PcId = PcId });
                             }
-                            else if (Policyincllist.Exists(p => p.name == "Personal Liabilities Farm"))
+                            else if (Policyincllist.Exists(p => p.name == "Personal Liability"))
                             {
                                 return RedirectToAction("PersonalLiability", "FarmPolicyPersonalLiability", new { cid = cid, PcId = PcId });
                             }
@@ -117,8 +113,6 @@ namespace InsureThatAPI.Controllers
             }
             ViewEditPolicyDetails unitdetails = new ViewEditPolicyDetails();
             NewPolicyDetailsClass FarmDetailsmodel = new NewPolicyDetailsClass();
-
-
             if (cid != null)
             {
                 ViewBag.cid = cid;
@@ -214,18 +208,21 @@ namespace InsureThatAPI.Controllers
                     policyid = PcId.ToString();
                     FPFarmInterruption.PolicyId = policyid;
                 }
-                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Farm Interuption");
+                bool policyinclusion = policyinclusions.Exists(p => p.Name == "Farm Interruption");
                 if (policyinclusion == true && PcId != null && PcId.HasValue)
                 {
-
-                    int sectionId = policyinclusions.Where(p => p.Name == "Farm Interuption" && p.UnitNumber == unid).Select(p => p.UnId).FirstOrDefault();
-                    int? profileunid = policyinclusions.Where(p => p.Name == "Farm Interuption" && p.ProfileUnId == profileid).Select(p => p.ProfileUnId).FirstOrDefault();
-                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + unid + "&ProfileUnId=" + profileid);
+                    int sectionId = policyinclusions.Where(p => p.Name == "Farm Interruption").Select(p => p.UnId).FirstOrDefault();
+                    int? profileunid = policyinclusions.Where(p => p.Name == "Farm Interruption").Select(p => p.ProfileUnId).FirstOrDefault();
+                    HttpResponseMessage getunit = await hclient.GetAsync("UnitDetails?ApiKey=" + ApiKey + "&Action=Existing&SectionName=&SectionUnId=" + sectionId + "&ProfileUnId=" + profileunid);
                     var EmpResponse = getunit.Content.ReadAsStringAsync().Result;
                     if (EmpResponse != null)
                     {
                         unitdetails = JsonConvert.DeserializeObject<ViewEditPolicyDetails>(EmpResponse);
                     }
+                }
+                else
+                {
+                    return RedirectToAction("Money", "FarmPolicyMoney", new { cid = cid, PcId = PcId });
                 }
             }
             else
@@ -254,7 +251,6 @@ namespace InsureThatAPI.Controllers
                                 else
                                 {
                                     Policyincllist.FindAll(p => p.name == "Farm Interuption").First().UnitId = unitdetails.SectionData.UnId;
-
                                     Policyincllist.FindAll(p => p.name == "Farm Interuption").First().ProfileId = unitdetails.SectionData.ProfileUnId;
                                 }
                             }
@@ -364,8 +360,6 @@ namespace InsureThatAPI.Controllers
                         string val = unitdetails.SectionData.ValueData.Where(p => p.Element.ElId == FPFarmInterruption.SumInsuredShearingDelayFPObj.EiId).Select(p => p.Value).FirstOrDefault();
                         FPFarmInterruption.SumInsuredShearingDelayFPObj.SumInsured = val;
                     }
-
-
                 }
                 if (unitdetails.SectionData != null && unitdetails.SectionData.AddressData != null)
                 {
@@ -375,7 +369,16 @@ namespace InsureThatAPI.Controllers
                     }
                 }
             }
-
+            if (cid != null && cid.HasValue)
+            {
+                FPFarmInterruption.CustomerId = cid.Value;
+            }
+            if (PcId != null && PcId.HasValue)
+            {
+                FPFarmInterruption.PcId = PcId;
+            }
+            Session["Controller"] = "FarmPolicyFarmInterruption";
+            Session["ActionName"] = "FarmInterruption";
             return View(FPFarmInterruption);
         }
 
@@ -401,7 +404,6 @@ namespace InsureThatAPI.Controllers
                 ViewBag.cid = FPFarmInterruption.CustomerId;
             }
             var db = new MasterDataEntities();
-            string policyid = null;
             Session["unId"] = null;
             Session["profileId"] = null;
             return RedirectToAction("Money", "FarmPolicyMoney", new { cid = FPFarmInterruption.CustomerId, PcId = FPFarmInterruption.PcId });

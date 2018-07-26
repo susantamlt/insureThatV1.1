@@ -788,10 +788,6 @@ namespace InsureThatAPI.CommonMethods
         {
             List<SelectListItem> FamilyList = new List<SelectListItem>();
             FamilyList.Add(new SelectListItem { Value = "", Text = "--Select--" });
-            FamilyList.Add(new SelectListItem { Value = "1", Text = "HD45" });
-            FamilyList.Add(new SelectListItem { Value = "2", Text = "HD55" });
-            FamilyList.Add(new SelectListItem { Value = "3", Text = "HD65" });
-            FamilyList.Add(new SelectListItem { Value = "4", Text = "HD75" });
             return FamilyList;
         }
         #endregion
